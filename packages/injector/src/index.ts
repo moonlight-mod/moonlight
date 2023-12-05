@@ -74,7 +74,10 @@ class BrowserWindow extends ElectronBrowserWindow {
     oldPreloadPath = opts.webPreferences!.preload!;
     opts.webPreferences!.preload = require.resolve("./node-preload.js");
 
+    moonlightHost.events.emit("window-options", opts);
     super(opts);
+    moonlightHost.events.emit("window-created", this);
+
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
         if (details.resourceType == "mainFrame") {
