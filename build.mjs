@@ -55,7 +55,8 @@ async function build(name, entry) {
 
     treeShaking: true,
     bundle: true,
-    sourcemap: prod ? false : "inline",
+    minify: prod,
+    sourcemap: "inline",
 
     external: [...ignoredExternal, ...external],
 
