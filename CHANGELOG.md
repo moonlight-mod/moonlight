@@ -1,1 +1,1 @@
-- Initial release
+- Fix release builds

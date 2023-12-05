@@ -31,7 +31,10 @@ jobs:
           NODE_ENV: production
         run: pnpm run build
       - name: Create archive
-        run: tar -czf ./dist.tar.gz ./dist
+        run: |
+          cd ./dist
+          tar -czf ../dist.tar.gz *
+          cd ..
 
       - name: Deploy to GitHub
         uses: ncipollo/release-action@v1
