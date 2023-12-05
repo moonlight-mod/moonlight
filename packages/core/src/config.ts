@@ -4,7 +4,7 @@ import { getConfigPath } from "./util/data";
 
 const defaultConfig: Config = {
   extensions: {},
-  repositories: []
+  repositories: ["https://moonlight-mod.github.io/extensions/repo.json"]
 };
 
 export function writeConfig(config: Config) {
