@@ -1,0 +1,9 @@
+{
+  "id": "moonbase",
+  "meta": {
+    "name": "Moonbase",
+    "tagline": "The official settings UI for moonlight",
+    "authors": ["Cynosphere", "NotNite"]
+  },
+  "dependencies": ["spacepack", "settings", "common"]
+}

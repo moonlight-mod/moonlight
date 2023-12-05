@@ -1,0 +1,9 @@
+{
+  "id": "disableSentry",
+  "meta": {
+    "name": "Disable Sentry",
+    "tagline": "Turns off Discord's error reporting systems",
+    "authors": ["Cynosphere", "NotNite"],
+    "tags": ["privacy"]
+  }
+}

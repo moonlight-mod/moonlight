@@ -1,0 +1,8 @@
+{
+  "name": "@moonlight-mod/injector",
+  "private": true,
+  "dependencies": {
+    "@moonlight-mod/types": "workspace:*",
+    "@moonlight-mod/core": "workspace:*"
+  }
+}

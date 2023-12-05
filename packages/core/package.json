@@ -1,0 +1,11 @@
+{
+  "name": "@moonlight-mod/core",
+  "private": true,
+  "exports": {
+    "./*": "./src/*.ts"
+  },
+  "dependencies": {
+    "glob": "^10.3.4",
+    "@moonlight-mod/types": "workspace:*"
+  }
+}

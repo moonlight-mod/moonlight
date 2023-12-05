@@ -1,0 +1,9 @@
+{
+  "id": "noTrack",
+  "meta": {
+    "name": "No Track",
+    "tagline": "Disables /api/science and analytics",
+    "authors": ["Cynosphere", "NotNite"],
+    "tags": ["privacy"]
+  }
+}

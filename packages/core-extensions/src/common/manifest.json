@@ -1,0 +1,10 @@
+{
+  "id": "common",
+  "meta": {
+    "name": "Common",
+    "tagline": "A *lot* of common clientmodding utilities from the Discord client",
+    "authors": ["Cynosphere", "NotNite"],
+    "tags": ["library"]
+  },
+  "dependencies": ["spacepack"]
+}

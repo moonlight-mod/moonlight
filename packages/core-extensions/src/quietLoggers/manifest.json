@@ -1,0 +1,17 @@
+{
+  "id": "quietLoggers",
+  "meta": {
+    "name": "Quiet Loggers",
+    "tagline": "Quiet errors on startup, and disable unnecesary loggers",
+    "authors": ["Cynosphere", "NotNite", "adryd"],
+    "tags": ["development"]
+  },
+  "settings": {
+    "xssDefensesOnly": {
+      "displayName": "Only hide self-XSS",
+      "description": "Only disable self XSS prevention log",
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

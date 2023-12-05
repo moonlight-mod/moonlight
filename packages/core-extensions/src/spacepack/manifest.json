@@ -1,0 +1,17 @@
+{
+  "id": "spacepack",
+  "meta": {
+    "name": "Spacepack",
+    "tagline": "Search utilities across all Webpack modules",
+    "authors": ["Cynosphere", "NotNite"],
+    "tags": ["library", "development"]
+  },
+  "settings": {
+    "addToGlobalScope": {
+      "displayName": "Add to global scope",
+      "description": "Populates window.spacepack for easier usage in DevTools",
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

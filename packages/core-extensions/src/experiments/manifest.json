@@ -1,0 +1,9 @@
+{
+  "id": "experiments",
+  "meta": {
+    "name": "Experiments",
+    "tagline": "Allows you to configure Discord's internal A/B testing features",
+    "authors": ["NotNite"],
+    "tags": ["dangerZone"]
+  }
+}

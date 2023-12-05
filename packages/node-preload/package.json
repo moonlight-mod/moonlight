@@ -1,0 +1,8 @@
+{
+  "name": "@moonlight-mod/node-preload",
+  "private": true,
+  "dependencies": {
+    "@moonlight-mod/core": "workspace:*",
+    "@moonlight-mod/types": "workspace:*"
+  }
+}

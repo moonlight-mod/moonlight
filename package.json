@@ -1,0 +1,21 @@
+{
+  "name": "moonlight",
+  "version": "1.0.0",
+  "description": "Yet another Discord mod",
+  "homepage": "https://github.com/moonlight-mod/moonlight#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moonlight-mod/moonlight.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moonlight-mod/moonlight/issues"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch"
+  },
+  "devDependencies": {
+    "esbuild": "^0.19.3",
+    "esbuild-copy-static-files": "^0.1.0"
+  }
+}
