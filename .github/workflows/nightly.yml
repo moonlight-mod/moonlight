@@ -35,6 +35,7 @@ jobs:
 
       - name: Write ref/commit to file
         run: |
+          find ./dist -not -path "./dist/files" > ./dist/files
           echo "${{ github.sha }}" > ./dist/ref
           echo "${{ github.ref }}" >> ./dist/ref
           echo "$(date +%s)" >> ./dist/ref
