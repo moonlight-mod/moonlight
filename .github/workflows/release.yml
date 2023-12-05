@@ -1,0 +1,40 @@
+name: Release builds to GitHub Releases
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release builds to GitHub Releases
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build moonlight
+        env:
+          NODE_ENV: production
+        run: pnpm run build
+      - name: Create archive
+        run: tar -czf ./dist.tar.gz ./dist
+
+      - name: Deploy to GitHub
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ./dist.tar.gz
+          bodyFile: ./CHANGELOG.md

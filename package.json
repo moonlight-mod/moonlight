@@ -2,7 +2,7 @@
   "name": "moonlight",
   "version": "1.0.0",
   "description": "Yet another Discord mod",
-  "homepage": "https://github.com/moonlight-mod/moonlight#readme",
+  "homepage": "https://moonlight-mod.github.io/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/moonlight-mod/moonlight.git"
