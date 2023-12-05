@@ -29,6 +29,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build moonlight
+        env:
+          NODE_ENV: production
         run: pnpm run build
 
       - name: Write ref/commit to file
