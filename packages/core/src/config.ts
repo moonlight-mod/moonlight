@@ -3,7 +3,12 @@ import requireImport from "./util/import";
 import { getConfigPath } from "./util/data";
 
 const defaultConfig: Config = {
-  extensions: {},
+  extensions: {
+    moonbase: true,
+    disableSentry: true,
+    noTrack: true,
+    noHideToken: true
+  },
   repositories: ["https://moonlight-mod.github.io/extensions/repo.json"]
 };
 
