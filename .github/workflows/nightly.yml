@@ -37,6 +37,7 @@ jobs:
         run: |
           echo "${{ github.sha }}" > ./dist/ref
           echo "${{ github.ref }}" >> ./dist/ref
+          echo "$(date +%s)" >> ./dist/ref
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v3
