@@ -1,0 +1,46 @@
+name: Nightly builds on GitHub Pages
+
+on:
+  push:
+    branches:
+      - develop
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  nightly:
+    name: Nightly builds on GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build moonlight
+        run: pnpm run build
+
+      - name: Write ref/commit to file
+        run: |
+          echo "${{ github.sha }}" > ./dist/ref
+          echo "${{ github.ref }}" >> ./dist/ref
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: ./dist
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2
