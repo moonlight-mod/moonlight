@@ -7,7 +7,7 @@ import { ExtensionWebExports, WebpackModuleFunc } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: ".UserSettingsSections.EXPERIMENTS",
+    find: ".UserSettingsSections.HOTSPOT_OPTIONS",
     replace: {
       match: /\.CUSTOM,element:(.+?)}\];return (.{1,2})/,
       replacement: (_, lastElement, sections) =>
@@ -17,9 +17,12 @@ export const patches: Patch[] = [
   {
     find: 'navId:"user-settings-cog",',
     replace: {
-      match: /children:\[(.)\.map\(.+?\),{children:.\((.)\)/,
+      match: /children:\[(.)\.map\(.+?\),children:.\((.)\)/,
       replacement: (orig, sections, section) =>
-        `${orig}??${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`
+        `${orig.replace(
+          /Object\.values\(.\.UserSettingsSections\)/,
+          (orig) => `[...require("settings_settings").sectionNames,...${orig}]`
+        )}??${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`
     }
   }
 ];
@@ -29,6 +32,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     run: (module, exports, require) => {
       const Settings: SettingsType = {
         ourSections: [],
+        sectionNames: [],
 
         addSection: (section, label, element, color = null, pos, notice) => {
           const data: SettingsSection = {
@@ -41,6 +45,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
           };
 
           Settings.ourSections.push(data);
+          Settings.sectionNames.push(label);
           return data;
         },
 

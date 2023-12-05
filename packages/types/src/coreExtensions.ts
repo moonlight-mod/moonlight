@@ -45,6 +45,7 @@ export type SettingsSection =
 
 export type Settings = {
   ourSections: SettingsSection[];
+  sectionNames: string[];
 
   addSection: (
     section: string,
