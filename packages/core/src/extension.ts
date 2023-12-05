@@ -8,6 +8,24 @@ import { readConfig } from "./config";
 import requireImport from "./util/import";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 
+function findManifests(dir: string): string[] {
+  const fs = requireImport("fs");
+  const path = requireImport("path");
+  const ret = [];
+
+  for (const file of fs.readdirSync(dir)) {
+    if (file == "manifest.json") {
+      ret.push(path.join(dir, file));
+    }
+
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      ret.push(...findManifests(path.join(dir, file)));
+    }
+  }
+
+  return ret;
+}
+
 function loadDetectedExtensions(
   dir: string,
   type: ExtensionLoadSource
@@ -16,9 +34,7 @@ function loadDetectedExtensions(
   const path = requireImport("path");
   const ret: DetectedExtension[] = [];
 
-  const glob = require("glob");
-  const manifests = glob.sync(dir + "/**/manifest.json");
-
+  const manifests = findManifests(dir);
   for (const manifestPath of manifests) {
     if (!fs.existsSync(manifestPath)) continue;
     const dir = path.dirname(manifestPath);
