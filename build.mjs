@@ -25,6 +25,47 @@ const external = [
   "./node-preload.js"
 ];
 
+let lastMessages = new Set();
+/** @type {import("esbuild").Plugin} */
+const deduplicatedLogging = {
+  name: "deduplicated-logging",
+  setup(build) {
+    build.onStart(() => {
+      lastMessages.clear();
+    });
+
+    build.onEnd(async (result) => {
+      const formatted = await Promise.all([
+        esbuild.formatMessages(result.warnings, { kind: "warning", color: true }),
+        esbuild.formatMessages(result.errors, { kind: "error", color: true })
+      ]).then((a) => a.flat());
+      
+      // console.log(formatted);
+      for (const message of formatted) {
+        if (lastMessages.has(message)) continue;
+        lastMessages.add(message);
+        console.log(message.trim());
+      }
+    });
+  }
+}
+
+const timeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hour12: false
+});
+/** @type {import("esbuild").Plugin} */
+const taggedBuildLog = (tag) => ({
+  name: "build-log",
+  setup(build) {
+    build.onEnd((result) => {
+      console.log(`[${timeFormatter.format(new Date())}] [${tag}] build finished`);
+    });
+  }
+});
+
 async function build(name, entry) {
   const outfile = path.join("./dist", name + ".js");
 
@@ -46,6 +87,7 @@ async function build(name, entry) {
   const nodeDependencies = ["glob"];
   const ignoredExternal = name === "web-preload" ? nodeDependencies : [];
 
+  /** @type {import("esbuild").BuildOptions} */
   const esbuildConfig = {
     entryPoints: [entry],
     outfile,
@@ -61,7 +103,13 @@ async function build(name, entry) {
     external: [...ignoredExternal, ...external],
 
     define,
-    dropLabels
+    dropLabels,
+
+    logLevel: "silent",
+    plugins: [
+      deduplicatedLogging,
+      taggedBuildLog(name)
+    ]
   };
 
   if (watch) {
@@ -118,19 +166,19 @@ async function buildExt(ext, side, copyManifest, fileExt) {
 
     external,
 
-    plugins: copyManifest
-      ? [
-          copyStaticFiles({
-            src: `./packages/core-extensions/src/${ext}/manifest.json`,
-            dest: `./dist/core-extensions/${ext}/manifest.json`
-          }),
-          wpImportPlugin
-        ]
-      : [wpImportPlugin],
-
     logOverride: {
       "commonjs-variable-in-esm": "verbose"
-    }
+    },
+    logLevel: "silent",
+    plugins: [
+      ...copyManifest ? [copyStaticFiles({
+        src: `./packages/core-extensions/src/${ext}/manifest.json`,
+        dest: `./dist/core-extensions/${ext}/manifest.json`
+      })] : [],
+      wpImportPlugin,
+      deduplicatedLogging,
+      taggedBuildLog(`ext/${ext}`)
+    ]
   };
 
   if (watch) {
