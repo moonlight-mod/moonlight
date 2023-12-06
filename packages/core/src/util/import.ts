@@ -9,13 +9,12 @@
   cemented if import is passed a string literal.
 */
 
-const canRequire = ["path", "fs", "glob"] as const;
+const canRequire = ["path", "fs"] as const;
 type CanRequire = (typeof canRequire)[number];
 
 type ImportTypes = {
   path: typeof import("path");
   fs: typeof import("fs");
-  glob: typeof import("glob");
 };
 
 export default function requireImport<T extends CanRequire>(
