@@ -5,7 +5,6 @@ import {
 } from "@moonlight-mod/types";
 import { readConfig } from "../config";
 import Logger from "../util/logger";
-import { getExtensions } from "../extension";
 import { registerPatch, registerWebpackModule } from "../patch";
 import calculateDependencies from "../util/dependency";
 import { createEventEmitter } from "../util/event";

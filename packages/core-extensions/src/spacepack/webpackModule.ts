@@ -12,6 +12,8 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
   const cache = require.c;
   const modules = require.m;
 
+  const logger = moonlight.getLogger("spacepack");
+
   const spacepack: Spacepack = {
     require,
     modules,
@@ -61,8 +63,7 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
           try {
             exports = require(id);
           } catch (e) {
-            console.error(e);
-            debugger;
+            logger.error(`Error requiring module "${id}": `, e);
           }
 
           return {
@@ -70,7 +71,7 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
             exports
           };
         })
-        .filter((item) => item != null);
+        .filter((item) => item !== null);
     },
 
     findByExports: (...args: string[]) => {
@@ -80,8 +81,8 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
             !args.some(
               (item) =>
                 !(
-                  exports != undefined &&
-                  exports != window &&
+                  exports !== undefined &&
+                  exports !== window &&
                   (exports?.[item] ||
                     exports?.default?.[item] ||
                     exports?.Z?.[item] ||
@@ -119,8 +120,10 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
     findObjectFromValue: (exports: Record<string, any>, value: any) => {
       for (const exportKey in exports) {
         const obj = exports[exportKey];
+        // eslint-disable-next-line eqeqeq
         if (obj == value) return obj;
         for (const subKey in obj) {
+          // eslint-disable-next-line eqeqeq
           if (obj && obj[subKey] == value) {
             return obj;
           }
@@ -136,6 +139,7 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
     ) => {
       for (const exportKey in exports) {
         const obj = exports[exportKey];
+        // eslint-disable-next-line eqeqeq
         if (obj && obj[key] == value) {
           return obj;
         }

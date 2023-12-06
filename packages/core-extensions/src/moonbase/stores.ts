@@ -1,9 +1,5 @@
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import {
-  Config,
-  DetectedExtension,
-  ExtensionLoadSource
-} from "@moonlight-mod/types";
+import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
 import {
   ExtensionState,
   MoonbaseExtension,
@@ -15,6 +11,8 @@ export const stores = (require: typeof WebpackRequire) => {
   const Flux = require("common_flux");
   const Dispatcher = require("common_fluxDispatcher");
   const natives: MoonbaseNatives = moonlight.getNatives("moonbase");
+
+  const logger = moonlight.getLogger("moonbase");
 
   class MoonbaseSettingsStore extends Flux.Store<any> {
     private origConfig: Config;
@@ -58,7 +56,7 @@ export const stores = (require: typeof WebpackRequire) => {
             for (const ext of exts) {
               try {
                 const existingExtension = this.extensions[ext.id];
-                if (existingExtension != null) {
+                if (existingExtension !== null) {
                   if (this.hasUpdate(repo, ext, existingExtension)) {
                     this.updates[ext.id] = {
                       version: ext.version!,
@@ -75,11 +73,11 @@ export const stores = (require: typeof WebpackRequire) => {
                   state: ExtensionState.NotDownloaded
                 };
               } catch (e) {
-                console.error(`Error processing extension ${ext.id}`, e);
+                logger.error(`Error processing extension ${ext.id}`, e);
               }
             }
           } catch (e) {
-            console.error(`Error processing repository ${repo}`, e);
+            logger.error(`Error processing repository ${repo}`, e);
           }
         }
 
@@ -98,7 +96,7 @@ export const stores = (require: typeof WebpackRequire) => {
         existing.source.url != null &&
         existing.source.url === repo &&
         repoExt.version != null &&
-        existing.manifest.version != repoExt.version
+        existing.manifest.version !== repoExt.version
       );
     }
 
@@ -122,13 +120,15 @@ export const stores = (require: typeof WebpackRequire) => {
     }
 
     getExtensionName(id: string) {
-      return this.extensions.hasOwnProperty(id)
+      return Object.prototype.hasOwnProperty.call(this.extensions, id)
         ? this.extensions[id].manifest.meta?.name ?? id
         : id;
     }
 
     getExtensionUpdate(id: string) {
-      return this.updates.hasOwnProperty(id) ? this.updates[id] : null;
+      return Object.prototype.hasOwnProperty.call(this.updates, id)
+        ? this.updates[id]
+        : null;
     }
 
     getExtensionEnabled(id: string) {
@@ -204,7 +204,7 @@ export const stores = (require: typeof WebpackRequire) => {
 
         delete this.updates[id];
       } catch (e) {
-        console.error("Error installing extension:", e);
+        logger.error("Error installing extension:", e);
       }
 
       this.installing = false;
@@ -220,7 +220,7 @@ export const stores = (require: typeof WebpackRequire) => {
         await natives.deleteExtension(ext.id);
         this.extensions[id].state = ExtensionState.NotDownloaded;
       } catch (e) {
-        console.error("Error deleting extension:", e);
+        logger.error("Error deleting extension:", e);
       }
 
       this.installing = false;
@@ -235,7 +235,7 @@ export const stores = (require: typeof WebpackRequire) => {
         // I love jank cloning
         this.origConfig = JSON.parse(JSON.stringify(this.config));
       } catch (e) {
-        console.error("Error writing config", e);
+        logger.error("Error writing config", e);
       }
 
       this.submitting = false;

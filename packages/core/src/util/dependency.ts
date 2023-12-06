@@ -36,6 +36,7 @@ export default function calculateDependencies<T, D>(
     const fullDeps: Set<T> = new Set();
     let failed = false;
 
+    // eslint-disable-next-line no-inner-declarations
     function resolveDeps(id: T, root: boolean) {
       if (id === item.id && !root) {
         logger.warn(`Circular dependency detected: "${item.id}"`);

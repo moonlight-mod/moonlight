@@ -31,7 +31,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       const spacepack = require("spacepack_spacepack");
       const { MoonbaseSettingsStore } =
         require("moonbase_stores") as ReturnType<
-          typeof import("./stores")["stores"]
+          (typeof import("./stores"))["stores"]
         >;
 
       settings.addSection("Moonbase", "Moonbase", ui(require), null, -2, {

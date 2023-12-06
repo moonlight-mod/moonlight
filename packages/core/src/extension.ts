@@ -14,7 +14,7 @@ function findManifests(dir: string): string[] {
   const ret = [];
 
   for (const file of fs.readdirSync(dir)) {
-    if (file == "manifest.json") {
+    if (file === "manifest.json") {
       ret.push(path.join(dir, file));
     }
 
@@ -62,7 +62,7 @@ function loadDetectedExtensions(
 
     let url: string | undefined = undefined;
     const urlPath = path.join(dir, constants.repoUrlFile);
-    if (type == ExtensionLoadSource.Normal && fs.existsSync(urlPath)) {
+    if (type === ExtensionLoadSource.Normal && fs.existsSync(urlPath)) {
       url = fs.readFileSync(urlPath, "utf8");
     }
 

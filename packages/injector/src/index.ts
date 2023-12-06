@@ -2,8 +2,7 @@ import electron, {
   BrowserWindowConstructorOptions,
   BrowserWindow as ElectronBrowserWindow,
   ipcMain,
-  app,
-  ipcRenderer
+  app
 } from "electron";
 import Module from "module";
 import { constants } from "@moonlight-mod/types";
@@ -15,6 +14,8 @@ import {
   loadProcessedExtensions
 } from "core/src/extension/loader";
 import EventEmitter from "events";
+
+const logger = new Logger("injector");
 
 let oldPreloadPath = "";
 let corsAllow: string[] = [];
@@ -80,7 +81,7 @@ class BrowserWindow extends ElectronBrowserWindow {
 
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
-        if (details.resourceType == "mainFrame") {
+        if (details.resourceType === "mainFrame") {
           patchCsp(details.responseHeaders);
         }
 
@@ -100,6 +101,7 @@ export async function inject(asarPath: string) {
     const extensions = getExtensions();
 
     // Duplicated in node-preload... oops
+    // eslint-disable-next-line no-inner-declarations
     function getConfig(ext: string) {
       const val = config.extensions[ext];
       if (val == null || typeof val === "boolean") return undefined;
@@ -134,7 +136,7 @@ export async function inject(asarPath: string) {
     global.moonlightHost.processedExtensions = await loadExtensions(extensions);
     await loadProcessedExtensions(global.moonlightHost.processedExtensions);
   } catch (e) {
-    console.error("Failed to inject", e);
+    logger.error("Failed to inject", e);
   }
 
   require(asarPath);

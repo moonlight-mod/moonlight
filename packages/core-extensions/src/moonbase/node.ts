@@ -5,6 +5,8 @@ import path from "path";
 import os from "os";
 import { repoUrlFile } from "types/src/constants";
 
+const logger = moonlightNode.getLogger("moonbase");
+
 async function fetchRepositories(repos: string[]) {
   const ret: Record<string, RepositoryManifest[]> = {};
 
@@ -14,7 +16,7 @@ async function fetchRepositories(repos: string[]) {
       const json = await req.json();
       ret[repo] = json;
     } catch (e) {
-      console.error(`Error fetching repository ${repo}`, e);
+      logger.error(`Error fetching repository ${repo}`, e);
     }
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { LogLevel } from "@moonlight-mod/types/logger";
 import { readConfig } from "../config";
 

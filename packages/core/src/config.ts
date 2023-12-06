@@ -1,4 +1,4 @@
-import { Config, constants } from "@moonlight-mod/types";
+import { Config } from "@moonlight-mod/types";
 import requireImport from "./util/import";
 import { getConfigPath } from "./util/data";
 

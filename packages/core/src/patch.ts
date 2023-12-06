@@ -15,7 +15,7 @@ import WebpackRequire from "@moonlight-mod/types/discord/require";
 const logger = new Logger("core/patch");
 
 // Can't be Set because we need splice
-let patches: IdentifiedPatch[] = [];
+const patches: IdentifiedPatch[] = [];
 let webpackModules: Set<IdentifiedWebpackModule> = new Set();
 
 export function registerPatch(patch: IdentifiedPatch) {
@@ -40,7 +40,7 @@ const patched: Record<string, Array<string>> = {};
 
 function patchModules(entry: WebpackJsonpEntry[1]) {
   for (const [id, func] of Object.entries(entry)) {
-    let moduleString = moduleCache.hasOwnProperty(id)
+    let moduleString = Object.prototype.hasOwnProperty.call(moduleCache, id)
       ? moduleCache[id]
       : func.toString().replace(/\n/g, "");
 
@@ -72,7 +72,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 
         if (
           replace.type === undefined ||
-          replace.type == PatchReplaceType.Normal
+          replace.type === PatchReplaceType.Normal
         ) {
           // tsc fails to detect the overloads for this, so I'll just do this
           // Verbose, but it works
@@ -114,7 +114,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           } catch (e) {
             logger.warn("Error constructing function for patch", e);
           }
-        } else if (replace.type == PatchReplaceType.Module) {
+        } else if (replace.type === PatchReplaceType.Module) {
           // Directly replace the module with a new one
           const newModule = replace.replacement(moduleString);
           entry[id] = newModule;
@@ -199,7 +199,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
   const entrypoints: string[] = [];
   let inject = false;
 
-  for (const [modId, mod] of Object.entries(entry)) {
+  for (const [_modId, mod] of Object.entries(entry)) {
     const modStr = mod.toString();
     const wpModules = Array.from(webpackModules.values());
     for (const wpModule of wpModules) {
