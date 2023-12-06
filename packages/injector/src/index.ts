@@ -12,7 +12,7 @@ import Logger from "@moonlight-mod/core/util/logger";
 import {
   loadExtensions,
   loadProcessedExtensions
-} from "core/src/extension/loader";
+} from "@moonlight-mod/core/extension/loader";
 import EventEmitter from "events";
 
 const logger = new Logger("injector");

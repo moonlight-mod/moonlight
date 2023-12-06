@@ -9,6 +9,7 @@
     "moduleResolution": "bundler",
     "baseUrl": "./packages/",
     "jsx": "react",
+    "noEmit": true,
 
     // disable unreachable code detection because it breaks with esbuild labels
     "allowUnreachableCode": true
