@@ -22,11 +22,5 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Save code linting report JSON
-        run: pnpm run lint:report
-        continue-on-error: true
-
-      - name: Annotate code linting results
-        uses: ataylorme/eslint-annotate-action@v2
-        with:
-          report-json: "eslint_report.json"
+      - name: Lint
+        run: pnpm run lint
