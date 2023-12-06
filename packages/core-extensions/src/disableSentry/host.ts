@@ -4,7 +4,6 @@ import { BrowserWindow } from "electron";
 
 const logger = moonlightHost.getLogger("disableSentry");
 
-
 try {
   const hostSentryPath = require.resolve(
     join(moonlightHost.asarPath, "node_modules", "@sentry", "electron")
