@@ -20,13 +20,16 @@ export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
   const CommonComponents = require("common_components");
   const Flux = require("common_flux");
+  const spacepack = require("spacepack_spacepack").spacepack;
 
   const { MoonbaseSettingsStore } =
     require("moonbase_stores") as typeof import("../webpackModules/stores");
 
+  const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
+
   function Boolean({ ext, name, setting }: SettingsProps) {
     const { FormSwitch } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
+    const { value, displayName, description } = Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
         return {
@@ -35,6 +38,10 @@ export default (require: typeof WebpackRequire) => {
             name
           ),
           displayName: MoonbaseSettingsStore.getExtensionConfigName(
+            ext.id,
+            name
+          ),
+          description: MoonbaseSettingsStore.getExtensionConfigDescription(
             ext.id,
             name
           )
@@ -50,6 +57,7 @@ export default (require: typeof WebpackRequire) => {
         onChange={(value: boolean) => {
           MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
+        note={description}
       >
         {displayName}
       </FormSwitch>
@@ -57,13 +65,17 @@ export default (require: typeof WebpackRequire) => {
   }
 
   function Number({ ext, name, setting }: SettingsProps) {
-    const { Slider, ControlClasses } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
+    const { FormTitle, FormText, Slider } = CommonComponents;
+    const { value, displayName, description } = Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
         return {
           value: MoonbaseSettingsStore.getExtensionConfig<number>(ext.id, name),
           displayName: MoonbaseSettingsStore.getExtensionConfigName(
+            ext.id,
+            name
+          ),
+          description: MoonbaseSettingsStore.getExtensionConfigDescription(
             ext.id,
             name
           )
@@ -77,8 +89,9 @@ export default (require: typeof WebpackRequire) => {
     const max = castedSetting.max ?? 100;
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <>
+        <FormTitle>{displayName}</FormTitle>
+        {description && <FormText>{description}</FormText>}
         <Slider
           initialValue={value ?? 0}
           minValue={castedSetting.min ?? 0}
@@ -87,19 +100,24 @@ export default (require: typeof WebpackRequire) => {
             const rounded = Math.max(min, Math.min(max, Math.round(value)));
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
           }}
+          className={Margins.marginBottom8}
         />
-      </div>
+      </>
     );
   }
 
   function String({ ext, name, setting }: SettingsProps) {
-    const { TextInput, ControlClasses } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
+    const { FormTitle, FormText, TextInput } = CommonComponents;
+    const { value, displayName, description } = Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
         return {
           value: MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name),
           displayName: MoonbaseSettingsStore.getExtensionConfigName(
+            ext.id,
+            name
+          ),
+          description: MoonbaseSettingsStore.getExtensionConfigDescription(
             ext.id,
             name
           )
@@ -109,26 +127,34 @@ export default (require: typeof WebpackRequire) => {
     );
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <>
+        <FormTitle>{displayName}</FormTitle>
+        {description && (
+          <FormText className={Margins.marginBottom8}>{description}</FormText>
+        )}
         <TextInput
           value={value ?? ""}
           onChange={(value: string) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
+          className={Margins.marginBottom20}
         />
-      </div>
+      </>
     );
   }
 
   function Select({ ext, name, setting }: SettingsProps) {
-    const { ControlClasses, SingleSelect } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
+    const { FormItem, FormText, SingleSelect } = CommonComponents;
+    const { value, displayName, description } = Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
         return {
           value: MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name),
           displayName: MoonbaseSettingsStore.getExtensionConfigName(
+            ext.id,
+            name
+          ),
+          description: MoonbaseSettingsStore.getExtensionConfigDescription(
             ext.id,
             name
           )
@@ -141,8 +167,10 @@ export default (require: typeof WebpackRequire) => {
     const options = castedSetting.options;
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <FormItem title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom8}>{description}</FormText>
+        )}
         <SingleSelect
           autofocus={false}
           clearable={false}
@@ -151,15 +179,17 @@ export default (require: typeof WebpackRequire) => {
           onChange={(value: string) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
+          // @ts-expect-error SingleSelect and Select are almost the exact same type and yet here it errors wtf
+          className={Margins.marginBottom20}
         />
-      </div>
+      </FormItem>
     );
   }
 
   function MultiSelect({ ext, name, setting }: SettingsProps) {
-    const { ControlClasses, Select, useVariableSelect, multiSelect } =
+    const { FormItem, FormText, Select, useVariableSelect, multiSelect } =
       CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
+    const { value, displayName, description } = Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
         return {
@@ -167,6 +197,10 @@ export default (require: typeof WebpackRequire) => {
             MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name) ??
             [],
           displayName: MoonbaseSettingsStore.getExtensionConfigName(
+            ext.id,
+            name
+          ),
+          description: MoonbaseSettingsStore.getExtensionConfigDescription(
             ext.id,
             name
           )
@@ -179,8 +213,10 @@ export default (require: typeof WebpackRequire) => {
     const options = castedSetting.options;
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <FormItem title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom8}>{description}</FormText>
+        )}
         <Select
           autofocus={false}
           clearable={false}
@@ -196,8 +232,9 @@ export default (require: typeof WebpackRequire) => {
               );
             }
           })}
+          className={Margins.marginBottom20}
         />
-      </div>
+      </FormItem>
     );
   }
 
