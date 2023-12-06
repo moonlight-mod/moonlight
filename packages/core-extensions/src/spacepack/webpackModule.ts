@@ -62,7 +62,6 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
             exports = require(id);
           } catch (e) {
             console.error(e);
-            debugger;
           }
 
           return {
@@ -80,8 +79,8 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
             !args.some(
               (item) =>
                 !(
-                  exports != undefined &&
-                  exports != window &&
+                  exports !== undefined &&
+                  exports !== window &&
                   (exports?.[item] ||
                     exports?.default?.[item] ||
                     exports?.Z?.[item] ||
@@ -119,8 +118,11 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
     findObjectFromValue: (exports: Record<string, any>, value: any) => {
       for (const exportKey in exports) {
         const obj = exports[exportKey];
+        // Fuzzy matching might be nice here
+        // eslint-disable-next-line eqeqeq
         if (obj == value) return obj;
         for (const subKey in obj) {
+          // eslint-disable-next-line eqeqeq
           if (obj && obj[subKey] == value) {
             return obj;
           }
@@ -136,6 +138,7 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
     ) => {
       for (const exportKey in exports) {
         const obj = exports[exportKey];
+        // eslint-disable-next-line eqeqeq
         if (obj && obj[key] == value) {
           return obj;
         }

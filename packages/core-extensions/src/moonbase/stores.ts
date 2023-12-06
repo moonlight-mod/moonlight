@@ -1,9 +1,5 @@
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import {
-  Config,
-  DetectedExtension,
-  ExtensionLoadSource
-} from "@moonlight-mod/types";
+import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
 import {
   ExtensionState,
   MoonbaseExtension,
@@ -98,7 +94,7 @@ export const stores = (require: typeof WebpackRequire) => {
         existing.source.url != null &&
         existing.source.url === repo &&
         repoExt.version != null &&
-        existing.manifest.version != repoExt.version
+        existing.manifest.version !== repoExt.version
       );
     }
 
@@ -122,13 +118,15 @@ export const stores = (require: typeof WebpackRequire) => {
     }
 
     getExtensionName(id: string) {
-      return this.extensions.hasOwnProperty(id)
+      return Object.prototype.hasOwnProperty.call(this.extensions, id)
         ? this.extensions[id].manifest.meta?.name ?? id
         : id;
     }
 
     getExtensionUpdate(id: string) {
-      return this.updates.hasOwnProperty(id) ? this.updates[id] : null;
+      return Object.prototype.hasOwnProperty.call(this.updates, id)
+        ? this.updates[id]
+        : null;
     }
 
     getExtensionEnabled(id: string) {

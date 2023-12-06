@@ -1,4 +1,4 @@
-import { Config, constants } from "@moonlight-mod/types";
+import { Config } from "@moonlight-mod/types";
 import requireImport from "./util/import";
 import { getConfigPath } from "./util/data";
 
@@ -32,15 +32,15 @@ function readConfigNode(): Config {
 }
 
 export function readConfig(): Config {
-  webPreload: {
+  {
     return moonlightNode.config;
   }
 
-  nodePreload: {
+  {
     return readConfigNode();
   }
 
-  injector: {
+  {
     return readConfigNode();
   }
 

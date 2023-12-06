@@ -14,9 +14,9 @@ export const stores: ExtensionWebpackModule = {
           let targetStore;
           for (const store of allStores) {
             const name = store.getName();
-            if (name.length == 1) continue; // filter out unnamed stores
+            if (name.length === 1) continue; // filter out unnamed stores
 
-            if (name == key) {
+            if (name === key) {
               targetStore = store;
               break;
             }

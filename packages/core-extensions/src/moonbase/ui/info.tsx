@@ -1,5 +1,5 @@
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { DetectedExtension, ExtensionTag } from "@moonlight-mod/types";
+import { ExtensionTag } from "@moonlight-mod/types";
 import { MoonbaseExtension } from "../types";
 
 type Dependency = {
@@ -25,7 +25,7 @@ export default (require: typeof WebpackRequire) => {
   )[0].exports;
 
   const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    typeof import("../stores")["stores"]
+    (typeof import("../stores"))["stores"]
   >;
 
   function InfoSection({
@@ -78,7 +78,6 @@ export default (require: typeof WebpackRequire) => {
   }
 
   function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
-    const { Flex, Text } = CommonComponents;
     const authors = ext.manifest?.meta?.authors;
     const tags = ext.manifest?.meta?.tags;
 
@@ -161,7 +160,7 @@ export default (require: typeof WebpackRequire) => {
               return (
                 <Badge
                   color={
-                    tag == ExtensionTag.DangerZone
+                    tag === ExtensionTag.DangerZone
                       ? "var(--red-400)"
                       : "var(--brand-500)"
                   }

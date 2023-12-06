@@ -20,7 +20,9 @@
   },
   "rules": {
     "indent": "off",
-    "eqeqeq": "error",
+    "eqeqeq": ["error", "always", {
+      "null": "ignore"
+    }],
     "quotes": [
       "error",
       "double",
@@ -30,8 +32,20 @@
       "error",
       { "args": "none", "varsIgnorePattern": "^_" }
     ],
+
     // Mostly so we don't forget to leave these in when committing
     "no-console": "error",
-    "no-debugger": "error"
+    "no-debugger": "error",
+
+    // Quite honestly we're interacting with so much unknown within Discord that
+    // this being enabled is a hinderance
+    "@typescript-eslint/no-explicit-any": "off",
+
+    "@typescript-eslint/no-var-requires": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "18.2"
+    }
   }
 }
