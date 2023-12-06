@@ -24,9 +24,8 @@ export default (require: typeof WebpackRequire) => {
     "userInfoSectionHeader"
   )[0].exports;
 
-  const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    (typeof import("../stores"))["stores"]
-  >;
+  const { MoonbaseSettingsStore } =
+    require("moonbase_stores") as typeof import("../webpackModules/stores");
 
   function InfoSection({
     title,

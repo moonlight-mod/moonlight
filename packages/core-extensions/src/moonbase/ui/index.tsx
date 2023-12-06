@@ -18,9 +18,8 @@ export default (require: typeof WebpackRequire) => {
 
   const { ExtensionInfo } = info(require);
   const { Settings } = settings(require);
-  const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    (typeof import("../stores"))["stores"]
-  >;
+  const { MoonbaseSettingsStore } =
+    require("moonbase_stores") as typeof import("../webpackModules/stores");
 
   const UserProfileClasses = spacepack.findByCode(
     "tabBarContainer",
