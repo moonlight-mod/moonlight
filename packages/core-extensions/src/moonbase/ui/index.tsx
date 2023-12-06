@@ -107,11 +107,7 @@ export default (require: typeof WebpackRequire) => {
               >
                 {ext.source.type === ExtensionLoadSource.Normal && (
                   <PanelButton
-                    icon={() => (
-                      <TrashIcon
-                        color={CommonComponents.tokens.colors.STATUS_DANGER}
-                      />
-                    )}
+                    icon={TrashIcon}
                     tooltipText="Delete"
                     onClick={() => {
                       MoonbaseSettingsStore.deleteExtension(id);
