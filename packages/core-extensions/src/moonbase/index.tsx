@@ -18,7 +18,8 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       { ext: "common", id: "components" },
       { ext: "moonbase", id: "stores" },
       DownloadIconSVG,
-      TrashIconSVG
+      TrashIconSVG,
+      "Masks.PANEL_BUTTON"
     ],
     entrypoint: true,
     run: (module, exports, require) => {

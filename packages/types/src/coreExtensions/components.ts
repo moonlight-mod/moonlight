@@ -351,4 +351,5 @@ export type CommonComponents = {
   // TODO
   useVariableSelect: any;
   multiSelect: any;
+  tokens: any;
 };

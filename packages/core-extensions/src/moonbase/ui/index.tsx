@@ -29,6 +29,9 @@ export default (require: typeof WebpackRequire) => {
   const DownloadIcon = spacepack.findByCode(DownloadIconSVG)[0].exports.default;
   const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
 
+  const PanelButton =
+    spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
+
   function ExtensionCard({ id }: { id: string }) {
     const [tab, setTab] = React.useState(ExtensionPage.Info);
     const { ext, enabled, busy, update } = Flux.useStateFromStores(
@@ -103,30 +106,27 @@ export default (require: typeof WebpackRequire) => {
                 }}
               >
                 {ext.source.type === ExtensionLoadSource.Normal && (
-                  // TODO: this needs centering
-                  <Button
-                    color={Button.Colors.RED}
-                    size={Button.Sizes.ICON}
-                    submitting={busy}
+                  <PanelButton
+                    icon={() => (
+                      <TrashIcon
+                        color={CommonComponents.tokens.colors.STATUS_DANGER}
+                      />
+                    )}
+                    tooltipText="Delete"
                     onClick={() => {
                       MoonbaseSettingsStore.deleteExtension(id);
                     }}
-                  >
-                    <TrashIcon width={27} />
-                  </Button>
+                  />
                 )}
 
                 {update !== null && (
-                  <Button
-                    color={Button.Colors.BRAND}
-                    size={Button.Sizes.ICON}
-                    submitting={busy}
+                  <PanelButton
+                    icon={DownloadIcon}
+                    tooltipText="Delete"
                     onClick={() => {
                       MoonbaseSettingsStore.installExtension(id);
                     }}
-                  >
-                    <DownloadIcon width={27} />
-                  </Button>
+                  />
                 )}
 
                 <Switch
