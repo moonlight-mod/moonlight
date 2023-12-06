@@ -117,7 +117,7 @@ export default (require: typeof WebpackRequire) => {
               const comma = i !== authors.length - 1 ? ", " : "";
               if (typeof author === "string") {
                 return (
-                  <span>
+                  <span key={i}>
                     {author}
                     {comma}
                   </span>
@@ -125,7 +125,7 @@ export default (require: typeof WebpackRequire) => {
               } else {
                 // TODO: resolve IDs
                 return (
-                  <span>
+                  <span key={i}>
                     {author.name}
                     {comma}
                   </span>
@@ -159,6 +159,7 @@ export default (require: typeof WebpackRequire) => {
 
               return (
                 <Badge
+                  key={i}
                   color={
                     tag === ExtensionTag.DangerZone
                       ? "var(--red-400)"
@@ -182,7 +183,11 @@ export default (require: typeof WebpackRequire) => {
               };
               const color = colors[dep.type];
               const name = MoonbaseSettingsStore.getExtensionName(dep.id);
-              return <Badge color={color}>{name}</Badge>;
+              return (
+                <Badge color={color} key={dep.id}>
+                  {name}
+                </Badge>
+              );
             })}
           </InfoSection>
         )}
