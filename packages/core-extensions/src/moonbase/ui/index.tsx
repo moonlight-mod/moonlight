@@ -12,7 +12,7 @@ export enum ExtensionPage {
 
 export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
-  const spacepack = require("spacepack_spacepack");
+  const spacepack = require("spacepack_spacepack").spacepack;
   const CommonComponents = require("common_components");
   const Flux = require("common_flux");
 

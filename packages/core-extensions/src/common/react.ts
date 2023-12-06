@@ -9,7 +9,7 @@ const findReact = [
 export const react: ExtensionWebpackModule = {
   dependencies: [...findReact, { ext: "spacepack", id: "spacepack" }],
   run: (module, exports, require) => {
-    const spacepack = require("spacepack_spacepack");
+    const spacepack = require("spacepack_spacepack").spacepack;
     module.exports = spacepack.findByCode(...findReact)[0].exports;
   }
 };

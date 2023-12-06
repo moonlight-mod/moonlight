@@ -1,7 +1,8 @@
 import {
   ExtensionWebExports,
   DetectedExtension,
-  ProcessedExtensions
+  ProcessedExtensions,
+  WebpackModuleFunc
 } from "@moonlight-mod/types";
 import { readConfig } from "../config";
 import Logger from "../util/logger";
@@ -49,7 +50,22 @@ async function loadExt(ext: DetectedExtension) {
 
       if (exports.webpackModules != null) {
         for (const [name, wp] of Object.entries(exports.webpackModules)) {
-          registerWebpackModule({ ...wp, ext: ext.id, id: name });
+          if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
+            const func = new Function(
+              "module",
+              "exports",
+              "require",
+              ext.scripts.webpackModules[name]!
+            ) as WebpackModuleFunc;
+            registerWebpackModule({
+              ...wp,
+              ext: ext.id,
+              id: name,
+              run: func
+            });
+          } else {
+            registerWebpackModule({ ...wp, ext: ext.id, id: name });
+          }
         }
       }
     }

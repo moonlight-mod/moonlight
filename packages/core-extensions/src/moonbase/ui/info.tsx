@@ -15,7 +15,7 @@ enum DependencyType {
 
 export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
-  const spacepack = require("spacepack_spacepack");
+  const spacepack = require("spacepack_spacepack").spacepack;
 
   const CommonComponents = require("common_components");
   const UserInfoClasses = spacepack.findByCode(

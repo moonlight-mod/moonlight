@@ -28,7 +28,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     run: (module, exports, require) => {
       const settings = require("settings_settings");
       const React = require("common_react");
-      const spacepack = require("spacepack_spacepack");
+      const spacepack = require("spacepack_spacepack").spacepack;
       const { MoonbaseSettingsStore } =
         require("moonbase_stores") as ReturnType<
           (typeof import("./stores"))["stores"]

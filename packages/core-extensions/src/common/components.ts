@@ -9,7 +9,7 @@ export const components: ExtensionWebpackModule = {
     //".Messages.SWITCH_ACCOUNTS_TOAST_LOGIN_SUCCESS.format"
   ],
   run: function (module, exports, require) {
-    const spacepack = require("spacepack_spacepack");
+    const spacepack = require("spacepack_spacepack").spacepack;
 
     const Components = spacepack.findByCode("MasonryList:function")[0].exports;
     const MarkdownParser = spacepack.findByCode(

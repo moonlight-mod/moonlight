@@ -8,7 +8,10 @@ import {
 } from "../coreExtensions";
 
 declare function WebpackRequire(id: string): any;
-declare function WebpackRequire(id: "spacepack_spacepack"): Spacepack;
+declare function WebpackRequire(id: "spacepack_spacepack"): {
+  default: Spacepack;
+  spacepack: Spacepack;
+};
 declare function WebpackRequire(id: "common_react"): CommonReact;
 declare function WebpackRequire(id: "common_flux"): CommonFlux;
 declare function WebpackRequire(

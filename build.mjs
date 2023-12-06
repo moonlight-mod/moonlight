@@ -73,16 +73,28 @@ async function build(name, entry) {
 }
 
 async function buildExt(ext, side, copyManifest, fileExt) {
-  const outDir = path.join("./dist", "core-extensions", ext);
-  if (!fs.existsSync(outDir)) {
-    fs.mkdirSync(outDir, { recursive: true });
+  const outdir = path.join("./dist", "core-extensions", ext);
+  if (!fs.existsSync(outdir)) {
+    fs.mkdirSync(outdir, { recursive: true });
   }
 
-  const entryPoint = `packages/core-extensions/src/${ext}/${side}.${fileExt}`;
+  const entryPoints = [
+    `packages/core-extensions/src/${ext}/${side}.${fileExt}`
+  ];
+
+  const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
+  if (fs.existsSync(wpModulesDir)) {
+    const wpModules = fs.readdirSync(wpModulesDir);
+    for (const wpModule of wpModules) {
+      entryPoints.push(
+        `packages/core-extensions/src/${ext}/webpackModules/${wpModule}`
+      );
+    }
+  }
 
   const esbuildConfig = {
-    entryPoints: [entryPoint],
-    outfile: path.join(outDir, side + ".js"),
+    entryPoints,
+    outdir,
 
     format: "cjs",
     platform: "node",

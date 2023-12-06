@@ -62,6 +62,7 @@ export type DetectedExtension = {
   scripts: {
     web?: string;
     webPath?: string;
+    webpackModules?: Record<string, string>;
     nodePath?: string;
     hostPath?: string;
   };
@@ -108,7 +109,7 @@ export type ExtensionDependency = string | RegExp | ExplicitExtensionDependency;
 export type ExtensionWebpackModule = {
   entrypoint?: boolean;
   dependencies?: ExtensionDependency[];
-  run: WebpackModuleFunc;
+  run?: WebpackModuleFunc;
 };
 
 export type ExtensionWebExports = {

@@ -7,7 +7,7 @@ export const fluxDispatcher: ExtensionWebpackModule = {
     "dispatch"
   ],
   run: (module, exports, require) => {
-    const spacepack = require("spacepack_spacepack");
+    const spacepack = require("spacepack_spacepack").spacepack;
     module.exports = spacepack.findByExports(
       "isDispatching",
       "dispatch"
