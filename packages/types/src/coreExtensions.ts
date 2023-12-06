@@ -1,9 +1,9 @@
 import { FluxDefault, Store } from "./discord/common/Flux";
-import WebpackRequire from "./discord/require";
-import { WebpackModuleFunc } from "./discord/webpack";
 import { CommonComponents as CommonComponents_ } from "./coreExtensions/components";
 import { Dispatcher } from "flux";
 import React from "react";
+import { WebpackModuleFunc } from "./discord";
+import WebpackRequire from "./discord/require";
 
 export type Spacepack = {
   inspect: (module: number | string) => WebpackModuleFunc | null;

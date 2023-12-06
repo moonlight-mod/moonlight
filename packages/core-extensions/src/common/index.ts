@@ -4,14 +4,20 @@ import { react } from "./react";
 import { flux } from "./flux";
 import { stores } from "./stores";
 import { http } from "./http";
-import { components } from "./components";
 import { fluxDispatcher } from "./fluxDispatcher";
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
+  components: {
+    dependencies: [
+      { ext: "spacepack", id: "spacepack" },
+      "MasonryList:",
+      ".flexGutterSmall,"
+    ]
+  },
+
   react,
   flux,
   stores,
   http,
-  components,
   fluxDispatcher
 };

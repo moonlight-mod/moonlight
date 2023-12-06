@@ -5,6 +5,7 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
+    "./import": "./src/import.d.ts",
     "./*": "./src/*.ts"
   },
   "dependencies": {

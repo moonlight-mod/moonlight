@@ -92,6 +92,19 @@ async function buildExt(ext, side, copyManifest, fileExt) {
     }
   }
 
+  const wpImportPlugin = {
+    name: "webpackImports",
+    setup(build) {
+      build.onResolve({ filter: /^@moonlight-mod\/wp\// }, (args) => {
+        const wpModule = args.path.replace(/^@moonlight-mod\/wp\//, "");
+        return {
+          path: wpModule,
+          external: true
+        };
+      });
+    }
+  };
+
   const esbuildConfig = {
     entryPoints,
     outdir,
@@ -110,9 +123,14 @@ async function buildExt(ext, side, copyManifest, fileExt) {
           copyStaticFiles({
             src: `./packages/core-extensions/src/${ext}/manifest.json`,
             dest: `./dist/core-extensions/${ext}/manifest.json`
-          })
+          }),
+          wpImportPlugin
         ]
-      : []
+      : [wpImportPlugin],
+
+    logOverride: {
+      "commonjs-variable-in-esm": "verbose"
+    }
   };
 
   if (watch) {

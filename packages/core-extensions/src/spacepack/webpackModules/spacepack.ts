@@ -12,7 +12,7 @@ const modules = webpackRequire.m;
 const logger = moonlight.getLogger("spacepack");
 
 export const spacepack: Spacepack = {
-  require,
+  require: webpackRequire,
   modules,
   cache,
 
