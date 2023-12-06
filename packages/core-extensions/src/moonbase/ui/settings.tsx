@@ -6,7 +6,7 @@ import {
   SelectSettingType
 } from "@moonlight-mod/types/config";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { MoonbaseExtension } from "../types";
+import { CircleXIconSVG, MoonbaseExtension } from "../types";
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -184,6 +184,9 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
+  const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
+    .exports;
+  const CircleXIcon = spacepack.findByCode(CircleXIconSVG)[0].exports.default;
   function Dictionary({ ext, name, setting }: SettingsProps) {
     const { FormItem, FormText, TextInput, Button, Flex, Tooltip, Clickable } =
       CommonComponents;
@@ -200,73 +203,72 @@ export default (require: typeof WebpackRequire) => {
       );
 
     return (
-      <Flex direction={Flex.Direction.VERTICAL}>
-        <label className={ControlClasses.title}>{displayName}</label>
-        {entries.map(([key, val], i) => (
-          // FIXME: stylesheets
-          <div
-            key={i}
-            style={{
-              display: "grid",
-              height: "40px",
-              gap: "10px",
-              gridTemplateColumns: "1fr 1fr 40px"
-            }}
-          >
-            <TextInput
-              value={key}
-              onChange={(newKey: string) => {
-                entries[i][0] = newKey;
-                MoonbaseSettingsStore.setExtensionConfig(
-                  ext.id,
-                  name,
-                  Object.fromEntries(entries)
-                );
-              }}
-            />
-            <TextInput
-              value={val}
-              onChange={(newValue: string) => {
-                entries[i][1] = newValue;
-                MoonbaseSettingsStore.setExtensionConfig(
-                  ext.id,
-                  name,
-                  Object.fromEntries(entries)
-                );
-              }}
-            />
-            <Button
-              color={Button.Colors.RED}
-              size={Button.Sizes.ICON}
-              onClick={() => {
-                entries.splice(i, 1);
-                MoonbaseSettingsStore.setExtensionConfig(
-                  ext.id,
-                  name,
-                  Object.fromEntries(entries)
-                );
+      <FormItem title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom4}>{description}</FormText>
+        )}
+        <Flex direction={Flex.Direction.VERTICAL}>
+          {entries.map(([key, val], i) => (
+            // FIXME: stylesheets
+            <div
+              key={i}
+              style={{
+                display: "grid",
+                height: "32px",
+                gap: "8px",
+                gridTemplateColumns: "1fr 1fr 32px",
+                alignItems: "center"
               }}
             >
-              X
-            </Button>
-          </div>
-        ))}
+              <TextInput
+                size={TextInput.Sizes.MINI}
+                value={key}
+                onChange={(newKey: string) => {
+                  entries[i][0] = newKey;
+                  updateConfig();
+                }}
+              />
+              <TextInput
+                size={TextInput.Sizes.MINI}
+                value={val}
+                onChange={(newValue: string) => {
+                  entries[i][1] = newValue;
+                  updateConfig();
+                }}
+              />
+              <div className={RemoveButtonClasses.removeButtonContainer}>
+                <Tooltip text="Remove entry" position="top">
+                  {(props: any) => (
+                    <Clickable
+                      {...props}
+                      className={RemoveButtonClasses.removeButton}
+                      onClick={() => {
+                        entries.splice(i, 1);
+                        updateConfig();
+                      }}
+                    >
+                      <CircleXIcon width={16} height={16} />
+                    </Clickable>
+                  )}
+                </Tooltip>
+              </div>
+            </div>
+          ))}
 
-        <Button
-          look={Button.Looks.FILLED}
-          color={Button.Colors.GREEN}
-          onClick={() => {
-            entries.push([`entry-${entries.length}`, ""]);
-            MoonbaseSettingsStore.setExtensionConfig(
-              ext.id,
-              name,
-              Object.fromEntries(entries)
-            );
-          }}
-        >
-          Add new entry
-        </Button>
-      </Flex>
+          <Button
+            look={Button.Looks.FILLED}
+            color={Button.Colors.GREEN}
+            size={Button.Sizes.SMALL}
+            className={Margins.marginTop8}
+            onClick={() => {
+              entries.push([`entry-${entries.length}`, ""]);
+              updateConfig();
+            }}
+          >
+            Add new entry
+          </Button>
+        </Flex>
+      </FormItem>
     );
   }
 

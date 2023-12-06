@@ -40,7 +40,7 @@ interface TextInput
       onBlur?: (event: any, name: string) => void;
     }>
   > {
-  Sizes: TextInputSizes;
+  Sizes: typeof TextInputSizes;
 }
 
 export enum FormTextTypes {
@@ -223,7 +223,7 @@ interface Flex
 
 // TODO: wtaf is up with react types not working in jsx
 export type CommonComponents = {
-  Clickable: Component<
+  Clickable: ComponentClass<
     PropsWithChildren<{
       onClick?: () => void;
       href?: any;
@@ -293,6 +293,7 @@ export type CommonComponents = {
   >;
   Switch: ComponentClass<PropsWithChildren<any>>;
   Button: Button;
+  Tooltip: ComponentClass<PropsWithChildren<any>>;
   SmallSlider: Component;
   Avatar: Component;
   Scroller: Component;
