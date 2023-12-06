@@ -15,6 +15,7 @@ import {
 export * from "./discord";
 export * from "./config";
 export * from "./extension";
+export * as CoreExtensions from "./coreExtensions";
 export * from "./globals";
 export * from "./logger";
 export * as constants from "./constants";

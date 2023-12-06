@@ -83,7 +83,7 @@ async function buildExt(ext, side, copyManifest, fileExt) {
   ];
 
   const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
-  if (fs.existsSync(wpModulesDir)) {
+  if (fs.existsSync(wpModulesDir) && side === "index") {
     const wpModules = fs.readdirSync(wpModulesDir);
     for (const wpModule of wpModules) {
       entryPoints.push(
