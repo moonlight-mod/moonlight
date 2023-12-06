@@ -1,6 +1,9 @@
 name: Lint commits
 on: [push, pull_request]
 
+permissions:
+  checks: write
+
 jobs:
   lint:
     name: Lint commits
