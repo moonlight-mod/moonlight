@@ -1,6 +1,7 @@
 import {
   ExtensionSettingType,
   ExtensionSettingsManifest,
+  MultiSelectSettingType,
   NumberSettingType,
   SelectSettingType
 } from "@moonlight-mod/types/config";
@@ -155,7 +156,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function List({ ext, name, setting }: SettingsProps) {
+  function MultiSelect({ ext, name, setting }: SettingsProps) {
     const { ControlClasses, Select, useVariableSelect, multiSelect } =
       CommonComponents;
     const { value, displayName } = Flux.useStateFromStores(
@@ -174,7 +175,7 @@ export default (require: typeof WebpackRequire) => {
       [ext.id, name]
     );
 
-    const castedSetting = setting as SelectSettingType;
+    const castedSetting = setting as MultiSelectSettingType;
     const options = castedSetting.options;
 
     return (
@@ -297,7 +298,7 @@ export default (require: typeof WebpackRequire) => {
       [ExtensionSettingType.Number]: Number,
       [ExtensionSettingType.String]: String,
       [ExtensionSettingType.Select]: Select,
-      [ExtensionSettingType.List]: List,
+      [ExtensionSettingType.MultiSelect]: MultiSelect,
       [ExtensionSettingType.Dictionary]: Dictionary
     };
     const element = elements[setting.type];
