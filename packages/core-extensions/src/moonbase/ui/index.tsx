@@ -1,5 +1,10 @@
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { DownloadIconSVG, ExtensionState, TrashIconSVG } from "../types";
+import {
+  DangerIconSVG,
+  DownloadIconSVG,
+  ExtensionState,
+  TrashIconSVG
+} from "../types";
 import { ExtensionLoadSource } from "types/src";
 import info from "./info";
 import settings from "./settings";
@@ -28,12 +33,16 @@ export default (require: typeof WebpackRequire) => {
 
   const DownloadIcon = spacepack.findByCode(DownloadIconSVG)[0].exports.default;
   const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
+  const DangerIcon =
+    spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
 
   const PanelButton =
     spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
 
   function ExtensionCard({ id }: { id: string }) {
     const [tab, setTab] = React.useState(ExtensionPage.Info);
+    const [restartNeeded, setRestartNeeded] = React.useState(false);
+
     const { ext, enabled, busy, update } = Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
@@ -125,9 +134,21 @@ export default (require: typeof WebpackRequire) => {
                   />
                 )}
 
+                {restartNeeded && (
+                  <PanelButton
+                    icon={() => (
+                      <DangerIcon
+                        color={CommonComponents.tokens.colors.STATUS_DANGER}
+                      />
+                    )}
+                    tooltipText="You will need to reload/restart your client for this extension to work properly."
+                  />
+                )}
+
                 <Switch
                   checked={enabled}
                   onChange={() => {
+                    setRestartNeeded(true);
                     MoonbaseSettingsStore.setExtensionEnabled(id, !enabled);
                   }}
                 />
@@ -199,6 +220,8 @@ export default (require: typeof WebpackRequire) => {
   }
 
   return function Moonbase() {
+    const { Text } = require("common_components");
+
     const { extensions } = Flux.useStateFromStoresObject(
       [MoonbaseSettingsStore],
       () => {
@@ -214,6 +237,15 @@ export default (require: typeof WebpackRequire) => {
 
     return (
       <>
+        <Text
+          style={{
+            "margin-bottom": "16px"
+          }}
+          variant="heading-lg/semibold"
+          tag="h2"
+        >
+          Moonbase
+        </Text>
         {sorted.map((ext) => (
           <ExtensionCard id={ext.id} key={ext.id} />
         ))}
