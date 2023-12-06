@@ -160,6 +160,7 @@ export default (require: typeof WebpackRequire) => {
         <Select
           autofocus={false}
           clearable={false}
+          closeOnSelect={false}
           options={options.map((o) => ({ value: o, label: o }))}
           {...useVariableSelect({
             onSelectInteraction: multiSelect,
