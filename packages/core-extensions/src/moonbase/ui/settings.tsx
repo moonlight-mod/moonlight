@@ -27,27 +27,28 @@ export default (require: typeof WebpackRequire) => {
 
   const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
-  function Boolean({ ext, name, setting }: SettingsProps) {
-    const { FormSwitch } = CommonComponents;
-    const { value, displayName, description } = Flux.useStateFromStores(
+  function useConfigEntry<T>(id: string, name: string) {
+    return Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
         return {
-          value: MoonbaseSettingsStore.getExtensionConfig<boolean>(
-            ext.id,
-            name
-          ),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          ),
+          value: MoonbaseSettingsStore.getExtensionConfig<T>(id, name),
+          displayName: MoonbaseSettingsStore.getExtensionConfigName(id, name),
           description: MoonbaseSettingsStore.getExtensionConfigDescription(
-            ext.id,
+            id,
             name
           )
         };
       },
-      [ext.id, name]
+      [id, name]
+    );
+  }
+
+  function Boolean({ ext, name, setting }: SettingsProps) {
+    const { FormSwitch } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<boolean>(
+      ext.id,
+      name
     );
 
     return (
@@ -66,22 +67,9 @@ export default (require: typeof WebpackRequire) => {
 
   function Number({ ext, name, setting }: SettingsProps) {
     const { FormTitle, FormText, Slider } = CommonComponents;
-    const { value, displayName, description } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<number>(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          ),
-          description: MoonbaseSettingsStore.getExtensionConfigDescription(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
+    const { value, displayName, description } = useConfigEntry<number>(
+      ext.id,
+      name
     );
 
     const castedSetting = setting as NumberSettingType;
@@ -108,22 +96,9 @@ export default (require: typeof WebpackRequire) => {
 
   function String({ ext, name, setting }: SettingsProps) {
     const { FormTitle, FormText, TextInput } = CommonComponents;
-    const { value, displayName, description } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          ),
-          description: MoonbaseSettingsStore.getExtensionConfigDescription(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
+    const { value, displayName, description } = useConfigEntry<string>(
+      ext.id,
+      name
     );
 
     return (
@@ -145,22 +120,9 @@ export default (require: typeof WebpackRequire) => {
 
   function Select({ ext, name, setting }: SettingsProps) {
     const { FormItem, FormText, SingleSelect } = CommonComponents;
-    const { value, displayName, description } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          ),
-          description: MoonbaseSettingsStore.getExtensionConfigDescription(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
+    const { value, displayName, description } = useConfigEntry<string>(
+      ext.id,
+      name
     );
 
     const castedSetting = setting as SelectSettingType;
@@ -189,25 +151,9 @@ export default (require: typeof WebpackRequire) => {
   function MultiSelect({ ext, name, setting }: SettingsProps) {
     const { FormItem, FormText, Select, useVariableSelect, multiSelect } =
       CommonComponents;
-    const { value, displayName, description } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value:
-            MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name) ??
-            [],
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          ),
-          description: MoonbaseSettingsStore.getExtensionConfigDescription(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
-    );
+    const { value, displayName, description } = useConfigEntry<
+      string | string[]
+    >(ext.id, name);
 
     const castedSetting = setting as MultiSelectSettingType;
     const options = castedSetting.options;
@@ -239,24 +185,19 @@ export default (require: typeof WebpackRequire) => {
   }
 
   function Dictionary({ ext, name, setting }: SettingsProps) {
-    const { TextInput, ControlClasses, Button, Flex } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<
-            Record<string, string>
-          >(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
-    );
+    const { FormItem, FormText, TextInput, Button, Flex, Tooltip, Clickable } =
+      CommonComponents;
+    const { value, displayName, description } = useConfigEntry<
+      Record<string, string>
+    >(ext.id, name);
 
     const entries = Object.entries(value ?? {});
+    const updateConfig = () =>
+      MoonbaseSettingsStore.setExtensionConfig(
+        ext.id,
+        name,
+        Object.fromEntries(entries)
+      );
 
     return (
       <Flex direction={Flex.Direction.VERTICAL}>
