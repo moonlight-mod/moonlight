@@ -1,6 +1,6 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
 import ui from "./ui";
-import { DownloadIconSVG, TrashIconSVG } from "./types";
+import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {
@@ -19,7 +19,9 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       { ext: "moonbase", id: "stores" },
       DownloadIconSVG,
       TrashIconSVG,
-      "Masks.PANEL_BUTTON"
+      CircleXIconSVG,
+      "Masks.PANEL_BUTTON",
+      "removeButtonContainer:"
     ],
     entrypoint: true,
     run: (module, exports, require) => {

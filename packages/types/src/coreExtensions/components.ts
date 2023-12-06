@@ -40,7 +40,7 @@ interface TextInput
       onBlur?: (event: any, name: string) => void;
     }>
   > {
-  Sizes: TextInputSizes;
+  Sizes: typeof TextInputSizes;
 }
 
 export enum FormTextTypes {
@@ -55,7 +55,7 @@ export enum FormTextTypes {
 }
 
 interface FormText
-  extends Component<
+  extends ComponentClass<
     PropsWithChildren<{
       type?: FormTextTypes;
       className?: string;
@@ -223,7 +223,7 @@ interface Flex
 
 // TODO: wtaf is up with react types not working in jsx
 export type CommonComponents = {
-  Clickable: Component<
+  Clickable: ComponentClass<
     PropsWithChildren<{
       onClick?: () => void;
       href?: any;
@@ -238,30 +238,30 @@ export type CommonComponents = {
     }>
   >;
   TextInput: TextInput;
-  Form: {
-    Section: Component<
-      PropsWithChildren<{
-        className?: string;
-        titleClassName?: string;
-        title?: ReactNode;
-        icon?: ReactNode;
-        disabled?: boolean;
-        htmlFor?: any;
-        tag?: string;
-      }>
-    >;
-    Text: FormText;
-    Title: Component<
-      PropsWithChildren<{
-        tag?: string;
-        className?: string;
-        faded?: boolean;
-        disabled?: boolean;
-        required?: boolean;
-        error?: string;
-      }>
-    >;
-  };
+  FormSection: ComponentClass<
+    PropsWithChildren<{
+      className?: string;
+      titleClassName?: string;
+      title?: ReactNode;
+      icon?: ReactNode;
+      disabled?: boolean;
+      htmlFor?: any;
+      tag?: string;
+    }>
+  >;
+  FormText: FormText;
+  FormTitle: ComponentClass<
+    PropsWithChildren<{
+      tag?: string;
+      className?: string;
+      faded?: boolean;
+      disabled?: boolean;
+      required?: boolean;
+      error?: string;
+    }>
+  >;
+  FormSwitch: ComponentClass<PropsWithChildren<any>>;
+  FormItem: ComponentClass<PropsWithChildren<any>>;
   Slider: ComponentClass<
     PropsWithChildren<{
       disabled?: boolean;
@@ -291,9 +291,9 @@ export type CommonComponents = {
       keyboardStep?: number;
     }>
   >;
-  FormSwitch: ComponentClass<PropsWithChildren<any>>;
   Switch: ComponentClass<PropsWithChildren<any>>;
   Button: Button;
+  Tooltip: ComponentClass<PropsWithChildren<any>>;
   SmallSlider: Component;
   Avatar: Component;
   Scroller: Component;

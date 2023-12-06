@@ -21,6 +21,7 @@ export enum ExtensionSettingType {
   String = "string",
   Select = "select",
   MultiSelect = "multiselect",
+  List = "list",
   Dictionary = "dictionary",
   Custom = "custom"
 }
@@ -54,6 +55,11 @@ export type MultiSelectSettingType = {
   default?: string[];
 };
 
+export type ListSettingType = {
+  type: ExtensionSettingType.List;
+  default?: string[];
+};
+
 export type DictionarySettingType = {
   type: ExtensionSettingType.Dictionary;
   default?: Record<string, string>;
@@ -73,6 +79,7 @@ export type ExtensionSettingsManifest = {
   | StringSettingType
   | SelectSettingType
   | MultiSelectSettingType
+  | ListSettingType
   | DictionarySettingType
   | CustomSettingType
 );

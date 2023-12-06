@@ -146,6 +146,10 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
     return this.extensions[id].manifest.settings?.[key]?.displayName ?? key;
   }
 
+  getExtensionConfigDescription(id: string, key: string) {
+    return this.extensions[id].manifest.settings?.[key]?.description;
+  }
+
   setExtensionConfig(id: string, key: string, value: any) {
     const oldConfig = this.config.extensions[id];
     const newConfig =

@@ -6,7 +6,7 @@ import {
   SelectSettingType
 } from "@moonlight-mod/types/config";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { MoonbaseExtension } from "../types";
+import { CircleXIconSVG, MoonbaseExtension } from "../types";
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -20,27 +20,35 @@ export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
   const CommonComponents = require("common_components");
   const Flux = require("common_flux");
+  const spacepack = require("spacepack_spacepack").spacepack;
 
   const { MoonbaseSettingsStore } =
     require("moonbase_stores") as typeof import("../webpackModules/stores");
 
-  function Boolean({ ext, name, setting }: SettingsProps) {
-    const { FormSwitch } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
+  const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
+
+  function useConfigEntry<T>(id: string, name: string) {
+    return Flux.useStateFromStores(
       [MoonbaseSettingsStore],
       () => {
         return {
-          value: MoonbaseSettingsStore.getExtensionConfig<boolean>(
-            ext.id,
-            name
-          ),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
+          value: MoonbaseSettingsStore.getExtensionConfig<T>(id, name),
+          displayName: MoonbaseSettingsStore.getExtensionConfigName(id, name),
+          description: MoonbaseSettingsStore.getExtensionConfigDescription(
+            id,
             name
           )
         };
       },
-      [ext.id, name]
+      [id, name]
+    );
+  }
+
+  function Boolean({ ext, name, setting }: SettingsProps) {
+    const { FormSwitch } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<boolean>(
+      ext.id,
+      name
     );
 
     return (
@@ -50,6 +58,7 @@ export default (require: typeof WebpackRequire) => {
         onChange={(value: boolean) => {
           MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
+        note={description}
       >
         {displayName}
       </FormSwitch>
@@ -57,19 +66,10 @@ export default (require: typeof WebpackRequire) => {
   }
 
   function Number({ ext, name, setting }: SettingsProps) {
-    const { Slider, ControlClasses } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<number>(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
+    const { FormItem, FormText, Slider } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<number>(
+      ext.id,
+      name
     );
 
     const castedSetting = setting as NumberSettingType;
@@ -77,8 +77,8 @@ export default (require: typeof WebpackRequire) => {
     const max = castedSetting.max ?? 100;
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <FormItem className={Margins.marginTop8} title={displayName}>
+        {description && <FormText>{description}</FormText>}
         <Slider
           initialValue={value ?? 0}
           minValue={castedSetting.min ?? 0}
@@ -88,61 +88,47 @@ export default (require: typeof WebpackRequire) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
           }}
         />
-      </div>
+      </FormItem>
     );
   }
 
   function String({ ext, name, setting }: SettingsProps) {
-    const { TextInput, ControlClasses } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
+    const { FormItem, FormText, TextInput } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<string>(
+      ext.id,
+      name
     );
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <FormItem className={Margins.marginTop20} title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom8}>{description}</FormText>
+        )}
         <TextInput
           value={value ?? ""}
           onChange={(value: string) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
         />
-      </div>
+      </FormItem>
     );
   }
 
   function Select({ ext, name, setting }: SettingsProps) {
-    const { ControlClasses, SingleSelect } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
+    const { FormItem, FormText, SingleSelect } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<string>(
+      ext.id,
+      name
     );
 
     const castedSetting = setting as SelectSettingType;
     const options = castedSetting.options;
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <FormItem className={Margins.marginTop20} title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom8}>{description}</FormText>
+        )}
         <SingleSelect
           autofocus={false}
           clearable={false}
@@ -152,38 +138,29 @@ export default (require: typeof WebpackRequire) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
         />
-      </div>
+      </FormItem>
     );
   }
 
   function MultiSelect({ ext, name, setting }: SettingsProps) {
-    const { ControlClasses, Select, useVariableSelect, multiSelect } =
+    const { FormItem, FormText, Select, useVariableSelect, multiSelect } =
       CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value:
-            MoonbaseSettingsStore.getExtensionConfig<string>(ext.id, name) ??
-            [],
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
-    );
+    const { value, displayName, description } = useConfigEntry<
+      string | string[]
+    >(ext.id, name);
 
     const castedSetting = setting as MultiSelectSettingType;
     const options = castedSetting.options;
 
     return (
-      <div>
-        <label className={ControlClasses.title}>{displayName}</label>
+      <FormItem className={Margins.marginTop20} title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom8}>{description}</FormText>
+        )}
         <Select
           autofocus={false}
           clearable={false}
+          closeOnSelect={false}
           options={options.map((o) => ({ value: o, label: o }))}
           {...useVariableSelect({
             onSelectInteraction: multiSelect,
@@ -197,98 +174,166 @@ export default (require: typeof WebpackRequire) => {
             }
           })}
         />
+      </FormItem>
+    );
+  }
+
+  const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
+    .exports;
+  const CircleXIcon = spacepack.findByCode(CircleXIconSVG)[0].exports.default;
+  function RemoveEntryButton({ onClick }: { onClick: () => void }) {
+    const { Tooltip, Clickable } = CommonComponents;
+    return (
+      <div className={RemoveButtonClasses.removeButtonContainer}>
+        <Tooltip text="Remove entry" position="top">
+          {(props: any) => (
+            <Clickable
+              {...props}
+              className={RemoveButtonClasses.removeButton}
+              onClick={onClick}
+            >
+              <CircleXIcon width={16} height={16} />
+            </Clickable>
+          )}
+        </Tooltip>
       </div>
     );
   }
 
-  function Dictionary({ ext, name, setting }: SettingsProps) {
-    const { TextInput, ControlClasses, Button, Flex } = CommonComponents;
-    const { value, displayName } = Flux.useStateFromStores(
-      [MoonbaseSettingsStore],
-      () => {
-        return {
-          value: MoonbaseSettingsStore.getExtensionConfig<
-            Record<string, string>
-          >(ext.id, name),
-          displayName: MoonbaseSettingsStore.getExtensionConfigName(
-            ext.id,
-            name
-          )
-        };
-      },
-      [ext.id, name]
+  function List({ ext, name, setting }: SettingsProps) {
+    const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<string[]>(
+      ext.id,
+      name
     );
 
-    const entries = Object.entries(value ?? {});
+    const entries = value ?? [];
+    const updateConfig = () =>
+      MoonbaseSettingsStore.setExtensionConfig(ext.id, name, entries);
 
     return (
-      <Flex direction={Flex.Direction.VERTICAL}>
-        <label className={ControlClasses.title}>{displayName}</label>
-        {entries.map(([key, val], i) => (
-          // FIXME: stylesheets
-          <div
-            key={i}
-            style={{
-              display: "grid",
-              height: "40px",
-              gap: "10px",
-              gridTemplateColumns: "1fr 1fr 40px"
-            }}
-          >
-            <TextInput
-              value={key}
-              onChange={(newKey: string) => {
-                entries[i][0] = newKey;
-                MoonbaseSettingsStore.setExtensionConfig(
-                  ext.id,
-                  name,
-                  Object.fromEntries(entries)
-                );
-              }}
-            />
-            <TextInput
-              value={val}
-              onChange={(newValue: string) => {
-                entries[i][1] = newValue;
-                MoonbaseSettingsStore.setExtensionConfig(
-                  ext.id,
-                  name,
-                  Object.fromEntries(entries)
-                );
-              }}
-            />
-            <Button
-              color={Button.Colors.RED}
-              size={Button.Sizes.ICON}
-              onClick={() => {
-                entries.splice(i, 1);
-                MoonbaseSettingsStore.setExtensionConfig(
-                  ext.id,
-                  name,
-                  Object.fromEntries(entries)
-                );
+      <FormItem className={Margins.marginTop20} title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom4}>{description}</FormText>
+        )}
+        <Flex direction={Flex.Direction.VERTICAL}>
+          {entries.map((val, i) => (
+            // FIXME: stylesheets
+            <div
+              key={i}
+              style={{
+                display: "grid",
+                height: "32px",
+                gap: "8px",
+                gridTemplateColumns: "1fr 32px",
+                alignItems: "center"
               }}
             >
-              X
-            </Button>
-          </div>
-        ))}
+              <TextInput
+                size={TextInput.Sizes.MINI}
+                value={val}
+                onChange={(newVal: string) => {
+                  entries[i] = newVal;
+                  updateConfig();
+                }}
+              />
+              <RemoveEntryButton
+                onClick={() => {
+                  entries.splice(i, 1);
+                  updateConfig();
+                }}
+              />
+            </div>
+          ))}
 
-        <Button
-          look={Button.Looks.FILLED}
-          color={Button.Colors.GREEN}
-          onClick={() => {
-            entries.push([`entry-${entries.length}`, ""]);
-            MoonbaseSettingsStore.setExtensionConfig(
-              ext.id,
-              name,
-              Object.fromEntries(entries)
-            );
-          }}
-        >
-          Add new entry
-        </Button>
-      </Flex>
+          <Button
+            look={Button.Looks.FILLED}
+            color={Button.Colors.GREEN}
+            size={Button.Sizes.SMALL}
+            className={Margins.marginTop8}
+            onClick={() => {
+              entries.push("");
+              updateConfig();
+            }}
+          >
+            Add new entry
+          </Button>
+        </Flex>
+      </FormItem>
+    );
+  }
+
+  function Dictionary({ ext, name, setting }: SettingsProps) {
+    const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<
+      Record<string, string>
+    >(ext.id, name);
+
+    const entries = Object.entries(value ?? {});
+    const updateConfig = () =>
+      MoonbaseSettingsStore.setExtensionConfig(
+        ext.id,
+        name,
+        Object.fromEntries(entries)
+      );
+
+    return (
+      <FormItem className={Margins.marginTop20} title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom4}>{description}</FormText>
+        )}
+        <Flex direction={Flex.Direction.VERTICAL}>
+          {entries.map(([key, val], i) => (
+            // FIXME: stylesheets
+            <div
+              key={i}
+              style={{
+                display: "grid",
+                height: "32px",
+                gap: "8px",
+                gridTemplateColumns: "1fr 1fr 32px",
+                alignItems: "center"
+              }}
+            >
+              <TextInput
+                size={TextInput.Sizes.MINI}
+                value={key}
+                onChange={(newKey: string) => {
+                  entries[i][0] = newKey;
+                  updateConfig();
+                }}
+              />
+              <TextInput
+                size={TextInput.Sizes.MINI}
+                value={val}
+                onChange={(newValue: string) => {
+                  entries[i][1] = newValue;
+                  updateConfig();
+                }}
+              />
+              <RemoveEntryButton
+                onClick={() => {
+                  entries.splice(i, 1);
+                  updateConfig();
+                }}
+              />
+            </div>
+          ))}
+
+          <Button
+            look={Button.Looks.FILLED}
+            color={Button.Colors.GREEN}
+            size={Button.Sizes.SMALL}
+            className={Margins.marginTop8}
+            onClick={() => {
+              entries.push([`entry-${entries.length}`, ""]);
+              updateConfig();
+            }}
+          >
+            Add new entry
+          </Button>
+        </Flex>
+      </FormItem>
     );
   }
 
@@ -299,6 +344,7 @@ export default (require: typeof WebpackRequire) => {
       [ExtensionSettingType.String]: String,
       [ExtensionSettingType.Select]: Select,
       [ExtensionSettingType.MultiSelect]: MultiSelect,
+      [ExtensionSettingType.List]: List,
       [ExtensionSettingType.Dictionary]: Dictionary
     };
     const element = elements[setting.type];
