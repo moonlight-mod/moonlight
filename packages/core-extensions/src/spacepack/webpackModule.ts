@@ -12,6 +12,8 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
   const cache = require.c;
   const modules = require.m;
 
+  const logger = moonlight.getLogger("spacepack");
+
   const spacepack: Spacepack = {
     require,
     modules,
@@ -61,7 +63,7 @@ export default (module: any, exports: any, require: WebpackRequireType) => {
           try {
             exports = require(id);
           } catch (e) {
-            console.error(e);
+            logger.error(`Error requiring module "${id}": `, e);
           }
 
           return {

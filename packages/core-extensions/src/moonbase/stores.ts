@@ -12,6 +12,8 @@ export const stores = (require: typeof WebpackRequire) => {
   const Dispatcher = require("common_fluxDispatcher");
   const natives: MoonbaseNatives = moonlight.getNatives("moonbase");
 
+  const logger = moonlight.getLogger("moonbase");
+
   class MoonbaseSettingsStore extends Flux.Store<any> {
     private origConfig: Config;
     private config: Config;
@@ -71,11 +73,11 @@ export const stores = (require: typeof WebpackRequire) => {
                   state: ExtensionState.NotDownloaded
                 };
               } catch (e) {
-                console.error(`Error processing extension ${ext.id}`, e);
+                logger.error(`Error processing extension ${ext.id}`, e);
               }
             }
           } catch (e) {
-            console.error(`Error processing repository ${repo}`, e);
+            logger.error(`Error processing repository ${repo}`, e);
           }
         }
 
@@ -202,7 +204,7 @@ export const stores = (require: typeof WebpackRequire) => {
 
         delete this.updates[id];
       } catch (e) {
-        console.error("Error installing extension:", e);
+        logger.error("Error installing extension:", e);
       }
 
       this.installing = false;
@@ -218,7 +220,7 @@ export const stores = (require: typeof WebpackRequire) => {
         await natives.deleteExtension(ext.id);
         this.extensions[id].state = ExtensionState.NotDownloaded;
       } catch (e) {
-        console.error("Error deleting extension:", e);
+        logger.error("Error deleting extension:", e);
       }
 
       this.installing = false;
@@ -233,7 +235,7 @@ export const stores = (require: typeof WebpackRequire) => {
         // I love jank cloning
         this.origConfig = JSON.parse(JSON.stringify(this.config));
       } catch (e) {
-        console.error("Error writing config", e);
+        logger.error("Error writing config", e);
       }
 
       this.submitting = false;
