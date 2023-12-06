@@ -1,17 +1,39 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
 
-import { react } from "./react";
-import { flux } from "./flux";
-import { stores } from "./stores";
-import { http } from "./http";
-import { components } from "./components";
-import { fluxDispatcher } from "./fluxDispatcher";
-
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
-  react,
-  flux,
-  stores,
-  http,
-  components,
-  fluxDispatcher
+  components: {
+    dependencies: [
+      { ext: "spacepack", id: "spacepack" },
+      "MasonryList:",
+      ".flexGutterSmall,"
+    ]
+  },
+
+  flux: {
+    dependencies: [
+      { ext: "spacepack", id: "spacepack" },
+      "useStateFromStores:function"
+    ]
+  },
+
+  fluxDispatcher: {
+    dependencies: [
+      { ext: "spacepack", id: "spacepack" },
+      "isDispatching",
+      "dispatch"
+    ]
+  },
+
+  react: {
+    dependencies: [
+      { ext: "spacepack", id: "spacepack" },
+      "__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED",
+      /\.?version(?:=|:)/,
+      /\.?createElement(?:=|:)/
+    ]
+  },
+
+  stores: {
+    dependencies: [{ ext: "common", id: "flux" }]
+  }
 };

@@ -1,1 +1,1 @@
-/// <reference types="./packages/types/src/index.d.ts" />
+/// <reference types="./packages/types/src/index" />

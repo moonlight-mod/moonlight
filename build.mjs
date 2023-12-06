@@ -73,16 +73,41 @@ async function build(name, entry) {
 }
 
 async function buildExt(ext, side, copyManifest, fileExt) {
-  const outDir = path.join("./dist", "core-extensions", ext);
-  if (!fs.existsSync(outDir)) {
-    fs.mkdirSync(outDir, { recursive: true });
+  const outdir = path.join("./dist", "core-extensions", ext);
+  if (!fs.existsSync(outdir)) {
+    fs.mkdirSync(outdir, { recursive: true });
   }
 
-  const entryPoint = `packages/core-extensions/src/${ext}/${side}.${fileExt}`;
+  const entryPoints = [
+    `packages/core-extensions/src/${ext}/${side}.${fileExt}`
+  ];
+
+  const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
+  if (fs.existsSync(wpModulesDir)) {
+    const wpModules = fs.readdirSync(wpModulesDir);
+    for (const wpModule of wpModules) {
+      entryPoints.push(
+        `packages/core-extensions/src/${ext}/webpackModules/${wpModule}`
+      );
+    }
+  }
+
+  const wpImportPlugin = {
+    name: "webpackImports",
+    setup(build) {
+      build.onResolve({ filter: /^@moonlight-mod\/wp\// }, (args) => {
+        const wpModule = args.path.replace(/^@moonlight-mod\/wp\//, "");
+        return {
+          path: wpModule,
+          external: true
+        };
+      });
+    }
+  };
 
   const esbuildConfig = {
-    entryPoints: [entryPoint],
-    outfile: path.join(outDir, side + ".js"),
+    entryPoints,
+    outdir,
 
     format: "cjs",
     platform: "node",
@@ -98,9 +123,14 @@ async function buildExt(ext, side, copyManifest, fileExt) {
           copyStaticFiles({
             src: `./packages/core-extensions/src/${ext}/manifest.json`,
             dest: `./dist/core-extensions/${ext}/manifest.json`
-          })
+          }),
+          wpImportPlugin
         ]
-      : []
+      : [wpImportPlugin],
+
+    logOverride: {
+      "commonjs-variable-in-esm": "verbose"
+    }
   };
 
   if (watch) {

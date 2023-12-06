@@ -66,6 +66,21 @@ function loadDetectedExtensions(
       url = fs.readFileSync(urlPath, "utf8");
     }
 
+    const wpModules: Record<string, string> = {};
+    const wpModulesPath = path.join(dir, "webpackModules");
+    if (fs.existsSync(wpModulesPath)) {
+      const wpModulesFile = fs.readdirSync(wpModulesPath);
+
+      for (const wpModuleFile of wpModulesFile) {
+        if (wpModuleFile.endsWith(".js")) {
+          wpModules[wpModuleFile.replace(".js", "")] = fs.readFileSync(
+            path.join(wpModulesPath, wpModuleFile),
+            "utf8"
+          );
+        }
+      }
+    }
+
     ret.push({
       id: manifest.id,
       manifest,
@@ -76,6 +91,7 @@ function loadDetectedExtensions(
       scripts: {
         web,
         webPath: web != null ? webPath : undefined,
+        webpackModules: wpModules,
         nodePath: fs.existsSync(nodePath) ? nodePath : undefined,
         hostPath: fs.existsSync(hostPath) ? hostPath : undefined
       }

@@ -10,5 +10,5 @@
     "jsx": "react",
     "declaration": true
   },
-  "include": ["./src/**/*", "src/index.ts"]
+  "include": ["./src/**/*", "src/index.ts", "./src/import.d.ts"]
 }

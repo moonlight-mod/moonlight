@@ -1,10 +1,14 @@
-import { ExtensionWebExports, WebpackModuleFunc } from "@moonlight-mod/types";
-import webpackModule from "./webpackModule";
+import { ExtensionWebExports } from "@moonlight-mod/types";
+import { Spacepack } from "@moonlight-mod/types/coreExtensions";
+
+declare global {
+  interface Window {
+    spacepack: Spacepack;
+  }
+}
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   spacepack: {
-    entrypoint: true,
-    // Assert the type because we're adding extra fields to require
-    run: webpackModule as WebpackModuleFunc
+    entrypoint: true
   }
 };

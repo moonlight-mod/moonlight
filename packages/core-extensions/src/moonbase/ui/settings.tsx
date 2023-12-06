@@ -20,9 +20,8 @@ export default (require: typeof WebpackRequire) => {
   const CommonComponents = require("common_components");
   const Flux = require("common_flux");
 
-  const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    (typeof import("../stores"))["stores"]
-  >;
+  const { MoonbaseSettingsStore } =
+    require("moonbase_stores") as typeof import("../webpackModules/stores");
 
   function Boolean({ ext, name, setting }: SettingsProps) {
     const { FormSwitch } = CommonComponents;

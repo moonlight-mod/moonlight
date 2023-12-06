@@ -12,15 +12,14 @@ export enum ExtensionPage {
 
 export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
-  const spacepack = require("spacepack_spacepack");
+  const spacepack = require("spacepack_spacepack").spacepack;
   const CommonComponents = require("common_components");
   const Flux = require("common_flux");
 
   const { ExtensionInfo } = info(require);
   const { Settings } = settings(require);
-  const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    (typeof import("../stores"))["stores"]
-  >;
+  const { MoonbaseSettingsStore } =
+    require("moonbase_stores") as typeof import("../webpackModules/stores");
 
   const UserProfileClasses = spacepack.findByCode(
     "tabBarContainer",

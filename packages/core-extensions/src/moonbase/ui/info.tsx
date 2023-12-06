@@ -15,7 +15,7 @@ enum DependencyType {
 
 export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
-  const spacepack = require("spacepack_spacepack");
+  const spacepack = require("spacepack_spacepack").spacepack;
 
   const CommonComponents = require("common_components");
   const UserInfoClasses = spacepack.findByCode(
@@ -24,9 +24,8 @@ export default (require: typeof WebpackRequire) => {
     "userInfoSectionHeader"
   )[0].exports;
 
-  const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    (typeof import("../stores"))["stores"]
-  >;
+  const { MoonbaseSettingsStore } =
+    require("moonbase_stores") as typeof import("../webpackModules/stores");
 
   function InfoSection({
     title,
