@@ -66,7 +66,7 @@ export default (require: typeof WebpackRequire) => {
   }
 
   function Number({ ext, name, setting }: SettingsProps) {
-    const { FormTitle, FormText, Slider } = CommonComponents;
+    const { FormItem, FormText, Slider } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<number>(
       ext.id,
       name
@@ -77,8 +77,7 @@ export default (require: typeof WebpackRequire) => {
     const max = castedSetting.max ?? 100;
 
     return (
-      <>
-        <FormTitle className={Margins.marginTop8}>{displayName}</FormTitle>
+      <FormItem className={Margins.marginTop8} title={displayName}>
         {description && <FormText>{description}</FormText>}
         <Slider
           initialValue={value ?? 0}
@@ -89,20 +88,19 @@ export default (require: typeof WebpackRequire) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
           }}
         />
-      </>
+      </FormItem>
     );
   }
 
   function String({ ext, name, setting }: SettingsProps) {
-    const { FormTitle, FormText, TextInput } = CommonComponents;
+    const { FormItem, FormText, TextInput } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<string>(
       ext.id,
       name
     );
 
     return (
-      <>
-        <FormTitle className={Margins.marginTop20}>{displayName}</FormTitle>
+      <FormItem className={Margins.marginTop20} title={displayName}>
         {description && (
           <FormText className={Margins.marginBottom8}>{description}</FormText>
         )}
@@ -112,7 +110,7 @@ export default (require: typeof WebpackRequire) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
         />
-      </>
+      </FormItem>
     );
   }
 
