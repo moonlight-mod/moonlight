@@ -41,7 +41,10 @@
     // this being enabled is a hinderance
     "@typescript-eslint/no-explicit-any": "off",
 
-    "@typescript-eslint/no-var-requires": "off"
+    "@typescript-eslint/no-var-requires": "off",
+
+    // https://canary.discord.com/channels/1154257010532032512/1154275441788583996/1181760413231230976
+    "no-unused-labels": "off"
   },
   "settings": {
     "react": {

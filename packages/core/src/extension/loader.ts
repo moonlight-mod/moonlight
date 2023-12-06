@@ -12,7 +12,7 @@ import { createEventEmitter } from "../util/event";
 const logger = new Logger("core/extension/loader");
 
 async function loadExt(ext: DetectedExtension) {
-  {
+  webPreload: {
     if (ext.scripts.web != null) {
       const source =
         ext.scripts.web + "\n//# sourceURL=file:///" + ext.scripts.webPath;
@@ -55,7 +55,7 @@ async function loadExt(ext: DetectedExtension) {
     }
   }
 
-  {
+  nodePreload: {
     if (ext.scripts.nodePath != null) {
       try {
         const module = require(ext.scripts.nodePath);
@@ -66,7 +66,7 @@ async function loadExt(ext: DetectedExtension) {
     }
   }
 
-  {
+  injector: {
     if (ext.scripts.hostPath != null) {
       try {
         require(ext.scripts.hostPath);
