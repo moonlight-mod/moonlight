@@ -1,1 +1,2 @@
-- Fix release builds
+- Added ability to convert ESM modules to Webpack modules
+- Updated types
