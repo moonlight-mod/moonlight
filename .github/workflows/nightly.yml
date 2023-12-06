@@ -38,6 +38,7 @@ jobs:
           cd ./dist
           tar -czf ../dist.tar.gz *
           cd ..
+          mv ./dist.tar.gz ./dist/dist.tar.gz
           find ./dist -type f -not -path "./dist/files" > ./dist/files
           echo "${{ github.sha }}" > ./dist/ref
           echo "${{ github.ref }}" >> ./dist/ref
