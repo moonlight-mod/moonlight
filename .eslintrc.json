@@ -1,0 +1,37 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended",
+    "plugin:react/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "prettier", "react"],
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": "off",
+    "eqeqeq": "error",
+    "quotes": [
+      "error",
+      "double",
+      { "avoidEscape": true, "allowTemplateLiterals": true }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "args": "none", "varsIgnorePattern": "^_" }
+    ],
+    // Mostly so we don't forget to leave these in when committing
+    "no-console": "error",
+    "no-debugger": "error"
+  }
+}
