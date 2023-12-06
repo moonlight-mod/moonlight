@@ -187,9 +187,90 @@ export default (require: typeof WebpackRequire) => {
   const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
     .exports;
   const CircleXIcon = spacepack.findByCode(CircleXIconSVG)[0].exports.default;
+  function RemoveEntryButton({ onClick }: { onClick: () => void }) {
+    const { Tooltip, Clickable } = CommonComponents;
+    return (
+      <div className={RemoveButtonClasses.removeButtonContainer}>
+        <Tooltip text="Remove entry" position="top">
+          {(props: any) => (
+            <Clickable
+              {...props}
+              className={RemoveButtonClasses.removeButton}
+              onClick={onClick}
+            >
+              <CircleXIcon width={16} height={16} />
+            </Clickable>
+          )}
+        </Tooltip>
+      </div>
+    );
+  }
+
+  function List({ ext, name, setting }: SettingsProps) {
+    const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
+    const { value, displayName, description } = useConfigEntry<string[]>(
+      ext.id,
+      name
+    );
+
+    const entries = value ?? [];
+    const updateConfig = () =>
+      MoonbaseSettingsStore.setExtensionConfig(ext.id, name, entries);
+
+    return (
+      <FormItem title={displayName}>
+        {description && (
+          <FormText className={Margins.marginBottom4}>{description}</FormText>
+        )}
+        <Flex direction={Flex.Direction.VERTICAL}>
+          {entries.map((val, i) => (
+            // FIXME: stylesheets
+            <div
+              key={i}
+              style={{
+                display: "grid",
+                height: "32px",
+                gap: "8px",
+                gridTemplateColumns: "1fr 32px",
+                alignItems: "center"
+              }}
+            >
+              <TextInput
+                size={TextInput.Sizes.MINI}
+                value={val}
+                onChange={(newVal: string) => {
+                  entries[i] = newVal;
+                  updateConfig();
+                }}
+              />
+              <RemoveEntryButton
+                onClick={() => {
+                  entries.splice(i, 1);
+                  updateConfig();
+                }}
+              />
+            </div>
+          ))}
+
+          <Button
+            look={Button.Looks.FILLED}
+            color={Button.Colors.GREEN}
+            size={Button.Sizes.SMALL}
+            className={Margins.marginTop8}
+            onClick={() => {
+              entries.push("");
+              updateConfig();
+            }}
+          >
+            Add new entry
+          </Button>
+        </Flex>
+      </FormItem>
+    );
+  }
+
   function Dictionary({ ext, name, setting }: SettingsProps) {
-    const { FormItem, FormText, TextInput, Button, Flex, Tooltip, Clickable } =
-      CommonComponents;
+    const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<
       Record<string, string>
     >(ext.id, name);
@@ -236,22 +317,12 @@ export default (require: typeof WebpackRequire) => {
                   updateConfig();
                 }}
               />
-              <div className={RemoveButtonClasses.removeButtonContainer}>
-                <Tooltip text="Remove entry" position="top">
-                  {(props: any) => (
-                    <Clickable
-                      {...props}
-                      className={RemoveButtonClasses.removeButton}
-                      onClick={() => {
-                        entries.splice(i, 1);
-                        updateConfig();
-                      }}
-                    >
-                      <CircleXIcon width={16} height={16} />
-                    </Clickable>
-                  )}
-                </Tooltip>
-              </div>
+              <RemoveEntryButton
+                onClick={() => {
+                  entries.splice(i, 1);
+                  updateConfig();
+                }}
+              />
             </div>
           ))}
 
@@ -279,6 +350,7 @@ export default (require: typeof WebpackRequire) => {
       [ExtensionSettingType.String]: String,
       [ExtensionSettingType.Select]: Select,
       [ExtensionSettingType.MultiSelect]: MultiSelect,
+      [ExtensionSettingType.List]: List,
       [ExtensionSettingType.Dictionary]: Dictionary
     };
     const element = elements[setting.type];
