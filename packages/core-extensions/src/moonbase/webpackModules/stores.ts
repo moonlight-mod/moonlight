@@ -53,7 +53,7 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
           for (const ext of exts) {
             try {
               const existingExtension = this.extensions[ext.id];
-              if (existingExtension !== null) {
+              if (existingExtension !== undefined) {
                 if (this.hasUpdate(repo, ext, existingExtension)) {
                   this.updates[ext.id] = {
                     version: ext.version!,
