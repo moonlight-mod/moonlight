@@ -1,2 +1,2 @@
-- Added ability to convert ESM modules to Webpack modules
-- Updated types
+- Improved the Moonbase UI (@redstonekasi, @xyzeva)
+- Renamed the List setting type to MultiSelect, added a new List type in its place
