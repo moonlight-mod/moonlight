@@ -78,7 +78,7 @@ export default (require: typeof WebpackRequire) => {
 
     return (
       <>
-        <FormTitle>{displayName}</FormTitle>
+        <FormTitle className={Margins.marginTop8}>{displayName}</FormTitle>
         {description && <FormText>{description}</FormText>}
         <Slider
           initialValue={value ?? 0}
@@ -88,7 +88,6 @@ export default (require: typeof WebpackRequire) => {
             const rounded = Math.max(min, Math.min(max, Math.round(value)));
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
           }}
-          className={Margins.marginBottom8}
         />
       </>
     );
@@ -103,7 +102,7 @@ export default (require: typeof WebpackRequire) => {
 
     return (
       <>
-        <FormTitle>{displayName}</FormTitle>
+        <FormTitle className={Margins.marginTop20}>{displayName}</FormTitle>
         {description && (
           <FormText className={Margins.marginBottom8}>{description}</FormText>
         )}
@@ -112,7 +111,6 @@ export default (require: typeof WebpackRequire) => {
           onChange={(value: string) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
-          className={Margins.marginBottom20}
         />
       </>
     );
@@ -129,7 +127,7 @@ export default (require: typeof WebpackRequire) => {
     const options = castedSetting.options;
 
     return (
-      <FormItem title={displayName}>
+      <FormItem className={Margins.marginTop20} title={displayName}>
         {description && (
           <FormText className={Margins.marginBottom8}>{description}</FormText>
         )}
@@ -141,8 +139,6 @@ export default (require: typeof WebpackRequire) => {
           onChange={(value: string) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
-          // @ts-expect-error SingleSelect and Select are almost the exact same type and yet here it errors wtf
-          className={Margins.marginBottom20}
         />
       </FormItem>
     );
@@ -159,7 +155,7 @@ export default (require: typeof WebpackRequire) => {
     const options = castedSetting.options;
 
     return (
-      <FormItem title={displayName}>
+      <FormItem className={Margins.marginTop20} title={displayName}>
         {description && (
           <FormText className={Margins.marginBottom8}>{description}</FormText>
         )}
@@ -178,7 +174,6 @@ export default (require: typeof WebpackRequire) => {
               );
             }
           })}
-          className={Margins.marginBottom20}
         />
       </FormItem>
     );
@@ -218,7 +213,7 @@ export default (require: typeof WebpackRequire) => {
       MoonbaseSettingsStore.setExtensionConfig(ext.id, name, entries);
 
     return (
-      <FormItem title={displayName}>
+      <FormItem className={Margins.marginTop20} title={displayName}>
         {description && (
           <FormText className={Margins.marginBottom4}>{description}</FormText>
         )}
@@ -284,7 +279,7 @@ export default (require: typeof WebpackRequire) => {
       );
 
     return (
-      <FormItem title={displayName}>
+      <FormItem className={Margins.marginTop20} title={displayName}>
         {description && (
           <FormText className={Margins.marginBottom4}>{description}</FormText>
         )}
