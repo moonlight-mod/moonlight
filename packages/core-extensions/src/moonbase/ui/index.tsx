@@ -1,5 +1,10 @@
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { DangerIconSVG, DownloadIconSVG, ExtensionState, TrashIconSVG } from "../types";
+import {
+  DangerIconSVG,
+  DownloadIconSVG,
+  ExtensionState,
+  TrashIconSVG
+} from "../types";
 import { ExtensionLoadSource } from "types/src";
 import info from "./info";
 import settings from "./settings";
@@ -28,7 +33,8 @@ export default (require: typeof WebpackRequire) => {
 
   const DownloadIcon = spacepack.findByCode(DownloadIconSVG)[0].exports.default;
   const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
-  const DangerIcon = spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
+  const DangerIcon =
+    spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
 
   const PanelButton =
     spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
@@ -130,7 +136,11 @@ export default (require: typeof WebpackRequire) => {
 
                 {restartNeeded && (
                   <PanelButton
-                    icon={() => <DangerIcon color={CommonComponents.tokens.colors.STATUS_DANGER} />}
+                    icon={() => (
+                      <DangerIcon
+                        color={CommonComponents.tokens.colors.STATUS_DANGER}
+                      />
+                    )}
                     tooltipText="You will need to reload/restart your client for this extension to work properly."
                   />
                 )}
@@ -138,7 +148,7 @@ export default (require: typeof WebpackRequire) => {
                 <Switch
                   checked={enabled}
                   onChange={() => {
-                    setRestartNeeded(true)
+                    setRestartNeeded(true);
                     MoonbaseSettingsStore.setExtensionEnabled(id, !enabled);
                   }}
                 />
@@ -227,9 +237,15 @@ export default (require: typeof WebpackRequire) => {
 
     return (
       <>
-        <Text style={{
-          "margin-bottom": "16px"
-        }} variant="heading-lg/semibold" tag="h2">Moonbase</Text>
+        <Text
+          style={{
+            "margin-bottom": "16px"
+          }}
+          variant="heading-lg/semibold"
+          tag="h2"
+        >
+          Moonbase
+        </Text>
         {sorted.map((ext) => (
           <ExtensionCard id={ext.id} key={ext.id} />
         ))}
