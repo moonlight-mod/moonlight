@@ -241,7 +241,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
 
       inject = true;
 
-      modules[id] = wpModule.run;
+      if (wpModule.run) modules[id] = wpModule.run;
       if (wpModule.entrypoint) entrypoints.push(id);
     }
     if (!webpackModules.size) break;
