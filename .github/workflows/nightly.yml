@@ -35,6 +35,9 @@ jobs:
 
       - name: Write ref/commit to file
         run: |
+          cd ./dist
+          tar -czf ../dist.tar.gz *
+          cd ..
           find ./dist -type f -not -path "./dist/files" > ./dist/files
           echo "${{ github.sha }}" > ./dist/ref
           echo "${{ github.ref }}" >> ./dist/ref
