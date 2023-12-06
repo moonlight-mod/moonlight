@@ -1,4 +1,5 @@
 import {
+  DictionarySettingType,
   ExtensionSettingType,
   ExtensionSettingsManifest,
   NumberSettingType,
@@ -17,11 +18,12 @@ type SettingsComponent = React.ComponentType<SettingsProps>;
 
 export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
+  const spacepack = require("spacepack_spacepack");
   const CommonComponents = require("common_components");
   const Flux = require("common_flux");
 
   const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    (typeof import("../stores"))["stores"]
+    typeof import("../stores")["stores"]
   >;
 
   function Boolean({ ext, name, setting }: SettingsProps) {
@@ -219,6 +221,7 @@ export default (require: typeof WebpackRequire) => {
       [ext.id, name]
     );
 
+    const castedSetting = setting as DictionarySettingType;
     const entries = Object.entries(value ?? {});
 
     return (

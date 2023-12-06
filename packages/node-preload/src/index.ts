@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
-import { constants } from "@moonlight-mod/types";
+import { ProcessedExtensions, constants } from "@moonlight-mod/types";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { getExtensionsPath } from "@moonlight-mod/core/util/data";
 import Logger from "@moonlight-mod/core/util/logger";

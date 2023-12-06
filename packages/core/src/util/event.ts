@@ -37,7 +37,7 @@ function nodeMethod(): MoonlightEventEmitter {
 }
 
 export function createEventEmitter(): MoonlightEventEmitter {
-  {
+  webPreload: {
     const eventEmitter = new EventTarget();
     const listeners = new Map<MoonlightEventCallback, (e: Event) => void>();
 
@@ -67,11 +67,11 @@ export function createEventEmitter(): MoonlightEventEmitter {
     };
   }
 
-  {
+  nodePreload: {
     return nodeMethod();
   }
 
-  {
+  injector: {
     return nodeMethod();
   }
 

@@ -2,7 +2,8 @@ import electron, {
   BrowserWindowConstructorOptions,
   BrowserWindow as ElectronBrowserWindow,
   ipcMain,
-  app
+  app,
+  ipcRenderer
 } from "electron";
 import Module from "module";
 import { constants } from "@moonlight-mod/types";
@@ -17,8 +18,6 @@ import EventEmitter from "events";
 
 let oldPreloadPath = "";
 let corsAllow: string[] = [];
-
-const logger = new Logger("injector");
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
@@ -78,7 +77,7 @@ class BrowserWindow extends ElectronBrowserWindow {
     super(opts);
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
-        if (details.resourceType === "mainFrame") {
+        if (details.resourceType == "mainFrame") {
           patchCsp(details.responseHeaders);
         }
 
@@ -98,9 +97,6 @@ export async function inject(asarPath: string) {
     const extensions = getExtensions();
 
     // Duplicated in node-preload... oops
-    // Eslint disabled because it depends on `config` which is only loaded
-    // after inject is called.
-    // eslint-disable-next-line no-inner-declarations
     function getConfig(ext: string) {
       const val = config.extensions[ext];
       if (val == null || typeof val === "boolean") return undefined;
@@ -135,7 +131,7 @@ export async function inject(asarPath: string) {
     global.moonlightHost.processedExtensions = await loadExtensions(extensions);
     await loadProcessedExtensions(global.moonlightHost.processedExtensions);
   } catch (e) {
-    logger.error("Failed to inject", e);
+    console.error("Failed to inject", e);
   }
 
   require(asarPath);

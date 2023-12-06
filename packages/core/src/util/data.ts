@@ -7,11 +7,11 @@ export function getMoonlightDir(): string {
   const path = requireImport("path");
 
   let appData = "";
-  {
+  injector: {
     appData = app.getPath("appData");
   }
 
-  {
+  nodePreload: {
     appData = ipcRenderer.sendSync(constants.ipcGetAppData);
   }
 

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { LogLevel } from "@moonlight-mod/types/logger";
 import { readConfig } from "../config";
 
@@ -69,11 +68,11 @@ export default class Logger {
     }
 
     switch (level) {
+      case LogLevel.SILLY:
       case LogLevel.TRACE:
         console.trace(...args);
         break;
 
-      case LogLevel.SILLY:
       case LogLevel.DEBUG:
         console.debug(...args);
         break;

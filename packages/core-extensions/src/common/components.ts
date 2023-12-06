@@ -1,4 +1,5 @@
 import { ExtensionWebpackModule } from "@moonlight-mod/types";
+import { CommonComponents } from "@moonlight-mod/types/coreExtensions";
 
 export const components: ExtensionWebpackModule = {
   dependencies: [
@@ -27,6 +28,7 @@ export const components: ExtensionWebpackModule = {
       "dividerDefault"
     )[0].exports;
 
+    let cache: Partial<CommonComponents> = {};
     module.exports = {
       ...Components,
       MarkdownParser,

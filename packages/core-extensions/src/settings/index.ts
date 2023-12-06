@@ -1,9 +1,9 @@
-import { Patch } from "@moonlight-mod/types";
+import { Patch, PatchReplaceType } from "@moonlight-mod/types";
 import {
   SettingsSection,
   Settings as SettingsType
 } from "@moonlight-mod/types/coreExtensions";
-import { ExtensionWebExports } from "@moonlight-mod/types";
+import { ExtensionWebExports, WebpackModuleFunc } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {

@@ -5,6 +5,8 @@ import type {
   PropsWithoutRef,
   CSSProperties,
   ReactNode,
+  MouseEvent,
+  KeyboardEvent,
   ReactElement,
   ComponentClass,
   ComponentType,

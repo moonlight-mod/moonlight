@@ -5,6 +5,7 @@ import {
 } from "@moonlight-mod/types";
 import { readConfig } from "../config";
 import Logger from "../util/logger";
+import { getExtensions } from "../extension";
 import { registerPatch, registerWebpackModule } from "../patch";
 import calculateDependencies from "../util/dependency";
 import { createEventEmitter } from "../util/event";
@@ -12,7 +13,7 @@ import { createEventEmitter } from "../util/event";
 const logger = new Logger("core/extension/loader");
 
 async function loadExt(ext: DetectedExtension) {
-  {
+  webPreload: {
     if (ext.scripts.web != null) {
       const source =
         ext.scripts.web + "\n//# sourceURL=file:///" + ext.scripts.webPath;
@@ -55,7 +56,7 @@ async function loadExt(ext: DetectedExtension) {
     }
   }
 
-  {
+  nodePreload: {
     if (ext.scripts.nodePath != null) {
       try {
         const module = require(ext.scripts.nodePath);
@@ -66,7 +67,7 @@ async function loadExt(ext: DetectedExtension) {
     }
   }
 
-  {
+  injector: {
     if (ext.scripts.hostPath != null) {
       try {
         require(ext.scripts.hostPath);
@@ -216,7 +217,7 @@ export async function loadProcessedExtensions({
     logger.debug(`Loaded "${ext.id}"`);
   }
 
-  {
+  webPreload: {
     for (const ext of extensions) {
       moonlight.enabledExtensions.add(ext.id);
     }

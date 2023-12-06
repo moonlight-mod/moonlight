@@ -46,7 +46,7 @@ function loadDetectedExtensions(
 
     let url: string | undefined = undefined;
     const urlPath = path.join(dir, constants.repoUrlFile);
-    if (type === ExtensionLoadSource.Normal && fs.existsSync(urlPath)) {
+    if (type == ExtensionLoadSource.Normal && fs.existsSync(urlPath)) {
       url = fs.readFileSync(urlPath, "utf8");
     }
 
@@ -91,15 +91,15 @@ function getExtensionsNative(): DetectedExtension[] {
 }
 
 export function getExtensions(): DetectedExtension[] {
-  {
+  webPreload: {
     return moonlightNode.extensions;
   }
 
-  {
+  nodePreload: {
     return getExtensionsNative();
   }
 
-  {
+  injector: {
     return getExtensionsNative();
   }
 

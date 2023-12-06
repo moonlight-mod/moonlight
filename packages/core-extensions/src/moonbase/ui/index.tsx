@@ -19,7 +19,7 @@ export default (require: typeof WebpackRequire) => {
   const { ExtensionInfo } = info(require);
   const { Settings } = settings(require);
   const { MoonbaseSettingsStore } = require("moonbase_stores") as ReturnType<
-    (typeof import("../stores"))["stores"]
+    typeof import("../stores")["stores"]
   >;
 
   const UserProfileClasses = spacepack.findByCode(
@@ -103,7 +103,7 @@ export default (require: typeof WebpackRequire) => {
                   gap: "1rem"
                 }}
               >
-                {ext.source.type === ExtensionLoadSource.Normal && (
+                {ext.source.type == ExtensionLoadSource.Normal && (
                   // TODO: this needs centering
                   <Button
                     color={Button.Colors.RED}

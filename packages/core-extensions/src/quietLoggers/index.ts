@@ -31,7 +31,7 @@ const stubPatches = [
   // "sh" is not a valid locale.
   [
     "is not a valid locale",
-    /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g
+    /(.)\.error\(""\.concat\((.)\," is not a valid locale\."\)\)/g
   ],
   ['.displayName="RunningGameStore"', /.\.info\("games",{.+?}\),/],
   [
