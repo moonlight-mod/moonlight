@@ -2,17 +2,17 @@ import { constants } from "@moonlight-mod/types";
 import requireImport from "./import";
 
 export function getMoonlightDir(): string {
-  const { app, ipcRenderer } = require("electron");
+  const electron = require("electron");
   const fs = requireImport("fs");
   const path = requireImport("path");
 
   let appData = "";
   injector: {
-    appData = app.getPath("appData");
+    appData = electron.app.getPath("appData");
   }
 
   nodePreload: {
-    appData = ipcRenderer.sendSync(constants.ipcGetAppData);
+    appData = electron.ipcRenderer.sendSync(constants.ipcGetAppData);
   }
 
   const dir = path.join(appData, "moonlight-mod");
@@ -56,10 +56,7 @@ export function getExtensionsPath(): string {
 }
 
 export function getCoreExtensionsPath(): string {
-  if (MOONLIGHT_PROD) {
-    return getPathFromMoonlight(constants.distDir, constants.coreExtensionsDir);
-  } else {
-    const path = requireImport("path");
-    return path.join(__dirname, constants.coreExtensionsDir);
-  }
+  const path = requireImport("path");
+  const a = path.join(__dirname, constants.coreExtensionsDir);
+  return a;
 }
