@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import * as esbuild from "esbuild";
 import copyStaticFiles from "esbuild-copy-static-files";
 
@@ -36,10 +37,13 @@ const deduplicatedLogging = {
 
     build.onEnd(async (result) => {
       const formatted = await Promise.all([
-        esbuild.formatMessages(result.warnings, { kind: "warning", color: true }),
+        esbuild.formatMessages(result.warnings, {
+          kind: "warning",
+          color: true
+        }),
         esbuild.formatMessages(result.errors, { kind: "error", color: true })
       ]).then((a) => a.flat());
-      
+
       // console.log(formatted);
       for (const message of formatted) {
         if (lastMessages.has(message)) continue;
@@ -48,7 +52,7 @@ const deduplicatedLogging = {
       }
     });
   }
-}
+};
 
 const timeFormatter = new Intl.DateTimeFormat(undefined, {
   hour: "numeric",
@@ -61,7 +65,9 @@ const taggedBuildLog = (tag) => ({
   name: "build-log",
   setup(build) {
     build.onEnd((result) => {
-      console.log(`[${timeFormatter.format(new Date())}] [${tag}] build finished`);
+      console.log(
+        `[${timeFormatter.format(new Date())}] [${tag}] build finished`
+      );
     });
   }
 });
@@ -106,10 +112,7 @@ async function build(name, entry) {
     dropLabels,
 
     logLevel: "silent",
-    plugins: [
-      deduplicatedLogging,
-      taggedBuildLog(name)
-    ]
+    plugins: [deduplicatedLogging, taggedBuildLog(name)]
   };
 
   if (watch) {
@@ -171,10 +174,14 @@ async function buildExt(ext, side, copyManifest, fileExt) {
     },
     logLevel: "silent",
     plugins: [
-      ...copyManifest ? [copyStaticFiles({
-        src: `./packages/core-extensions/src/${ext}/manifest.json`,
-        dest: `./dist/core-extensions/${ext}/manifest.json`
-      })] : [],
+      ...(copyManifest
+        ? [
+            copyStaticFiles({
+              src: `./packages/core-extensions/src/${ext}/manifest.json`,
+              dest: `./dist/core-extensions/${ext}/manifest.json`
+            })
+          ]
+        : []),
       wpImportPlugin,
       deduplicatedLogging,
       taggedBuildLog(`ext/${ext}`)

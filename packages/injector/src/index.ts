@@ -95,6 +95,24 @@ class BrowserWindow extends ElectronBrowserWindow {
   }
 }
 
+/*
+  Fun fact: esbuild transforms that BrowserWindow class statement into this:
+
+  var variableName = class extends electronImport.BrowserWindow {
+    ...
+  }
+
+  This means that in production builds, variableName is minified, and for some
+  ungodly reason this breaks electron (because it needs to be named BrowserWindow).
+  Without it, random things fail and crash (like opening DevTools). There is no
+  esbuild option to preserve only a single name, so you get the next best thing:
+*/
+Object.defineProperty(BrowserWindow, "name", {
+  value: "BrowserWindow",
+  writable: false
+});
+// "aight i'm writing exclusively C# from now on and never touching JavaScript again"
+
 export async function inject(asarPath: string) {
   try {
     const config = readConfig();
