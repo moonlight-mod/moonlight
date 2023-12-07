@@ -21,3 +21,14 @@ declare module "@moonlight-mod/wp/common_fluxDispatcher" {
   const Dispatcher: CoreExtensions.CommonFluxDispatcher;
   export default Dispatcher;
 }
+
+declare module "@moonlight-mod/wp/common_react" {
+  import React from "react";
+  export = React;
+}
+
+declare module "@moonlight-mod/wp/settings_settings" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  export const Settings: CoreExtensions.Settings;
+  export default Settings;
+}
