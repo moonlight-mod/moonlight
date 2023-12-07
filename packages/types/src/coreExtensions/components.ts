@@ -298,9 +298,12 @@ export type CommonComponents = {
   Avatar: Component;
   Scroller: Component;
   Text: ComponentClass<PropsWithChildren<any>>;
+  Heading: ComponentClass<PropsWithChildren<any>>;
   LegacyText: Component;
   Flex: Flex;
   Card: ComponentClass<PropsWithChildren<any>>;
+  Popout: ComponentClass<PropsWithChildren<any>>;
+  Dialog: ComponentClass<PropsWithChildren<any>>;
   CardClasses: {
     card: string;
     cardHeader: string;

@@ -1,12 +1,6 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
 import ui from "./ui";
-import {
-  ArrowsUpDownIconSVG,
-  ChevronSmallDownIconSVG,
-  CircleXIconSVG,
-  DownloadIconSVG,
-  TrashIconSVG
-} from "./types";
+import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {

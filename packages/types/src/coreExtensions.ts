@@ -9,7 +9,7 @@ export type Spacepack = {
   inspect: (module: number | string) => WebpackModuleFunc | null;
   findByCode: (...args: (string | RegExp)[]) => any[];
   findByExports: (...args: string[]) => any[];
-  require: typeof WebpackRequire;
+  require: WebpackRequire;
   modules: Record<string, WebpackModuleFunc>;
   cache: Record<string, any>;
   findObjectFromKey: (exports: Record<string, any>, key: string) => any | null;
