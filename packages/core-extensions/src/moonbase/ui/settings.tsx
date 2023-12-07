@@ -352,7 +352,7 @@ export default (require: typeof WebpackRequire) => {
     return React.createElement(element, { ext, name, setting });
   }
 
-  function Settings({ ext }: { ext: MoonbaseExtension }) {
+  return function Settings({ ext }: { ext: MoonbaseExtension }) {
     const { Flex } = CommonComponents;
     return (
       <Flex direction={Flex.Direction.VERTICAL}>
@@ -361,10 +361,5 @@ export default (require: typeof WebpackRequire) => {
         ))}
       </Flex>
     );
-  }
-
-  return {
-    Boolean,
-    Settings
   };
 };
