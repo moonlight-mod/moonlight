@@ -39,6 +39,10 @@ export default (require: typeof WebpackRequire) => {
   const PanelButton =
     spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
 
+  const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
+  const SearchBar = spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0]
+    .exports.default;
+
   function ExtensionCard({ id }: { id: string }) {
     const [tab, setTab] = React.useState(ExtensionPage.Info);
     const [restartNeeded, setRestartNeeded] = React.useState(false);
@@ -229,11 +233,22 @@ export default (require: typeof WebpackRequire) => {
       }
     );
 
+    const [query, setQuery] = React.useState("");
+
     const sorted = Object.values(extensions).sort((a, b) => {
       const aName = a.manifest.meta?.name ?? a.id;
       const bName = b.manifest.meta?.name ?? b.id;
       return aName.localeCompare(bName);
     });
+
+    const filtered = query.trim().length
+      ? sorted.filter(
+          (ext) =>
+            ext.manifest.meta?.name?.toLowerCase().includes(query) ||
+            ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
+            ext.manifest.meta?.description?.toLowerCase().includes(query)
+        )
+      : sorted;
 
     return (
       <>
@@ -246,7 +261,20 @@ export default (require: typeof WebpackRequire) => {
         >
           Moonbase
         </Text>
-        {sorted.map((ext) => (
+        <SearchBar
+          size={SearchBar.Sizes.MEDIUM}
+          className={Margins.marginBottom20}
+          query={query}
+          onChange={(v: string) => setQuery(v.toLowerCase())}
+          onClear={() => setQuery("")}
+          autoComplete="off"
+          inputProps={{
+            autoCapitalize: "none",
+            autoCorrect: "off",
+            spellCheck: "false"
+          }}
+        />
+        {filtered.map((ext) => (
           <ExtensionCard id={ext.id} key={ext.id} />
         ))}
       </>
