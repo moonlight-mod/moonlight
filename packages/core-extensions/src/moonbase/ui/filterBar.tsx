@@ -6,6 +6,17 @@ import {
   ChevronSmallUpIconSVG
 } from "../types";
 
+export const defaultFilter = {
+  core: true,
+  normal: true,
+  developer: true,
+  enabled: true,
+  disabled: true,
+  installed: true,
+  repository: true
+};
+export type Filter = typeof defaultFilter;
+
 export default async (require: WebpackRequireType) => {
   const spacepack = require("spacepack_spacepack").spacepack;
   const React = require("common_react");
@@ -30,6 +41,8 @@ export default async (require: WebpackRequireType) => {
   await require.el(moduleId);
 
   const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
+  const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
+    .exports;
   const FilterDialogClasses = spacepack.findByCode(
     "countContainer:",
     "tagContainer:"
@@ -56,6 +69,101 @@ export default async (require: WebpackRequireType) => {
     if (newState.has(tag)) newState.delete(tag);
     else newState.add(tag);
     setSelectedTags(newState);
+  }
+
+  function FilterButtonPopout({
+    filter,
+    setFilter,
+    closePopout
+  }: {
+    filter: Filter;
+    setFilter: (filter: Filter) => void;
+    closePopout: () => void;
+  }) {
+    const {
+      Menu,
+      MenuItem,
+      MenuGroup,
+      MenuCheckboxItem
+    } = require("common_components");
+
+    return (
+      <div className={SortMenuClasses.container}>
+        <Menu navId="sort-filter" hideScrollbar={true} onClose={closePopout}>
+          <MenuGroup label="Type">
+            <MenuCheckboxItem
+              id="t-core"
+              label="Core"
+              checked={filter.core}
+              action={() => setFilter({ ...filter, core: !filter.core })}
+            />
+            <MenuCheckboxItem
+              id="t-normal"
+              label="Normal"
+              checked={filter.normal}
+              action={() => setFilter({ ...filter, normal: !filter.normal })}
+            />
+            <MenuCheckboxItem
+              id="t-developer"
+              label="Developer"
+              checked={filter.developer}
+              action={() =>
+                setFilter({ ...filter, developer: !filter.developer })
+              }
+            />
+          </MenuGroup>
+          <MenuGroup label="State">
+            <MenuCheckboxItem
+              id="s-enabled"
+              label="Enabled"
+              checked={filter.enabled}
+              action={() => setFilter({ ...filter, enabled: !filter.enabled })}
+            />
+            <MenuCheckboxItem
+              id="s-disabled"
+              label="Disabled"
+              checked={filter.disabled}
+              action={() =>
+                setFilter({ ...filter, disabled: !filter.disabled })
+              }
+            />
+          </MenuGroup>
+          <MenuGroup label="Location">
+            <MenuCheckboxItem
+              id="l-installed"
+              label="Installed"
+              checked={filter.installed}
+              action={() =>
+                setFilter({ ...filter, installed: !filter.installed })
+              }
+            />
+            <MenuCheckboxItem
+              id="l-repository"
+              label="Repository"
+              checked={filter.repository}
+              action={() =>
+                setFilter({ ...filter, repository: !filter.repository })
+              }
+            />
+          </MenuGroup>
+          <MenuGroup>
+            <MenuItem
+              id="reset-all"
+              className={SortMenuClasses.clearText}
+              label={
+                <Text variant="text-sm/medium" color="none">
+                  Reset to default
+                </Text>
+              }
+              action={() => {
+                setFilter({ ...defaultFilter });
+                closePopout();
+              }}
+            />
+          </MenuGroup>
+        </Menu>
+      </div>
+    );
   }
 
   function TagButtonPopout({
@@ -117,9 +225,13 @@ export default async (require: WebpackRequireType) => {
   }
 
   return function FilterBar({
+    filter,
+    setFilter,
     selectedTags,
     setSelectedTags
   }: {
+    filter: Filter;
+    setFilter: (filter: Filter) => void;
     selectedTags: Set<string>;
     setSelectedTags: (tags: Set<string>) => void;
   }) {
@@ -159,24 +271,42 @@ export default async (require: WebpackRequireType) => {
         }}
         className={`${FilterBarClasses.tagsContainer} ${Margins.marginBottom8}`}
       >
-        <Button
-          size={Button.Sizes.MIN}
-          color={Button.Colors.CUSTOM}
-          className={FilterBarClasses.sortDropdown}
-          innerClassName={FilterBarClasses.sortDropdownInner}
+        <Popout
+          renderPopout={({ closePopout }: any) => (
+            <FilterButtonPopout
+              filter={filter}
+              setFilter={setFilter}
+              closePopout={closePopout}
+            />
+          )}
+          position="bottom"
+          align="left"
         >
-          <ArrowsUpDownIcon />
-          <Text
-            className={FilterBarClasses.sortDropdownText}
-            variant="text-sm/medium"
-            color="interactive-normal"
-          >
-            Sort & filter
-          </Text>
-          <ChevronSmallDownIcon size={20} />
-        </Button>
+          {(props: any, { isShown }: { isShown: boolean }) => (
+            <Button
+              {...props}
+              size={Button.Sizes.MIN}
+              color={Button.Colors.CUSTOM}
+              className={FilterBarClasses.sortDropdown}
+              innerClassName={FilterBarClasses.sortDropdownInner}
+            >
+              <ArrowsUpDownIcon />
+              <Text
+                className={FilterBarClasses.sortDropdownText}
+                variant="text-sm/medium"
+                color="interactive-normal"
+              >
+                Sort & filter
+              </Text>
+              {isShown ? (
+                <ChevronSmallUpIcon size={20} />
+              ) : (
+                <ChevronSmallDownIcon size={20} />
+              )}
+            </Button>
+          )}
+        </Popout>
         <div className={FilterBarClasses.divider} />
-        {/* TODO: make this scrollable with a ListNavigator */}
         <div className={FilterBarClasses.tagList}>
           <div ref={tagListInner} className={FilterBarClasses.tagListInner}>
             {Object.keys(tagNames).map((tag) => (

@@ -1,6 +1,11 @@
-import { ExtensionTag, WebpackRequireType } from "@moonlight-mod/types";
+import {
+  ExtensionLoadSource,
+  ExtensionTag,
+  WebpackRequireType
+} from "@moonlight-mod/types";
 import card from "./card";
-import filterBar from "./filterBar";
+import filterBar, { defaultFilter } from "./filterBar";
+import { ExtensionState } from "../types";
 
 export enum ExtensionPage {
   Info,
@@ -36,6 +41,7 @@ export default (require: WebpackRequireType) => {
     );
 
     const [query, setQuery] = React.useState("");
+    const [filter, setFilter] = React.useState({ ...defaultFilter });
     const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
 
     const sorted = Object.values(extensions).sort((a, b) => {
@@ -51,6 +57,19 @@ export default (require: WebpackRequireType) => {
           ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
         [...selectedTags.values()].every(
           (tag) => ext.manifest.meta?.tags?.includes(tag as ExtensionTag)
+        ) &&
+        // This seems very bad, sorry
+        !(
+          (!filter.core && ext.source.type === ExtensionLoadSource.Core) ||
+          (!filter.normal && ext.source.type === ExtensionLoadSource.Normal) ||
+          (!filter.developer &&
+            ext.source.type === ExtensionLoadSource.Developer) ||
+          (!filter.enabled &&
+            MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
+          (!filter.disabled &&
+            !MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
+          (!filter.installed && ext.state !== ExtensionState.NotDownloaded) ||
+          (!filter.repository && ext.state === ExtensionState.NotDownloaded)
         )
     );
 
@@ -77,6 +96,8 @@ export default (require: WebpackRequireType) => {
           }}
         />
         <FilterBar
+          filter={filter}
+          setFilter={setFilter}
           selectedTags={selectedTags}
           setSelectedTags={setSelectedTags}
         />

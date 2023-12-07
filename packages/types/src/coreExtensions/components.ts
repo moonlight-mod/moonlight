@@ -304,6 +304,10 @@ export type CommonComponents = {
   Card: ComponentClass<PropsWithChildren<any>>;
   Popout: ComponentClass<PropsWithChildren<any>>;
   Dialog: ComponentClass<PropsWithChildren<any>>;
+  Menu: ComponentClass<PropsWithChildren<any>>;
+  MenuItem: ComponentClass<PropsWithChildren<any>>;
+  MenuGroup: ComponentClass<PropsWithChildren<any>>;
+  MenuCheckboxItem: ComponentClass<PropsWithChildren<any>>;
   CardClasses: {
     card: string;
     cardHeader: string;
