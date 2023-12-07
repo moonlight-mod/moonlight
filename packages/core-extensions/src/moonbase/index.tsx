@@ -1,6 +1,12 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
 import ui from "./ui";
-import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
+import {
+  ArrowsUpDownIconSVG,
+  ChevronSmallDownIconSVG,
+  CircleXIconSVG,
+  DownloadIconSVG,
+  TrashIconSVG
+} from "./types";
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {
@@ -21,7 +27,8 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       TrashIconSVG,
       CircleXIconSVG,
       "Masks.PANEL_BUTTON",
-      "removeButtonContainer:"
+      "removeButtonContainer:",
+      '"Missing channel in Channel.openChannelContextMenu"'
     ],
     entrypoint: true,
     run: (module, exports, require) => {

@@ -13,6 +13,24 @@ enum DependencyType {
   Incompatible = "incompatible"
 }
 
+export const tagNames: Record<ExtensionTag, string> = {
+  [ExtensionTag.Accessibility]: "Accessibility",
+  [ExtensionTag.Appearance]: "Appearance",
+  [ExtensionTag.Chat]: "Chat",
+  [ExtensionTag.Commands]: "Commands",
+  [ExtensionTag.ContextMenu]: "Context Menu",
+  [ExtensionTag.DangerZone]: "Danger Zone",
+  [ExtensionTag.Development]: "Development",
+  [ExtensionTag.Fixes]: "Fixes",
+  [ExtensionTag.Fun]: "Fun",
+  [ExtensionTag.Markdown]: "Markdown",
+  [ExtensionTag.Voice]: "Voice",
+  [ExtensionTag.Privacy]: "Privacy",
+  [ExtensionTag.Profiles]: "Profiles",
+  [ExtensionTag.QualityOfLife]: "Quality of Life",
+  [ExtensionTag.Library]: "Library"
+};
+
 export default (require: typeof WebpackRequire) => {
   const React = require("common_react");
   const spacepack = require("spacepack_spacepack").spacepack;
@@ -137,24 +155,7 @@ export default (require: typeof WebpackRequire) => {
         {tags != null && (
           <InfoSection title="Tags">
             {tags.map((tag, i) => {
-              const names: Record<ExtensionTag, string> = {
-                [ExtensionTag.Accessibility]: "Accessibility",
-                [ExtensionTag.Appearance]: "Appearance",
-                [ExtensionTag.Chat]: "Chat",
-                [ExtensionTag.Commands]: "Commands",
-                [ExtensionTag.ContextMenu]: "Context Menu",
-                [ExtensionTag.DangerZone]: "Danger Zone",
-                [ExtensionTag.Development]: "Development",
-                [ExtensionTag.Fixes]: "Fixes",
-                [ExtensionTag.Fun]: "Fun",
-                [ExtensionTag.Markdown]: "Markdown",
-                [ExtensionTag.Voice]: "Voice",
-                [ExtensionTag.Privacy]: "Privacy",
-                [ExtensionTag.Profiles]: "Profiles",
-                [ExtensionTag.QualityOfLife]: "Quality of Life",
-                [ExtensionTag.Library]: "Library"
-              };
-              const name = names[tag];
+              const name = tagNames[tag];
 
               return (
                 <Badge
