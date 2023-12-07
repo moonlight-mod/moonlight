@@ -59,6 +59,7 @@ export default (require: typeof WebpackRequire) => {
           MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
         note={description}
+        className={`${Margins.marginReset} ${Margins.marginTop20}`}
       >
         {displayName}
       </FormSwitch>
@@ -77,7 +78,7 @@ export default (require: typeof WebpackRequire) => {
     const max = castedSetting.max ?? 100;
 
     return (
-      <FormItem className={Margins.marginTop8} title={displayName}>
+      <FormItem className={Margins.marginTop20} title={displayName}>
         {description && <FormText>{description}</FormText>}
         <Slider
           initialValue={value ?? 0}
@@ -355,7 +356,10 @@ export default (require: typeof WebpackRequire) => {
   return function Settings({ ext }: { ext: MoonbaseExtension }) {
     const { Flex } = CommonComponents;
     return (
-      <Flex direction={Flex.Direction.VERTICAL}>
+      <Flex className="moonbase-settings" direction={Flex.Direction.VERTICAL}>
+        <style>
+          {".moonbase-settings > :nth-child(2) { margin-top: 0px; }"}
+        </style>
         {Object.entries(ext.manifest.settings!).map(([name, setting]) => (
           <Setting ext={ext} key={name} name={name} setting={setting} />
         ))}
