@@ -65,6 +65,9 @@ export default (require: typeof WebpackRequire) => {
     const ArrowsUpDownIcon =
       spacepack.findByCode(ArrowsUpDownIconSVG)[0].exports.default;
 
+    const { WindowStore } = require("common_stores");
+    const windowSize = Flux.useStateFromStores([WindowStore], () => WindowStore.windowSize());
+
     const tagsContainer = React.useRef<HTMLDivElement>(null);
     const tagListInner = React.useRef<HTMLDivElement>(null);
     const [tagsButtonOffset, setTagsButtonOffset] = React.useState(0);
@@ -88,7 +91,7 @@ export default (require: typeof WebpackRequire) => {
         }
       }
       setTagsButtonOffset(offset);
-    }, []);
+    }, [windowSize]);
 
     const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
     const toggleTag = (tag: string) => {
