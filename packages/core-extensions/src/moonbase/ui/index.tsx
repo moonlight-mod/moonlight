@@ -1,5 +1,11 @@
-import WebpackRequire from "@moonlight-mod/types/discord/require";
+import {
+  ExtensionLoadSource,
+  ExtensionTag,
+  WebpackRequireType
+} from "@moonlight-mod/types";
 import card from "./card";
+import filterBar, { defaultFilter } from "./filterBar";
+import { ExtensionState } from "../types";
 
 export enum ExtensionPage {
   Info,
@@ -7,7 +13,7 @@ export enum ExtensionPage {
   Settings
 }
 
-export default (require: typeof WebpackRequire) => {
+export default (require: WebpackRequireType) => {
   const React = require("common_react");
   const spacepack = require("spacepack_spacepack").spacepack;
   const Flux = require("common_flux");
@@ -16,6 +22,9 @@ export default (require: typeof WebpackRequire) => {
     require("moonbase_stores") as typeof import("../webpackModules/stores");
 
   const ExtensionCard = card(require);
+  const FilterBar = React.lazy(() =>
+    filterBar(require).then((c) => ({ default: c }))
+  );
 
   const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
   const SearchBar = spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0]
@@ -32,6 +41,8 @@ export default (require: typeof WebpackRequire) => {
     );
 
     const [query, setQuery] = React.useState("");
+    const [filter, setFilter] = React.useState({ ...defaultFilter });
+    const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
 
     const sorted = Object.values(extensions).sort((a, b) => {
       const aName = a.manifest.meta?.name ?? a.id;
@@ -39,21 +50,33 @@ export default (require: typeof WebpackRequire) => {
       return aName.localeCompare(bName);
     });
 
-    const filtered = query.trim().length
-      ? sorted.filter(
-          (ext) =>
-            ext.manifest.meta?.name?.toLowerCase().includes(query) ||
-            ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
-            ext.manifest.meta?.description?.toLowerCase().includes(query)
+    const filtered = sorted.filter(
+      (ext) =>
+        (ext.manifest.meta?.name?.toLowerCase().includes(query) ||
+          ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
+          ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
+        [...selectedTags.values()].every(
+          (tag) => ext.manifest.meta?.tags?.includes(tag as ExtensionTag)
+        ) &&
+        // This seems very bad, sorry
+        !(
+          (!filter.core && ext.source.type === ExtensionLoadSource.Core) ||
+          (!filter.normal && ext.source.type === ExtensionLoadSource.Normal) ||
+          (!filter.developer &&
+            ext.source.type === ExtensionLoadSource.Developer) ||
+          (!filter.enabled &&
+            MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
+          (!filter.disabled &&
+            !MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
+          (!filter.installed && ext.state !== ExtensionState.NotDownloaded) ||
+          (!filter.repository && ext.state === ExtensionState.NotDownloaded)
         )
-      : sorted;
+    );
 
     return (
       <>
         <Text
-          style={{
-            "margin-bottom": "16px"
-          }}
+          className={Margins.marginBottom20}
           variant="heading-lg/semibold"
           tag="h2"
         >
@@ -61,7 +84,6 @@ export default (require: typeof WebpackRequire) => {
         </Text>
         <SearchBar
           size={SearchBar.Sizes.MEDIUM}
-          className={Margins.marginBottom20}
           query={query}
           onChange={(v: string) => setQuery(v.toLowerCase())}
           onClear={() => setQuery("")}
@@ -73,6 +95,16 @@ export default (require: typeof WebpackRequire) => {
             spellCheck: "false"
           }}
         />
+        <React.Suspense
+          fallback={<div className={Margins.marginBottom20}></div>}
+        >
+          <FilterBar
+            filter={filter}
+            setFilter={setFilter}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
+        </React.Suspense>
         {filtered.map((ext) => (
           <ExtensionCard id={ext.id} key={ext.id} />
         ))}

@@ -2,14 +2,13 @@ import { FluxDefault, Store } from "./discord/common/Flux";
 import { CommonComponents as CommonComponents_ } from "./coreExtensions/components";
 import { Dispatcher } from "flux";
 import React from "react";
-import { WebpackModuleFunc } from "./discord";
-import WebpackRequire from "./discord/require";
+import { WebpackModuleFunc, WebpackRequireType } from "./discord";
 
 export type Spacepack = {
   inspect: (module: number | string) => WebpackModuleFunc | null;
   findByCode: (...args: (string | RegExp)[]) => any[];
   findByExports: (...args: string[]) => any[];
-  require: typeof WebpackRequire;
+  require: WebpackRequireType;
   modules: Record<string, WebpackModuleFunc>;
   cache: Record<string, any>;
   findObjectFromKey: (exports: Record<string, any>, key: string) => any | null;
