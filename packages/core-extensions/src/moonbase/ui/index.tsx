@@ -95,12 +95,16 @@ export default (require: WebpackRequireType) => {
             spellCheck: "false"
           }}
         />
-        <FilterBar
-          filter={filter}
-          setFilter={setFilter}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
-        />
+        <React.Suspense
+          fallback={<div className={Margins.marginBottom20}></div>}
+        >
+          <FilterBar
+            filter={filter}
+            setFilter={setFilter}
+            selectedTags={selectedTags}
+            setSelectedTags={setSelectedTags}
+          />
+        </React.Suspense>
         {filtered.map((ext) => (
           <ExtensionCard id={ext.id} key={ext.id} />
         ))}
