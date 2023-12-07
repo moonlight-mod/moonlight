@@ -267,6 +267,7 @@ export default (require: typeof WebpackRequire) => {
           query={query}
           onChange={(v: string) => setQuery(v.toLowerCase())}
           onClear={() => setQuery("")}
+          autoFocus={true}
           autoComplete="off"
           inputProps={{
             autoCapitalize: "none",
