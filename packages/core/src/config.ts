@@ -9,7 +9,7 @@ const defaultConfig: Config = {
     noTrack: true,
     noHideToken: true
   },
-  repositories: ["https://moonlight-mod.github.io/extensions/repo.json"]
+  repositories: ["https://moonlight-mod.github.io/extensions-dist/repo.json"]
 };
 
 export function writeConfig(config: Config) {
