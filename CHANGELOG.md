@@ -1,2 +1,4 @@
-- Improved the Moonbase UI (@redstonekasi, @xyzeva)
-- Renamed the List setting type to MultiSelect, added a new List type in its place
+- Added search and filters to Moonbase (@redstonekasi)
+- Changed the official repository URL
+  - If you installed moonlight before this update, you will need to edit your config file manually and set it to `https://moonlight-mod.github.io/extensions-dist/repo.json`
+- Fixed random bugs from release builds
