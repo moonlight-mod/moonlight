@@ -1,6 +1,6 @@
 import WebpackRequire from "@moonlight-mod/types/discord/require";
 import { ExtensionTag } from "@moonlight-mod/types";
-import { MoonbaseExtension } from "../types";
+import { MoonbaseExtension } from "../../types";
 
 type Dependency = {
   id: string;
@@ -43,7 +43,7 @@ export default (require: typeof WebpackRequire) => {
   )[0].exports;
 
   const { MoonbaseSettingsStore } =
-    require("moonbase_stores") as typeof import("../webpackModules/stores");
+    require("moonbase_stores") as typeof import("../../webpackModules/stores");
 
   function InfoSection({
     title,

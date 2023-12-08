@@ -227,6 +227,16 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
     this.emitChange();
   }
 
+  getConfigOption<K extends keyof Config>(key: K): Config[K] {
+    return this.config[key];
+  }
+
+  setConfigOption<K extends keyof Config>(key: K, value: Config[K]) {
+    this.config[key] = value;
+    this.modified = this.isModified();
+    this.emitChange();
+  }
+
   writeConfig() {
     this.submitting = true;
 

@@ -4,7 +4,7 @@ import {
   ArrowsUpDownIconSVG,
   ChevronSmallDownIconSVG,
   ChevronSmallUpIconSVG
-} from "../types";
+} from "../../types";
 
 export const defaultFilter = {
   core: true,

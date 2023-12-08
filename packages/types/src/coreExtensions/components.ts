@@ -238,6 +238,7 @@ export type CommonComponents = {
     }>
   >;
   TextInput: TextInput;
+  FormDivider: ComponentClass<any>;
   FormSection: ComponentClass<
     PropsWithChildren<{
       className?: string;

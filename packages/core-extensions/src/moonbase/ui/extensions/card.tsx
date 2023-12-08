@@ -4,8 +4,8 @@ import {
   DownloadIconSVG,
   ExtensionState,
   TrashIconSVG
-} from "../types";
-import { ExtensionLoadSource } from "types/src";
+} from "../../types";
+import { ExtensionLoadSource } from "@moonlight-mod/types";
 import info from "./info";
 import settings from "./settings";
 
@@ -24,7 +24,7 @@ export default (require: typeof WebpackRequire) => {
   const { ExtensionInfo } = info(require);
   const Settings = settings(require);
   const { MoonbaseSettingsStore } =
-    require("moonbase_stores") as typeof import("../webpackModules/stores");
+    require("moonbase_stores") as typeof import("../../webpackModules/stores");
 
   const UserProfileClasses = spacepack.findByCode(
     "tabBarContainer",
