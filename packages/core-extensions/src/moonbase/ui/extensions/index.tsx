@@ -25,7 +25,6 @@ export default (require: WebpackRequireType) => {
     .exports.default;
   const { Text } = require("common_components");
 
-
   return function ExtensionsPage() {
     const { extensions } = Flux.useStateFromStoresObject(
       [MoonbaseSettingsStore],

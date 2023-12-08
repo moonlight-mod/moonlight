@@ -55,9 +55,12 @@ export default (require: WebpackRequireType) => {
   }) {
     const items = MoonbaseSettingsStore.getConfigOption(config) ?? [];
     return (
-      <Flex style={{
-        "gap": "20px"
-      }} direction={Flex.Direction.VERTICAL}>
+      <Flex
+        style={{
+          gap: "20px"
+        }}
+        direction={Flex.Direction.VERTICAL}
+      >
         {items.map((val, i) => (
           <div
             key={i}
@@ -91,7 +94,7 @@ export default (require: WebpackRequireType) => {
           color={Button.Colors.GREEN}
           size={Button.Sizes.SMALL}
           style={{
-            "marginTop": "10px"
+            marginTop: "10px"
           }}
           onClick={() => {
             items.push("");
