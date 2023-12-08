@@ -1,5 +1,5 @@
 import { WebpackRequireType } from "@moonlight-mod/types";
-import { tagNames } from "../extensions/info";
+import { tagNames } from "./info";
 import {
   ArrowsUpDownIconSVG,
   ChevronSmallDownIconSVG,

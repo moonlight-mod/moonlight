@@ -5,7 +5,7 @@ import {
   ExtensionState,
   TrashIconSVG
 } from "../../types";
-import { ExtensionLoadSource } from "types/src";
+import { ExtensionLoadSource } from "@moonlight-mod/types";
 import info from "./info";
 import settings from "./settings";
 
