@@ -1,113 +1,70 @@
-import {
-  ExtensionLoadSource,
-  ExtensionTag,
-  WebpackRequireType
-} from "@moonlight-mod/types";
-import card from "./card";
-import filterBar, { defaultFilter } from "./filterBar";
-import { ExtensionState } from "../types";
+import { WebpackRequireType } from "@moonlight-mod/types";
+import extensionsPage from "./extensions";
+import configPage from "./config";
 
-export enum ExtensionPage {
-  Info,
-  Description,
-  Settings
+export enum MoonbasePage {
+  Extensions,
+  Config
 }
 
 export default (require: WebpackRequireType) => {
   const React = require("common_react");
   const spacepack = require("spacepack_spacepack").spacepack;
-  const Flux = require("common_flux");
-
-  const { MoonbaseSettingsStore } =
-    require("moonbase_stores") as typeof import("../webpackModules/stores");
-
-  const ExtensionCard = card(require);
-  const FilterBar = React.lazy(() =>
-    filterBar(require).then((c) => ({ default: c }))
-  );
 
   const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
-  const SearchBar = spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0]
-    .exports.default;
+
+  const { Divider } = spacepack.findByCode(".default.HEADER_BAR")[0].exports
+    .default;
+  const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0]
+    .exports;
+  const TabBarClasses = spacepack.findByCode("nowPlayingColumn:")[0].exports;
+
+  const ExtensionsPage = extensionsPage(require);
+  const ConfigPage = configPage(require);
 
   return function Moonbase() {
-    const { Text } = require("common_components");
+    const { Text, TabBar } = require("common_components");
 
-    const { extensions } = Flux.useStateFromStoresObject(
-      [MoonbaseSettingsStore],
-      () => {
-        return { extensions: MoonbaseSettingsStore.extensions };
-      }
-    );
-
-    const [query, setQuery] = React.useState("");
-    const [filter, setFilter] = React.useState({ ...defaultFilter });
-    const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
-
-    const sorted = Object.values(extensions).sort((a, b) => {
-      const aName = a.manifest.meta?.name ?? a.id;
-      const bName = b.manifest.meta?.name ?? b.id;
-      return aName.localeCompare(bName);
-    });
-
-    const filtered = sorted.filter(
-      (ext) =>
-        (ext.manifest.meta?.name?.toLowerCase().includes(query) ||
-          ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
-          ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
-        [...selectedTags.values()].every(
-          (tag) => ext.manifest.meta?.tags?.includes(tag as ExtensionTag)
-        ) &&
-        // This seems very bad, sorry
-        !(
-          (!filter.core && ext.source.type === ExtensionLoadSource.Core) ||
-          (!filter.normal && ext.source.type === ExtensionLoadSource.Normal) ||
-          (!filter.developer &&
-            ext.source.type === ExtensionLoadSource.Developer) ||
-          (!filter.enabled &&
-            MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
-          (!filter.disabled &&
-            !MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
-          (!filter.installed && ext.state !== ExtensionState.NotDownloaded) ||
-          (!filter.repository && ext.state === ExtensionState.NotDownloaded)
-        )
+    const [selectedTab, setSelectedTab] = React.useState(
+      MoonbasePage.Extensions
     );
 
     return (
       <>
-        <Text
-          className={Margins.marginBottom20}
-          variant="heading-lg/semibold"
-          tag="h2"
+        <div
+          className={`${TitleBarClasses.children} ${Margins.marginBottom20}`}
         >
-          Moonbase
-        </Text>
-        <SearchBar
-          size={SearchBar.Sizes.MEDIUM}
-          query={query}
-          onChange={(v: string) => setQuery(v.toLowerCase())}
-          onClear={() => setQuery("")}
-          autoFocus={true}
-          autoComplete="off"
-          inputProps={{
-            autoCapitalize: "none",
-            autoCorrect: "off",
-            spellCheck: "false"
-          }}
-        />
-        <React.Suspense
-          fallback={<div className={Margins.marginBottom20}></div>}
-        >
-          <FilterBar
-            filter={filter}
-            setFilter={setFilter}
-            selectedTags={selectedTags}
-            setSelectedTags={setSelectedTags}
-          />
-        </React.Suspense>
-        {filtered.map((ext) => (
-          <ExtensionCard id={ext.id} key={ext.id} />
-        ))}
+          <Text
+            className={TitleBarClasses.titleWrapper}
+            variant="heading-lg/semibold"
+            tag="h2"
+          >
+            Moonbase
+          </Text>
+          <Divider />
+          <TabBar
+            selectedItem={selectedTab}
+            onItemSelect={setSelectedTab}
+            type="top-pill"
+            className={TabBarClasses.tabBar}
+          >
+            <TabBar.Item
+              id={MoonbasePage.Extensions}
+              className={TabBarClasses.item}
+            >
+              Extensions
+            </TabBar.Item>
+            <TabBar.Item
+              id={MoonbasePage.Config}
+              className={TabBarClasses.item}
+            >
+              Config
+            </TabBar.Item>
+          </TabBar>
+        </div>
+
+        {selectedTab === MoonbasePage.Extensions && <ExtensionsPage />}
+        {selectedTab === MoonbasePage.Config && <ConfigPage />}
       </>
     );
   };

@@ -6,7 +6,7 @@ import {
   SelectSettingType
 } from "@moonlight-mod/types/config";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { CircleXIconSVG, MoonbaseExtension } from "../types";
+import { CircleXIconSVG, MoonbaseExtension } from "../../types";
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -23,7 +23,7 @@ export default (require: typeof WebpackRequire) => {
   const spacepack = require("spacepack_spacepack").spacepack;
 
   const { MoonbaseSettingsStore } =
-    require("moonbase_stores") as typeof import("../webpackModules/stores");
+    require("moonbase_stores") as typeof import("../../webpackModules/stores");
 
   const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 

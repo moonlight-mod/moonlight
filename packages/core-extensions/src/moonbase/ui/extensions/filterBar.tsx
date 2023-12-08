@@ -1,10 +1,10 @@
 import { WebpackRequireType } from "@moonlight-mod/types";
-import { tagNames } from "./info";
+import { tagNames } from "../extensions/info";
 import {
   ArrowsUpDownIconSVG,
   ChevronSmallDownIconSVG,
   ChevronSmallUpIconSVG
-} from "../types";
+} from "../../types";
 
 export const defaultFilter = {
   core: true,
