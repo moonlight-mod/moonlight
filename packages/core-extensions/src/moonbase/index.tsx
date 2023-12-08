@@ -1,5 +1,7 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
-import ui from "./ui";
+import configPage from "./ui/config";
+import extensionsPage from "./ui/extensions";
+
 import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
@@ -32,25 +34,31 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       const { MoonbaseSettingsStore } =
         require("moonbase_stores") as typeof import("./webpackModules/stores");
 
-      settings.addSection("Moonbase", "Moonbase", ui(require), null, -2, {
-        stores: [MoonbaseSettingsStore],
-        element: () => {
-          // Require it here because lazy loading SUX
-          const SettingsNotice =
-            spacepack.findByCode("onSaveButtonColor")[0].exports.default;
-          return (
-            <SettingsNotice
-              submitting={MoonbaseSettingsStore.submitting}
-              onReset={() => {
-                MoonbaseSettingsStore.reset();
-              }}
-              onSave={() => {
-                MoonbaseSettingsStore.writeConfig();
-              }}
-            />
-          );
-        }
-      });
-    }
+      const addSection = (name: string, element: React.FunctionComponent<{}>) => {
+        settings.addSection(name, name, element, null, -2, {
+          stores: [MoonbaseSettingsStore],
+          element: () => {
+            // Require it here because lazy loading SUX
+            const SettingsNotice =
+              spacepack.findByCode("onSaveButtonColor")[0].exports.default;
+            return (
+              <SettingsNotice
+                submitting={MoonbaseSettingsStore.submitting}
+                onReset={() => {
+                  MoonbaseSettingsStore.reset();
+                }}
+                onSave={() => {
+                  MoonbaseSettingsStore.writeConfig();
+                }}
+              />
+            );
+          }
+        })
+      }
+      settings.addHeader("moonlight", -2)
+      addSection("Extensions", extensionsPage(require));
+      addSection("Config", configPage(require))
+    },
+    
   }
 };

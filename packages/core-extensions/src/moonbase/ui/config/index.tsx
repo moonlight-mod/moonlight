@@ -40,7 +40,7 @@ export default (require: WebpackRequireType) => {
               className={RemoveButtonClasses.removeButton}
               onClick={onClick}
             >
-              <CircleXIcon width={16} height={16} />
+              <CircleXIcon width={24} height={24} />
             </Clickable>
           )}
         </Tooltip>
@@ -55,7 +55,9 @@ export default (require: WebpackRequireType) => {
   }) {
     const items = MoonbaseSettingsStore.getConfigOption(config) ?? [];
     return (
-      <Flex direction={Flex.Direction.VERTICAL}>
+      <Flex style={{
+        "gap": "20px"
+      }} direction={Flex.Direction.VERTICAL}>
         {items.map((val, i) => (
           <div
             key={i}
@@ -68,7 +70,7 @@ export default (require: WebpackRequireType) => {
             }}
           >
             <TextInput
-              size={TextInput.Sizes.MINI}
+              size={TextInput.Sizes.DEFAULT}
               value={val}
               onChange={(newVal: string) => {
                 items[i] = newVal;
@@ -88,7 +90,9 @@ export default (require: WebpackRequireType) => {
           look={Button.Looks.FILLED}
           color={Button.Colors.GREEN}
           size={Button.Sizes.SMALL}
-          className={Margins.marginTop8}
+          style={{
+            "marginTop": "10px"
+          }}
           onClick={() => {
             items.push("");
             MoonbaseSettingsStore.setConfigOption(config, items);
