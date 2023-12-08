@@ -34,10 +34,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       const { MoonbaseSettingsStore } =
         require("moonbase_stores") as typeof import("./webpackModules/stores");
 
-      const addSection = (
-        name: string,
-        element: React.FunctionComponent
-      ) => {
+      const addSection = (name: string, element: React.FunctionComponent) => {
         settings.addSection(name, name, element, null, -2, {
           stores: [MoonbaseSettingsStore],
           element: () => {
