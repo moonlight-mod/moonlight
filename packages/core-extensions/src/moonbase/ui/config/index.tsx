@@ -17,7 +17,8 @@ export default (require: WebpackRequireType) => {
     TextInput,
     Flex,
     Button,
-    SingleSelect
+    SingleSelect,
+    Text
   } = CommonComponents;
 
   const { MoonbaseSettingsStore } =
@@ -110,6 +111,14 @@ export default (require: WebpackRequireType) => {
   return function ConfigPage() {
     return (
       <>
+        <Text
+          className={Margins.marginBottom20}
+          variant="heading-lg/semibold"
+          tag="h2"
+        >
+          Config
+        </Text>
+
         <FormItem title="Repositories">
           <FormText className={Margins.marginBottom4}>
             A list of remote repositories to display extensions from

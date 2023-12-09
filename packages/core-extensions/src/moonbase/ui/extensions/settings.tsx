@@ -7,12 +7,13 @@ import {
   SelectSettingType
 } from "@moonlight-mod/types/config";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { CircleXIconSVG, MoonbaseExtension } from "../../types";
+import { CircleXIconSVG, ExtensionState, MoonbaseExtension } from "../../types";
 
 type SettingsProps = {
   ext: MoonbaseExtension;
   name: string;
   setting: ExtensionSettingsManifest;
+  disabled: boolean;
 };
 
 type SettingsComponent = React.ComponentType<SettingsProps>;
@@ -45,7 +46,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function Boolean({ ext, name, setting }: SettingsProps) {
+  function Boolean({ ext, name, setting, disabled }: SettingsProps) {
     const { FormSwitch } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<boolean>(
       ext.id,
@@ -56,6 +57,7 @@ export default (require: typeof WebpackRequire) => {
       <FormSwitch
         value={value ?? false}
         hideBorder={true}
+        disabled={disabled}
         onChange={(value: boolean) => {
           MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
@@ -67,7 +69,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function Number({ ext, name, setting }: SettingsProps) {
+  function Number({ ext, name, setting, disabled }: SettingsProps) {
     const { FormItem, FormText, Slider } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<number>(
       ext.id,
@@ -83,6 +85,7 @@ export default (require: typeof WebpackRequire) => {
         {description && <FormText>{description}</FormText>}
         <Slider
           initialValue={value ?? 0}
+          disabled={disabled}
           minValue={castedSetting.min ?? 0}
           maxValue={castedSetting.max ?? 100}
           onValueChange={(value: number) => {
@@ -94,7 +97,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function String({ ext, name, setting }: SettingsProps) {
+  function String({ ext, name, setting, disabled }: SettingsProps) {
     const { FormItem, FormText, TextInput } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<string>(
       ext.id,
@@ -109,6 +112,7 @@ export default (require: typeof WebpackRequire) => {
         <TextInput
           value={value ?? ""}
           onChange={(value: string) => {
+            if (disabled) return;
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
         />
@@ -116,7 +120,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function Select({ ext, name, setting }: SettingsProps) {
+  function Select({ ext, name, setting, disabled }: SettingsProps) {
     const { FormItem, FormText, SingleSelect } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<string>(
       ext.id,
@@ -139,6 +143,7 @@ export default (require: typeof WebpackRequire) => {
             typeof o === "string" ? { value: o, label: o } : o
           )}
           onChange={(value: string) => {
+            if (disabled) return;
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
         />
@@ -146,7 +151,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function MultiSelect({ ext, name, setting }: SettingsProps) {
+  function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
     const { FormItem, FormText, Select, useVariableSelect, multiSelect } =
       CommonComponents;
     const { value, displayName, description } = useConfigEntry<
@@ -172,6 +177,7 @@ export default (require: typeof WebpackRequire) => {
             onSelectInteraction: multiSelect,
             value: new Set(Array.isArray(value) ? value : [value]),
             onChange: (value: string) => {
+              if (disabled) return;
               MoonbaseSettingsStore.setExtensionConfig(
                 ext.id,
                 name,
@@ -187,7 +193,13 @@ export default (require: typeof WebpackRequire) => {
   const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
     .exports;
   const CircleXIcon = spacepack.findByCode(CircleXIconSVG)[0].exports.default;
-  function RemoveEntryButton({ onClick }: { onClick: () => void }) {
+  function RemoveEntryButton({
+    onClick,
+    disabled
+  }: {
+    onClick: () => void;
+    disabled: boolean;
+  }) {
     const { Tooltip, Clickable } = CommonComponents;
     return (
       <div className={RemoveButtonClasses.removeButtonContainer}>
@@ -206,7 +218,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function List({ ext, name, setting }: SettingsProps) {
+  function List({ ext, name, setting, disabled }: SettingsProps) {
     const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<string[]>(
       ext.id,
@@ -238,12 +250,14 @@ export default (require: typeof WebpackRequire) => {
               <TextInput
                 size={TextInput.Sizes.MINI}
                 value={val}
+                disabled={disabled}
                 onChange={(newVal: string) => {
                   entries[i] = newVal;
                   updateConfig();
                 }}
               />
               <RemoveEntryButton
+                disabled={disabled}
                 onClick={() => {
                   entries.splice(i, 1);
                   updateConfig();
@@ -256,6 +270,7 @@ export default (require: typeof WebpackRequire) => {
             look={Button.Looks.FILLED}
             color={Button.Colors.GREEN}
             size={Button.Sizes.SMALL}
+            disabled={disabled}
             className={Margins.marginTop8}
             onClick={() => {
               entries.push("");
@@ -269,7 +284,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function Dictionary({ ext, name, setting }: SettingsProps) {
+  function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
     const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
     const { value, displayName, description } = useConfigEntry<
       Record<string, string>
@@ -304,6 +319,7 @@ export default (require: typeof WebpackRequire) => {
               <TextInput
                 size={TextInput.Sizes.MINI}
                 value={key}
+                disabled={disabled}
                 onChange={(newKey: string) => {
                   entries[i][0] = newKey;
                   updateConfig();
@@ -312,12 +328,14 @@ export default (require: typeof WebpackRequire) => {
               <TextInput
                 size={TextInput.Sizes.MINI}
                 value={val}
+                disabled={disabled}
                 onChange={(newValue: string) => {
                   entries[i][1] = newValue;
                   updateConfig();
                 }}
               />
               <RemoveEntryButton
+                disabled={disabled}
                 onClick={() => {
                   entries.splice(i, 1);
                   updateConfig();
@@ -331,6 +349,7 @@ export default (require: typeof WebpackRequire) => {
             color={Button.Colors.GREEN}
             size={Button.Sizes.SMALL}
             className={Margins.marginTop8}
+            disabled={disabled}
             onClick={() => {
               entries.push([`entry-${entries.length}`, ""]);
               updateConfig();
@@ -343,7 +362,7 @@ export default (require: typeof WebpackRequire) => {
     );
   }
 
-  function Setting({ ext, name, setting }: SettingsProps) {
+  function Setting({ ext, name, setting, disabled }: SettingsProps) {
     const elements: Partial<Record<ExtensionSettingType, SettingsComponent>> = {
       [ExtensionSettingType.Boolean]: Boolean,
       [ExtensionSettingType.Number]: Number,
@@ -355,7 +374,7 @@ export default (require: typeof WebpackRequire) => {
     };
     const element = elements[setting.type];
     if (element == null) return <></>;
-    return React.createElement(element, { ext, name, setting });
+    return React.createElement(element, { ext, name, setting, disabled });
   }
 
   return function Settings({ ext }: { ext: MoonbaseExtension }) {
@@ -363,7 +382,13 @@ export default (require: typeof WebpackRequire) => {
     return (
       <Flex className="moonbase-settings" direction={Flex.Direction.VERTICAL}>
         {Object.entries(ext.manifest.settings!).map(([name, setting]) => (
-          <Setting ext={ext} key={name} name={name} setting={setting} />
+          <Setting
+            ext={ext}
+            key={name}
+            name={name}
+            setting={setting}
+            disabled={ext.state === ExtensionState.NotDownloaded}
+          />
         ))}
       </Flex>
     );
