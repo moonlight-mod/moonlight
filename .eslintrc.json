@@ -20,9 +20,13 @@
   },
   "rules": {
     "indent": "off",
-    "eqeqeq": ["error", "always", {
-      "null": "ignore"
-    }],
+    "eqeqeq": [
+      "error",
+      "always",
+      {
+        "null": "ignore"
+      }
+    ],
     "quotes": [
       "error",
       "double",
