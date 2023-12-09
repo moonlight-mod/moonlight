@@ -1,8 +1,26 @@
-import { ExtensionWebExports } from "@moonlight-mod/types";
-import configPage from "./ui/config";
+import { ExtensionWebExports, WebpackRequireType } from "@moonlight-mod/types";
 import extensionsPage from "./ui/extensions";
+import configPage from "./ui/config";
 
 import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
+import ui from "./ui";
+
+export const pageModules: (require: WebpackRequireType) => Record<
+  string,
+  {
+    name: string;
+    element: React.FunctionComponent;
+  }
+> = (require) => ({
+  extensions: {
+    name: "Extensions",
+    element: extensionsPage(require)
+  },
+  config: {
+    name: "Config",
+    element: configPage(require)
+  }
+});
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {
@@ -55,9 +73,31 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
           }
         });
       };
-      settings.addHeader("moonlight", -2);
-      addSection("Extensions", extensionsPage(require));
-      addSection("Config", configPage(require));
+
+      if (moonlight.getConfigOption<boolean>("moonbase", "sections")) {
+        const pages = pageModules(require);
+
+        const { Text } = require("common_components");
+        const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
+
+        settings.addHeader("Moonbase", -2);
+        for (const page of Object.values(pages)) {
+          addSection(page.name, () => (
+            <>
+              <Text
+                className={Margins.marginBottom20}
+                variant="heading-lg/semibold"
+                tag="h2"
+              >
+                Extensions
+              </Text>
+              <page.element />
+            </>
+          ));
+        }
+      } else {
+        addSection("Moonbase", ui(require));
+      }
     }
   }
 };

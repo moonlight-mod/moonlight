@@ -7,6 +7,11 @@
   },
   "dependencies": ["spacepack", "settings", "common"],
   "settings": {
+    "sections": {
+      "displayName": "Split into sections",
+      "description": "Show the Moonbase tabs as separate sections",
+      "type": "boolean"
+    },
     "saveFilter": {
       "displayName": "Persist filter",
       "description": "Save extension filter in config",

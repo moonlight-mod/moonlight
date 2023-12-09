@@ -23,7 +23,6 @@ export default (require: WebpackRequireType) => {
   const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
   const SearchBar = spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0]
     .exports.default;
-  const { Text } = require("common_components");
 
   return function ExtensionsPage() {
     const { extensions, savedFilter } = Flux.useStateFromStoresObject(
@@ -87,13 +86,6 @@ export default (require: WebpackRequireType) => {
 
     return (
       <>
-        <Text
-          className={Margins.marginBottom20}
-          variant="heading-lg/semibold"
-          tag="h2"
-        >
-          Extensions
-        </Text>
         <SearchBar
           size={SearchBar.Sizes.MEDIUM}
           query={query}
