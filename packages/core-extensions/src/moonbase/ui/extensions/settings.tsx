@@ -362,9 +362,6 @@ export default (require: typeof WebpackRequire) => {
     const { Flex } = CommonComponents;
     return (
       <Flex className="moonbase-settings" direction={Flex.Direction.VERTICAL}>
-        <style>
-          {".moonbase-settings > :nth-child(2) { margin-top: 0px; }"}
-        </style>
         {Object.entries(ext.manifest.settings!).map(([name, setting]) => (
           <Setting ext={ext} key={name} name={name} setting={setting} />
         ))}

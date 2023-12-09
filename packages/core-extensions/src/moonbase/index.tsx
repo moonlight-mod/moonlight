@@ -61,3 +61,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     }
   }
 };
+
+export const styles = [
+  ".moonbase-settings > :first-child { margin-top: 0px; }"
+];
