@@ -6,16 +6,16 @@ import {
   ChevronSmallUpIconSVG
 } from "../../types";
 
-export const defaultFilter = {
-  core: true,
-  normal: true,
-  developer: true,
-  enabled: true,
-  disabled: true,
-  installed: true,
-  repository: true
-};
-export type Filter = typeof defaultFilter;
+export enum Filter {
+  Core = 1 << 0,
+  Normal = 1 << 1,
+  Developer = 1 << 2,
+  Enabled = 1 << 3,
+  Disabled = 1 << 4,
+  Installed = 1 << 5,
+  Repository = 1 << 6
+}
+export const defaultFilter = ~(~0 << 7);
 
 export default async (require: WebpackRequireType) => {
   const spacepack = require("spacepack_spacepack").spacepack;
@@ -87,6 +87,9 @@ export default async (require: WebpackRequireType) => {
       MenuCheckboxItem
     } = require("common_components");
 
+    const toggleFilter = (set: Filter) =>
+      setFilter(filter & set ? filter & ~set : filter | set);
+
     return (
       <div className={SortMenuClasses.container}>
         <Menu navId="sort-filter" hideScrollbar={true} onClose={closePopout}>
@@ -94,56 +97,48 @@ export default async (require: WebpackRequireType) => {
             <MenuCheckboxItem
               id="t-core"
               label="Core"
-              checked={filter.core}
-              action={() => setFilter({ ...filter, core: !filter.core })}
+              checked={filter & Filter.Core}
+              action={() => toggleFilter(Filter.Core)}
             />
             <MenuCheckboxItem
               id="t-normal"
               label="Normal"
-              checked={filter.normal}
-              action={() => setFilter({ ...filter, normal: !filter.normal })}
+              checked={filter & Filter.Normal}
+              action={() => toggleFilter(Filter.Normal)}
             />
             <MenuCheckboxItem
               id="t-developer"
               label="Developer"
-              checked={filter.developer}
-              action={() =>
-                setFilter({ ...filter, developer: !filter.developer })
-              }
+              checked={filter & Filter.Developer}
+              action={() => toggleFilter(Filter.Developer)}
             />
           </MenuGroup>
           <MenuGroup label="State">
             <MenuCheckboxItem
               id="s-enabled"
               label="Enabled"
-              checked={filter.enabled}
-              action={() => setFilter({ ...filter, enabled: !filter.enabled })}
+              checked={filter & Filter.Enabled}
+              action={() => toggleFilter(Filter.Enabled)}
             />
             <MenuCheckboxItem
               id="s-disabled"
               label="Disabled"
-              checked={filter.disabled}
-              action={() =>
-                setFilter({ ...filter, disabled: !filter.disabled })
-              }
+              checked={filter & Filter.Disabled}
+              action={() => toggleFilter(Filter.Disabled)}
             />
           </MenuGroup>
           <MenuGroup label="Location">
             <MenuCheckboxItem
               id="l-installed"
               label="Installed"
-              checked={filter.installed}
-              action={() =>
-                setFilter({ ...filter, installed: !filter.installed })
-              }
+              checked={filter & Filter.Installed}
+              action={() => toggleFilter(Filter.Installed)}
             />
             <MenuCheckboxItem
               id="l-repository"
               label="Repository"
-              checked={filter.repository}
-              action={() =>
-                setFilter({ ...filter, repository: !filter.repository })
-              }
+              checked={filter & Filter.Repository}
+              action={() => toggleFilter(Filter.Repository)}
             />
           </MenuGroup>
           <MenuGroup>
@@ -156,7 +151,7 @@ export default async (require: WebpackRequireType) => {
                 </Text>
               }
               action={() => {
-                setFilter({ ...defaultFilter });
+                setFilter(defaultFilter);
                 closePopout();
               }}
             />

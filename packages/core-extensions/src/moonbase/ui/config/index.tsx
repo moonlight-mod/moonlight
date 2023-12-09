@@ -125,17 +125,7 @@ export default (require: WebpackRequireType) => {
           </FormText>
           <ArrayFormItem config="repositories" />
         </FormItem>
-
-        <FormSwitch
-          className={Margins.marginTop20}
-          value={MoonbaseSettingsStore.getConfigOption("saveExtensionFilter")}
-          onChange={(value: boolean) => {
-            MoonbaseSettingsStore.setConfigOption("saveExtensionFilter", value);
-          }}
-          note="Save the filter on the extensions page so it persists"
-        >
-          Save extension filter
-        </FormSwitch>
+        <FormDivider className={FormClasses.dividerDefault} />
         <FormItem
           title="Extension search paths"
           className={Margins.marginTop20}
