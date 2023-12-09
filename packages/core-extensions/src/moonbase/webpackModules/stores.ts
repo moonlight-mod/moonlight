@@ -173,6 +173,7 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
 
     if (val == null) {
       this.config.extensions[id] = { enabled };
+      this.modified = this.isModified();
       this.emitChange();
       return;
     }
