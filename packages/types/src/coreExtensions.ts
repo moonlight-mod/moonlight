@@ -23,6 +23,10 @@ export type Spacepack = {
     ...strings: (string | RegExp)[]
     // eslint-disable-next-line @typescript-eslint/ban-types
   ) => Function | null;
+  lazyLoad: (
+    find: string | RegExp | (string | RegExp)[],
+    match: RegExp
+  ) => Promise<any>;
 };
 
 export type NoticeProps = {

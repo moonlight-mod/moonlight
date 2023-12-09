@@ -160,6 +160,22 @@ export const spacepack: Spacepack = {
           )
       )?.[0]?.[1] ?? null
     );
+  },
+
+  lazyLoad: (find: string | RegExp | (string | RegExp)[], match: RegExp) => {
+    const module = Array.isArray(find)
+      ? spacepack.findByCode(...find)
+      : spacepack.findByCode(find);
+    if (module.length < 1) return Promise.reject("Find failed");
+
+    const findId = module[0].id;
+    const findCode = webpackRequire.m[findId].toString().replace(/\n/g, "");
+
+    const matchResult = findCode.match(match);
+    if (!matchResult) return Promise.reject("Match failed");
+
+    const matchId = matchResult[1];
+    return webpackRequire.el(matchId).then(() => webpackRequire(matchId));
   }
 };
 
