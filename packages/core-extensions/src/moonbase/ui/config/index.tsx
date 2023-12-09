@@ -109,21 +109,15 @@ export default (require: WebpackRequireType) => {
   }
 
   return function ConfigPage() {
-    const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0]
-      .exports;
     return (
       <>
-        <div
-          className={`${TitleBarClasses.children} ${Margins.marginBottom20}`}
+        <Text
+          className={Margins.marginBottom20}
+          variant="heading-lg/semibold"
+          tag="h2"
         >
-          <Text
-            className={TitleBarClasses.titleWrapper}
-            variant="heading-lg/semibold"
-            tag="h2"
-          >
-            Config
-          </Text>
-        </div>
+          Config
+        </Text>
 
         <FormItem title="Repositories">
           <FormText className={Margins.marginBottom4}>

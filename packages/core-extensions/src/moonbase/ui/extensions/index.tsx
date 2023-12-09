@@ -44,8 +44,6 @@ export default (require: WebpackRequireType) => {
       savedFilter ? { ...savedFilter } : { ...defaultFilter }
     );
     const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
-    const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0]
-      .exports;
     const sorted = Object.values(extensions).sort((a, b) => {
       const aName = a.manifest.meta?.name ?? a.id;
       const bName = b.manifest.meta?.name ?? b.id;
@@ -77,17 +75,13 @@ export default (require: WebpackRequireType) => {
 
     return (
       <>
-        <div
-          className={`${TitleBarClasses.children} ${Margins.marginBottom20}`}
+        <Text
+          className={Margins.marginBottom20}
+          variant="heading-lg/semibold"
+          tag="h2"
         >
-          <Text
-            className={TitleBarClasses.titleWrapper}
-            variant="heading-lg/semibold"
-            tag="h2"
-          >
-            Extensions
-          </Text>
-        </div>
+          Extensions
+        </Text>
         <SearchBar
           size={SearchBar.Sizes.MEDIUM}
           query={query}
