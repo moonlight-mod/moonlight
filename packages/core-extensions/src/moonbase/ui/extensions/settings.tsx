@@ -3,6 +3,7 @@ import {
   ExtensionSettingsManifest,
   MultiSelectSettingType,
   NumberSettingType,
+  SelectOption,
   SelectSettingType
 } from "@moonlight-mod/types/config";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
@@ -134,7 +135,9 @@ export default (require: typeof WebpackRequire) => {
           autofocus={false}
           clearable={false}
           value={value ?? ""}
-          options={options.map((o) => ({ value: o, label: o }))}
+          options={options.map((o: SelectOption) =>
+            typeof o === "string" ? { value: o, label: o } : o
+          )}
           onChange={(value: string) => {
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
           }}
@@ -162,7 +165,9 @@ export default (require: typeof WebpackRequire) => {
           autofocus={false}
           clearable={false}
           closeOnSelect={false}
-          options={options.map((o) => ({ value: o, label: o }))}
+          options={options.map((o: SelectOption) =>
+            typeof o === "string" ? { value: o, label: o } : o
+          )}
           {...useVariableSelect({
             onSelectInteraction: multiSelect,
             value: new Set(Array.isArray(value) ? value : [value]),

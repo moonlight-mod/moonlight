@@ -26,6 +26,13 @@ export enum ExtensionSettingType {
   Custom = "custom"
 }
 
+export type SelectOption =
+  | string
+  | {
+      value: string;
+      label: string;
+    };
+
 export type BooleanSettingType = {
   type: ExtensionSettingType.Boolean;
   default?: boolean;
@@ -45,7 +52,7 @@ export type StringSettingType = {
 
 export type SelectSettingType = {
   type: ExtensionSettingType.Select;
-  options: string[];
+  options: SelectOption[];
   default?: string;
 };
 
