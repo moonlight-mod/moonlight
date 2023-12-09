@@ -41,12 +41,6 @@ export default (require: WebpackRequireType) => {
 
     const [query, setQuery] = React.useState("");
 
-    // const [filter, setFilter] = React.useState(
-    //   moonlight.getConfigOption<boolean>("moonbase", "saveFilters")
-    //     ? moonlight.getConfigOption<number>("moonbase", "filters") ??
-    //         defaultFilter
-    //     : defaultFilter
-    // );
     let filter: Filter, setFilter: (filter: Filter) => void;
     if (moonlight.getConfigOption<boolean>("moonbase", "saveFilter")) {
       filter = savedFilter ?? defaultFilter;
@@ -118,17 +112,7 @@ export default (require: WebpackRequireType) => {
         >
           <FilterBar
             filter={filter}
-            setFilter={(filter) => {
-              // if (
-              //   MoonbaseSettingsStore.getConfigOption("saveExtensionFilter")
-              // ) {
-              //   MoonbaseSettingsStore.setConfigOption(
-              //     "extensionsFilter",
-              //     filter
-              //   );
-              // }
-              setFilter(filter);
-            }}
+            setFilter={setFilter}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
           />
