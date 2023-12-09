@@ -263,7 +263,7 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
   // Required because electron likes to make it immutable sometimes.
   // This sucks.
   private clone<T>(obj: T): T {
-    return JSON.parse(JSON.stringify(obj));
+    return structuredClone(obj);
   }
 }
 
