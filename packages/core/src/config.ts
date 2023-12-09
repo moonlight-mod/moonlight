@@ -9,16 +9,6 @@ const defaultConfig: Config = {
     noTrack: true,
     noHideToken: true
   },
-  saveExtensionFilter: false,
-  extensionsFilter: {
-    core: true,
-    developer: true,
-    disabled: true,
-    enabled: true,
-    installed: true,
-    normal: true,
-    repository: true
-  },
   repositories: ["https://moonlight-mod.github.io/extensions-dist/repo.json"]
 };
 

@@ -4,7 +4,7 @@ import {
   WebpackRequireType
 } from "@moonlight-mod/types";
 import { ExtensionState } from "../../types";
-import filterBar, { defaultFilter } from "./filterBar";
+import filterBar, { Filter, defaultFilter } from "./filterBar";
 import card from "./card";
 
 export default (require: WebpackRequireType) => {
@@ -26,23 +26,37 @@ export default (require: WebpackRequireType) => {
   const { Text } = require("common_components");
 
   return function ExtensionsPage() {
-    const { extensions } = Flux.useStateFromStoresObject(
+    const { extensions, savedFilter } = Flux.useStateFromStoresObject(
       [MoonbaseSettingsStore],
       () => {
-        return { extensions: MoonbaseSettingsStore.extensions };
+        return {
+          extensions: MoonbaseSettingsStore.extensions,
+          savedFilter: MoonbaseSettingsStore.getExtensionConfig(
+            "moonbase",
+            "filter"
+          )
+        };
       }
     );
 
     const [query, setQuery] = React.useState("");
 
-    const savedFilter = MoonbaseSettingsStore.getConfigOption(
-      "saveExtensionFilter"
-    )
-      ? MoonbaseSettingsStore.getConfigOption("extensionsFilter")
-      : null;
-    const [filter, setFilter] = React.useState(
-      savedFilter ? { ...savedFilter } : { ...defaultFilter }
-    );
+    // const [filter, setFilter] = React.useState(
+    //   moonlight.getConfigOption<boolean>("moonbase", "saveFilters")
+    //     ? moonlight.getConfigOption<number>("moonbase", "filters") ??
+    //         defaultFilter
+    //     : defaultFilter
+    // );
+    let filter: Filter, setFilter: (filter: Filter) => void;
+    if (moonlight.getConfigOption<boolean>("moonbase", "saveFilter")) {
+      filter = savedFilter ?? defaultFilter;
+      setFilter = (filter) =>
+        MoonbaseSettingsStore.setExtensionConfig("moonbase", "filter", filter);
+    } else {
+      const state = React.useState(defaultFilter);
+      filter = state[0];
+      setFilter = state[1];
+    }
     const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
     const sorted = Object.values(extensions).sort((a, b) => {
       const aName = a.manifest.meta?.name ?? a.id;
@@ -60,16 +74,20 @@ export default (require: WebpackRequireType) => {
         ) &&
         // This seems very bad, sorry
         !(
-          (!filter.core && ext.source.type === ExtensionLoadSource.Core) ||
-          (!filter.normal && ext.source.type === ExtensionLoadSource.Normal) ||
-          (!filter.developer &&
+          (!(filter & Filter.Core) &&
+            ext.source.type === ExtensionLoadSource.Core) ||
+          (!(filter & Filter.Normal) &&
+            ext.source.type === ExtensionLoadSource.Normal) ||
+          (!(filter & Filter.Developer) &&
             ext.source.type === ExtensionLoadSource.Developer) ||
-          (!filter.enabled &&
+          (!(filter & Filter.Enabled) &&
             MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
-          (!filter.disabled &&
+          (!(filter & Filter.Disabled) &&
             !MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
-          (!filter.installed && ext.state !== ExtensionState.NotDownloaded) ||
-          (!filter.repository && ext.state === ExtensionState.NotDownloaded)
+          (!(filter & Filter.Installed) &&
+            ext.state !== ExtensionState.NotDownloaded) ||
+          (!(filter & Filter.Repository) &&
+            ext.state === ExtensionState.NotDownloaded)
         )
     );
 
@@ -101,14 +119,14 @@ export default (require: WebpackRequireType) => {
           <FilterBar
             filter={filter}
             setFilter={(filter) => {
-              if (
-                MoonbaseSettingsStore.getConfigOption("saveExtensionFilter")
-              ) {
-                MoonbaseSettingsStore.setConfigOption(
-                  "extensionsFilter",
-                  filter
-                );
-              }
+              // if (
+              //   MoonbaseSettingsStore.getConfigOption("saveExtensionFilter")
+              // ) {
+              //   MoonbaseSettingsStore.setConfigOption(
+              //     "extensionsFilter",
+              //     filter
+              //   );
+              // }
               setFilter(filter);
             }}
             selectedTags={selectedTags}

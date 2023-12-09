@@ -5,5 +5,12 @@
     "tagline": "The official settings UI for moonlight",
     "authors": ["Cynosphere", "NotNite"]
   },
-  "dependencies": ["spacepack", "settings", "common"]
+  "dependencies": ["spacepack", "settings", "common"],
+  "settings": {
+    "saveFilter": {
+      "displayName": "Persist filter",
+      "description": "Save extension filter in config",
+      "type": "boolean"
+    }
+  }
 }
