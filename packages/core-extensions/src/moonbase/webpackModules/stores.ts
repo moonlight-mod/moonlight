@@ -25,9 +25,8 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
   constructor() {
     super(Dispatcher);
 
-    // Fucking Electron making it immutable
     this.origConfig = moonlightNode.config;
-    this.config = JSON.parse(JSON.stringify(this.origConfig));
+    this.config = this.clone(this.origConfig);
 
     this.modified = false;
     this.submitting = false;
@@ -136,10 +135,11 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
 
   getExtensionConfig<T>(id: string, key: string): T | undefined {
     const defaultValue = this.extensions[id].manifest.settings?.[key]?.default;
+    const clonedDefaultValue = this.clone(defaultValue);
     const cfg = this.config.extensions[id];
 
-    if (cfg == null || typeof cfg === "boolean") return defaultValue;
-    return cfg.config?.[key] ?? defaultValue;
+    if (cfg == null || typeof cfg === "boolean") return clonedDefaultValue;
+    return cfg.config?.[key] ?? clonedDefaultValue;
   }
 
   getExtensionConfigName(id: string, key: string) {
@@ -243,8 +243,7 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
 
     try {
       moonlightNode.writeConfig(this.config);
-      // I love jank cloning
-      this.origConfig = JSON.parse(JSON.stringify(this.config));
+      this.origConfig = this.clone(this.config);
     } catch (e) {
       logger.error("Error writing config", e);
     }
@@ -257,8 +256,14 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
   reset() {
     this.submitting = false;
     this.modified = false;
-    this.config = JSON.parse(JSON.stringify(this.origConfig));
+    this.config = this.clone(this.origConfig);
     this.emitChange();
+  }
+
+  // Required because electron likes to make it immutable sometimes.
+  // This sucks.
+  private clone<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
   }
 }
 
