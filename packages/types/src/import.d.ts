@@ -32,3 +32,9 @@ declare module "@moonlight-mod/wp/settings_settings" {
   export const Settings: CoreExtensions.Settings;
   export default Settings;
 }
+
+declare module "@moonlight-mod/wp/markdown_markdown" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  const Markdown: CoreExtensions.Markdown.Markdown;
+  export = Markdown;
+}

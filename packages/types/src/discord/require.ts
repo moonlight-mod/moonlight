@@ -6,6 +6,7 @@ import {
   CommonComponents,
   CommonFluxDispatcher
 } from "../coreExtensions";
+import { Markdown } from "../coreExtensions/markdown";
 
 declare function WebpackRequire(id: string): any;
 declare function WebpackRequire(id: "spacepack_spacepack"): {
@@ -24,5 +25,7 @@ declare function WebpackRequire(id: "settings_settings"): {
   Settings: Settings;
   default: Settings;
 };
+
+declare function WebpackRequire(id: "markdown_markdown"): Markdown;
 
 export default WebpackRequire;

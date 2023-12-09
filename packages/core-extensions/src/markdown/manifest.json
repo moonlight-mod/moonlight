@@ -1,0 +1,9 @@
+{
+  "id": "markdown",
+  "meta": {
+    "name": "Markdown",
+    "tagline": "A library for adding new markdown rules",
+    "authors": ["Cynosphere"],
+    "tags": ["library"]
+  }
+}
