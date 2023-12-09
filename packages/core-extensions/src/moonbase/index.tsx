@@ -5,23 +5,18 @@ import configPage from "./ui/config";
 import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
 import ui from "./ui";
 
-export enum MoonbasePage {
-  Extensions = "extensions",
-  Config = "config"
-}
-
 export const pageModules: (require: WebpackRequireType) => Record<
-  MoonbasePage,
+  string,
   {
     name: string;
     element: React.FunctionComponent;
   }
 > = (require) => ({
-  [MoonbasePage.Extensions]: {
+  extensions: {
     name: "Extensions",
     element: extensionsPage(require)
   },
-  [MoonbasePage.Config]: {
+  config: {
     name: "Config",
     element: configPage(require)
   }

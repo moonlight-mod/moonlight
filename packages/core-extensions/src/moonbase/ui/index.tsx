@@ -1,5 +1,5 @@
 import { WebpackRequireType } from "@moonlight-mod/types";
-import { MoonbasePage, pageModules } from "..";
+import { pageModules } from "..";
 
 export default (require: WebpackRequireType) => {
   const React = require("common_react");
@@ -18,9 +18,7 @@ export default (require: WebpackRequireType) => {
   return function Moonbase() {
     const { Text, TabBar } = require("common_components");
 
-    const [selectedTab, setSelectedTab] = React.useState(
-      MoonbasePage.Extensions
-    );
+    const [selectedTab, setSelectedTab] = React.useState(Object.keys(pages)[0]);
 
     return (
       <>
