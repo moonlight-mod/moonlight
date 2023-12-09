@@ -115,6 +115,7 @@ export type ExtensionWebpackModule = {
 export type ExtensionWebExports = {
   patches?: Patch[];
   webpackModules?: Record<string, ExtensionWebpackModule>;
+  styles?: string[];
 };
 
 export type IdentifiedPatch = Patch & {

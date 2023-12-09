@@ -1,5 +1,6 @@
 import { loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import { installWebpackPatcher } from "@moonlight-mod/core/patch";
+import { installStyles } from "@moonlight-mod/core/styles";
 import Logger from "@moonlight-mod/core/util/logger";
 
 (async () => {
@@ -23,4 +24,8 @@ import Logger from "@moonlight-mod/core/util/logger";
   } catch (e) {
     logger.error("Error setting up web-preload", e);
   }
+
+  window.addEventListener("DOMContentLoaded", () => {
+    installStyles();
+  });
 })();

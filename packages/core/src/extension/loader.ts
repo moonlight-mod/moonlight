@@ -9,6 +9,7 @@ import Logger from "../util/logger";
 import { registerPatch, registerWebpackModule } from "../patch";
 import calculateDependencies from "../util/dependency";
 import { createEventEmitter } from "../util/event";
+import { registerStyles } from "../styles";
 
 const logger = new Logger("core/extension/loader");
 
@@ -67,6 +68,12 @@ async function loadExt(ext: DetectedExtension) {
             registerWebpackModule({ ...wp, ext: ext.id, id: name });
           }
         }
+      }
+
+      if (exports.styles != null) {
+        registerStyles(
+          exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`)
+        );
       }
     }
   }
