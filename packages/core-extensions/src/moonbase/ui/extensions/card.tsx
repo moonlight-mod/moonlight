@@ -141,6 +141,7 @@ export default (require: typeof WebpackRequire) => {
                         color={CommonComponents.tokens.colors.STATUS_DANGER}
                       />
                     )}
+                    onClick={() => window.location.reload()}
                     tooltipText="You will need to reload/restart your client for this extension to work properly."
                   />
                 )}

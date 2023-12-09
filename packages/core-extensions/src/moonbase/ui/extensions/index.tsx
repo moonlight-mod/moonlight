@@ -34,7 +34,15 @@ export default (require: WebpackRequireType) => {
     );
 
     const [query, setQuery] = React.useState("");
-    const [filter, setFilter] = React.useState({ ...defaultFilter });
+
+    const savedFilter = MoonbaseSettingsStore.getConfigOption(
+      "saveExtensionFilter"
+    )
+      ? MoonbaseSettingsStore.getConfigOption("extensionsFilter")
+      : null;
+    const [filter, setFilter] = React.useState(
+      savedFilter ? { ...savedFilter } : { ...defaultFilter }
+    );
     const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
     const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0]
       .exports;
@@ -98,7 +106,17 @@ export default (require: WebpackRequireType) => {
         >
           <FilterBar
             filter={filter}
-            setFilter={setFilter}
+            setFilter={(filter) => {
+              if (
+                MoonbaseSettingsStore.getConfigOption("saveExtensionFilter")
+              ) {
+                MoonbaseSettingsStore.setConfigOption(
+                  "extensionsFilter",
+                  filter
+                );
+              }
+              setFilter(filter);
+            }}
             selectedTags={selectedTags}
             setSelectedTags={setSelectedTags}
           />

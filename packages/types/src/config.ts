@@ -4,6 +4,16 @@ export type Config = {
   devSearchPaths?: string[];
   loggerLevel?: string;
   patchAll?: boolean;
+  saveExtensionFilter: boolean;
+  extensionsFilter: {
+    core: boolean;
+    normal: boolean;
+    developer: boolean;
+    enabled: boolean;
+    disabled: boolean;
+    installed: boolean;
+    repository: boolean;
+  };
 };
 
 export type ConfigExtensions =

@@ -17,7 +17,8 @@ export default (require: WebpackRequireType) => {
     TextInput,
     Flex,
     Button,
-    SingleSelect
+    SingleSelect,
+    Text
   } = CommonComponents;
 
   const { MoonbaseSettingsStore } =
@@ -108,15 +109,39 @@ export default (require: WebpackRequireType) => {
   }
 
   return function ConfigPage() {
+    const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0]
+      .exports;
     return (
       <>
+        <div
+          className={`${TitleBarClasses.children} ${Margins.marginBottom20}`}
+        >
+          <Text
+            className={TitleBarClasses.titleWrapper}
+            variant="heading-lg/semibold"
+            tag="h2"
+          >
+            Config
+          </Text>
+        </div>
+
         <FormItem title="Repositories">
           <FormText className={Margins.marginBottom4}>
             A list of remote repositories to display extensions from
           </FormText>
           <ArrayFormItem config="repositories" />
         </FormItem>
-        <FormDivider className={FormClasses.dividerDefault} />
+
+        <FormSwitch
+          className={Margins.marginTop20}
+          value={MoonbaseSettingsStore.getConfigOption("saveExtensionFilter")}
+          onChange={(value: boolean) => {
+            MoonbaseSettingsStore.setConfigOption("saveExtensionFilter", value);
+          }}
+          note="Save the filter on the extensions page so it persists"
+        >
+          Save extension filter
+        </FormSwitch>
         <FormItem
           title="Extension search paths"
           className={Margins.marginTop20}
