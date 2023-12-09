@@ -74,6 +74,13 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           replace.type === undefined ||
           replace.type === PatchReplaceType.Normal
         ) {
+          // Add support for \i to match rspack's minified names
+          if (typeof replace.match !== "string") {
+            replace.match = new RegExp(
+              replace.match.source.replace(/\\i/g, "[A-Za-z_$][\\w$]*"),
+              replace.match.flags
+            );
+          }
           // tsc fails to detect the overloads for this, so I'll just do this
           // Verbose, but it works
           let replaced;
