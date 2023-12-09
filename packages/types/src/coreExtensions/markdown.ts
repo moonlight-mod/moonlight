@@ -1,28 +1,28 @@
 // {{{ simple-markdown
 
-type SingleASTNode = {
+export type SingleASTNode = {
   type: string;
   [key: string]: any;
 };
 
-type UnTypedASTNode = {
+export type UntypedASTNode = {
   [key: string]: any;
 };
 
-type ASTNode = SingleASTNode | Array<SingleASTNode>;
+export type ASTNode = SingleASTNode | Array<SingleASTNode>;
 
-type Parser = (
+export type Parser = (
   source: string,
   state?: State | null | undefined
 ) => Array<SingleASTNode>;
 
-type ParseFunction = (
+export type ParseFunction = (
   capture: Capture,
   nestedParse: Parser,
   state: State
-) => UnTypedASTNode | ASTNode;
+) => UntypedASTNode | ASTNode;
 
-type Capture =
+export type Capture =
   | (Array<string> & {
       index: number;
     })
@@ -30,13 +30,13 @@ type Capture =
       index?: number;
     });
 
-type State = {
+export type State = {
   key?: string | number | undefined;
   inline?: boolean | null | undefined;
   [key: string]: any;
 };
 
-type MatchFunction = {
+export type MatchFunction = {
   regex?: RegExp;
 } & ((
   source: string,
@@ -44,13 +44,13 @@ type MatchFunction = {
   prevCapture: string
 ) => Capture | null | undefined);
 
-type Output<Result> = (
+export type Output<Result> = (
   node: ASTNode,
   state?: State | null | undefined
 ) => Result;
 
-type ArrayNodeOutput<Result> = (
-  node: Array<SingleASTNode>,
+export type SingleNodeOutput<Result> = (
+  node: SingleASTNode,
   nestedOutput: Output<Result>,
   state: State
 ) => Result;
@@ -63,7 +63,7 @@ export type MarkdownRule = {
   order: number;
   match: MatchFunction;
   parse: ParseFunction;
-  react: ArrayNodeOutput<React.ReactNode>;
+  react: SingleNodeOutput<React.ReactNode>;
 };
 
 export type SlateRule =
@@ -83,6 +83,7 @@ export type SlateRule =
     };
 
 export type Ruleset =
+  | "RULES"
   | "CHANNEL_TOPIC_RULES"
   | "VOICE_CHANNEL_STATUS_RULES"
   | "EMBED_TITLE_RULES"
@@ -92,3 +93,18 @@ export type Ruleset =
   | "PROFILE_BIO_RULES"
   | "AUTO_MODERATION_SYSTEM_MESSAGE_RULES"
   | "NATIVE_SEARCH_RESULT_LINK_RULES";
+
+export type Markdown = {
+  rules: Record<string, MarkdownRule>;
+  slateRules: Record<string, SlateRule>;
+  slateDecorators: Record<string, string>;
+  ruleBlacklists: Record<Ruleset, Record<string, boolean>>;
+
+  addRule: (
+    name: string,
+    markdown: (rules: Record<string, MarkdownRule>) => MarkdownRule,
+    slate: (rules: Record<string, SlateRule>) => SlateRule,
+    decorator?: string | undefined
+  ) => void;
+  blacklistFromRuleset: (ruleset: Ruleset, name: string) => void;
+};

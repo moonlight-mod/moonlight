@@ -65,3 +65,5 @@ export type CommonReact = typeof import("react");
 export type CommonFlux = FluxDefault;
 export type CommonComponents = CommonComponents_; // lol
 export type CommonFluxDispatcher = Dispatcher<any>;
+
+export * as Markdown from "./coreExtensions/markdown";
