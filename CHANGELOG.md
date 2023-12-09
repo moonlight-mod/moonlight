@@ -1,4 +1,6 @@
-- Added search and filters to Moonbase (@redstonekasi)
-- Changed the official repository URL
-  - If you installed moonlight before this update, you will need to edit your config file manually and set it to `https://moonlight-mod.github.io/extensions-dist/repo.json`
-- Fixed random bugs from release builds
+- Updated Moonbase
+- Added Markdown library
+- Added ability for extensions to expose styles (`export const styles: string[] = [];`)
+- Added `lazyLoad` to Spacepack
+- Added custom labels to Select/MultiSelect in extension settings
+- Added `\i` for matching variable names in patches
