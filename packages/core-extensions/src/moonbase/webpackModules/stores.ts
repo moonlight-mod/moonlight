@@ -59,6 +59,13 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
                     download: ext.download
                   };
                 }
+
+                this.extensions[ext.id].manifest = ext;
+                this.extensions[ext.id].source = {
+                  type: ExtensionLoadSource.Normal,
+                  url: repo
+                };
+
                 continue;
               }
 

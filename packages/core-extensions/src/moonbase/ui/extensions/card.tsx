@@ -31,7 +31,8 @@ export default (require: typeof WebpackRequire) => {
     "topSection"
   )[0].exports;
 
-  const DownloadIcon = spacepack.findByCode(DownloadIconSVG)[0].exports.default;
+  const DownloadIcon =
+    spacepack.findByCode(DownloadIconSVG)[0].exports.DownloadIcon;
   const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
   const DangerIcon =
     spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
@@ -127,7 +128,7 @@ export default (require: typeof WebpackRequire) => {
                 {update !== null && (
                   <PanelButton
                     icon={DownloadIcon}
-                    tooltipText="Delete"
+                    tooltipText="Update"
                     onClick={() => {
                       MoonbaseSettingsStore.installExtension(id);
                     }}

@@ -97,6 +97,7 @@ export default (require: typeof WebpackRequire) => {
   function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
     const authors = ext.manifest?.meta?.authors;
     const tags = ext.manifest?.meta?.tags;
+    const version = ext.manifest?.version;
 
     const dependencies: Dependency[] = [];
     if (ext.manifest.dependencies != null) {
@@ -189,6 +190,12 @@ export default (require: typeof WebpackRequire) => {
                 </Badge>
               );
             })}
+          </InfoSection>
+        )}
+
+        {version != null && (
+          <InfoSection title="Version">
+            <span>{version}</span>
           </InfoSection>
         )}
       </>
