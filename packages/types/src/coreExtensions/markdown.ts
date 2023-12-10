@@ -63,7 +63,7 @@ export type MarkdownRule = {
   order: number;
   match: MatchFunction;
   parse: ParseFunction;
-  react: SingleNodeOutput<React.ReactNode>;
+  react?: SingleNodeOutput<React.ReactNode>;
 };
 
 export type SlateRule =
