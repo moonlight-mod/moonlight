@@ -157,7 +157,9 @@ export async function inject(asarPath: string) {
     logger.error("Failed to inject", e);
   }
 
-  require(asarPath);
+  // Need to do this instead of require() or it breaks require.main
+  // @ts-expect-error why are you not documented
+  Module._load(asarPath, Module, true);
 }
 
 function patchElectron() {
