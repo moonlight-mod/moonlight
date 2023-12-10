@@ -42,7 +42,8 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       CircleXIconSVG,
       "Masks.PANEL_BUTTON",
       "removeButtonContainer:",
-      '"Missing channel in Channel.openChannelContextMenu"'
+      '"Missing channel in Channel.openChannelContextMenu"',
+      ".default.HEADER_BAR"
     ],
     entrypoint: true,
     run: (module, exports, require) => {
