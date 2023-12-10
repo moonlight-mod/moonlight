@@ -43,7 +43,7 @@ export type ExtensionManifest = {
 
   dependencies?: string[];
   suggested?: string[];
-  incompatible?: string[]; // TODO: implement
+  incompatible?: string[];
 
   settings?: Record<string, ExtensionSettingsManifest>;
   cors?: string[];
