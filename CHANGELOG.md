@@ -1,6 +1,3 @@
-- Updated Moonbase
-- Added Markdown library
-- Added ability for extensions to expose styles (`export const styles: string[] = [];`)
-- Added `lazyLoad` to Spacepack
-- Added custom labels to Select/MultiSelect in extension settings
-- Added `\i` for matching variable names in patches
+- Fixed updating extensions
+- Fixed Linux support
+- Fixed some incorrect types on Webpack module imports
