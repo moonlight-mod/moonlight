@@ -10,7 +10,8 @@
     "sections": {
       "displayName": "Split into sections",
       "description": "Show the Moonbase tabs as separate sections",
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "saveFilter": {
       "displayName": "Persist filter",
