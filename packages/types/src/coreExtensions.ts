@@ -2,7 +2,11 @@ import { FluxDefault, Store } from "./discord/common/Flux";
 import { CommonComponents as CommonComponents_ } from "./coreExtensions/components";
 import { Dispatcher } from "flux";
 import React from "react";
-import { WebpackModuleFunc, WebpackRequireType } from "./discord";
+import {
+  WebpackModule,
+  WebpackModuleFunc,
+  WebpackRequireType
+} from "./discord";
 
 export type Spacepack = {
   inspect: (module: number | string) => WebpackModuleFunc | null;
@@ -27,6 +31,7 @@ export type Spacepack = {
     find: string | RegExp | (string | RegExp)[],
     match: RegExp
   ) => Promise<any>;
+  filterReal: (modules: WebpackModule[]) => WebpackModule[];
 };
 
 export type NoticeProps = {
