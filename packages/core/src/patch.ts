@@ -49,9 +49,16 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         continue;
       }
 
-      if (patch.find instanceof RegExp && patch.find.global) {
-        // Reset state because global regexes are stateful for some reason
-        patch.find.lastIndex = 0;
+      if (patch.find instanceof RegExp) {
+        if (patch.find.global) {
+          // Reset state because global regexes are stateful for some reason
+          patch.find.lastIndex = 0;
+        }
+        // Add support for \i to match rspack's minified names
+        patch.find = new RegExp(
+          patch.find.source.replace(/\\i/g, "[A-Za-z_$][\\w$]*"),
+          patch.find.flags
+        );
       }
 
       // indexOf is faster than includes by 0.25% lmao
