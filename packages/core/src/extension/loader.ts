@@ -117,6 +117,7 @@ async function loadExt(ext: DetectedExtension) {
 export async function loadExtensions(
   exts: DetectedExtension[]
 ): Promise<ProcessedExtensions> {
+  const config = readConfig();
   const items = exts
     .map((ext) => {
       return {
@@ -126,65 +127,30 @@ export async function loadExtensions(
     })
     .sort((a, b) => a.id.localeCompare(b.id));
 
-  const [sorted, dependencyGraph] = calculateDependencies(
-    items,
-
-    function fetchDep(id) {
+  const [sorted, dependencyGraph] = calculateDependencies(items, {
+    fetchDep: (id) => {
       return exts.find((x) => x.id === id) ?? null;
     },
 
-    function getDeps(item) {
+    getDeps: (item) => {
       return item.data.manifest.dependencies ?? [];
     },
 
-    function getIncompatible(item) {
+    getIncompatible: (item) => {
       return item.data.manifest.incompatible ?? [];
+    },
+
+    getEnabled: (item) => {
+      const entry = config.extensions[item.id];
+      if (entry == null) return false;
+      if (entry === true) return true;
+      if (typeof entry === "object" && entry.enabled === true) return true;
+      return false;
     }
-  );
-  exts = sorted.map((x) => x.data);
-
-  logger.debug(
-    "Implicit dependency stage - extension list:",
-    exts.map((x) => x.id)
-  );
-  const config = readConfig();
-  const implicitlyEnabled: string[] = [];
-
-  function isEnabledInConfig(ext: DetectedExtension) {
-    if (implicitlyEnabled.includes(ext.id)) return true;
-
-    const entry = config.extensions[ext.id];
-    if (entry == null) return false;
-
-    if (entry === true) return true;
-    if (typeof entry === "object" && entry.enabled === true) return true;
-
-    return false;
-  }
-
-  function validateDeps(ext: DetectedExtension) {
-    if (isEnabledInConfig(ext)) {
-      const deps = dependencyGraph.get(ext.id)!;
-      for (const dep of deps.values()) {
-        validateDeps(exts.find((e) => e.id === dep)!);
-      }
-    } else {
-      const dependsOnMe = Array.from(dependencyGraph.entries()).filter(
-        ([, v]) => v?.has(ext.id)
-      );
-
-      if (dependsOnMe.length > 0) {
-        logger.debug("Implicitly enabling extension", ext.id);
-        implicitlyEnabled.push(ext.id);
-      }
-    }
-  }
-
-  for (const ext of exts) validateDeps(ext);
-  exts = exts.filter((e) => isEnabledInConfig(e));
+  });
 
   return {
-    extensions: exts,
+    extensions: sorted.map((x) => x.data),
     dependencyGraph
   };
 }
@@ -196,7 +162,7 @@ export async function loadProcessedExtensions({
   const eventEmitter = createEventEmitter();
   const finished: Set<string> = new Set();
 
-  logger.debug(
+  logger.trace(
     "Load stage - extension list:",
     extensions.map((x) => x.id)
   );
