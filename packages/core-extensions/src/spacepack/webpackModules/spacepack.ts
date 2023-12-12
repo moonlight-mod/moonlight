@@ -176,6 +176,10 @@ export const spacepack: Spacepack = {
 
     const matchId = matchResult[1];
     return webpackRequire.el(matchId).then(() => webpackRequire(matchId));
+  },
+
+  filterReal: (modules: WebpackModule[]) => {
+    return modules.filter((module) => module.id.toString().match(/^\d+$/));
   }
 };
 
