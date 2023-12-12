@@ -180,14 +180,12 @@ function handleModuleDependencies() {
       };
     });
 
-  const [sorted, _] = calculateDependencies(
-    dependencies,
-
-    function fetchDep(id) {
+  const [sorted, _] = calculateDependencies(dependencies, {
+    fetchDep: (id) => {
       return modules.find((x) => id === `${x.ext}_${x.id}`) ?? null;
     },
 
-    function getDeps(item) {
+    getDeps: (item) => {
       const deps = item.data?.dependencies ?? [];
       return (
         deps.filter(
@@ -195,7 +193,7 @@ function handleModuleDependencies() {
         ) as ExplicitExtensionDependency[]
       ).map((x) => `${x.ext}_${x.id}`);
     }
-  );
+  });
 
   webpackModules = new Set(sorted.map((x) => x.data));
 }

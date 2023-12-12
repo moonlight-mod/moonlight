@@ -1,37 +1,36 @@
 import Logger from "./logger";
 
+const logger = new Logger("core/util/dependency");
+
 export type Dependency<T, D> = {
   id: T;
   data: D;
 };
+type Dependencies<T, D> = Dependency<T, D>[];
+type DependencyGraph<T> = Map<T, Set<T> | null>;
 
-const logger = new Logger("core/util/dependency");
+type FetchDep<T, D> = (id: T) => D | null;
+type GetDeps<T, D> = (item: Dependency<T, D>) => T[];
+type GetIncompatible<T, D> = (item: Dependency<T, D>) => T[];
+type GetEnabled<T, D> = (item: Dependency<T, D>) => boolean;
 
-export default function calculateDependencies<T, D>(
-  origItems: Dependency<T, D>[],
-  fetchDep: (id: T) => D | null,
-  getDeps: (item: Dependency<T, D>) => T[],
-  getIncompatible?: (item: Dependency<T, D>) => T[]
-): [Dependency<T, D>[], Map<T, Set<T> | null>] {
-  logger.trace("sortDependencies begin", origItems);
-  let items = [...origItems];
-
-  if (getIncompatible != null) {
-    for (const item of items) {
-      const incompatibleItems = getIncompatible(item);
-      for (const incompatibleItem of incompatibleItems) {
-        if (items.find((x) => x.id === incompatibleItem) != null) {
-          logger.warn(
-            `Incompatible dependency detected: "${item.id}" and "${incompatibleItem}" - removing "${incompatibleItem}"`
-          );
-
-          items = items.filter((x) => x.id !== incompatibleItem);
-        }
-      }
-    }
+function buildDependencyGraph<T, D>(
+  origItems: Dependencies<T, D>,
+  {
+    fetchDep,
+    getDeps,
+    getIncompatible,
+    getEnabled
+  }: {
+    fetchDep: FetchDep<T, D>;
+    getDeps: GetDeps<T, D>;
+    getIncompatible?: GetIncompatible<T, D>;
+    getEnabled?: GetEnabled<T, D>;
   }
+): [Dependencies<T, D>, DependencyGraph<T>] {
+  let items = [...origItems];
+  const dependencyGraph: DependencyGraph<T> = new Map();
 
-  const dependencyGraph = new Map<T, Set<T> | null>();
   for (const item of items) {
     const fullDeps: Set<T> = new Set();
     let failed = false;
@@ -83,6 +82,90 @@ export default function calculateDependencies<T, D>(
     logger.warn("Skipping failed items", failed);
     items = items.filter((item) => !failed.includes(item));
   }
+
+  return [items, dependencyGraph];
+}
+
+export default function calculateDependencies<T, D>(
+  origItems: Dependencies<T, D>,
+  {
+    fetchDep,
+    getDeps,
+    getIncompatible,
+    getEnabled
+  }: {
+    fetchDep: FetchDep<T, D>;
+    getDeps: GetDeps<T, D>;
+    getIncompatible?: GetIncompatible<T, D>;
+    getEnabled?: GetEnabled<T, D>;
+  }
+): [Dependencies<T, D>, DependencyGraph<T>] {
+  logger.trace("sortDependencies begin", origItems);
+  // eslint-disable-next-line prefer-const
+  let [itemsOrig, dependencyGraphOrig] = buildDependencyGraph(origItems, {
+    fetchDep,
+    getDeps,
+    getIncompatible,
+    getEnabled
+  });
+
+  if (getEnabled != null) {
+    logger.trace("Enabled stage", itemsOrig);
+    const implicitlyEnabled: T[] = [];
+
+    // eslint-disable-next-line no-inner-declarations
+    function validateDeps(dep: Dependency<T, D>) {
+      if (getEnabled!(dep)) {
+        const deps = dependencyGraphOrig.get(dep.id)!;
+        for (const id of deps.values()) {
+          const data = fetchDep(id)!;
+          validateDeps({ id, data });
+        }
+      } else {
+        const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(
+          ([, v]) => v?.has(dep.id)
+        );
+
+        if (dependsOnMe.length > 0) {
+          logger.debug("Implicitly enabling dependency", dep.id);
+          implicitlyEnabled.push(dep.id);
+        }
+      }
+    }
+
+    for (const dep of itemsOrig) validateDeps(dep);
+    itemsOrig = itemsOrig.filter(
+      (x) => getEnabled(x) || implicitlyEnabled.includes(x.id)
+    );
+  }
+
+  if (getIncompatible != null) {
+    logger.trace("Incompatible stage", itemsOrig);
+
+    for (const item of itemsOrig) {
+      // JavaScript iterator moment
+      if (!itemsOrig.includes(item)) continue;
+
+      const incompatibleItems = getIncompatible(item);
+      for (const incompatibleItem of incompatibleItems) {
+        if (itemsOrig.find((x) => x.id === incompatibleItem) != null) {
+          logger.warn(
+            `Incompatible dependency detected: "${item.id}" and "${incompatibleItem}" - removing "${incompatibleItem}"`
+          );
+
+          itemsOrig = itemsOrig.filter((x) => x.id !== incompatibleItem);
+        }
+      }
+    }
+  }
+
+  logger.trace("Verification stage", itemsOrig);
+  const [items, dependencyGraph] = buildDependencyGraph(itemsOrig, {
+    fetchDep,
+    getDeps,
+    getIncompatible,
+    getEnabled
+  });
 
   logger.trace("Sorting stage", items);
   const sorted: Dependency<T, D>[] = [];
