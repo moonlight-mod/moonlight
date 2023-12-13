@@ -66,6 +66,15 @@ importers:
         specifier: workspace:*
         version: link:../types
 
+  packages/injector-desktop:
+    dependencies:
+      '@moonlight-mod/core':
+        specifier: workspace:*
+        version: link:../core
+      '@moonlight-mod/types':
+        specifier: workspace:*
+        version: link:../types
+
   packages/node-preload:
     dependencies:
       '@moonlight-mod/core':
