@@ -75,5 +75,9 @@ export function createEventEmitter(): MoonlightEventEmitter {
     return nodeMethod();
   }
 
+  injectorDesktop: {
+    return nodeMethod();
+  }
+
   throw new Error("Called createEventEmitter() in an impossible environment");
 }

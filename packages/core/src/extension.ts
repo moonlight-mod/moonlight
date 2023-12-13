@@ -135,5 +135,9 @@ export function getExtensions(): DetectedExtension[] {
     return getExtensionsNative();
   }
 
+  injectorDesktop: {
+    return getExtensionsNative();
+  }
+
   throw new Error("Called getExtensions() outside of node-preload/web-preload");
 }

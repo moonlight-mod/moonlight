@@ -98,6 +98,16 @@ async function loadExt(ext: DetectedExtension) {
       }
     }
   }
+
+  injectorDesktop: {
+    if (ext.scripts.hostPath != null) {
+      try {
+        require(ext.scripts.hostPath);
+      } catch (e) {
+        logger.error(`Failed to load extension "${ext.id}"`, e);
+      }
+    }
+  }
 }
 
 /*

@@ -7,6 +7,7 @@ import fs from "fs";
 
 const config = {
   injector: "packages/injector/src/index.ts",
+  "injector-desktop": "packages/injector-desktop/src/index.ts",
   "node-preload": "packages/node-preload/src/index.ts",
   "web-preload": "packages/web-preload/src/index.ts"
 };
@@ -77,6 +78,7 @@ async function build(name, entry) {
 
   const dropLabels = [];
   if (name !== "injector") dropLabels.push("injector");
+  if (name !== "injector-desktop") dropLabels.push("injectorDesktop");
   if (name !== "node-preload") dropLabels.push("nodePreload");
   if (name !== "web-preload") dropLabels.push("webPreload");
 

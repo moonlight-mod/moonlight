@@ -49,5 +49,9 @@ export function readConfig(): Config {
     return readConfigNode();
   }
 
+  injectorDesktop: {
+    return readConfigNode();
+  }
+
   throw new Error("Called readConfig() in an impossible environment");
 }

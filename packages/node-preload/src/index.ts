@@ -90,4 +90,4 @@ async function init(oldPreloadPath: string) {
 const oldPreloadPath: string = ipcRenderer.sendSync(
   constants.ipcGetOldPreloadPath
 );
-init(oldPreloadPath);
+if (oldPreloadPath !== "moonlightDesktop") init(oldPreloadPath);

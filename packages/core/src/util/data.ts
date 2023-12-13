@@ -11,6 +11,10 @@ export function getMoonlightDir(): string {
     appData = electron.app.getPath("appData");
   }
 
+  injectorDesktop: {
+    appData = electron.app.getPath("appData");
+  }
+
   nodePreload: {
     appData = electron.ipcRenderer.sendSync(constants.ipcGetAppData);
   }
@@ -28,15 +32,20 @@ type BuildInfo = {
 
 export function getConfigPath(): string {
   const dir = getMoonlightDir();
-  const fs = requireImport("fs");
   const path = requireImport("path");
 
-  const buildInfoPath = path.join(process.resourcesPath, "build_info.json");
-  const buildInfo: BuildInfo = JSON.parse(
-    fs.readFileSync(buildInfoPath, "utf8")
-  );
-
-  const configPath = path.join(dir, buildInfo.releaseChannel + ".json");
+  let configPath = "";
+  injector: {
+    const fs = requireImport("fs");
+    const buildInfoPath = path.join(process.resourcesPath, "build_info.json");
+    const buildInfo: BuildInfo = JSON.parse(
+      fs.readFileSync(buildInfoPath, "utf8")
+    );
+    configPath = path.join(dir, buildInfo.releaseChannel + ".json");
+  }
+  injectorDesktop: {
+    configPath = path.join(dir, "desktop.json");
+  }
   return configPath;
 }
 
