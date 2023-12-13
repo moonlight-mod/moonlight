@@ -17,7 +17,7 @@ import EventEmitter from "events";
 
 const logger = new Logger("injector");
 
-let oldPreloadPath = "";
+let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
 let isMoonlightDesktop = false;
 
@@ -76,7 +76,7 @@ function patchCsp(headers: Record<string, string[]>) {
 
 class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
-    oldPreloadPath = opts.webPreferences!.preload!;
+    oldPreloadPath = opts.webPreferences!.preload;
     opts.webPreferences!.preload = require.resolve("./node-preload.js");
 
     moonlightHost.events.emit("window-options", opts);

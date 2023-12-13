@@ -83,7 +83,7 @@ async function init(oldPreloadPath: string) {
   }
 
   // Let Discord start even if we fail
-  if (oldPreloadPath !== "") require(oldPreloadPath);
+  if (oldPreloadPath) require(oldPreloadPath);
 }
 
 const oldPreloadPath: string = ipcRenderer.sendSync(
