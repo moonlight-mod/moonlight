@@ -28,7 +28,6 @@ async function injectGlobals() {
     extensions: getExtensions(),
     processedExtensions: processed,
     nativesCache: {},
-
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {
       const config = getConfig(ext);
@@ -84,7 +83,7 @@ async function init(oldPreloadPath: string) {
   }
 
   // Let Discord start even if we fail
-  require(oldPreloadPath);
+  if (oldPreloadPath) require(oldPreloadPath);
 }
 
 const oldPreloadPath: string = ipcRenderer.sendSync(

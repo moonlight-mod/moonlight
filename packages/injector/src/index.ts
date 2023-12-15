@@ -17,14 +17,18 @@ import EventEmitter from "events";
 
 const logger = new Logger("injector");
 
-let oldPreloadPath = "";
+let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
+let isMoonlightDesktop = false;
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
 });
 ipcMain.on(constants.ipcGetAppData, (e) => {
   e.returnValue = app.getPath("appData");
+});
+ipcMain.on(constants.ipcGetIsMoonlightDesktop, (e) => {
+  e.returnValue = isMoonlightDesktop;
 });
 ipcMain.handle(constants.ipcMessageBox, (_, opts) => {
   electron.dialog.showMessageBoxSync(opts);
@@ -72,7 +76,7 @@ function patchCsp(headers: Record<string, string[]>) {
 
 class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
-    oldPreloadPath = opts.webPreferences!.preload!;
+    oldPreloadPath = opts.webPreferences!.preload;
     opts.webPreferences!.preload = require.resolve("./node-preload.js");
 
     moonlightHost.events.emit("window-options", opts);
@@ -114,6 +118,7 @@ Object.defineProperty(BrowserWindow, "name", {
 // "aight i'm writing exclusively C# from now on and never touching JavaScript again"
 
 export async function inject(asarPath: string) {
+  isMoonlightDesktop = asarPath === "moonlightDesktop";
   try {
     const config = readConfig();
     const extensions = getExtensions();
@@ -157,6 +162,7 @@ export async function inject(asarPath: string) {
     logger.error("Failed to inject", e);
   }
 
+  if (isMoonlightDesktop) return;
   // Need to do this instead of require() or it breaks require.main
   // @ts-expect-error why are you not documented
   Module._load(asarPath, Module, true);

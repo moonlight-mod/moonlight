@@ -31,12 +31,18 @@ export function getConfigPath(): string {
   const fs = requireImport("fs");
   const path = requireImport("path");
 
-  const buildInfoPath = path.join(process.resourcesPath, "build_info.json");
-  const buildInfo: BuildInfo = JSON.parse(
-    fs.readFileSync(buildInfoPath, "utf8")
-  );
+  let configPath = "";
 
-  const configPath = path.join(dir, buildInfo.releaseChannel + ".json");
+  const buildInfoPath = path.join(process.resourcesPath, "build_info.json");
+  if (!fs.existsSync(buildInfoPath)) {
+    configPath = path.join(dir, "desktop.json");
+  } else {
+    const buildInfo: BuildInfo = JSON.parse(
+      fs.readFileSync(buildInfoPath, "utf8")
+    );
+    configPath = path.join(dir, buildInfo.releaseChannel + ".json");
+  }
+
   return configPath;
 }
 
