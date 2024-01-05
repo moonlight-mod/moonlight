@@ -4,7 +4,7 @@ import electron, {
   ipcMain,
   app
 } from "electron";
-import Module from "module";
+import Module from "node:module";
 import { constants } from "@moonlight-mod/types";
 import { readConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
@@ -13,13 +13,16 @@ import {
   loadExtensions,
   loadProcessedExtensions
 } from "@moonlight-mod/core/extension/loader";
-import EventEmitter from "events";
+import EventEmitter from "node:events";
+import { join, resolve } from "node:path";
 
 const logger = new Logger("injector");
 
 let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
 let isMoonlightDesktop = false;
+let hasOpenAsar = false;
+let openAsarConfigPreload: string | undefined;
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
@@ -74,21 +77,38 @@ function patchCsp(headers: Record<string, string[]>) {
   headers[csp] = [stringified];
 }
 
+function removeOpenAsarEventIfPresent(eventHandler: (...args: any[]) => void) {
+  const code = eventHandler.toString();
+  if (code.indexOf("bw.webContents.on('dom-ready'") > -1) {
+    electron.app.off("browser-window-created", eventHandler);
+  }
+}
+
 class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
     oldPreloadPath = opts.webPreferences!.preload;
-    opts.webPreferences!.preload = require.resolve("./node-preload.js");
 
+    // Only overwrite preload if its the actual main client window
+    if (opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1) {
+      opts.webPreferences!.preload = require.resolve("./node-preload.js");
+    }
+
+    // Event for modifying window options
     moonlightHost.events.emit("window-options", opts);
+
     super(opts);
+
+    // Event for when a window is created
     moonlightHost.events.emit("window-created", this);
 
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
+        // Patch CSP so things can use externally hosted assets
         if (details.resourceType === "mainFrame") {
           patchCsp(details.responseHeaders);
         }
 
+        // Allow plugins to bypass CORS for specific URLs
         if (corsAllow.some((x) => details.url.startsWith(x))) {
           details.responseHeaders["access-control-allow-origin"] = ["*"];
         }
@@ -96,6 +116,27 @@ class BrowserWindow extends ElectronBrowserWindow {
         cb({ cancel: false, responseHeaders: details.responseHeaders });
       }
     });
+
+    if (hasOpenAsar) {
+      // Remove DOM injections
+      // Settings can still be opened via:
+      // `DiscordNative.ipc.send("DISCORD_UPDATED_QUOTES","o")`
+      // @ts-expect-error Electron internals
+      const events = electron.app._events["browser-window-created"];
+      if (Array.isArray(events)) {
+        for (const event of events) {
+          removeOpenAsarEventIfPresent(event);
+        }
+      } else if (events != null) {
+        removeOpenAsarEventIfPresent(events);
+      }
+
+      // Config screen fails to context bridge properly
+      // Less than ideal, but better than disabling it everywhere
+      if (opts.webPreferences!.preload === openAsarConfigPreload) {
+        opts.webPreferences!.sandbox = false;
+      }
+    }
   }
 }
 
@@ -115,7 +156,6 @@ Object.defineProperty(BrowserWindow, "name", {
   value: "BrowserWindow",
   writable: false
 });
-// "aight i'm writing exclusively C# from now on and never touching JavaScript again"
 
 export async function inject(asarPath: string) {
   isMoonlightDesktop = asarPath === "moonlightDesktop";
@@ -154,17 +194,47 @@ export async function inject(asarPath: string) {
       }
     };
 
+    // Check if we're running with OpenAsar
+    try {
+      require.resolve(join(asarPath, "updater", "updater.js"));
+      hasOpenAsar = true;
+      openAsarConfigPreload = resolve(asarPath, "config", "preload.js");
+      // eslint-disable-next-line no-empty
+    } catch {}
+
+    if (hasOpenAsar) {
+      // Disable command line switch injection
+      // I personally think that the command line switches should be vetted by
+      // the user and not just "trust that these are sane defaults that work
+      // always". I'm not hating on Ducko or anything, I'm just opinionated.
+      // Someone can always make a command line modifier plugin, thats the point
+      // of having host modules.
+      try {
+        const cmdSwitchesPath = require.resolve(
+          join(asarPath, "cmdSwitches.js")
+        );
+        require.cache[cmdSwitchesPath] = new Module(
+          cmdSwitchesPath,
+          require.cache[require.resolve(asarPath)]
+        );
+        require.cache[cmdSwitchesPath]!.exports = () => {};
+      } catch (error) {
+        logger.error("Failed to disable OpenAsar's command line flags:", error);
+      }
+    }
+
     patchElectron();
 
     global.moonlightHost.processedExtensions = await loadExtensions(extensions);
     await loadProcessedExtensions(global.moonlightHost.processedExtensions);
-  } catch (e) {
-    logger.error("Failed to inject", e);
+  } catch (error) {
+    logger.error("Failed to inject:", error);
   }
 
   if (isMoonlightDesktop) return;
+
   // Need to do this instead of require() or it breaks require.main
-  // @ts-expect-error why are you not documented
+  // @ts-expect-error Module internals
   Module._load(asarPath, Module, true);
 }
 
@@ -187,7 +257,7 @@ function patchElectron() {
     }
   }
 
-  // exports is a getter only on Windows, let's do some cursed shit instead
+  // exports is a getter only on Windows, recreate export cache instead
   const electronPath = require.resolve("electron");
   const cachedElectron = require.cache[electronPath]!;
   require.cache[electronPath] = new Module(cachedElectron.id, require.main);
