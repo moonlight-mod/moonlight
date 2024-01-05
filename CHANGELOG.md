@@ -1,3 +1,4 @@
-- Fixed updating extensions
-- Fixed Linux support
-- Fixed some incorrect types on Webpack module imports
+- Add `spacepack.filterReal`
+- More dependency resolver stages
+- Injector now supports "other patch methods"
+- OpenAsar fixes
