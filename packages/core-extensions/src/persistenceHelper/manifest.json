@@ -1,0 +1,9 @@
+{
+  "id": "persistenceHelper",
+  "meta": {
+    "name": "Persistence Helper",
+    "tagline": "Helps prevent Discord removing Moonlight on updates",
+    "authors": ["Luny <3"],
+    "tags": ["qol"]
+  }
+}
