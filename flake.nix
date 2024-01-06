@@ -37,12 +37,26 @@
           };
         };
 
-      mkOverride = discord: name: moonlight:
-        discord.overrideAttrs (old: {
+      nameTable = {
+        discord = "Discord";
+        discord-ptb = "DiscordPTB";
+        discord-canary = "DiscordCanary";
+        discord-development = "DiscordDevelopment";
+      };
+
+      darwinNameTable = {
+        discord = "Discord";
+        discord-ptb = "Discord PTB";
+        discord-canary = "Discord Canary";
+        discord-development = "Discord Development";
+      };
+
+      mkOverride = prev: moonlight: name:
+        let discord = prev.${name};
+        in discord.overrideAttrs (old: {
           installPhase = let
-            origAsar = "$out/opt/${name}/resources/app.asar";
-            movedAsar = "$out/opt/${name}/resources/_app.asar";
-            app = "$out/opt/${name}/resources/app";
+            folderName = nameTable.${name};
+            darwinFolderName = darwinNameTable.${name};
 
             injected = ''
               require("${moonlight}/injector").inject(
@@ -55,26 +69,29 @@
             '';
 
           in old.installPhase + "\n" + ''
-            mv ${origAsar} ${movedAsar}
-            mkdir -p ${app}
+            resources="$out/opt/${folderName}/resources"
+            if [ ! -d "$resources" ]; then
+              resources="$out/Applications/${darwinFolderName}.app/Contents/Resources"
+            fi
 
-            cat > ${app}/injector.js <<EOF
+            mv "$resources/app.asar" "$resources/_app.asar"
+            mkdir -p "$resources/app"
+
+            cat > "$resources/app/injector.js" <<EOF
             ${injected}
             EOF
 
-            echo '${packageJson}' > ${app}/package.json
+            echo '${packageJson}' > "$resources/app/package.json"
           '';
         });
 
       overlay = final: prev: rec {
         moonlight-mod = mkMoonlight { pkgs = final; };
-        discord = mkOverride prev.discord "Discord" moonlight-mod;
-        discord-ptb = mkOverride prev.discord-ptb "DiscordPTB" moonlight-mod;
-        discord-canary =
-          mkOverride prev.discord-canary "DiscordCanary" moonlight-mod;
+        discord = mkOverride prev moonlight-mod "discord";
+        discord-ptb = mkOverride prev moonlight-mod "discord-ptb";
+        discord-canary = mkOverride prev moonlight-mod "discord-canary";
         discord-development =
-          mkOverride prev.discord-development "DiscordDevelopment"
-          moonlight-mod;
+          mkOverride prev moonlight-mod "discord-development";
       };
     in flake-utils.lib.eachDefaultSystem (system:
       let
