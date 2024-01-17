@@ -71,3 +71,4 @@ export type CommonComponents = CommonComponents_; // lol
 export type CommonFluxDispatcher = Dispatcher<any>;
 
 export * as Markdown from "./coreExtensions/markdown";
+export * as ContextMenu from "./coreExtensions/contextMenu";

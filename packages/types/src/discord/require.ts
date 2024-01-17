@@ -6,6 +6,7 @@ import {
   CommonComponents,
   CommonFluxDispatcher
 } from "../coreExtensions";
+import { ContextMenu, EvilItemParser } from "../coreExtensions/contextMenu";
 import { Markdown } from "../coreExtensions/markdown";
 
 declare function WebpackRequire(id: string): any;
@@ -27,5 +28,8 @@ declare function WebpackRequire(id: "settings_settings"): {
 };
 
 declare function WebpackRequire(id: "markdown_markdown"): Markdown;
+
+declare function WebpackRequire(id: "contextMenu_evilMenu"): EvilItemParser;
+declare function WebpackRequire(id: "contextMenu_contextMenu"): ContextMenu;
 
 export default WebpackRequire;
