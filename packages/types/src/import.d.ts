@@ -41,3 +41,15 @@ declare module "@moonlight-mod/wp/markdown_markdown" {
   const Markdown: CoreExtensions.Markdown.Markdown;
   export = Markdown;
 }
+
+declare module "@moonlight-mod/wp/contextMenu_evilMenu" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  const EvilParser: CoreExtensions.ContextMenu.EvilItemParser;
+  export = EvilParser;
+}
+
+declare module "@moonlight-mod/wp/contextMenu_contextMenu" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  const ContextMenu: CoreExtensions.ContextMenu.ContextMenu;
+  export = ContextMenu;
+}
