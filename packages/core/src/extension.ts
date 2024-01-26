@@ -13,13 +13,15 @@ function findManifests(dir: string): string[] {
   const path = requireImport("path");
   const ret = [];
 
-  for (const file of fs.readdirSync(dir)) {
-    if (file === "manifest.json") {
-      ret.push(path.join(dir, file));
-    }
+  if (fs.existsSync(dir)) {
+    for (const file of fs.readdirSync(dir)) {
+      if (file === "manifest.json") {
+        ret.push(path.join(dir, file));
+      }
 
-    if (fs.statSync(path.join(dir, file)).isDirectory()) {
-      ret.push(...findManifests(path.join(dir, file)));
+      if (fs.statSync(path.join(dir, file)).isDirectory()) {
+        ret.push(...findManifests(path.join(dir, file)));
+      }
     }
   }
 
