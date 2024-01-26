@@ -148,12 +148,15 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         const wrapped =
           `(${moduleString}).apply(this, arguments)\n` +
           `//# sourceURL=Webpack-Module-${id}`;
-        entry[id] = new Function(
-          "module",
-          "exports",
-          "require",
-          wrapped
-        ) as WebpackModuleFunc;
+        entry[id] = wrapTry(
+          new Function(
+            "module",
+            "exports",
+            "require",
+            wrapped
+          ) as WebpackModuleFunc,
+          id
+        );
         entry[id].__moonlight = true;
       }
     }
@@ -196,6 +199,20 @@ function handleModuleDependencies() {
   });
 
   webpackModules = new Set(sorted.map((x) => x.data));
+}
+
+function wrapTry(
+  fn: WebpackModuleFunc,
+  moduleName?: string
+): WebpackModuleFunc {
+  const tryFn: WebpackModuleFunc = function (module, exports, require) {
+    try {
+      return fn(module, exports, require);
+    } catch (e) {
+      logger.error("Failed to run Webpack module", moduleName, e);
+    }
+  };
+  return tryFn;
 }
 
 const injectedWpModules: IdentifiedWebpackModule[] = [];
@@ -246,7 +263,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
 
       inject = true;
 
-      if (wpModule.run) modules[id] = wpModule.run;
+      if (wpModule.run) modules[id] = wrapTry(wpModule.run, id);
       if (wpModule.entrypoint) entrypoints.push(id);
     }
     if (!webpackModules.size) break;
