@@ -58,7 +58,7 @@ const ChevronSmallDownIcon = spacepack.findByCode(ChevronSmallDownIconSVG)[0]
   .exports.default;
 const ChevronSmallUpIcon = spacepack.findByCode(ChevronSmallUpIconSVG)[0]
   .exports.default;
-let ArrowsUpDownIcon;
+let ArrowsUpDownIcon: React.FunctionComponent;
 
 function toggleTag(
   selectedTags: Set<string>,

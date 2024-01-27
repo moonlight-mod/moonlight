@@ -80,9 +80,6 @@ importers:
       '@types/flux':
         specifier: ^3.1.12
         version: 3.1.12
-      '@types/node':
-        specifier: ^20.6.2
-        version: 20.6.2
       '@types/react':
         specifier: ^18.2.22
         version: 18.2.22
@@ -421,10 +418,6 @@ packages:
 
   /@types/node@18.17.17:
     resolution: {integrity: sha512-cOxcXsQ2sxiwkykdJqvyFS+MLQPLvIdwh5l6gNg8qF6s+C7XSkEWOZjK+XhUZd+mYvHV/180g2cnCcIl4l06Pw==}
-    dev: false
-
-  /@types/node@20.6.2:
-    resolution: {integrity: sha512-Y+/1vGBHV/cYk6OI1Na/LHzwnlNCAfU3ZNGrc1LdRe/LAIbdDPTTv/HU3M7yXN448aTVDq3eKRm2cg7iKLb8gw==}
     dev: false
 
   /@types/prop-types@15.7.6:

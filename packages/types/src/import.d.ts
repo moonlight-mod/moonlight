@@ -6,9 +6,8 @@ declare module "@moonlight-mod/wp/spacepack_spacepack" {
 
 declare module "@moonlight-mod/wp/common_components" {
   import { CoreExtensions } from "@moonlight-mod/types";
-  const components: CoreExtensions.CommonComponents;
-  export default components;
-  export = components;
+  const CommonComponent: CoreExtensions.CommonComponents;
+  export = CommonComponent;
 }
 
 declare module "@moonlight-mod/wp/common_flux" {
@@ -25,8 +24,6 @@ declare module "@moonlight-mod/wp/common_fluxDispatcher" {
 }
 
 declare module "@moonlight-mod/wp/common_stores";
-declare module "@moonlight-mod/wp/moonbase_ui";
-declare module "@moonlight-mod/wp/moonbase_stores";
 
 declare module "@moonlight-mod/wp/common_react" {
   import React from "react";
@@ -37,7 +34,6 @@ declare module "@moonlight-mod/wp/settings_settings" {
   import { CoreExtensions } from "@moonlight-mod/types";
   export const Settings: CoreExtensions.Settings;
   export default Settings;
-  export = Settings;
 }
 
 declare module "@moonlight-mod/wp/markdown_markdown" {
