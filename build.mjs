@@ -135,11 +135,23 @@ async function buildExt(ext, side, copyManifest, fileExt) {
 
   const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
   if (fs.existsSync(wpModulesDir) && side === "index") {
-    const wpModules = fs.readdirSync(wpModulesDir);
-    for (const wpModule of wpModules) {
-      entryPoints.push(
-        `packages/core-extensions/src/${ext}/webpackModules/${wpModule}`
-      );
+    const wpModules = fs.opendirSync(wpModulesDir);
+    for await (const wpModule of wpModules) {
+      if (wpModule.isFile()) {
+        entryPoints.push(
+          `packages/core-extensions/src/${ext}/webpackModules/${wpModule.name}`
+        );
+      } else {
+        for (const fileExt of ["ts", "tsx"]) {
+          const path = `packages/core-extensions/src/${ext}/webpackModules/${wpModule.name}/index.${fileExt}`;
+          if (fs.existsSync(path)) {
+            entryPoints.push({
+              in: path,
+              out: `webpackModules/${wpModule.name}`
+            });
+          }
+        }
+      }
     }
   }
 
