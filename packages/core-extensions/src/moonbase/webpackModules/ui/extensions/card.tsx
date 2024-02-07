@@ -1,0 +1,218 @@
+import {
+  DangerIconSVG,
+  DownloadIconSVG,
+  ExtensionState,
+  TrashIconSVG
+} from "../../../types";
+import { ExtensionLoadSource } from "@moonlight-mod/types";
+
+import React from "@moonlight-mod/wp/common_react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import CommonComponents from "@moonlight-mod/wp/common_components";
+import * as Flux from "@moonlight-mod/wp/common_flux";
+
+import ExtensionInfo from "./info";
+import Settings from "./settings";
+
+export enum ExtensionPage {
+  Info,
+  Description,
+  Settings
+}
+
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+
+const UserProfileClasses = spacepack.findByCode(
+  "tabBarContainer",
+  "topSection"
+)[0].exports;
+
+const DownloadIcon =
+  spacepack.findByCode(DownloadIconSVG)[0].exports.DownloadIcon;
+const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
+const DangerIcon =
+  spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
+
+const PanelButton =
+  spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
+
+export default function ExtensionCard({ id }: { id: string }) {
+  const [tab, setTab] = React.useState(ExtensionPage.Info);
+  const [restartNeeded, setRestartNeeded] = React.useState(false);
+
+  const { ext, enabled, busy, update } = Flux.useStateFromStores(
+    [MoonbaseSettingsStore],
+    () => {
+      return {
+        ext: MoonbaseSettingsStore.getExtension(id),
+        enabled: MoonbaseSettingsStore.getExtensionEnabled(id),
+        busy: MoonbaseSettingsStore.busy,
+        update: MoonbaseSettingsStore.getExtensionUpdate(id)
+      };
+    }
+  );
+
+  // Why it work like that :sob:
+  if (ext == null) return <></>;
+
+  const {
+    Card,
+    CardClasses,
+    Flex,
+    Text,
+    MarkdownParser,
+    Switch,
+    TabBar,
+    Button
+  } = CommonComponents;
+
+  const tagline = ext.manifest?.meta?.tagline;
+  const settings = ext.manifest?.settings;
+  const description = ext.manifest?.meta?.description;
+
+  return (
+    <Card editable={true} className={CardClasses.card}>
+      <div className={CardClasses.cardHeader}>
+        <Flex direction={Flex.Direction.VERTICAL}>
+          <Flex direction={Flex.Direction.HORIZONTAL}>
+            <Text variant="text-md/semibold">
+              {ext.manifest?.meta?.name ?? ext.id}
+            </Text>
+          </Flex>
+
+          {tagline != null && (
+            <Text variant="text-sm/normal">
+              {MarkdownParser.parse(tagline)}
+            </Text>
+          )}
+        </Flex>
+
+        <Flex
+          direction={Flex.Direction.HORIZONTAL}
+          align={Flex.Align.END}
+          justify={Flex.Justify.END}
+        >
+          {ext.state === ExtensionState.NotDownloaded ? (
+            <Button
+              color={Button.Colors.BRAND}
+              submitting={busy}
+              onClick={() => {
+                MoonbaseSettingsStore.installExtension(id);
+              }}
+            >
+              Install
+            </Button>
+          ) : (
+            <div
+              // too lazy to learn how <Flex /> works lmao
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "1rem"
+              }}
+            >
+              {ext.source.type === ExtensionLoadSource.Normal && (
+                <PanelButton
+                  icon={TrashIcon}
+                  tooltipText="Delete"
+                  onClick={() => {
+                    MoonbaseSettingsStore.deleteExtension(id);
+                  }}
+                />
+              )}
+
+              {update !== null && (
+                <PanelButton
+                  icon={DownloadIcon}
+                  tooltipText="Update"
+                  onClick={() => {
+                    MoonbaseSettingsStore.installExtension(id);
+                  }}
+                />
+              )}
+
+              {restartNeeded && (
+                <PanelButton
+                  icon={() => (
+                    <DangerIcon
+                      color={CommonComponents.tokens.colors.STATUS_DANGER}
+                    />
+                  )}
+                  onClick={() => window.location.reload()}
+                  tooltipText="You will need to reload/restart your client for this extension to work properly."
+                />
+              )}
+
+              <Switch
+                checked={enabled}
+                onChange={() => {
+                  setRestartNeeded(true);
+                  MoonbaseSettingsStore.setExtensionEnabled(id, !enabled);
+                }}
+              />
+            </div>
+          )}
+        </Flex>
+      </div>
+
+      <div className={UserProfileClasses.body}>
+        {(description != null || settings != null) && (
+          <div
+            className={UserProfileClasses.tabBarContainer}
+            style={{
+              padding: "0 10px"
+            }}
+          >
+            <TabBar
+              selectedItem={tab}
+              type="top"
+              onItemSelect={setTab}
+              className={UserProfileClasses.tabBar}
+            >
+              <TabBar.Item
+                className={UserProfileClasses.tabBarItem}
+                id={ExtensionPage.Info}
+              >
+                Info
+              </TabBar.Item>
+
+              {description != null && (
+                <TabBar.Item
+                  className={UserProfileClasses.tabBarItem}
+                  id={ExtensionPage.Description}
+                >
+                  Description
+                </TabBar.Item>
+              )}
+
+              {settings != null && (
+                <TabBar.Item
+                  className={UserProfileClasses.tabBarItem}
+                  id={ExtensionPage.Settings}
+                >
+                  Settings
+                </TabBar.Item>
+              )}
+            </TabBar>
+          </div>
+        )}
+
+        <Flex
+          justify={Flex.Justify.START}
+          wrap={Flex.Wrap.WRAP}
+          style={{
+            padding: "16px 16px"
+          }}
+        >
+          {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
+          {tab === ExtensionPage.Description && (
+            <Text variant="text-md/normal">
+              {MarkdownParser.parse(description ?? "*No description*")}
+            </Text>
+          )}
+          {tab === ExtensionPage.Settings && <Settings ext={ext} />}
+        </Flex>
+      </div>
+    </Card>
+  );
+}
