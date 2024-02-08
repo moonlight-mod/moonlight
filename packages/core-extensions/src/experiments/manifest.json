@@ -3,7 +3,13 @@
   "meta": {
     "name": "Experiments",
     "tagline": "Allows you to configure Discord's internal A/B testing features",
-    "authors": ["NotNite"],
+    "authors": ["NotNite", "Cynosphere"],
     "tags": ["dangerZone"]
+  },
+  "settings": {
+    "sections": {
+      "displayName": "Allow access to other staff settings elsewhere",
+      "type": "boolean"
+    }
   }
 }
