@@ -208,8 +208,9 @@ function wrapTry(
   const tryFn: WebpackModuleFunc = function (module, exports, require) {
     try {
       return fn(module, exports, require);
-    } catch (e) {
-      logger.error("Failed to run Webpack module", moduleName, e);
+    } catch (err) {
+      logger.error("Failed to run Webpack module", moduleName, err);
+      return null;
     }
   };
   return tryFn;
