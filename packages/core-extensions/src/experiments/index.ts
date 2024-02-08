@@ -2,10 +2,10 @@ import { Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: "isStaffEnv:",
+    find: "isStaffPersonal:",
     replace: {
-      match: /.\.isStaff\(\)/,
-      replacement: "!0"
+      match: /&&null!=this\.personalConnectionId/,
+      replacement: "||!0"
     }
   },
   {
