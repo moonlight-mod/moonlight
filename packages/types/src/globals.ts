@@ -3,6 +3,7 @@ import { Config, ConfigExtension } from "./config";
 import {
   DetectedExtension,
   IdentifiedPatch,
+  IdentifiedWebpackModule,
   ProcessedExtensions
 } from "./extension";
 import EventEmitter from "events";
@@ -36,6 +37,7 @@ export type MoonlightNode = {
 
 export type MoonlightWeb = {
   unpatched: Set<IdentifiedPatch>;
+  pendingModules: Set<IdentifiedWebpackModule>;
   enabledExtensions: Set<string>;
 
   getConfig: (ext: string) => ConfigExtension["config"];

@@ -8,6 +8,7 @@ import Logger from "@moonlight-mod/core/util/logger";
 
   window.moonlight = {
     unpatched: new Set(),
+    pendingModules: new Set(),
     enabledExtensions: new Set(),
 
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
