@@ -19,6 +19,7 @@ export enum ExtensionSettingType {
   Boolean = "boolean",
   Number = "number",
   String = "string",
+  MultilineTextInput = "multilinetextinput",
   Select = "select",
   MultiSelect = "multiselect",
   List = "list",
@@ -47,6 +48,11 @@ export type NumberSettingType = {
 
 export type StringSettingType = {
   type: ExtensionSettingType.String;
+  default?: string;
+};
+
+export type MultilineTextInputSettingType = {
+  type: ExtensionSettingType.MultilineTextInput;
   default?: string;
 };
 
@@ -84,6 +90,7 @@ export type ExtensionSettingsManifest = {
   | BooleanSettingType
   | NumberSettingType
   | StringSettingType
+  | MultilineTextInputSettingType
   | SelectSettingType
   | MultiSelectSettingType
   | ListSettingType
