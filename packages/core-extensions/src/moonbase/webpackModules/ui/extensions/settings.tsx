@@ -122,7 +122,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function MultilineTextInput({ ext, name, setting, disabled }: SettingsProps) {
+function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextArea } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<string>(
     ext.id,
@@ -395,7 +395,7 @@ function Setting({ ext, name, setting, disabled }: SettingsProps) {
     [ExtensionSettingType.Boolean]: Boolean,
     [ExtensionSettingType.Number]: Number,
     [ExtensionSettingType.String]: String,
-    [ExtensionSettingType.MultilineTextInput]: MultilineTextInput,
+    [ExtensionSettingType.MultilineString]: MultilineString,
     [ExtensionSettingType.Select]: Select,
     [ExtensionSettingType.MultiSelect]: MultiSelect,
     [ExtensionSettingType.List]: List,
