@@ -122,6 +122,31 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
+function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
+  const { FormItem, FormText, TextArea } = CommonComponents;
+  const { value, displayName, description } = useConfigEntry<string>(
+    ext.id,
+    name
+  );
+
+  return (
+    <FormItem className={Margins.marginTop20} title={displayName}>
+      {description && (
+        <FormText className={Margins.marginBottom8}>{description}</FormText>
+      )}
+      <TextArea
+        rows={5}
+        value={value ?? ""}
+        className={"moonbase-resizeable"}
+        onChange={(value: string) => {
+          if (disabled) return;
+          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
+        }}
+      />
+    </FormItem>
+  );
+}
+
 function Select({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, SingleSelect } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<string>(
@@ -370,6 +395,7 @@ function Setting({ ext, name, setting, disabled }: SettingsProps) {
     [ExtensionSettingType.Boolean]: Boolean,
     [ExtensionSettingType.Number]: Number,
     [ExtensionSettingType.String]: String,
+    [ExtensionSettingType.MultilineString]: MultilineString,
     [ExtensionSettingType.Select]: Select,
     [ExtensionSettingType.MultiSelect]: MultiSelect,
     [ExtensionSettingType.List]: List,
