@@ -31,7 +31,7 @@ const stubPatches = [
   // "sh" is not a valid locale.
   [
     "is not a valid locale",
-    /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g
+    /(.)\.error\(`\$\{.{1,2}\} is not a valid locale\.`\)/g
   ],
   ['.displayName="RunningGameStore"', /.\.info\("games",{.+?}\),/],
   [
@@ -50,7 +50,7 @@ const stubPatches = [
     '"[NATIVE INFO] ',
     /new\(0,.{1,2}\.default\)\(\)\.log\("\[NATIVE INFO] .+?\)\),/
   ],
-  ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
+  ['"Spellchecker"', /.\.info\(`Switching to .+?"\(unavailable\)"\);?/g],
   [
     'throw new Error("Messages are still loading.");',
     /console\.warn\("Unsupported Locale",.\);/
@@ -65,7 +65,7 @@ const stubPatches = [
     'Error("Messages are still loading.")',
     /console\.warn\("Unsupported Locale",.\),/
   ],
-  ['("DatabaseManager")', /.\.log\("removing database \(user: ".+?\)\),/],
+  ['("DatabaseManager")', /.\.log\(`removing database .+?`\),/],
   [
     '"Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch. Action: "',
     /.\.has\(.\.type\)&&.\.log\(.+?\.type\)\),/
