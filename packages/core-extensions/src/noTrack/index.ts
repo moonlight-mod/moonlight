@@ -2,10 +2,10 @@ import { Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: "analyticsTrackingStoreMaker:function",
+    find: 'displayName="AnalyticsTrackingStore"',
     replace: {
       match: /analyticsTrackingStoreMaker:function\(\){return .}/,
-      replacement: "analyticsTrackingStoreMaker:function(){return ()=>{}}"
+      replacement: "analyticsTrackingStoreMaker:function(){return()=>{}}"
     }
   },
   {
