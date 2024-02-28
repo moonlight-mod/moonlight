@@ -38,8 +38,8 @@ const channelModule =
       '"Missing channel in Channel.openChannelContextMenu"'
     )[0].id
   ].toString();
-const moduleId = channelModule.match(/webpackId:"(.+?)"/)![1];
-const modPromise = spacepack.require.el(moduleId);
+const chunkId = channelModule.match(/createPromise:\(\)=>.\.el\("(.+?)"/)![1];
+const modPromise = spacepack.require.el(chunkId);
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
