@@ -7,7 +7,8 @@ const defaultConfig: Config = {
     moonbase: true,
     disableSentry: true,
     noTrack: true,
-    noHideToken: true
+    noHideToken: true,
+    persistenceHelper: true
   },
   repositories: ["https://moonlight-mod.github.io/extensions-dist/repo.json"]
 };
