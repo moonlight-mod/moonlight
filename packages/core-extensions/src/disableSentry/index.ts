@@ -6,9 +6,8 @@ export const patches: Patch[] = [
     find: "DSN:function",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /default:function\(\){return .}/,
-      replacement:
-        'default:function(){return require("disableSentry_stub").proxy()}'
+      match: /(?<=\.default=){.+?}}/,
+      replacement: 'require("disableSentry_stub").proxy()'
     }
   },
   {
@@ -32,8 +31,8 @@ export const patches: Patch[] = [
     find: "window.DiscordErrors=",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /uses_client_mods:\(0,.\.usesClientMods\)\(\)/,
-      replacement: "uses_client_mods:false"
+      match: /\(0,.\.usesClientMods\)\(\)/,
+      replacement: "false"
     }
   }
 ];
