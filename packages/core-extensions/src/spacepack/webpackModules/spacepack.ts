@@ -162,6 +162,7 @@ export const spacepack: Spacepack = {
     );
   },
 
+  // TODO: rework this
   lazyLoad: (find: string | RegExp | (string | RegExp)[], match: RegExp) => {
     const module = Array.isArray(find)
       ? spacepack.findByCode(...find)
@@ -175,7 +176,7 @@ export const spacepack: Spacepack = {
     if (!matchResult) return Promise.reject("Match failed");
 
     const matchId = matchResult[1];
-    return webpackRequire.el(matchId).then(() => webpackRequire(matchId));
+    return webpackRequire.e(matchId).then(() => webpackRequire(matchId));
   },
 
   filterReal: (modules: WebpackModule[]) => {
