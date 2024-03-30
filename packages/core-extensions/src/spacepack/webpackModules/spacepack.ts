@@ -162,20 +162,31 @@ export const spacepack: Spacepack = {
     );
   },
 
-  lazyLoad: (find: string | RegExp | (string | RegExp)[], match: RegExp) => {
-    const module = Array.isArray(find)
+  lazyLoad: (
+    find: string | RegExp | (string | RegExp)[],
+    chunk: RegExp,
+    module: RegExp
+  ) => {
+    if (!chunk.flags.includes("g"))
+      return Promise.reject("Chunk ID regex must be global");
+
+    const mod = Array.isArray(find)
       ? spacepack.findByCode(...find)
       : spacepack.findByCode(find);
-    if (module.length < 1) return Promise.reject("Find failed");
+    if (mod.length < 1) return Promise.reject("Module find failed");
 
-    const findId = module[0].id;
+    const findId = mod[0].id;
     const findCode = webpackRequire.m[findId].toString().replace(/\n/g, "");
 
-    const matchResult = findCode.match(match);
-    if (!matchResult) return Promise.reject("Match failed");
+    const chunkIds = [...findCode.matchAll(chunk)].map(([, id]) => id);
+    if (chunkIds.length === 0) return Promise.reject("Chunk ID match failed");
 
-    const matchId = matchResult[1];
-    return webpackRequire.el(matchId).then(() => webpackRequire(matchId));
+    const moduleId = findCode.match(module)?.[1];
+    if (!moduleId) return Promise.reject("Module ID match failed");
+
+    return Promise.all(chunkIds.map((c) => webpackRequire.e(c))).then(() =>
+      webpackRequire(moduleId)
+    );
   },
 
   filterReal: (modules: WebpackModule[]) => {

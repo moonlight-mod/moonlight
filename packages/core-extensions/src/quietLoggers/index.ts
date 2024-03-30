@@ -33,7 +33,7 @@ const stubPatches = [
     "is not a valid locale",
     /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g
   ],
-  ['.displayName="RunningGameStore"', /.\.info\("games",{.+?}\),/],
+  ['="RunningGameStore"', /.\.info\("games",{.+?}\),/],
   [
     '"[BUILD INFO] Release Channel: "',
     /new .{1,2}\.default\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/

@@ -32,14 +32,11 @@ export enum Filter {
 }
 export const defaultFilter = ~(~0 << 7);
 
-const channelModule =
-  spacepack.require.m[
-    spacepack.findByCode(
-      '"Missing channel in Channel.openChannelContextMenu"'
-    )[0].id
-  ].toString();
-const moduleId = channelModule.match(/webpackId:"(.+?)"/)![1];
-const modPromise = spacepack.require.el(moduleId);
+const modPromise = spacepack.lazyLoad(
+  '"Missing channel in Channel.openChannelContextMenu"',
+  /e\("(\d+)"\)/g,
+  /webpackId:"(.+?)"/
+);
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]

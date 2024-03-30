@@ -6,7 +6,7 @@ const MarkdownParser = spacepack.findByCode(
 )[0].exports.default;
 const LegacyText = spacepack.findByCode(".selectable", ".colorStandard")[0]
   .exports.default;
-const Flex = spacepack.findByCode(".flex" + "GutterSmall,")[0].exports.default;
+const Flex = spacepack.findByCode(".flex" + "GutterSmall,")[0].exports.Flex;
 const CardClasses = spacepack.findByCode("card", "cardHeader", "inModal")[0]
   .exports;
 const ControlClasses = spacepack.findByCode(
