@@ -3,7 +3,7 @@ import WebpackRequire from "./require";
 export type WebpackRequireType = typeof WebpackRequire & {
   c: Record<string, WebpackModule>;
   m: Record<string, WebpackModuleFunc>;
-  el: (module: number | string) => Promise<void>;
+  e: (module: number | string) => Promise<void>;
 };
 
 export type WebpackModule = {

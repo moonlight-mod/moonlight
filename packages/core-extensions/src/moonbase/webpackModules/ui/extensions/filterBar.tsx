@@ -32,6 +32,7 @@ export enum Filter {
 }
 export const defaultFilter = ~(~0 << 7);
 
+// TODO: turn this into a utility function
 const channelModule =
   spacepack.require.m[
     spacepack.findByCode(
@@ -39,7 +40,10 @@ const channelModule =
     )[0].id
   ].toString();
 const moduleId = channelModule.match(/webpackId:"(.+?)"/)![1];
-const modPromise = spacepack.require.el(moduleId);
+const chunks = [...channelModule.matchAll(/e\("(\d+)"\)/g)].map(([, id]) => id);
+const modPromise = Promise.all(chunks.map((c) => spacepack.require.e(c))).then(
+  () => spacepack.require(moduleId)
+);
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
