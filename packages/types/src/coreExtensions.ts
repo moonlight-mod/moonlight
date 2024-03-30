@@ -29,7 +29,8 @@ export type Spacepack = {
   ) => Function | null;
   lazyLoad: (
     find: string | RegExp | (string | RegExp)[],
-    match: RegExp
+    chunk: RegExp,
+    module: RegExp
   ) => Promise<any>;
   filterReal: (modules: WebpackModule[]) => WebpackModule[];
 };
