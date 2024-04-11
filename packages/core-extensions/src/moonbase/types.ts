@@ -40,6 +40,7 @@ export enum ExtensionState {
 
 export type MoonbaseExtension = {
   id: string;
+  uniqueId: number;
   manifest: ExtensionManifest | RepositoryManifest;
   source: DetectedExtension["source"];
   state: ExtensionState;
