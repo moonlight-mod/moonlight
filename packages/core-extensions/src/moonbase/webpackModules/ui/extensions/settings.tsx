@@ -31,27 +31,30 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
-function useConfigEntry<T>(id: string, name: string) {
+function useConfigEntry<T>(uniqueId: number, name: string) {
   return Flux.useStateFromStores(
     [MoonbaseSettingsStore],
     () => {
       return {
-        value: MoonbaseSettingsStore.getExtensionConfig<T>(id, name),
-        displayName: MoonbaseSettingsStore.getExtensionConfigName(id, name),
+        value: MoonbaseSettingsStore.getExtensionConfig<T>(uniqueId, name),
+        displayName: MoonbaseSettingsStore.getExtensionConfigName(
+          uniqueId,
+          name
+        ),
         description: MoonbaseSettingsStore.getExtensionConfigDescription(
-          id,
+          uniqueId,
           name
         )
       };
     },
-    [id, name]
+    [uniqueId, name]
   );
 }
 
 function Boolean({ ext, name, setting, disabled }: SettingsProps) {
   const { FormSwitch } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<boolean>(
-    ext.id,
+    ext.uniqueId,
     name
   );
 
@@ -61,7 +64,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
       hideBorder={true}
       disabled={disabled}
       onChange={(value: boolean) => {
-        MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
+        MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
       }}
       note={description}
       className={`${Margins.marginReset} ${Margins.marginTop20}`}
@@ -74,7 +77,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
 function Number({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, Slider } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<number>(
-    ext.id,
+    ext.uniqueId,
     name
   );
 
@@ -92,7 +95,7 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
         maxValue={castedSetting.max ?? 100}
         onValueChange={(value: number) => {
           const rounded = Math.max(min, Math.min(max, Math.round(value)));
-          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
+          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, rounded);
         }}
       />
     </FormItem>
@@ -102,7 +105,7 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
 function String({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextInput } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<string>(
-    ext.id,
+    ext.uniqueId,
     name
   );
 
@@ -115,7 +118,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
         value={value ?? ""}
         onChange={(value: string) => {
           if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
+          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
         }}
       />
     </FormItem>
@@ -125,7 +128,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
 function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextArea } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<string>(
-    ext.id,
+    ext.uniqueId,
     name
   );
 
@@ -140,7 +143,7 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
         className={"moonbase-resizeable"}
         onChange={(value: string) => {
           if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
+          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
         }}
       />
     </FormItem>
@@ -150,7 +153,7 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
 function Select({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, SingleSelect } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<string>(
-    ext.id,
+    ext.uniqueId,
     name
   );
 
@@ -171,7 +174,7 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
         )}
         onChange={(value: string) => {
           if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
+          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
         }}
       />
     </FormItem>
@@ -182,7 +185,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, Select, useVariableSelect, multiSelect } =
     CommonComponents;
   const { value, displayName, description } = useConfigEntry<string | string[]>(
-    ext.id,
+    ext.uniqueId,
     name
   );
 
@@ -207,7 +210,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
           onChange: (value: string) => {
             if (disabled) return;
             MoonbaseSettingsStore.setExtensionConfig(
-              ext.id,
+              ext.uniqueId,
               name,
               Array.from(value)
             );
@@ -249,13 +252,13 @@ function RemoveEntryButton({
 function List({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<string[]>(
-    ext.id,
+    ext.uniqueId,
     name
   );
 
   const entries = value ?? [];
   const updateConfig = () =>
-    MoonbaseSettingsStore.setExtensionConfig(ext.id, name, entries);
+    MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, entries);
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
@@ -316,12 +319,12 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
   const { value, displayName, description } = useConfigEntry<
     Record<string, string>
-  >(ext.id, name);
+  >(ext.uniqueId, name);
 
   const entries = Object.entries(value ?? {});
   const updateConfig = () =>
     MoonbaseSettingsStore.setExtensionConfig(
-      ext.id,
+      ext.uniqueId,
       name,
       Object.fromEntries(entries)
     );

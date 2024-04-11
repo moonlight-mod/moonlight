@@ -36,18 +36,19 @@ const DangerIcon =
 const PanelButton =
   spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
 
-export default function ExtensionCard({ id }: { id: string }) {
+export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
   const [restartNeeded, setRestartNeeded] = React.useState(false);
 
-  const { ext, enabled, busy, update } = Flux.useStateFromStores(
+  const { ext, enabled, busy, update, conflicting } = Flux.useStateFromStores(
     [MoonbaseSettingsStore],
     () => {
       return {
-        ext: MoonbaseSettingsStore.getExtension(id),
-        enabled: MoonbaseSettingsStore.getExtensionEnabled(id),
+        ext: MoonbaseSettingsStore.getExtension(uniqueId),
+        enabled: MoonbaseSettingsStore.getExtensionEnabled(uniqueId),
         busy: MoonbaseSettingsStore.busy,
-        update: MoonbaseSettingsStore.getExtensionUpdate(id)
+        update: MoonbaseSettingsStore.getExtensionUpdate(uniqueId),
+        conflicting: MoonbaseSettingsStore.getExtensionConflicting(uniqueId)
       };
     }
   );
@@ -96,8 +97,9 @@ export default function ExtensionCard({ id }: { id: string }) {
             <Button
               color={Button.Colors.BRAND}
               submitting={busy}
+              disabled={conflicting}
               onClick={() => {
-                MoonbaseSettingsStore.installExtension(id);
+                MoonbaseSettingsStore.installExtension(uniqueId);
               }}
             >
               Install
@@ -116,7 +118,7 @@ export default function ExtensionCard({ id }: { id: string }) {
                   icon={TrashIcon}
                   tooltipText="Delete"
                   onClick={() => {
-                    MoonbaseSettingsStore.deleteExtension(id);
+                    MoonbaseSettingsStore.deleteExtension(uniqueId);
                   }}
                 />
               )}
@@ -126,7 +128,7 @@ export default function ExtensionCard({ id }: { id: string }) {
                   icon={DownloadIcon}
                   tooltipText="Update"
                   onClick={() => {
-                    MoonbaseSettingsStore.installExtension(id);
+                    MoonbaseSettingsStore.installExtension(uniqueId);
                   }}
                 />
               )}
@@ -147,7 +149,7 @@ export default function ExtensionCard({ id }: { id: string }) {
                 checked={enabled}
                 onChange={() => {
                   setRestartNeeded(true);
-                  MoonbaseSettingsStore.setExtensionEnabled(id, !enabled);
+                  MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
                 }}
               />
             </div>

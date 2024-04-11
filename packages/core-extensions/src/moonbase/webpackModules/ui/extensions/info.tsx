@@ -180,7 +180,11 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
               [DependencyType.Incompatible]: "var(--red-400)"
             };
             const color = colors[dep.type];
-            const name = MoonbaseSettingsStore.getExtensionName(dep.id);
+            const id = MoonbaseSettingsStore.getExtensionUniqueId(dep.id);
+            const name =
+              (id !== null
+                ? MoonbaseSettingsStore.getExtensionName(id!)
+                : null) ?? dep.id;
             return (
               <Badge color={color} key={dep.id}>
                 {name}

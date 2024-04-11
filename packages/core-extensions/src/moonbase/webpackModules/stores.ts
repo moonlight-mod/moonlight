@@ -1,10 +1,5 @@
 import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
-import {
-  ExtensionState,
-  MoonbaseExtension,
-  MoonbaseNatives,
-  RepositoryManifest
-} from "../types";
+import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
 import Flux from "@moonlight-mod/wp/common_flux";
 import Dispatcher from "@moonlight-mod/wp/common_fluxDispatcher";
 
@@ -14,19 +9,21 @@ const logger = moonlight.getLogger("moonbase");
 class MoonbaseSettingsStore extends Flux.Store<any> {
   private origConfig: Config;
   private config: Config;
+  private extensionIndex: number;
 
   modified: boolean;
   submitting: boolean;
   installing: boolean;
 
-  extensions: { [id: string]: MoonbaseExtension };
-  updates: { [id: string]: { version: string; download: string } };
+  extensions: { [id: number]: MoonbaseExtension };
+  updates: { [id: number]: { version: string; download: string } };
 
   constructor() {
     super(Dispatcher);
 
     this.origConfig = moonlightNode.config;
     this.config = this.clone(this.origConfig);
+    this.extensionIndex = 0;
 
     this.modified = false;
     this.submitting = false;
@@ -35,11 +32,10 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
     this.extensions = {};
     this.updates = {};
     for (const ext of moonlightNode.extensions) {
-      const existingExtension = this.extensions[ext.id];
-      if (existingExtension != null) continue;
-
-      this.extensions[ext.id] = {
+      const uniqueId = this.extensionIndex++;
+      this.extensions[uniqueId] = {
         ...ext,
+        uniqueId,
         state: moonlight.enabledExtensions.has(ext.id)
           ? ExtensionState.Enabled
           : ExtensionState.Disabled
@@ -50,34 +46,27 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
       for (const [repo, exts] of Object.entries(ret)) {
         try {
           for (const ext of exts) {
-            try {
-              const existingExtension = this.extensions[ext.id];
-              if (existingExtension !== undefined) {
-                if (this.hasUpdate(repo, ext, existingExtension)) {
-                  this.updates[ext.id] = {
-                    version: ext.version!,
-                    download: ext.download
-                  };
-                }
+            const uniqueId = this.extensionIndex++;
+            const extensionData = {
+              id: ext.id,
+              uniqueId,
+              manifest: ext,
+              source: { type: ExtensionLoadSource.Normal, url: repo },
+              state: ExtensionState.NotDownloaded
+            };
 
-                this.extensions[ext.id].manifest = ext;
-                this.extensions[ext.id].source = {
-                  type: ExtensionLoadSource.Normal,
-                  url: repo
+            if (this.alreadyExists(extensionData)) {
+              if (this.hasUpdate(extensionData)) {
+                this.updates[uniqueId] = {
+                  version: ext.version!,
+                  download: ext.download
                 };
-
-                continue;
               }
 
-              this.extensions[ext.id] = {
-                id: ext.id,
-                manifest: ext,
-                source: { type: ExtensionLoadSource.Normal, url: repo },
-                state: ExtensionState.NotDownloaded
-              };
-            } catch (e) {
-              logger.error(`Error processing extension ${ext.id}`, e);
+              continue;
             }
+
+            this.extensions[uniqueId] = extensionData;
           }
         } catch (e) {
           logger.error(`Error processing repository ${repo}`, e);
@@ -88,18 +77,21 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
     });
   }
 
-  // this logic sucks so bad lol
-  private hasUpdate(
-    repo: string,
-    repoExt: RepositoryManifest,
-    existing: MoonbaseExtension
-  ) {
+  private alreadyExists(ext: MoonbaseExtension) {
+    return Object.values(this.extensions).some(
+      (e) => e.id === ext.id && e.source.url === ext.source.url
+    );
+  }
+
+  private hasUpdate(ext: MoonbaseExtension) {
+    const existing = Object.values(this.extensions).find(
+      (e) => e.id === ext.id && e.source.url === ext.source.url
+    );
+    if (existing == null) return false;
+
     return (
-      existing.source.type === ExtensionLoadSource.Normal &&
-      existing.source.url != null &&
-      existing.source.url === repo &&
-      repoExt.version != null &&
-      existing.manifest.version !== repoExt.version
+      existing.manifest.version !== ext.manifest.version &&
+      existing.state !== ExtensionState.NotDownloaded
     );
   }
 
@@ -118,47 +110,66 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
     return this.modified;
   }
 
-  getExtension(id: string) {
-    return this.extensions[id];
+  getExtension(uniqueId: number) {
+    return this.extensions[uniqueId];
   }
 
-  getExtensionName(id: string) {
-    return Object.prototype.hasOwnProperty.call(this.extensions, id)
-      ? this.extensions[id].manifest.meta?.name ?? id
-      : id;
+  getExtensionUniqueId(id: string) {
+    return Object.values(this.extensions).find((ext) => ext.id === id)
+      ?.uniqueId;
   }
 
-  getExtensionUpdate(id: string) {
-    return Object.prototype.hasOwnProperty.call(this.updates, id)
-      ? this.updates[id]
-      : null;
+  getExtensionConflicting(uniqueId: number) {
+    const ext = this.getExtension(uniqueId);
+    if (ext.state !== ExtensionState.NotDownloaded) return false;
+    return Object.values(this.extensions).some(
+      (e) =>
+        e.id === ext.id &&
+        e.uniqueId !== uniqueId &&
+        e.state !== ExtensionState.NotDownloaded
+    );
   }
 
-  getExtensionEnabled(id: string) {
-    const val = this.config.extensions[id];
+  getExtensionName(uniqueId: number) {
+    const ext = this.getExtension(uniqueId);
+    return ext.manifest.meta?.name ?? ext.id;
+  }
+
+  getExtensionUpdate(uniqueId: number) {
+    return this.updates[uniqueId]?.version;
+  }
+
+  getExtensionEnabled(uniqueId: number) {
+    const ext = this.getExtension(uniqueId);
+    if (ext.state === ExtensionState.NotDownloaded) return false;
+    const val = this.config.extensions[ext.id];
     if (val == null) return false;
     return typeof val === "boolean" ? val : val.enabled;
   }
 
-  getExtensionConfig<T>(id: string, key: string): T | undefined {
-    const defaultValue = this.extensions[id].manifest.settings?.[key]?.default;
+  getExtensionConfig<T>(uniqueId: number, key: string): T | undefined {
+    const ext = this.getExtension(uniqueId);
+    const defaultValue = ext.manifest.settings?.[key]?.default;
     const clonedDefaultValue = this.clone(defaultValue);
-    const cfg = this.config.extensions[id];
+    const cfg = this.config.extensions[ext.id];
 
     if (cfg == null || typeof cfg === "boolean") return clonedDefaultValue;
     return cfg.config?.[key] ?? clonedDefaultValue;
   }
 
-  getExtensionConfigName(id: string, key: string) {
-    return this.extensions[id].manifest.settings?.[key]?.displayName ?? key;
+  getExtensionConfigName(uniqueId: number, key: string) {
+    const ext = this.getExtension(uniqueId);
+    return ext.manifest.settings?.[key]?.displayName ?? key;
   }
 
-  getExtensionConfigDescription(id: string, key: string) {
-    return this.extensions[id].manifest.settings?.[key]?.description;
+  getExtensionConfigDescription(uniqueId: number, key: string) {
+    const ext = this.getExtension(uniqueId);
+    return ext.manifest.settings?.[key]?.description;
   }
 
-  setExtensionConfig(id: string, key: string, value: any) {
-    const oldConfig = this.config.extensions[id];
+  setExtensionConfig(uniqueId: number, key: string, value: any) {
+    const ext = this.getExtension(uniqueId);
+    const oldConfig = this.config.extensions[ext.id];
     const newConfig =
       typeof oldConfig === "boolean"
         ? {
@@ -170,16 +181,17 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
             config: { ...(oldConfig?.config ?? {}), [key]: value }
           };
 
-    this.config.extensions[id] = newConfig;
+    this.config.extensions[ext.id] = newConfig;
     this.modified = this.isModified();
     this.emitChange();
   }
 
-  setExtensionEnabled(id: string, enabled: boolean) {
-    let val = this.config.extensions[id];
+  setExtensionEnabled(uniqueId: number, enabled: boolean) {
+    const ext = this.getExtension(uniqueId);
+    let val = this.config.extensions[ext.id];
 
     if (val == null) {
-      this.config.extensions[id] = { enabled };
+      this.config.extensions[ext.id] = { enabled };
       this.modified = this.isModified();
       this.emitChange();
       return;
@@ -191,26 +203,26 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
       val.enabled = enabled;
     }
 
-    this.config.extensions[id] = val;
+    this.config.extensions[ext.id] = val;
     this.modified = this.isModified();
     this.emitChange();
   }
 
-  async installExtension(id: string) {
-    const ext = this.getExtension(id);
+  async installExtension(uniqueId: number) {
+    const ext = this.getExtension(uniqueId);
     if (!("download" in ext.manifest)) {
       throw new Error("Extension has no download URL");
     }
 
     this.installing = true;
     try {
-      const url = this.updates[id]?.download ?? ext.manifest.download;
+      const url = this.updates[uniqueId]?.download ?? ext.manifest.download;
       await natives.installExtension(ext.manifest, url, ext.source.url!);
       if (ext.state === ExtensionState.NotDownloaded) {
-        this.extensions[id].state = ExtensionState.Disabled;
+        this.extensions[uniqueId].state = ExtensionState.Disabled;
       }
 
-      delete this.updates[id];
+      delete this.updates[uniqueId];
     } catch (e) {
       logger.error("Error installing extension:", e);
     }
@@ -219,14 +231,14 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
     this.emitChange();
   }
 
-  async deleteExtension(id: string) {
-    const ext = this.getExtension(id);
+  async deleteExtension(uniqueId: number) {
+    const ext = this.getExtension(uniqueId);
     if (ext == null) return;
 
     this.installing = true;
     try {
       await natives.deleteExtension(ext.id);
-      this.extensions[id].state = ExtensionState.NotDownloaded;
+      this.extensions[uniqueId].state = ExtensionState.NotDownloaded;
     } catch (e) {
       logger.error("Error deleting extension:", e);
     }

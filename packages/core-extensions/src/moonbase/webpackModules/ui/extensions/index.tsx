@@ -14,13 +14,14 @@ const SearchBar = spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0]
   .exports.default;
 
 export default function ExtensionsPage() {
+  const moonbaseId = MoonbaseSettingsStore.getExtensionUniqueId("moonbase")!;
   const { extensions, savedFilter } = Flux.useStateFromStoresObject(
     [MoonbaseSettingsStore],
     () => {
       return {
         extensions: MoonbaseSettingsStore.extensions,
         savedFilter: MoonbaseSettingsStore.getExtensionConfig(
-          "moonbase",
+          moonbaseId,
           "filter"
         )
       };
@@ -33,7 +34,7 @@ export default function ExtensionsPage() {
   if (moonlight.getConfigOption<boolean>("moonbase", "saveFilter")) {
     filter = savedFilter ?? defaultFilter;
     setFilter = (filter) =>
-      MoonbaseSettingsStore.setExtensionConfig("moonbase", "filter", filter);
+      MoonbaseSettingsStore.setExtensionConfig(moonbaseId, "filter", filter);
   } else {
     const state = React.useState(defaultFilter);
     filter = state[0];
@@ -63,9 +64,9 @@ export default function ExtensionsPage() {
         (!(filter & Filter.Developer) &&
           ext.source.type === ExtensionLoadSource.Developer) ||
         (!(filter & Filter.Enabled) &&
-          MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
+          MoonbaseSettingsStore.getExtensionEnabled(ext.uniqueId)) ||
         (!(filter & Filter.Disabled) &&
-          !MoonbaseSettingsStore.getExtensionEnabled(ext.id)) ||
+          !MoonbaseSettingsStore.getExtensionEnabled(ext.uniqueId)) ||
         (!(filter & Filter.Installed) &&
           ext.state !== ExtensionState.NotDownloaded) ||
         (!(filter & Filter.Repository) &&
@@ -97,7 +98,7 @@ export default function ExtensionsPage() {
         />
       </React.Suspense>
       {filtered.map((ext) => (
-        <ExtensionCard id={ext.id} key={ext.id} />
+        <ExtensionCard uniqueId={ext.uniqueId} key={ext.id} />
       ))}
     </>
   );
