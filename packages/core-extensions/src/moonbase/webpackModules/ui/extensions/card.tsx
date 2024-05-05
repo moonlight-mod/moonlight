@@ -123,7 +123,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 />
               )}
 
-              {update !== null && (
+              {update != null && (
                 <PanelButton
                   icon={DownloadIcon}
                   tooltipText="Update"
