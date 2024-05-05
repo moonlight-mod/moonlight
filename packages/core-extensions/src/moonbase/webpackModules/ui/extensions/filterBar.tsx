@@ -1,4 +1,4 @@
-import { tagNames } from "./info";
+//import { tagNames } from "./info";
 import {
   ArrowsUpDownIconSVG,
   ChevronSmallDownIconSVG,
@@ -48,8 +48,8 @@ const FilterDialogClasses = spacepack.findByCode(
 const FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0]
   .exports;
 
-const TagItem = spacepack.findByCode("IncreasedActivityForumTagPill:")[0]
-  .exports.default;
+/*const TagItem = spacepack.findByCode("IncreasedActivityForumTagPill:")[0]
+  .exports.default;*/
 
 const ChevronSmallDownIcon = spacepack.findByCode(ChevronSmallDownIconSVG)[0]
   .exports.default;
@@ -57,7 +57,7 @@ const ChevronSmallUpIcon = spacepack.findByCode(ChevronSmallUpIconSVG)[0]
   .exports.default;
 let ArrowsUpDownIcon: React.FunctionComponent;
 
-function toggleTag(
+/*function toggleTag(
   selectedTags: Set<string>,
   setSelectedTags: (tags: Set<string>) => void,
   tag: string
@@ -66,7 +66,7 @@ function toggleTag(
   if (newState.has(tag)) newState.delete(tag);
   else newState.add(tag);
   setSelectedTags(newState);
-}
+}*/
 
 function FilterButtonPopout({
   filter,
@@ -179,7 +179,7 @@ function TagButtonPopout({
           </div>
         </div>
       </div>
-      <div className={FilterDialogClasses.tagContainer}>
+      {/*<div className={FilterDialogClasses.tagContainer}>
         {Object.keys(tagNames).map((tag) => (
           <TagItem
             key={tag}
@@ -189,7 +189,7 @@ function TagButtonPopout({
             selected={selectedTags.has(tag)}
           />
         ))}
-      </div>
+      </div>*/}
       <div className={FilterDialogClasses.separator} />
       <Button
         look={Button.Looks.LINK}
@@ -291,7 +291,7 @@ function FilterBar({
         )}
       </Popout>
       <div className={FilterBarClasses.divider} />
-      <div className={FilterBarClasses.tagList}>
+      {/*<div className={FilterBarClasses.tagList}>
         <div ref={tagListInner} className={FilterBarClasses.tagListInner}>
           {Object.keys(tagNames).map((tag) => (
             <TagItem
@@ -303,7 +303,7 @@ function FilterBar({
             />
           ))}
         </div>
-      </div>
+        </div>*/}
       <Popout
         renderPopout={({ setPopoutRef, closePopout }: any) => (
           <TagButtonPopout
