@@ -1,0 +1,8 @@
+{
+  "name": "@moonlight-mod/browser",
+  "private": true,
+  "dependencies": {
+    "@moonlight-mod/core": "workspace:*",
+    "@moonlight-mod/web-preload": "workspace:*"
+  }
+}

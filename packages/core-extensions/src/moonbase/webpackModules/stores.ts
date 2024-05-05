@@ -1,10 +1,49 @@
 import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
-import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
+import {
+  ExtensionState,
+  MoonbaseExtension,
+  MoonbaseNatives,
+  RepositoryManifest
+} from "../types";
 import Flux from "@moonlight-mod/wp/common_flux";
 import Dispatcher from "@moonlight-mod/wp/common_fluxDispatcher";
 
-const natives: MoonbaseNatives = moonlight.getNatives("moonbase");
 const logger = moonlight.getLogger("moonbase");
+
+let natives: MoonbaseNatives | undefined = moonlight.getNatives("moonbase");
+if (!natives) {
+  natives = {
+    fetchRepositories: async (repos) => {
+      const ret: Record<string, RepositoryManifest[]> = {};
+
+      for (const repo of repos) {
+        try {
+          const req = await fetch(repo);
+          const json = await req.json();
+          ret[repo] = json;
+        } catch (e) {
+          logger.error(`Error fetching repository ${repo}`, e);
+        }
+      }
+
+      return ret;
+    },
+    installExtension: async (manifest, url, repo) => {
+      // TODO
+    },
+    deleteExtension: async (id) => {
+      // TODO
+    },
+    getExtensionConfig: (id, key) => {
+      const config = moonlightNode.config.extensions[id];
+      if (typeof config === "object") {
+        return config.config?.[key];
+      }
+
+      return undefined;
+    }
+  };
+}
 
 class MoonbaseSettingsStore extends Flux.Store<any> {
   private origConfig: Config;
@@ -42,7 +81,7 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
       };
     }
 
-    natives.fetchRepositories(this.config.repositories).then((ret) => {
+    natives!.fetchRepositories(this.config.repositories).then((ret) => {
       for (const [repo, exts] of Object.entries(ret)) {
         try {
           for (const ext of exts) {
@@ -217,7 +256,7 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
     this.installing = true;
     try {
       const url = this.updates[uniqueId]?.download ?? ext.manifest.download;
-      await natives.installExtension(ext.manifest, url, ext.source.url!);
+      await natives!.installExtension(ext.manifest, url, ext.source.url!);
       if (ext.state === ExtensionState.NotDownloaded) {
         this.extensions[uniqueId].state = ExtensionState.Disabled;
       }
@@ -237,7 +276,7 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
 
     this.installing = true;
     try {
-      await natives.deleteExtension(ext.id);
+      await natives!.deleteExtension(ext.id);
       this.extensions[uniqueId].state = ExtensionState.NotDownloaded;
     } catch (e) {
       logger.error("Error deleting extension:", e);

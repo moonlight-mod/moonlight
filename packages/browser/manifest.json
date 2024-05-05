@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "moonlight",
+  "description": "Yet another Discord mod",
+  "version": "1.0.8",
+  "permissions": ["declarativeNetRequestWithHostAccess"],
+  "content_scripts": [
+    {
+      "js": ["index.js"],
+      "matches": ["https://*.discord.com/*"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["core-extensions/*"],
+      "matches": ["https://*.discord.com/*"]
+    }
+  ],
+  "host_permissions": [
+    "https://moonlight-mod.github.io/*",
+    "https://*.discord.com/*"
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "modifyResponseHeaders",
+        "enabled": true,
+        "path": "modifyResponseHeaders.json"
+      }
+    ]
+  }
+}

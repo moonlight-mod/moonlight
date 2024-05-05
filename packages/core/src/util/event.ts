@@ -6,6 +6,36 @@ export interface MoonlightEventEmitter {
   removeEventListener: (id: string, cb: MoonlightEventCallback) => void;
 }
 
+function webMethod(): MoonlightEventEmitter {
+  const eventEmitter = new EventTarget();
+  const listeners = new Map<MoonlightEventCallback, (e: Event) => void>();
+
+  return {
+    dispatchEvent: (id: string, data: string) => {
+      eventEmitter.dispatchEvent(new CustomEvent(id, { detail: data }));
+    },
+
+    addEventListener: (id: string, cb: (data: string) => void) => {
+      if (listeners.has(cb)) return;
+
+      function listener(e: Event) {
+        const event = e as CustomEvent<string>;
+        cb(event.detail);
+      }
+
+      listeners.set(cb, listener);
+      eventEmitter.addEventListener(id, listener);
+    },
+
+    removeEventListener: (id: string, cb: (data: string) => void) => {
+      const listener = listeners.get(cb);
+      if (listener == null) return;
+      listeners.delete(cb);
+      eventEmitter.removeEventListener(id, listener);
+    }
+  };
+}
+
 function nodeMethod(): MoonlightEventEmitter {
   const EventEmitter = require("events");
   const eventEmitter = new EventEmitter();
@@ -38,33 +68,7 @@ function nodeMethod(): MoonlightEventEmitter {
 
 export function createEventEmitter(): MoonlightEventEmitter {
   webPreload: {
-    const eventEmitter = new EventTarget();
-    const listeners = new Map<MoonlightEventCallback, (e: Event) => void>();
-
-    return {
-      dispatchEvent: (id: string, data: string) => {
-        eventEmitter.dispatchEvent(new CustomEvent(id, { detail: data }));
-      },
-
-      addEventListener: (id: string, cb: (data: string) => void) => {
-        if (listeners.has(cb)) return;
-
-        function listener(e: Event) {
-          const event = e as CustomEvent<string>;
-          cb(event.detail);
-        }
-
-        listeners.set(cb, listener);
-        eventEmitter.addEventListener(id, listener);
-      },
-
-      removeEventListener: (id: string, cb: (data: string) => void) => {
-        const listener = listeners.get(cb);
-        if (listener == null) return;
-        listeners.delete(cb);
-        eventEmitter.removeEventListener(id, listener);
-      }
-    };
+    return webMethod();
   }
 
   nodePreload: {
@@ -73,6 +77,10 @@ export function createEventEmitter(): MoonlightEventEmitter {
 
   injector: {
     return nodeMethod();
+  }
+
+  browser: {
+    return webMethod();
   }
 
   throw new Error("Called createEventEmitter() in an impossible environment");

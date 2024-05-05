@@ -161,7 +161,7 @@ export async function inject(asarPath: string) {
   isMoonlightDesktop = asarPath === "moonlightDesktop";
   try {
     const config = readConfig();
-    const extensions = getExtensions();
+    const extensions = await getExtensions();
 
     // Duplicated in node-preload... oops
     // eslint-disable-next-line no-inner-declarations

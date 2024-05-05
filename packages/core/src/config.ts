@@ -13,9 +13,19 @@ const defaultConfig: Config = {
 };
 
 export function writeConfig(config: Config) {
-  const fs = requireImport("fs");
-  const configPath = getConfigPath();
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+  nodePreload: {
+    const fs = requireImport("fs");
+    const configPath = getConfigPath();
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    return;
+  }
+
+  browser: {
+    localStorage.setItem("moonlight-config", JSON.stringify(config));
+    return;
+  }
+
+  throw new Error("Called writeConfig() in an impossible environment");
 }
 
 function readConfigNode(): Config {
@@ -36,6 +46,20 @@ function readConfigNode(): Config {
   return config;
 }
 
+function readConfigBrowser(): Config {
+  const configStr = localStorage.getItem("moonlight-config");
+  if (!configStr) {
+    writeConfig(defaultConfig);
+    return defaultConfig;
+  }
+
+  let config: Config = JSON.parse(configStr);
+  config = { ...defaultConfig, ...config };
+  writeConfig(config);
+
+  return config;
+}
+
 export function readConfig(): Config {
   webPreload: {
     return moonlightNode.config;
@@ -47,6 +71,10 @@ export function readConfig(): Config {
 
   injector: {
     return readConfigNode();
+  }
+
+  browser: {
+    return readConfigBrowser();
   }
 
   throw new Error("Called readConfig() in an impossible environment");

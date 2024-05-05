@@ -57,7 +57,7 @@ export default class Logger {
     const logLevel = LogLevel[level].toUpperCase();
     if (maxLevel > level) return;
 
-    if (MOONLIGHT_WEB_PRELOAD) {
+    if (MOONLIGHT_WEB_PRELOAD || MOONLIGHT_BROWSER) {
       args = [
         `%c[${logLevel}]`,
         `background-color: ${colors[level]}; color: #FFFFFF;`,

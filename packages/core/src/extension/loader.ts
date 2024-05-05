@@ -13,69 +13,77 @@ import { registerStyles } from "../styles";
 
 const logger = new Logger("core/extension/loader");
 
-async function loadExt(ext: DetectedExtension) {
-  webPreload: {
-    if (ext.scripts.web != null) {
-      const source =
-        ext.scripts.web + "\n//# sourceURL=file:///" + ext.scripts.webPath;
-      const fn = new Function("require", "module", "exports", source);
+function loadExtWeb(ext: DetectedExtension) {
+  if (ext.scripts.web != null) {
+    const source =
+      ext.scripts.web + "\n//# sourceURL=file:///" + ext.scripts.webPath;
+    const fn = new Function("require", "module", "exports", source);
 
-      const module = { id: ext.id, exports: {} };
-      fn.apply(window, [
-        () => {
-          logger.warn("Attempted to require() from web");
-        },
-        module,
-        module.exports
-      ]);
+    const module = { id: ext.id, exports: {} };
+    fn.apply(window, [
+      () => {
+        logger.warn("Attempted to require() from web");
+      },
+      module,
+      module.exports
+    ]);
 
-      const exports: ExtensionWebExports = module.exports;
-      if (exports.patches != null) {
-        let idx = 0;
-        for (const patch of exports.patches) {
-          if (Array.isArray(patch.replace)) {
-            for (const replacement of patch.replace) {
-              const newPatch = Object.assign({}, patch, {
-                replace: replacement
-              });
+    const exports: ExtensionWebExports = module.exports;
+    if (exports.patches != null) {
+      let idx = 0;
+      for (const patch of exports.patches) {
+        if (Array.isArray(patch.replace)) {
+          for (const replacement of patch.replace) {
+            const newPatch = Object.assign({}, patch, {
+              replace: replacement
+            });
 
-              registerPatch({ ...newPatch, ext: ext.id, id: idx });
-              idx++;
-            }
-          } else {
-            registerPatch({ ...patch, ext: ext.id, id: idx });
+            registerPatch({ ...newPatch, ext: ext.id, id: idx });
             idx++;
           }
+        } else {
+          registerPatch({ ...patch, ext: ext.id, id: idx });
+          idx++;
         }
-      }
-
-      if (exports.webpackModules != null) {
-        for (const [name, wp] of Object.entries(exports.webpackModules)) {
-          if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
-            const func = new Function(
-              "module",
-              "exports",
-              "require",
-              ext.scripts.webpackModules[name]!
-            ) as WebpackModuleFunc;
-            registerWebpackModule({
-              ...wp,
-              ext: ext.id,
-              id: name,
-              run: func
-            });
-          } else {
-            registerWebpackModule({ ...wp, ext: ext.id, id: name });
-          }
-        }
-      }
-
-      if (exports.styles != null) {
-        registerStyles(
-          exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`)
-        );
       }
     }
+
+    if (exports.webpackModules != null) {
+      for (const [name, wp] of Object.entries(exports.webpackModules)) {
+        if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
+          const func = new Function(
+            "module",
+            "exports",
+            "require",
+            ext.scripts.webpackModules[name]!
+          ) as WebpackModuleFunc;
+          registerWebpackModule({
+            ...wp,
+            ext: ext.id,
+            id: name,
+            run: func
+          });
+        } else {
+          registerWebpackModule({ ...wp, ext: ext.id, id: name });
+        }
+      }
+    }
+
+    if (exports.styles != null) {
+      registerStyles(
+        exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`)
+      );
+    }
+  }
+}
+
+async function loadExt(ext: DetectedExtension) {
+  webPreload: {
+    loadExtWeb(ext);
+  }
+
+  browser: {
+    loadExtWeb(ext);
   }
 
   nodePreload: {
@@ -206,6 +214,12 @@ export async function loadProcessedExtensions({
   }
 
   webPreload: {
+    for (const ext of extensions) {
+      moonlight.enabledExtensions.add(ext.id);
+    }
+  }
+
+  browser: {
     for (const ext of extensions) {
       moonlight.enabledExtensions.add(ext.id);
     }

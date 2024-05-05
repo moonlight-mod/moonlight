@@ -14,8 +14,8 @@ import {
 
 async function injectGlobals() {
   const config = readConfig();
-  const extensions = getExtensions();
-  const processed = await loadExtensions(extensions);
+  const extensions = await getExtensions();
+  const processedExtensions = await loadExtensions(extensions);
 
   function getConfig(ext: string) {
     const val = config.extensions[ext];
@@ -25,8 +25,8 @@ async function injectGlobals() {
 
   global.moonlightNode = {
     config,
-    extensions: getExtensions(),
-    processedExtensions: processed,
+    extensions,
+    processedExtensions,
     nativesCache: {},
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {
@@ -48,7 +48,7 @@ async function injectGlobals() {
     writeConfig
   };
 
-  await loadProcessedExtensions(processed);
+  await loadProcessedExtensions(processedExtensions);
   contextBridge.exposeInMainWorld("moonlightNode", moonlightNode);
 
   const extCors = moonlightNode.processedExtensions.extensions

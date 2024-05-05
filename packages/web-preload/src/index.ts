@@ -3,7 +3,7 @@ import { installWebpackPatcher } from "@moonlight-mod/core/patch";
 import { installStyles } from "@moonlight-mod/core/styles";
 import Logger from "@moonlight-mod/core/util/logger";
 
-(async () => {
+export default async function load() {
   const logger = new Logger("web-preload");
 
   window.moonlight = {
@@ -29,4 +29,6 @@ import Logger from "@moonlight-mod/core/util/logger";
   window.addEventListener("DOMContentLoaded", () => {
     installStyles();
   });
-})();
+}
+
+if (MOONLIGHT_ENV === "web-preload") load();

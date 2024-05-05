@@ -124,7 +124,50 @@ function getExtensionsNative(): DetectedExtension[] {
   return res;
 }
 
-export function getExtensions(): DetectedExtension[] {
+async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
+  const res: DetectedExtension[] = [];
+
+  const coreExtensionsFs: Record<string, string> = JSON.parse(
+    // @ts-expect-error shut up
+    _moonlight_coreExtensionsStr
+  );
+  const coreExtensions = Array.from(
+    new Set(Object.keys(coreExtensionsFs).map((x) => x.split("/")[0]))
+  );
+
+  for (const ext of coreExtensions) {
+    if (!coreExtensionsFs[`${ext}/index.js`]) continue;
+    const manifest = JSON.parse(coreExtensionsFs[`${ext}/manifest.json`]);
+    const web = coreExtensionsFs[`${ext}/index.js`];
+
+    const wpModules: Record<string, string> = {};
+    const wpModulesPath = `${ext}/webpackModules`;
+    for (const wpModuleFile of Object.keys(coreExtensionsFs)) {
+      if (wpModuleFile.startsWith(wpModulesPath)) {
+        wpModules[
+          wpModuleFile.replace(wpModulesPath + "/", "").replace(".js", "")
+        ] = coreExtensionsFs[wpModuleFile];
+      }
+    }
+
+    res.push({
+      id: manifest.id,
+      manifest,
+      source: {
+        type: ExtensionLoadSource.Core
+      },
+      scripts: {
+        web,
+        webpackModules: wpModules
+      }
+    });
+  }
+
+  // TODO: normal extensions
+  return res;
+}
+
+export async function getExtensions(): Promise<DetectedExtension[]> {
   webPreload: {
     return moonlightNode.extensions;
   }
@@ -135,6 +178,10 @@ export function getExtensions(): DetectedExtension[] {
 
   injector: {
     return getExtensionsNative();
+  }
+
+  browser: {
+    return getExtensionsBrowser();
   }
 
   throw new Error("Called getExtensions() outside of node-preload/web-preload");
