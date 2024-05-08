@@ -1,0 +1,9 @@
+{
+  "id": "contextMenu",
+  "meta": {
+    "name": "Context Menu",
+    "tagline": "A library for patching and creating context menus",
+    "authors": ["redstonekasi"],
+    "tags": ["library"]
+  }
+}
