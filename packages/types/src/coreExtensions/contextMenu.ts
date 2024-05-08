@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-
 // TODO: Deduplicate common props
 
 export type Menu = React.FunctionComponent<{
@@ -21,6 +19,7 @@ export type MenuElement =
   | MenuRadioItem
   | MenuControlItem;
 
+/* eslint-disable prettier/prettier */
 export type MenuSeparator = React.FunctionComponent;
 export type MenuGroup = React.FunctionComponent<{
   label?: string;
@@ -98,6 +97,7 @@ export type MenuControlItem = React.FunctionComponent<{
   interactive?: boolean;
   children?: React.ReactComponentElement<MenuElement>[];
 })>;
+/* eslint-disable prettier/prettier */
 
 export type ContextMenu = {
   addItem: (
@@ -123,13 +123,13 @@ export type InternalItem = {
 export type InternalSeparator = {
   type: "separator";
   navigable: false;
-}
+};
 export type InternalGroupStart = {
   type: "groupstart";
   length: number;
   navigable: false;
   props: React.ComponentProps<MenuGroup>;
-}
+};
 export type InternalGroupEnd = {
   type: "groupend";
 } & Omit<InternalGroupStart, "type">;
@@ -139,13 +139,16 @@ export type InternalCustomItem = {
   navigable?: boolean;
   render: any;
   props: Extract<React.ComponentProps<MenuItem>, { render: any }>;
-} 
+};
 export type InternalItem_ = {
   type: "item";
   key: any;
   navigable: true;
   label: string;
-  
-}
+};
 
-export type EvilItemParser = (el: React.ReactComponentElement<MenuElement> | React.ReactComponentElement<MenuElement>[]) => InternalItem[];
+export type EvilItemParser = (
+  el:
+    | React.ReactComponentElement<MenuElement>
+    | React.ReactComponentElement<MenuElement>[]
+) => InternalItem[];
