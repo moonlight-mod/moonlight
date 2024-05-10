@@ -18,7 +18,7 @@ export const patches: Patch[] = [
       {
         match: /(?<=let\{[^}]+?\}=.;return ).\({[^}]+?}\)/,
         replacement: (render) =>
-          `require("contextMenu_contextMenu")._saveProps(${render})`
+          `require("contextMenu_contextMenu")._saveProps(this,${render})`
       }
     ]
   }
