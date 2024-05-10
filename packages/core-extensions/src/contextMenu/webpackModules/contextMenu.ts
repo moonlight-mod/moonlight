@@ -43,11 +43,11 @@ function _patchMenu(props: MenuProps, items: InternalItem[]) {
 }
 
 let menuProps: any;
-function _saveProps(el: any) {
+function _saveProps(self: any, el: any) {
   menuProps = el.props;
 
-  const original = el.props.config.onClose;
-  el.props.config.onClose = function (...args: any[]) {
+  const original = self.props.closeContextMenu;
+  self.props.closeContextMenu = function (...args: any[]) {
     menuProps = undefined;
     return original?.apply(this, args);
   };
