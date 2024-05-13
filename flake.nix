@@ -4,30 +4,28 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
     flake-utils.url = "github:numtide/flake-utils";
+    pnpm2nix.url = "github:mojotech/pnpm2nix-nzbr";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
+  outputs = { self, nixpkgs, flake-utils, pnpm2nix }:
     let
-      version = "1.0.7";
-      hash = "sha256-jqy9RM2/9i/o4TTzKG1FvnoUCjwslBaHVG2tIx/T2f4=";
+      mkMoonlight = { pkgs, mkPnpmPackage }:
+        mkPnpmPackage rec {
+          workspace = ./.;
+          src = ./.;
+          components = [
+            "packages/core"
+            "packages/core-extensions"
+            "packages/injector"
+            "packages/node-preload"
+            "packages/types"
+            "packages/web-preload"
+          ];
+          distDirs = [ "dist" ];
 
-      # pnpm2nix is unmaintained, forks of it don't support pnpm workspaces
-      # Downloading tarballs from GitHub releases will have to do
-      mkMoonlight = { pkgs }:
-        pkgs.stdenv.mkDerivation {
-          name = "moonlight";
-          version = version;
-          src = pkgs.fetchurl {
-            url =
-              "https://github.com/moonlight-mod/moonlight/releases/download/v${version}/dist.tar.gz";
-            sha256 = hash;
-          };
-
-          buildInputs = [ pkgs.gnutar ];
-          buildPhase = ''
-            mkdir -p $out
-            tar -xzf $src -C $out
-          '';
+          copyNodeModules = true;
+          buildPhase = "pnpm run build";
+          installPhase = "cp -r dist $out";
 
           meta = with pkgs.lib; {
             description = "Yet another Discord mod";
@@ -86,7 +84,10 @@
         });
 
       overlay = final: prev: rec {
-        moonlight-mod = mkMoonlight { pkgs = final; };
+        moonlight-mod = mkMoonlight {
+          pkgs = final;
+          mkPnpmPackage = pnpm2nix.packages.${final.system}.mkPnpmPackage;
+        };
         discord = mkOverride prev moonlight-mod "discord";
         discord-ptb = mkOverride prev moonlight-mod "discord-ptb";
         discord-canary = mkOverride prev moonlight-mod "discord-canary";
