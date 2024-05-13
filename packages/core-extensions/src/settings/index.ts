@@ -5,9 +5,9 @@ export const patches: Patch[] = [
   {
     find: ".UserSettingsSections.HOTSPOT_OPTIONS",
     replace: {
-      match: /\.CUSTOM,element:(.+?)}\];return (.{1,2})/,
-      replacement: (_, lastElement, sections) =>
-        `.CUSTOM,element:${lastElement}}];return require("settings_settings").Settings._mutateSections(${sections})`
+      match: /return(\[.+?\.CUSTOM,element:.+?}\])}/,
+      replacement: (_, arr) =>
+        `return require("settings_settings").Settings._mutateSections(${arr})}`
     }
   },
   {

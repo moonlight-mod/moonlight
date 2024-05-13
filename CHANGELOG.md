@@ -1,4 +1,3 @@
-- Add `spacepack.filterReal`
-- More dependency resolver stages
-- Injector now supports "other patch methods"
-- OpenAsar fixes
+- Added multiline string input for extension settings
+- Fixed conflicting extensions in Moonbase
+- Fixes for latest Discord

@@ -43,6 +43,50 @@ interface TextInput
   Sizes: typeof TextInputSizes;
 }
 
+export enum TextAreaAutoComplete {
+  ON = "on",
+  OFF = "off"
+}
+
+export enum TextAreaWrap {
+  HARD = "hard",
+  SOFT = "soft",
+  OFF = "off"
+}
+
+interface TextArea
+  extends ComponentClass<
+    PropsWithoutRef<{
+      value?: string;
+      defaultValue?: string;
+      autoComplete?: TextAreaAutoComplete;
+      autoFocus?: boolean;
+      cols?: number;
+      disabled?: boolean;
+      form?: string;
+      maxLength?: number;
+      minLength?: number;
+      name?: string;
+      onChange?: (value: string, name: string) => void;
+      onChangeCapture?: (value: string, name: string) => void;
+      onInput?: (value: string, name: string) => void;
+      onInputCapture?: (value: string, name: string) => void;
+      onInvalid?: (value: string, name: string) => void;
+      onInvalidCapture?: (value: string, name: string) => void;
+      onSelect?: (value: string, name: string) => void;
+      onSelectCapture?: (value: string, name: string) => void;
+      placeholder?: string;
+      readOnly?: boolean;
+      required?: boolean;
+      rows?: number;
+      wrap?: TextAreaWrap;
+      className?: string;
+    }>
+  > {
+  AutoCompletes: typeof TextAreaAutoComplete;
+  Wraps: typeof TextAreaWrap;
+}
+
 export enum FormTextTypes {
   DEFAULT = "default",
   DESCRIPTION = "description",
@@ -238,6 +282,7 @@ export type CommonComponents = {
     }>
   >;
   TextInput: TextInput;
+  TextArea: TextArea;
   FormDivider: ComponentClass<any>;
   FormSection: ComponentClass<
     PropsWithChildren<{

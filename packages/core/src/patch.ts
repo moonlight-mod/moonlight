@@ -20,10 +20,14 @@ let webpackModules: Set<IdentifiedWebpackModule> = new Set();
 
 export function registerPatch(patch: IdentifiedPatch) {
   patches.push(patch);
+  moonlight.unpatched.add(patch);
 }
 
 export function registerWebpackModule(wp: IdentifiedWebpackModule) {
   webpackModules.add(wp);
+  if (wp.dependencies?.length) {
+    moonlight.pendingModules.add(wp);
+  }
 }
 
 /*
@@ -206,8 +210,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
 
   for (const [_modId, mod] of Object.entries(entry)) {
     const modStr = mod.toString();
-    const wpModules = Array.from(webpackModules.values());
-    for (const wpModule of wpModules) {
+    for (const wpModule of webpackModules) {
       const id = wpModule.ext + "_" + wpModule.id;
       if (wpModule.dependencies) {
         const deps = new Set(wpModule.dependencies);
@@ -215,7 +218,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
         // FIXME: This dependency resolution might fail if the things we want
         // got injected earlier. If weird dependencies fail, this is likely why.
         if (deps.size) {
-          for (const dep of deps.values()) {
+          for (const dep of deps) {
             if (typeof dep === "string") {
               if (modStr.includes(dep)) deps.delete(dep);
             } else if (dep instanceof RegExp) {
@@ -230,10 +233,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
           }
 
           if (deps.size !== 0) {
-            // Update the deps that have passed
-            webpackModules.delete(wpModule);
             wpModule.dependencies = Array.from(deps);
-            webpackModules.add(wpModule);
             continue;
           }
 
@@ -242,11 +242,15 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
       }
 
       webpackModules.delete(wpModule);
+      moonlight.pendingModules.delete(wpModule);
       injectedWpModules.push(wpModule);
 
       inject = true;
 
-      if (wpModule.run) modules[id] = wpModule.run;
+      if (wpModule.run) {
+        modules[id] = wpModule.run;
+        wpModule.run.__moonlight = true;
+      }
       if (wpModule.entrypoint) entrypoints.push(id);
     }
     if (!webpackModules.size) break;

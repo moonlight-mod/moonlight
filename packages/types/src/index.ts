@@ -1,4 +1,3 @@
-/// <reference types="node" />
 /// <reference types="standalone-electron-types" />
 /// <reference types="react" />
 /// <reference types="flux" />

@@ -29,7 +29,8 @@ export type Spacepack = {
   ) => Function | null;
   lazyLoad: (
     find: string | RegExp | (string | RegExp)[],
-    match: RegExp
+    chunk: RegExp,
+    module: RegExp
   ) => Promise<any>;
   filterReal: (modules: WebpackModule[]) => WebpackModule[];
 };
@@ -76,3 +77,4 @@ export type CommonComponents = CommonComponents_; // lol
 export type CommonFluxDispatcher = Dispatcher<any>;
 
 export * as Markdown from "./coreExtensions/markdown";
+export * as ContextMenu from "./coreExtensions/contextMenu";
