@@ -30,7 +30,7 @@
           meta = with pkgs.lib; {
             description = "Yet another Discord mod";
             homepage = "https://moonlight-mod.github.io/";
-            license = licenses.agpl3;
+            license = licenses.lgpl3;
             maintainers = with maintainers; [ notnite ];
           };
         };
