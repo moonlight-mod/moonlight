@@ -3,11 +3,11 @@ import { ExtensionWebExports } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: ".UserSettingsSections.HOTSPOT_OPTIONS",
+    find: ".useUnseenOutboundPromotions)().length",
     replace: {
-      match: /return(\[.+?\.CUSTOM,element:.+?}\])}/,
-      replacement: (_, arr) =>
-        `return require("settings_settings").Settings._mutateSections(${arr})}`
+      match: /(\.push\(.+?\)}\)\)}\),)(.)}/,
+      replacement: (_, orig, sections) =>
+        `${orig}require("settings_settings").Settings._mutateSections(${sections})}`
     }
   },
   {
