@@ -2,10 +2,10 @@ import { Patch } from "types/src";
 
 export const patches: Patch[] = [
   {
-    find: "hideToken(){",
+    find: "hideToken:function",
     replace: {
-      match: /hideToken\(\)\{.+?},/,
-      replacement: `hideToken(){},`
+      match: /(?<=hideToken:function\(\){)/,
+      replacement: `return()=>{};`
     }
   }
 ];
