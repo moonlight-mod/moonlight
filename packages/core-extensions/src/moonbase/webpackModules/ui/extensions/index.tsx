@@ -11,7 +11,7 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SearchBar = spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0]
-  .exports.default;
+  .exports.SearchBar;
 
 export default function ExtensionsPage() {
   const moonbaseId = MoonbaseSettingsStore.getExtensionUniqueId("moonbase")!;
