@@ -1,7 +1,7 @@
 import { FluxDefault, Store } from "./discord/common/Flux";
 import { CommonComponents as CommonComponents_ } from "./coreExtensions/components";
 import { Dispatcher } from "flux";
-import React from "react";
+import React, { ReactElement } from "react";
 import {
   WebpackModule,
   WebpackModuleFunc,
@@ -50,12 +50,13 @@ export type SettingsSection =
       element: React.FunctionComponent;
       pos: number;
       notice?: NoticeProps;
-      _moonlight_submenu?: () => any;
+      _moonlight_submenu?: () => ReactElement | ReactElement[];
     };
 
 export type Settings = {
   ourSections: SettingsSection[];
   sectionNames: string[];
+  sectionMenuItems: Record<string, ReactElement[]>;
 
   addSection: (
     section: string,
@@ -65,6 +66,7 @@ export type Settings = {
     pos?: number,
     notice?: NoticeProps
   ) => void;
+  addSectionMenuItems: (section: string, ...items: ReactElement[]) => void;
 
   addDivider: (pos: number | null) => void;
   addHeader: (label: string, pos: number | null) => void;
