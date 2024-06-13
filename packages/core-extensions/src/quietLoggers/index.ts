@@ -49,23 +49,22 @@ const stubPatches = [
   ['"[NATIVE INFO] ', /new .{1,2}\.default\(\)\.log\("\[NATIVE INFO] .+?\)\),/],
   ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
   [
-    'throw new Error("Messages are still loading.");',
-    /console\.warn\("Unsupported Locale",.\);/
+    'throw Error("Messages are still loading.");',
+    /console\.warn\("Unsupported Locale",.\),/
   ],
-  ["_dispatchWithDevtools=", /.\.has\(.\.type\)&&.\.log\(.+?\);/],
-  ["_dispatchWithDevtools=", /.\.totalTime>100&&.\.log\(.+?\);0;/],
+  ["}_dispatchWithDevtools(", /.\.totalTime>100&&.\.verbose\(.+?\);/],
   [
     '"NativeDispatchUtils"',
     /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/
-  ],
-  [
-    'Error("Messages are still loading.")',
-    /console\.warn\("Unsupported Locale",.\),/
   ],
   ['("DatabaseManager")', /.\.log\("removing database \(user: ".+?\)\),/],
   [
     '"Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch. Action: "',
     /.\.has\(.\.type\)&&.\.log\(.+?\.type\)\),/
+  ],
+  [
+    'console.warn("Window state not initialized"',
+    /console\.warn\("Window state not initialized",.\),/
   ]
 ];
 
@@ -77,7 +76,8 @@ const simplePatches = [
   [
     /console\.warn\("\[DEPRECATED\] Please use `subscribeWithSelector` middleware"\)/g,
     "/*$&*/"
-  ]
+  ],
+  ["this.getDebugLogging()", "false"]
 ] as { [0]: string | RegExp; [1]: string }[];
 
 export const patches: Patch[] = [

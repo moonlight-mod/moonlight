@@ -48,7 +48,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       ? moduleCache[id]
       : func.toString().replace(/\n/g, "");
 
-    for (const patch of patches) {
+    for (let i = 0; i < patches.length; i++) {
+      const patch = patches[i];
       if (patch.prerequisite != null && !patch.prerequisite()) {
         continue;
       }
@@ -123,7 +124,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
             entry[id].__moonlight = true;
             moduleString = replaced;
           } catch (e) {
-            logger.warn("Error constructing function for patch", e);
+            logger.warn("Error constructing function for patch", patch, e);
+            patched[id].pop();
           }
         } else if (replace.type === PatchReplaceType.Module) {
           // Directly replace the module with a new one
@@ -136,10 +138,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         }
 
         if (shouldRemove) {
-          patches.splice(
-            patches.findIndex((p) => p.ext === patch.ext && p.id === patch.id),
-            1
-          );
+          patches.splice(i--, 1);
         }
       }
     }
