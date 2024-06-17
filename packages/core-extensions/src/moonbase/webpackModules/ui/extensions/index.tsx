@@ -10,8 +10,9 @@ import * as Flux from "@moonlight-mod/wp/common_flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
-const SearchBar = spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0]
-  .exports.SearchBar;
+const SearchBar: any = Object.values(
+  spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0].exports
+)[0];
 
 export default function ExtensionsPage() {
   const moonbaseId = MoonbaseSettingsStore.getExtensionUniqueId("moonbase")!;

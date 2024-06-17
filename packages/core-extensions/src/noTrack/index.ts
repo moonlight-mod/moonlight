@@ -4,7 +4,7 @@ export const patches: Patch[] = [
   {
     find: "analyticsTrackingStoreMaker:function",
     replace: {
-      match: /analyticsTrackingStoreMaker:function\(\){return .}/,
+      match: /analyticsTrackingStoreMaker:function\(\){return .+?}/,
       replacement: "analyticsTrackingStoreMaker:function(){return ()=>{}}"
     }
   },

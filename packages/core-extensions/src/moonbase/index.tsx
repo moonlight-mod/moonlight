@@ -22,7 +22,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       "Masks.PANEL_BUTTON",
       "removeButtonContainer:",
       '"Missing channel in Channel.openChannelContextMenu"',
-      ".default.HEADER_BAR"
+      ".forumOrHome]:"
     ]
   },
 

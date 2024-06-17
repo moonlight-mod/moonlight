@@ -3,11 +3,11 @@ import { ExtensionWebExports } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: ".useUnseenOutboundPromotions)().length",
+    find: '"useGenerateUserSettingsSections"',
     replace: {
-      match: /(\.push\(.+?\)}\)\)}\),)(.)}/,
-      replacement: (_, orig, sections) =>
-        `${orig}require("settings_settings").Settings._mutateSections(${sections})}`
+      match: /(?<=\.push\(.+?\)}\)\)}\),)./,
+      replacement: (sections: string) =>
+        `require("settings_settings").Settings._mutateSections(${sections})`
     }
   },
   {

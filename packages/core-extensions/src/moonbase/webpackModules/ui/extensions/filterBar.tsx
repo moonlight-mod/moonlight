@@ -35,7 +35,7 @@ export const defaultFilter = ~(~0 << 7);
 const modPromise = spacepack.lazyLoad(
   '"Missing channel in Channel.openChannelContextMenu"',
   /e\("(\d+)"\)/g,
-  /webpackId:"(.+?)"/
+  /webpackId:(\d+?),/
 );
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
@@ -49,12 +49,12 @@ const FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0]
   .exports;
 
 const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
-  .default;
+  .Z;
 
 const ChevronSmallDownIcon = spacepack.findByCode(ChevronSmallDownIconSVG)[0]
-  .exports.default;
+  .exports.Z;
 const ChevronSmallUpIcon = spacepack.findByCode(ChevronSmallUpIconSVG)[0]
-  .exports.default;
+  .exports.Z;
 let ArrowsUpDownIcon: React.FunctionComponent;
 
 function toggleTag(
@@ -362,8 +362,7 @@ function FilterBar({
 export default React.lazy(() =>
   modPromise.then(async () => {
     await modPromise;
-    ArrowsUpDownIcon ??=
-      spacepack.findByCode(ArrowsUpDownIconSVG)[0].exports.default;
+    ArrowsUpDownIcon ??= spacepack.findByCode(ArrowsUpDownIconSVG)[0].exports.Z;
 
     return { default: FilterBar };
   })

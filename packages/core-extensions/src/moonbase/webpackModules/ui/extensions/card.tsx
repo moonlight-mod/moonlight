@@ -27,14 +27,15 @@ const UserProfileClasses = spacepack.findByCode(
   "topSection"
 )[0].exports;
 
-const DownloadIcon =
-  spacepack.findByCode(DownloadIconSVG)[0].exports.DownloadIcon;
-const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
-const DangerIcon =
-  spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
+const DownloadIcon = Object.values(
+  spacepack.findByCode(DownloadIconSVG)[0].exports
+)[0];
+const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.Z;
+const DangerIcon: any = Object.values(
+  spacepack.findByCode(DangerIconSVG)[0].exports
+)[0];
 
-const PanelButton =
-  spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
+const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);

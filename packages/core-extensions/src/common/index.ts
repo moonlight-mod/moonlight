@@ -10,10 +10,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
   },
 
   flux: {
-    dependencies: [
-      { ext: "spacepack", id: "spacepack" },
-      "useStateFromStores:function"
-    ]
+    dependencies: [{ ext: "spacepack", id: "spacepack" }, "connectStores:"]
   },
 
   fluxDispatcher: {
