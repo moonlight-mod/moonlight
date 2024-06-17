@@ -55,12 +55,39 @@ function _saveProps(self: any, el: any) {
   return el;
 }
 
-const MenuElements = spacepack.findByCode("return null", "MenuGroup:")[0]
-  .exports;
-
 module.exports = {
-  ...MenuElements,
   addItem,
   _patchMenu,
   _saveProps
 };
+
+// Unmangle Menu elements
+const code =
+  spacepack.require.m[
+    spacepack.findByCode(
+      "Menu API only allows Items and groups of Items as children."
+    )[0].id
+  ].toString();
+
+let MangledMenu;
+
+const typeRegex = /if\(.\.type===(.)\.(.+?)\).+?type:"(.+?)"/g;
+const typeMap: Record<string, string | undefined> = {
+  checkbox: "MenuCheckboxItem",
+  control: "MenuControlItem",
+  groupstart: "MenuGroup",
+  customitem: "MenuItem",
+  radio: "MenuRadioItem",
+  separator: "MenuSeparator"
+};
+
+for (const [, modIdent, mangled, type] of code.matchAll(typeRegex)) {
+  if (!MangledMenu) {
+    const modId = code.match(new RegExp(`${modIdent}=.\\((\\d+?)\\)`))![1];
+    MangledMenu = spacepack.require(modId);
+  }
+
+  const prop = typeMap[type];
+  if (!prop) continue;
+  module.exports[prop] = MangledMenu[mangled];
+}

@@ -26,7 +26,10 @@ export const patches: Patch[] = [
 
 export const webpackModules: Record<string, ExtensionWebpackModule> = {
   contextMenu: {
-    dependencies: [{ ext: "spacepack", id: "spacepack" }, "MenuGroup:"]
+    dependencies: [
+      { ext: "spacepack", id: "spacepack" },
+      "Menu API only allows Items and groups of Items as children."
+    ]
   },
   evilMenu: {
     dependencies: [

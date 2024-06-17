@@ -16,8 +16,12 @@ const mod = new Function(
 );
 const exp: any = {};
 mod({}, exp, require);
+const Menu = spacepack.findFunctionByStrings(
+  exp,
+  "Menu API only allows Items and groups of Items as children."
+)!;
 module.exports = (el: any) => {
-  return exp.Menu({
+  return Menu({
     children: el,
     __contextMenu_evilMenu: true
   });
