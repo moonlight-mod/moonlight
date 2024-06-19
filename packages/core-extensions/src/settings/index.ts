@@ -16,7 +16,7 @@ export const patches: Patch[] = [
       match: /children:\[(.)\.map\(.+?\),children:.\((.)\)/,
       replacement: (orig, sections, section) =>
         `${orig.replace(
-          /Object\.values\(.\.UserSettingsSections\)/,
+          /Object\.values\(.\..+?\)/,
           (orig) =>
             `[...require("settings_settings").Settings.sectionNames,...${orig}]`
         )}??${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`
