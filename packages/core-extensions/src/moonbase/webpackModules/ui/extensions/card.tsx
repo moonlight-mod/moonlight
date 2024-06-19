@@ -1,4 +1,4 @@
-import { DangerIconSVG, ExtensionState } from "../../../types";
+import { ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 
 import React from "@moonlight-mod/wp/common_react";
@@ -24,9 +24,7 @@ const UserProfileClasses = spacepack.findByCode(
 
 const DownloadIcon = CommonComponents.DownloadIcon;
 const TrashIcon = CommonComponents.TrashIcon;
-const DangerIcon: any = Object.values(
-  spacepack.findByCode(DangerIconSVG)[0].exports
-)[0];
+const CircleExclamationPointIcon = CommonComponents.CircleExclamationPointIcon;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
@@ -130,7 +128,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               {restartNeeded && (
                 <PanelButton
                   icon={() => (
-                    <DangerIcon
+                    <CircleExclamationPointIcon
                       color={CommonComponents.tokens.colors.STATUS_DANGER}
                     />
                   )}
