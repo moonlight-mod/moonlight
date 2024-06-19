@@ -28,12 +28,6 @@ export enum Filter {
 }
 export const defaultFilter = ~(~0 << 7);
 
-const modPromise = spacepack.lazyLoad(
-  '"Missing channel in Channel.openChannelContextMenu"',
-  /e\("(\d+)"\)/g,
-  /webpackId:(\d+?),/
-);
-
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
   .exports;
@@ -203,7 +197,7 @@ function TagButtonPopout({
   );
 }
 
-function FilterBar({
+export default function FilterBar({
   filter,
   setFilter,
   selectedTags,
@@ -351,11 +345,3 @@ function FilterBar({
     </div>
   );
 }
-
-// TODO: spacepack lazy loading utils
-export default React.lazy(() =>
-  modPromise.then(async () => {
-    await modPromise;
-    return { default: FilterBar };
-  })
-);

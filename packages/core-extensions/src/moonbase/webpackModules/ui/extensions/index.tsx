@@ -9,7 +9,6 @@ import * as Flux from "@moonlight-mod/wp/common_flux";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SearchBar: any = Object.values(
   spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0].exports
 )[0];
@@ -90,14 +89,12 @@ export default function ExtensionsPage() {
           spellCheck: "false"
         }}
       />
-      <React.Suspense fallback={<div className={Margins.marginBottom20}></div>}>
-        <FilterBar
-          filter={filter}
-          setFilter={setFilter}
-          selectedTags={selectedTags}
-          setSelectedTags={setSelectedTags}
-        />
-      </React.Suspense>
+      <FilterBar
+        filter={filter}
+        setFilter={setFilter}
+        selectedTags={selectedTags}
+        setSelectedTags={setSelectedTags}
+      />
       {filtered.map((ext) => (
         <ExtensionCard uniqueId={ext.uniqueId} key={ext.id} />
       ))}
