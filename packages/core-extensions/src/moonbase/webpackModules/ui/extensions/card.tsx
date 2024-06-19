@@ -22,9 +22,8 @@ const UserProfileClasses = spacepack.findByCode(
   "topSection"
 )[0].exports;
 
-const DownloadIcon = CommonComponents.DownloadIcon;
-const TrashIcon = CommonComponents.TrashIcon;
-const CircleExclamationPointIcon = CommonComponents.CircleExclamationPointIcon;
+const { DownloadIcon, TrashIcon, CircleExclamationPointIcon } =
+  CommonComponents;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 

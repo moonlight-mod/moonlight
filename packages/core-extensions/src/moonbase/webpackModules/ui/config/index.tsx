@@ -27,7 +27,7 @@ const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
 const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
   .exports;
-const CircleXIcon = CommonComponents.CircleXIcon;
+const { CircleXIcon } = CommonComponents;
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (
     <div className={RemoveButtonClasses.removeButtonContainer}>

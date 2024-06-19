@@ -41,9 +41,8 @@ const FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0]
 const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
   .Z;
 
-const ChevronSmallDownIcon = CommonComponents.ChevronSmallDownIcon;
-const ChevronSmallUpIcon = CommonComponents.ChevronSmallUpIcon;
-const ArrowsUpDownIcon = CommonComponents.ArrowsUpDownIcon;
+const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } =
+  CommonComponents;
 
 function toggleTag(
   selectedTags: Set<string>,
