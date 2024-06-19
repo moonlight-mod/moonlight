@@ -1,5 +1,4 @@
 import { LogLevel } from "@moonlight-mod/types";
-import { CircleXIconSVG } from "../../../types";
 
 const logLevels = Object.values(LogLevel).filter(
   (v) => typeof v === "string"
@@ -19,6 +18,7 @@ import {
   Tooltip,
   Clickable
 } from "@moonlight-mod/wp/common_components";
+import CommonComponents from "@moonlight-mod/wp/common_components";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
@@ -27,7 +27,7 @@ const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
 const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
   .exports;
-const CircleXIcon = spacepack.findByCode(CircleXIconSVG)[0].exports.Z;
+const CircleXIcon = CommonComponents.CircleXIcon;
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (
     <div className={RemoveButtonClasses.removeButtonContainer}>

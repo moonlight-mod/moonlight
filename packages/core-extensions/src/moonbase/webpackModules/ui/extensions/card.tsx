@@ -1,9 +1,4 @@
-import {
-  DangerIconSVG,
-  DownloadIconSVG,
-  ExtensionState,
-  TrashIconSVG
-} from "../../../types";
+import { DangerIconSVG, ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 
 import React from "@moonlight-mod/wp/common_react";
@@ -27,10 +22,8 @@ const UserProfileClasses = spacepack.findByCode(
   "topSection"
 )[0].exports;
 
-const DownloadIcon = Object.values(
-  spacepack.findByCode(DownloadIconSVG)[0].exports
-)[0];
-const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.Z;
+const DownloadIcon = CommonComponents.DownloadIcon;
+const TrashIcon = CommonComponents.TrashIcon;
 const DangerIcon: any = Object.values(
   spacepack.findByCode(DangerIconSVG)[0].exports
 )[0];

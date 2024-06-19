@@ -1,9 +1,4 @@
 import { tagNames } from "./info";
-import {
-  ArrowsUpDownIconSVG,
-  ChevronSmallDownIconSVG,
-  ChevronSmallUpIconSVG
-} from "../../../types";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import React from "@moonlight-mod/wp/common_react";
@@ -20,6 +15,7 @@ import {
   MenuCheckboxItem,
   MenuItem
 } from "@moonlight-mod/wp/common_components";
+import CommonComponents from "@moonlight-mod/wp/common_components";
 
 export enum Filter {
   Core = 1 << 0,
@@ -51,11 +47,9 @@ const FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0]
 const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
   .Z;
 
-const ChevronSmallDownIcon = spacepack.findByCode(ChevronSmallDownIconSVG)[0]
-  .exports.Z;
-const ChevronSmallUpIcon = spacepack.findByCode(ChevronSmallUpIconSVG)[0]
-  .exports.Z;
-let ArrowsUpDownIcon: React.FunctionComponent;
+const ChevronSmallDownIcon = CommonComponents.ChevronSmallDownIcon;
+const ChevronSmallUpIcon = CommonComponents.ChevronSmallUpIcon;
+const ArrowsUpDownIcon = CommonComponents.ArrowsUpDownIcon;
 
 function toggleTag(
   selectedTags: Set<string>,
@@ -274,7 +268,7 @@ function FilterBar({
             className={FilterBarClasses.sortDropdown}
             innerClassName={FilterBarClasses.sortDropdownInner}
           >
-            <ArrowsUpDownIcon />
+            <ArrowsUpDownIcon size="xs" />
             <Text
               className={FilterBarClasses.sortDropdownText}
               variant="text-sm/medium"
@@ -283,9 +277,9 @@ function FilterBar({
               Sort & filter
             </Text>
             {isShown ? (
-              <ChevronSmallUpIcon size={20} />
+              <ChevronSmallUpIcon size={"custom"} width={20} />
             ) : (
-              <ChevronSmallDownIcon size={20} />
+              <ChevronSmallDownIcon size={"custom"} width={20} />
             )}
           </Button>
         )}
@@ -347,9 +341,9 @@ function FilterBar({
               <>All</>
             )}
             {isShown ? (
-              <ChevronSmallUpIcon size={20} />
+              <ChevronSmallUpIcon size={"custom"} width={20} />
             ) : (
-              <ChevronSmallDownIcon size={20} />
+              <ChevronSmallDownIcon size={"custom"} width={20} />
             )}
           </Button>
         )}
@@ -362,8 +356,6 @@ function FilterBar({
 export default React.lazy(() =>
   modPromise.then(async () => {
     await modPromise;
-    ArrowsUpDownIcon ??= spacepack.findByCode(ArrowsUpDownIconSVG)[0].exports.Z;
-
     return { default: FilterBar };
   })
 );
