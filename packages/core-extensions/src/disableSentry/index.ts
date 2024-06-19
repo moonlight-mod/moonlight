@@ -3,10 +3,10 @@ import { Patch, PatchReplaceType } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: "DSN:function",
+    find: "profiledRootComponent:",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /(?<=\.default=){.+?}}/,
+      match: /(?<=\.Z=){.+?}}/,
       replacement: 'require("disableSentry_stub").proxy()'
     }
   },
@@ -14,24 +14,24 @@ export const patches: Patch[] = [
     find: "window.DiscordSentry.addBreadcrumb",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /default:function\(\){return .}/,
+      match: /Z:function\(\){return .}/,
       replacement:
         'default:function(){return (...args)=>{moonlight.getLogger("disableSentry").debug("Sentry calling addBreadcrumb passthrough:", ...args);}}'
     }
   },
   {
-    find: "initSentry:function",
+    find: "/error-reporting-proxy/web",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /initSentry:function\(\){return .}/,
-      replacement: "default:function(){return ()=>{}}"
+      match: /(?<=function .\(\){var _;)/,
+      replacement: "return;"
     }
   },
   {
     find: "window.DiscordErrors=",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /\(0,.\.usesClientMods\)\(\)/,
+      match: /(?<=uses_client_mods:)./,
       replacement: "false"
     }
   }

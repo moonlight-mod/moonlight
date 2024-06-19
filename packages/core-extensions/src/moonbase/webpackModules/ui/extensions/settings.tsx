@@ -7,11 +7,7 @@ import {
   SelectSettingType
 } from "@moonlight-mod/types/config";
 
-import {
-  CircleXIconSVG,
-  ExtensionState,
-  MoonbaseExtension
-} from "../../../types";
+import { ExtensionState, MoonbaseExtension } from "../../../types";
 
 import React from "@moonlight-mod/wp/common_react";
 import CommonComponents from "@moonlight-mod/wp/common_components";
@@ -223,7 +219,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
 
 const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
   .exports;
-const CircleXIcon = spacepack.findByCode(CircleXIconSVG)[0].exports.default;
+const CircleXIcon = CommonComponents.CircleXIcon;
 function RemoveEntryButton({
   onClick,
   disabled

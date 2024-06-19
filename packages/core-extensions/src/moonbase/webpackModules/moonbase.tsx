@@ -12,7 +12,7 @@ function addSection(name: string, element: React.FunctionComponent) {
     element: () => {
       // Require it here because lazy loading SUX
       const SettingsNotice =
-        spacepack.findByCode("onSaveButtonColor")[0].exports.default;
+        spacepack.findByCode("onSaveButtonColor")[0].exports.Z;
       return (
         <SettingsNotice
           submitting={MoonbaseSettingsStore.submitting}
@@ -22,6 +22,7 @@ function addSection(name: string, element: React.FunctionComponent) {
           onSave={() => {
             MoonbaseSettingsStore.writeConfig();
           }}
+          disabled={false}
         />
       );
     }

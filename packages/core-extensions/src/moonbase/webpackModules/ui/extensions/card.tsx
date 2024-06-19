@@ -1,9 +1,4 @@
-import {
-  DangerIconSVG,
-  DownloadIconSVG,
-  ExtensionState,
-  TrashIconSVG
-} from "../../../types";
+import { ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 
 import React from "@moonlight-mod/wp/common_react";
@@ -27,14 +22,10 @@ const UserProfileClasses = spacepack.findByCode(
   "topSection"
 )[0].exports;
 
-const DownloadIcon =
-  spacepack.findByCode(DownloadIconSVG)[0].exports.DownloadIcon;
-const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
-const DangerIcon =
-  spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
+const { DownloadIcon, TrashIcon, CircleExclamationPointIcon } =
+  CommonComponents;
 
-const PanelButton =
-  spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
+const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -136,7 +127,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               {restartNeeded && (
                 <PanelButton
                   icon={() => (
-                    <DangerIcon
+                    <CircleExclamationPointIcon
                       color={CommonComponents.tokens.colors.STATUS_DANGER}
                     />
                   )}

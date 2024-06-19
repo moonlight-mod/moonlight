@@ -267,6 +267,7 @@ interface Flex
 
 // TODO: wtaf is up with react types not working in jsx
 export type CommonComponents = {
+  [index: string]: any;
   Clickable: ComponentClass<
     PropsWithChildren<{
       onClick?: () => void;

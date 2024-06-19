@@ -7,8 +7,7 @@ import ConfigPage from "./config";
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
-const { Divider } = spacepack.findByCode(".default.HEADER_BAR")[0].exports
-  .default;
+const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
 const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0]
   .exports;
 const TabBarClasses = spacepack.findByCode("nowPlayingColumn:")[0].exports;
