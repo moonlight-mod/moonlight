@@ -20,14 +20,6 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: "/error-reporting-proxy/web",
-    replace: {
-      type: PatchReplaceType.Normal,
-      match: /(?<=function .\(\){var _;)/,
-      replacement: "return;"
-    }
-  },
-  {
     find: "window.DiscordErrors=",
     replace: {
       type: PatchReplaceType.Normal,
