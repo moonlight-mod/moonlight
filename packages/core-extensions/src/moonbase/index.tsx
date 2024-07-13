@@ -15,7 +15,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       { ext: "common", id: "components" },
       { ext: "moonbase", id: "stores" },
       "Masks.PANEL_BUTTON",
-      "removeButtonContainer:",
+      "renderArtisanalHack(){",
       '"Missing channel in Channel.openChannelContextMenu"',
       ".forumOrHome]:"
     ]

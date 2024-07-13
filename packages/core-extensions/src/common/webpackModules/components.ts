@@ -9,8 +9,21 @@ const LegacyText = spacepack.findByCode(".selectable", ".colorStandard")[0]
 const Flex = Object.values(
   spacepack.findByCode(".flex" + "GutterSmall,")[0].exports
 )[0];
-const CardClasses = spacepack.findByCode("card", "cardHeader", "inModal")[0]
-  .exports;
+
+const CardClasses = {};
+spacepack
+  .lazyLoad(
+    "renderArtisanalHack",
+    /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"ChannelSettings"/,
+    /webpackId:(\d+),name:"ChannelSettings"/
+  )
+  .then(() =>
+    Object.assign(
+      CardClasses,
+      spacepack.findByExports("card", "cardHeader", "inModal")[0].exports
+    )
+  );
+
 const ControlClasses = spacepack.findByCode(
   "title",
   "titleDefault",

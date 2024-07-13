@@ -31,12 +31,22 @@ export const defaultFilter = ~(~0 << 7);
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
   .exports;
-const FilterDialogClasses = spacepack.findByCode(
-  "countContainer:",
-  "tagContainer:"
-)[0].exports;
-const FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0]
-  .exports;
+
+let FilterDialogClasses: any;
+let FilterBarClasses: any;
+spacepack
+  .lazyLoad(
+    '"Missing channel in Channel.openChannelContextMenu"',
+    /e\("(\d+)"\)/g,
+    /webpackId:(\d+?),/
+  )
+  .then(() => {
+    FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0].exports;
+    FilterDialogClasses = spacepack.findByCode(
+      "countContainer:",
+      "tagContainer:"
+    )[0].exports;
+  });
 
 const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
   .Z;

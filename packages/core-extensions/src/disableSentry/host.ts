@@ -30,7 +30,9 @@ moonlightHost.events.on("window-created", (window: BrowserWindow) => {
     {
       urls: [
         "https://*.sentry.io/*",
-        "https://*.discord.com/error-reporting-proxy/*"
+        "https://*.discord.com/error-reporting-proxy/*",
+        "https://discord.com/assets/sentry.*.js",
+        "https://*.discord.com/assets/sentry.*.js"
       ]
     },
     function (details, callback) {

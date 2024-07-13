@@ -17,10 +17,21 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const UserProfileClasses = spacepack.findByCode(
-  "tabBarContainer",
-  "topSection"
-)[0].exports;
+// ew
+let UserProfileClasses: any;
+spacepack
+  .lazyLoad(
+    "handleOpenUserProfileModal",
+    /.\.e\("(\d+)"\)\.then\(.\.bind\(.,\d+?\)\);return .{0,20}?\(.,\{location:"handleOpenUserProfileModal"/g,
+    /.\.e\("\d+"\)\.then\(.\.bind\(.,(\d+?)\)\);return .{0,20}?\(.,\{location:"handleOpenUserProfileModal"/
+  )
+  .then(
+    () =>
+      (UserProfileClasses = spacepack.findByCode(
+        "tabBarContainer",
+        "topSection"
+      )[0].exports)
+  );
 
 const { DownloadIcon, TrashIcon, CircleExclamationPointIcon } =
   CommonComponents;

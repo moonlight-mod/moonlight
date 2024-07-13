@@ -167,9 +167,6 @@ export const spacepack: Spacepack = {
     chunk: RegExp,
     module: RegExp
   ) => {
-    if (!chunk.flags.includes("g"))
-      return Promise.reject("Chunk ID regex must be global");
-
     const mod = Array.isArray(find)
       ? spacepack.findByCode(...find)
       : spacepack.findByCode(find);
@@ -178,8 +175,17 @@ export const spacepack: Spacepack = {
     const findId = mod[0].id;
     const findCode = webpackRequire.m[findId].toString().replace(/\n/g, "");
 
-    const chunkIds = [...findCode.matchAll(chunk)].map(([, id]) => id);
-    if (chunkIds.length === 0) return Promise.reject("Chunk ID match failed");
+    let chunkIds;
+    if (chunk.flags.includes("g")) {
+      chunkIds = [...findCode.matchAll(chunk)].map(([, id]) => id);
+    } else {
+      const match = findCode.match(chunk);
+      if (match)
+        chunkIds = [...match[0].matchAll(/"(\d+)"/g)].map(([, id]) => id);
+    }
+
+    if (!chunkIds || chunkIds.length === 0)
+      return Promise.reject("Chunk ID match failed");
 
     const moduleId = findCode.match(module)?.[1];
     if (!moduleId) return Promise.reject("Module ID match failed");

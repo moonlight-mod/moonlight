@@ -46,7 +46,7 @@ const stubPatches = [
     '.APP_NATIVE_CRASH,"Storage"',
     'console.log("AppCrashedFatalReport: getLastCrash not supported.");'
   ],
-  ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\),/],
+  ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
   ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
   [
     'throw Error("Messages are still loading.");',
