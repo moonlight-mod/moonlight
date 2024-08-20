@@ -17,26 +17,15 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-// ew
-let UserProfileClasses: any;
-spacepack
-  .lazyLoad(
-    "handleOpenUserProfileModal",
-    /.\.e\("(\d+)"\)\.then\(.\.bind\(.,\d+?\)\);return .{0,20}?\(.,\{location:"handleOpenUserProfileModal"/g,
-    /.\.e\("\d+"\)\.then\(.\.bind\(.,(\d+?)\)\);return .{0,20}?\(.,\{location:"handleOpenUserProfileModal"/
-  )
-  .then(
-    () =>
-      (UserProfileClasses = spacepack.findByCode(
-        "tabBarContainer",
-        "topSection"
-      )[0].exports)
-  );
-
 const { DownloadIcon, TrashIcon, CircleExclamationPointIcon } =
   CommonComponents;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
+const TabBarClasses = spacepack.findByExports(
+  "tabBar",
+  "tabBarItem",
+  "headerContentWrapper"
+)[0].exports;
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -159,46 +148,42 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         </Flex>
       </div>
 
-      <div className={UserProfileClasses.body}>
+      <div>
         {(description != null || settings != null) && (
-          <div
-            className={UserProfileClasses.tabBarContainer}
+          <TabBar
+            selectedItem={tab}
+            type="top"
+            onItemSelect={setTab}
+            className={TabBarClasses.tabBar}
             style={{
-              padding: "0 10px"
+              padding: "0 20px"
             }}
           >
-            <TabBar
-              selectedItem={tab}
-              type="top"
-              onItemSelect={setTab}
-              className={UserProfileClasses.tabBar}
+            <TabBar.Item
+              className={TabBarClasses.tabBarItem}
+              id={ExtensionPage.Info}
             >
+              Info
+            </TabBar.Item>
+
+            {description != null && (
               <TabBar.Item
-                className={UserProfileClasses.tabBarItem}
-                id={ExtensionPage.Info}
+                className={TabBarClasses.tabBarItem}
+                id={ExtensionPage.Description}
               >
-                Info
+                Description
               </TabBar.Item>
+            )}
 
-              {description != null && (
-                <TabBar.Item
-                  className={UserProfileClasses.tabBarItem}
-                  id={ExtensionPage.Description}
-                >
-                  Description
-                </TabBar.Item>
-              )}
-
-              {settings != null && (
-                <TabBar.Item
-                  className={UserProfileClasses.tabBarItem}
-                  id={ExtensionPage.Settings}
-                >
-                  Settings
-                </TabBar.Item>
-              )}
-            </TabBar>
-          </div>
+            {settings != null && (
+              <TabBar.Item
+                className={TabBarClasses.tabBarItem}
+                id={ExtensionPage.Settings}
+              >
+                Settings
+              </TabBar.Item>
+            )}
+          </TabBar>
         )}
 
         <Flex
