@@ -2,6 +2,7 @@ import { loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import { installWebpackPatcher } from "@moonlight-mod/core/patch";
 import { installStyles } from "@moonlight-mod/core/styles";
 import Logger from "@moonlight-mod/core/util/logger";
+import LunAST from "@moonlight-mod/lunast";
 
 (async () => {
   const logger = new Logger("web-preload");
@@ -14,9 +15,10 @@ import Logger from "@moonlight-mod/core/util/logger";
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
     getConfigOption: moonlightNode.getConfigOption.bind(moonlightNode),
     getNatives: moonlightNode.getNatives.bind(moonlightNode),
-    getLogger: (id: string) => {
+    getLogger(id) {
       return new Logger(id);
-    }
+    },
+    lunast: new LunAST()
   };
 
   try {

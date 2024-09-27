@@ -2,6 +2,7 @@
   "name": "@moonlight-mod/web-preload",
   "private": true,
   "dependencies": {
-    "@moonlight-mod/core": "workspace:*"
+    "@moonlight-mod/core": "workspace:*",
+    "@moonlight-mod/lunast": "workspace:*"
   }
 }

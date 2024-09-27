@@ -44,6 +44,9 @@ const patched: Record<string, Array<string>> = {};
 
 function patchModules(entry: WebpackJsonpEntry[1]) {
   for (const [id, func] of Object.entries(entry)) {
+    // `function(e,t,n){}` isn't valid I guess? so make it an IIFE to make ESTree happy
+    moonlight.lunast.parseScript(id, `(${func.toString()})()`);
+
     let moduleString = Object.prototype.hasOwnProperty.call(moduleCache, id)
       ? moduleCache[id]
       : func.toString().replace(/\n/g, "");

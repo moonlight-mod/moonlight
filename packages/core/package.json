@@ -5,6 +5,7 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "@moonlight-mod/types": "workspace:*"
+    "@moonlight-mod/types": "workspace:*",
+    "@moonlight-mod/lunast": "workspace:*"
   }
 }

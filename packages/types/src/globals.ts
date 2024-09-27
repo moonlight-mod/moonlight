@@ -1,12 +1,13 @@
-import { Logger } from "./logger";
-import { Config, ConfigExtension } from "./config";
-import {
+import type { Logger } from "./logger";
+import type { Config, ConfigExtension } from "./config";
+import type {
   DetectedExtension,
   IdentifiedPatch,
   IdentifiedWebpackModule,
   ProcessedExtensions
 } from "./extension";
-import EventEmitter from "events";
+import type EventEmitter from "events";
+import type LunAST from "@moonlight-mod/lunast";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -44,6 +45,7 @@ export type MoonlightWeb = {
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
+  lunast: LunAST;
 };
 
 export enum MoonlightEnv {
