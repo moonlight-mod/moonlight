@@ -1,7 +1,12 @@
 import type { Processor } from "./remap";
-import { traverse, is } from "estree-toolkit";
+import { traverse, is, Binding } from "estree-toolkit";
 // FIXME something's fishy with these types
-import type { Program, Property } from "estree-toolkit/dist/generated/types";
+import type {
+  ObjectExpression,
+  Program,
+  Property,
+  ReturnStatement
+} from "estree-toolkit/dist/generated/types";
 
 export const processors: Processor[] = [];
 
@@ -71,6 +76,49 @@ export function getExports(ast: Program) {
           // TODO: exports
         }
       }
+    }
+  });
+
+  return ret;
+}
+
+export function getGetters(ast: Program) {
+  const ret: Record<string, Binding> = {};
+
+  traverse(ast, {
+    $: { scope: true },
+    CallExpression(path) {
+      if (!is.callExpression(path.node)) return;
+      if (!is.memberExpression(path.node.callee)) return;
+      if (!is.identifier(path.node?.callee?.property)) return;
+      if (path.node.callee.property.name !== "d") return;
+
+      const arg = path.node.arguments.find((node): node is ObjectExpression =>
+        is.objectExpression(node)
+      );
+      if (!arg) return;
+
+      for (const property of arg.properties) {
+        if (!is.property(property)) continue;
+        if (!is.identifier(property.key)) continue;
+        if (!is.functionExpression(property.value)) continue;
+        if (!is.blockStatement(property.value.body)) continue;
+
+        const returnStatement = property.value.body.body.find(
+          (node): node is ReturnStatement => is.returnStatement(node)
+        );
+        if (!returnStatement) continue;
+        if (!is.identifier(returnStatement.argument)) continue;
+
+        const binding = path.scope?.getOwnBinding(
+          returnStatement.argument.name
+        );
+        if (!binding) continue;
+        if (!binding.path.node) continue;
+        ret[property.key.name] = binding;
+      }
+
+      this.stop();
     }
   });
 
