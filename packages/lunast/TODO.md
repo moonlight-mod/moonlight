@@ -5,7 +5,7 @@
 - [ ] Map Z/ZP to default
 - [x] Steal Webpack require and use it in our LunAST instance
 - [ ] Map `import` statements to LunAST
-- [ ] Support patching in the AST
+- [x] Support patching in the AST
   - Let user modify the AST, have a function to flag it as modified, if it's modified we serialize it back into a string and put it back into Webpack
   - We already have a `priority` system for this
 - [ ] Run in parallel with service workers
