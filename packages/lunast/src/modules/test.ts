@@ -1,5 +1,6 @@
 import { traverse, is } from "estree-toolkit";
-import { getExports, getGetters, register } from "../utils";
+import { getExports, getPropertyGetters, register, magicAST } from "../utils";
+import { BlockStatement } from "estree-toolkit/dist/generated/types";
 
 // These aren't actual modules yet, I'm just using this as a testbed for stuff
 register({
@@ -13,11 +14,46 @@ register({
   }
 });
 
+// Exports example
+/*register({
+  name: "ApplicationStoreDirectoryStore",
+  find: '"displayName","ApplicationStoreDirectoryStore"',
+  process({ ast }) {
+    const exports = getExports(ast);
+    return Object.keys(exports).length > 0;
+  }
+});*/
+
+// Patching example
+register({
+  name: "ImagePreview",
+  find: ".Messages.OPEN_IN_BROWSER",
+  process({ id, ast, lunast, markDirty }) {
+    const getters = getPropertyGetters(ast);
+    const replacement = magicAST(`return require("common_react").createElement(
+  "div",
+  {
+    style: {
+      color: "white",
+    },
+  },
+  "balls"
+)`)!;
+    for (const node of Object.values(getters)) {
+      const body = node.path.get<BlockStatement>("body");
+      body.replaceWith(replacement);
+    }
+    markDirty();
+
+    return true;
+  }
+});
+
 register({
   name: "ClipboardUtils",
   find: 'document.queryCommandEnabled("copy")',
   process({ id, ast, lunast }) {
-    const getters = getGetters(ast);
+    const getters = getPropertyGetters(ast);
     const fields = [];
 
     for (const [name, node] of Object.entries(getters)) {

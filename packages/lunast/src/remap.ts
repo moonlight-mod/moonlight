@@ -12,4 +12,5 @@ export type ProcessorState = {
   id: string;
   ast: Program;
   lunast: LunAST;
+  markDirty: () => void;
 };

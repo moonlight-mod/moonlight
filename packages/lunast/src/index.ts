@@ -3,6 +3,7 @@ import { Remapped } from "./modules";
 import { getProcessors } from "./utils";
 import { parse } from "meriyah";
 import { Processor, ProcessorState } from "./remap";
+import { generate } from "astring";
 
 export default class LunAST {
   private modules: Record<string, RemapModule>;
@@ -33,15 +34,14 @@ export default class LunAST {
     return "dev";
   }
 
-  public parseScript(id: string, code: string) {
-    const moduleString = code.toString().replace(/\n/g, "");
+  public parseScript(id: string, code: string): string | null {
     const available = [...this.processors]
       .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
       .filter((x) =>
         x.find != null
           ? typeof x.find === "string"
-            ? moduleString.indexOf(x.find) !== -1
-            : x.find.test(moduleString)
+            ? code.indexOf(x.find) !== -1
+            : x.find.test(code)
           : true
       )
       .filter((x) =>
@@ -49,14 +49,18 @@ export default class LunAST {
           ? x.dependencies.every((dep) => this.successful.has(dep))
           : true
       );
-    if (available.length === 0) return;
+    if (available.length === 0) return null;
 
     const module = parse(code);
+    let dirty = false;
     const state: ProcessorState = {
       id,
       // @ts-expect-error The ESTree types are mismatched with estree-toolkit, but ESTree is a standard so this is fine
       ast: module,
-      lunast: this
+      lunast: this,
+      markDirty: () => {
+        dirty = true;
+      }
     };
 
     for (const processor of available) {
@@ -64,6 +68,12 @@ export default class LunAST {
         this.processors.splice(this.processors.indexOf(processor), 1);
         this.successful.add(processor.name);
       }
+    }
+
+    if (dirty) {
+      return generate(module);
+    } else {
+      return null;
     }
   }
 

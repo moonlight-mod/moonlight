@@ -3,7 +3,7 @@
 - [ ] Experiment more! We need to know what's bad with this
 - [ ] Write utility functions for imports, exports, etc.
 - [ ] Map Z/ZP to default
-- [ ] Steal Webpack require and use it in our LunAST instance
+- [x] Steal Webpack require and use it in our LunAST instance
 - [ ] Map `import` statements to LunAST
 - [ ] Support patching in the AST
   - Let user modify the AST, have a function to flag it as modified, if it's modified we serialize it back into a string and put it back into Webpack

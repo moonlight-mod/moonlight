@@ -43,11 +43,39 @@ const moduleCache: Record<string, string> = {};
 const patched: Record<string, Array<string>> = {};
 
 function patchModules(entry: WebpackJsonpEntry[1]) {
-  for (const [id, func] of Object.entries(entry)) {
-    // `function(e,t,n){}` isn't valid I guess? so make it an IIFE to make ESTree happy
-    moonlight.lunast.parseScript(id, `(${func.toString()})()`);
+  function patchModule(id: string, patchId: string, replaced: string) {
+    // Store what extensions patched what modules for easier debugging
+    patched[id] = patched[id] || [];
+    patched[id].push(patchId);
 
-    let moduleString = Object.prototype.hasOwnProperty.call(moduleCache, id)
+    // Webpack module arguments are minified, so we replace them with consistent names
+    // We have to wrap it so things don't break, though
+    const patchedStr = patched[id].sort().join(", ");
+
+    const wrapped =
+      `(${replaced}).apply(this, arguments)\n` +
+      `// Patched by moonlight: ${patchedStr}\n` +
+      `//# sourceURL=Webpack-Module-${id}`;
+
+    try {
+      const func = new Function(
+        "module",
+        "exports",
+        "require",
+        wrapped
+      ) as WebpackModuleFunc;
+      entry[id] = func;
+      entry[id].__moonlight = true;
+      return true;
+    } catch (e) {
+      logger.warn("Error constructing function for patch", patchId, e);
+      patched[id].pop();
+      return false;
+    }
+  }
+
+  for (const [id, func] of Object.entries(entry)) {
+    let moduleString = Object.hasOwn(moduleCache, id)
       ? moduleCache[id]
       : func.toString().replace(/\n/g, "");
 
@@ -103,32 +131,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
             continue;
           }
 
-          // Store what extensions patched what modules for easier debugging
-          patched[id] = patched[id] || [];
-          patched[id].push(`${patch.ext}#${patch.id}`);
-
-          // Webpack module arguments are minified, so we replace them with consistent names
-          // We have to wrap it so things don't break, though
-          const patchedStr = patched[id].sort().join(", ");
-
-          const wrapped =
-            `(${replaced}).apply(this, arguments)\n` +
-            `// Patched by moonlight: ${patchedStr}\n` +
-            `//# sourceURL=Webpack-Module-${id}`;
-
-          try {
-            const func = new Function(
-              "module",
-              "exports",
-              "require",
-              wrapped
-            ) as WebpackModuleFunc;
-            entry[id] = func;
-            entry[id].__moonlight = true;
+          if (patchModule(id, `${patch.ext}#${patch.id}`, replaced)) {
             moduleString = replaced;
-          } catch (e) {
-            logger.warn("Error constructing function for patch", patch, e);
-            patched[id].pop();
           }
         } else if (replace.type === PatchReplaceType.Module) {
           // Directly replace the module with a new one
@@ -143,6 +147,15 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         if (shouldRemove) {
           patches.splice(i--, 1);
         }
+      }
+    }
+
+    let parsed = moonlight.lunast.parseScript(id, `(${moduleString})`);
+    if (parsed != null) {
+      // parseScript adds an extra ; for some reason
+      parsed = parsed.trimEnd().substring(0, parsed.lastIndexOf(";"));
+      if (patchModule(id, "lunast", parsed)) {
+        moduleString = parsed;
       }
     }
 
