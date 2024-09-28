@@ -3,9 +3,9 @@ import type { Program } from "estree-toolkit/dist/generated/types";
 
 export type Processor = {
   name: string;
-  find?: string | RegExp; // TODO: allow multiple finds
+  find?: (string | RegExp)[] | (string | RegExp);
   priority?: number;
-  dependencies?: string[]; // FIXME: this can skip modules
+  manual?: boolean;
   process: (state: ProcessorState) => boolean;
 };
 export type ProcessorState = {
@@ -13,4 +13,5 @@ export type ProcessorState = {
   ast: Program;
   lunast: LunAST;
   markDirty: () => void;
+  trigger: (id: string, tag: string) => void;
 };

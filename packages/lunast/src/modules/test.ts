@@ -1,5 +1,5 @@
 import { traverse, is } from "estree-toolkit";
-import { getPropertyGetters, register, magicAST } from "../utils";
+import { getPropertyGetters, register, magicAST, getImports } from "../utils";
 import { BlockStatement } from "estree-toolkit/dist/generated/types";
 
 // These aren't actual modules yet, I'm just using this as a testbed for stuff
@@ -44,9 +44,9 @@ register({
   "balls"
 )`)!;
     for (const data of Object.values(getters)) {
-      if (!is.identifier(data.argument)) continue;
+      if (!is.identifier(data.expression)) continue;
 
-      const node = data.scope.getOwnBinding(data.argument.name);
+      const node = data.scope.getOwnBinding(data.expression.name);
       if (!node) continue;
 
       const body = node.path.get<BlockStatement>("body");
@@ -67,8 +67,8 @@ register({
     const fields = [];
 
     for (const [name, data] of Object.entries(getters)) {
-      if (!is.identifier(data.argument)) continue;
-      const node = data.scope.getOwnBinding(data.argument.name);
+      if (!is.identifier(data.expression)) continue;
+      const node = data.scope.getOwnBinding(data.expression.name);
       if (!node) continue;
 
       let isSupportsCopy = false;
@@ -121,3 +121,50 @@ register({
     return false;
   }
 });*/
+
+// Triggering a processor from another processor
+register({
+  name: "FluxDispatcherParent",
+  find: ["isDispatching", "dispatch", "googlebot"],
+  process({ id, ast, lunast, trigger }) {
+    const imports = getImports(ast);
+    // This is so stupid lol
+    const usages = Object.entries(imports)
+      .map(([name, data]): [string, number] => {
+        if (!is.identifier(data.expression)) return [name, 0];
+        const binding = data.scope.getOwnBinding(data.expression.name);
+        if (!binding) return [name, 0];
+        return [name, binding.references.length];
+      })
+      .sort(([, a], [, b]) => b! - a!)
+      .map(([name]) => name);
+
+    const dispatcher = usages[1].toString();
+    trigger(dispatcher, "FluxDispatcher");
+    return true;
+  }
+});
+
+register({
+  name: "FluxDispatcher",
+  manual: true,
+  process({ id, ast, lunast }) {
+    lunast.addModule({
+      name: "FluxDispatcher",
+      id,
+      type: "FluxDispatcher"
+    });
+
+    lunast.addType({
+      name: "FluxDispatcher",
+      fields: [
+        {
+          name: "default",
+          unmapped: "Z"
+        }
+      ]
+    });
+
+    return true;
+  }
+});

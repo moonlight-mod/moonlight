@@ -114,7 +114,7 @@ Fetching the content of the `<script>` tags is impossible, and making a `fetch` 
 
 Not really. LunAST runs in roughly ~10ms on [my](https://github.com/NotNite) machine, with filtering for what modules to parse. Parsing every module takes only a second. There are future plans to cache and parallelize the process, so that load times are only slow once.
 
-You can measure how long LunAST took to process with the `moonlight.lunast.elapsed` variable
+You can measure how long LunAST took to process with the `moonlight.lunast.elapsed` variable.
 
 ### Does this mean patches are dead?
 

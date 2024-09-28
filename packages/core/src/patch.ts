@@ -74,11 +74,16 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     }
   }
 
+  // Populate the module cache
+  for (const [id, func] of Object.entries(entry)) {
+    if (!Object.hasOwn(moduleCache, id) && func.__moonlight !== true) {
+      moduleCache[id] = func.toString().replace(/\n/g, "");
+    }
+  }
+
   for (const [id, func] of Object.entries(entry)) {
     if (func.__moonlight === true) continue;
-    let moduleString = Object.hasOwn(moduleCache, id)
-      ? moduleCache[id]
-      : func.toString().replace(/\n/g, "");
+    let moduleString = moduleCache[id];
 
     for (let i = 0; i < patches.length; i++) {
       const patch = patches[i];
@@ -151,13 +156,20 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       }
     }
 
+    moduleCache[id] = moduleString;
+
     try {
-      let parsed = moonlight.lunast.parseScript(id, `(\n${moduleString}\n)`);
+      const parsed = moonlight.lunast.parseScript(id, moduleString);
       if (parsed != null) {
-        // parseScript adds an extra ; for some reason
-        parsed = parsed.trimEnd().substring(0, parsed.lastIndexOf(";"));
-        if (patchModule(id, "lunast", parsed)) {
-          moduleString = parsed;
+        for (const [parsedId, parsedScript] of Object.entries(parsed)) {
+          // parseScript adds an extra ; for some reason
+          const fixedScript = parsedScript
+            .trimEnd()
+            .substring(0, parsedScript.lastIndexOf(";"));
+
+          if (patchModule(parsedId, "lunast", fixedScript)) {
+            moduleCache[parsedId] = fixedScript;
+          }
         }
       }
     } catch (e) {
@@ -170,7 +182,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         !entry[id].__moonlight
       ) {
         const wrapped =
-          `(${moduleString}).apply(this, arguments)\n` +
+          `(${moduleCache[id]}).apply(this, arguments)\n` +
           `//# sourceURL=Webpack-Module-${id}`;
         entry[id] = new Function(
           "module",
@@ -181,8 +193,6 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         entry[id].__moonlight = true;
       }
     }
-
-    moduleCache[id] = moduleString;
   }
 }
 
@@ -302,6 +312,10 @@ declare global {
 */
 export async function installWebpackPatcher() {
   await handleModuleDependencies();
+
+  moonlight.lunast.setModuleSourceGetter((id) => {
+    return moduleCache[id] ?? null;
+  });
 
   let realWebpackJsonp: WebpackJsonp | null = null;
   Object.defineProperty(window, "webpackChunkdiscord_app", {

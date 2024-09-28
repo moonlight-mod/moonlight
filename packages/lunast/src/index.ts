@@ -16,6 +16,7 @@ export default class LunAST {
   >;
   private processors: Processor[];
   private defaultRequire?: (id: string) => any;
+  private getModuleSource?: (id: string) => string;
 
   elapsed: number;
 
@@ -37,26 +38,39 @@ export default class LunAST {
     return "dev";
   }
 
-  public parseScript(id: string, code: string): string | null {
+  public parseScript(id: string, code: string): Record<string, string> {
     const start = performance.now();
 
     const available = [...this.processors]
       .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
-      .filter((x) =>
-        x.find != null
-          ? typeof x.find === "string"
-            ? code.indexOf(x.find) !== -1
-            : x.find.test(code)
-          : true
-      )
-      .filter((x) =>
-        x.dependencies != null
-          ? x.dependencies.every((dep) => this.successful.has(dep))
-          : true
-      );
-    if (available.length === 0) return null;
+      .filter((x) => {
+        if (x.find == null) return true;
+        const finds = Array.isArray(x.find) ? x.find : [x.find];
+        return finds.every((find) =>
+          typeof find === "string" ? code.indexOf(find) !== -1 : find.test(code)
+        );
+      })
+      .filter((x) => x.manual !== true);
 
-    const module = parseFixed(code);
+    const ret = this.parseScriptInternal(id, code, available);
+
+    const end = performance.now();
+    this.elapsed += end - start;
+
+    return ret;
+  }
+
+  // This is like this so processors can trigger other processors while they're parsing
+  private parseScriptInternal(
+    id: string,
+    code: string,
+    processors: Processor[]
+  ) {
+    const ret: Record<string, string> = {};
+    if (processors.length === 0) return ret;
+
+    // Wrap so the anonymous function is valid JS
+    const module = parseFixed(`(\n${code}\n)`);
     let dirty = false;
     const state: ProcessorState = {
       id,
@@ -64,10 +78,19 @@ export default class LunAST {
       lunast: this,
       markDirty: () => {
         dirty = true;
+      },
+      trigger: (id, tag) => {
+        const source = this.getModuleSourceById(id);
+        if (source == null) return;
+        if (this.successful.has(tag)) return;
+        const processor = this.processors.find((x) => x.name === tag);
+        if (processor == null) return;
+        const theirRet = this.parseScriptInternal(id, source, [processor]);
+        Object.assign(ret, theirRet);
       }
     };
 
-    for (const processor of available) {
+    for (const processor of processors) {
       if (processor.process(state)) {
         this.processors.splice(this.processors.indexOf(processor), 1);
         this.successful.add(processor.name);
@@ -75,11 +98,9 @@ export default class LunAST {
     }
 
     const str = dirty ? generate(module) : null;
+    if (str != null) ret[id] = str;
 
-    const end = performance.now();
-    this.elapsed += end - start;
-
-    return str;
+    return ret;
   }
 
   public getType(name: string) {
@@ -140,6 +161,14 @@ export default class LunAST {
   // TODO: call this with require we obtain from the webpack entrypoint
   public setDefaultRequire(require: (id: string) => any) {
     this.defaultRequire = require;
+  }
+
+  public setModuleSourceGetter(getSource: (id: string) => string) {
+    this.getModuleSource = getSource;
+  }
+
+  public getModuleSourceById(id: string) {
+    return this.getModuleSource?.(id) ?? null;
   }
 
   public remap<Id extends keyof Remapped>(

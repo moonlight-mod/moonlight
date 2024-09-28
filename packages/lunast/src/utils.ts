@@ -1,5 +1,5 @@
 import type { Processor } from "./remap";
-import { traverse, is, Scope, Binding } from "estree-toolkit";
+import { traverse, is, Scope, Binding, NodePath } from "estree-toolkit";
 // FIXME something's fishy with these types
 import type {
   Expression,
@@ -22,9 +22,31 @@ export function getProcessors() {
 }
 
 export type ExpressionWithScope = {
-  argument: Expression;
+  expression: Expression;
   scope: Scope;
 };
+
+function getParent(path: NodePath) {
+  let parent = path.parentPath;
+  while (!is.program(parent)) {
+    parent = parent?.parentPath ?? null;
+    if (
+      parent == null ||
+      parent.node == null ||
+      ![
+        "FunctionExpression",
+        "ExpressionStatement",
+        "CallExpression",
+        "Program"
+      ].includes(parent.node.type)
+    ) {
+      return null;
+    }
+  }
+
+  if (!is.functionExpression(path.parent)) return null;
+  return path.parent;
+}
 
 export function getExports(ast: Program) {
   const ret: Record<string, ExpressionWithScope> = {};
@@ -33,29 +55,11 @@ export function getExports(ast: Program) {
     $: { scope: true },
     BlockStatement(path) {
       if (path.scope == null) return;
+      const parent = getParent(path);
+      if (parent == null) return;
 
-      // Walk up to make sure we are indeed the top level
-      let parent = path.parentPath;
-      while (!is.program(parent)) {
-        parent = parent?.parentPath ?? null;
-        if (
-          parent == null ||
-          parent.node == null ||
-          ![
-            "FunctionExpression",
-            "ExpressionStatement",
-            "CallExpression",
-            "Program"
-          ].includes(parent.node.type)
-        ) {
-          return;
-        }
-      }
-
-      if (!is.functionExpression(path.parent)) return;
-
-      for (let i = 0; i < path.parent.params.length; i++) {
-        const param = path.parent.params[i];
+      for (let i = 0; i < parent.params.length; i++) {
+        const param = parent.params[i];
         if (!is.identifier(param)) continue;
         const binding: Binding | undefined = path.scope!.getBinding(param.name);
         if (!binding) continue;
@@ -80,7 +84,7 @@ export function getExports(ast: Program) {
               if (!is.identifier(property.key)) continue;
               if (!is.expression(property.value)) continue;
               ret[property.key.name] = {
-                argument: property.value,
+                expression: property.value,
                 scope: path.scope
               };
             }
@@ -98,7 +102,7 @@ export function getExports(ast: Program) {
             if (!is.assignmentExpression(assignmentExpression)) continue;
 
             ret[reference.parentPath.node.property.name] = {
-              argument: assignmentExpression.right,
+              expression: assignmentExpression.right,
               scope: path.scope
             };
           }
@@ -139,7 +143,7 @@ export function getPropertyGetters(ast: Program) {
         );
         if (!returnStatement || !returnStatement.argument) continue;
         ret[property.key.name] = {
-          argument: returnStatement.argument,
+          expression: returnStatement.argument,
           scope: path.scope
         };
       }
@@ -169,4 +173,39 @@ export function magicAST(code: string) {
   if (!is.blockStatement(expressionStatement.expression.callee.body))
     return null;
   return expressionStatement.expression.callee.body;
+}
+
+export function getImports(ast: Program) {
+  const ret: Record<string, ExpressionWithScope> = {};
+
+  traverse(ast, {
+    $: { scope: true },
+    BlockStatement(path) {
+      if (path.scope == null) return;
+      const parent = getParent(path);
+      if (parent == null) return;
+
+      const require = parent.params[2];
+      if (!is.identifier(require)) return;
+      const references = path.scope.getOwnBinding(require.name)?.references;
+      if (references == null) return;
+      for (const reference of references) {
+        if (!is.callExpression(reference.parentPath)) continue;
+        if (reference.parentPath.node?.arguments.length !== 1) continue;
+        if (!is.variableDeclarator(reference.parentPath.parentPath)) continue;
+        if (!is.identifier(reference.parentPath.parentPath.node?.id)) continue;
+
+        const moduleId = reference.parentPath.node.arguments[0];
+        if (!is.literal(moduleId)) continue;
+        if (moduleId.value == null) continue;
+
+        ret[moduleId.value.toString()] = {
+          expression: reference.parentPath.parentPath.node.id,
+          scope: path.scope
+        };
+      }
+    }
+  });
+
+  return ret;
 }
