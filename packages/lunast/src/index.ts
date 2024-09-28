@@ -17,6 +17,8 @@ export default class LunAST {
   private processors: Processor[];
   private defaultRequire?: (id: string) => any;
 
+  elapsed: number;
+
   constructor() {
     this.modules = {};
     this.types = {};
@@ -25,6 +27,8 @@ export default class LunAST {
     this.typeCache = {};
     this.fieldCache = {};
     this.processors = getProcessors();
+
+    this.elapsed = 0;
   }
 
   public static getVersion() {
@@ -34,6 +38,8 @@ export default class LunAST {
   }
 
   public parseScript(id: string, code: string): string | null {
+    const start = performance.now();
+
     const available = [...this.processors]
       .sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0))
       .filter((x) =>
@@ -68,11 +74,12 @@ export default class LunAST {
       }
     }
 
-    if (dirty) {
-      return generate(module);
-    } else {
-      return null;
-    }
+    const str = dirty ? generate(module) : null;
+
+    const end = performance.now();
+    this.elapsed += end - start;
+
+    return str;
   }
 
   public getType(name: string) {

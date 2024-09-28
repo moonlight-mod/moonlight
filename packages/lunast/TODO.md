@@ -3,7 +3,7 @@
 - [ ] Experiment more! We need to know what's bad with this
 - [ ] Write utility functions for imports, exports, etc.
   - [ ] Imports
-  - [ ] Exports
+  - [x] Exports
   - [ ] Constant bindings for an object
 - [ ] Map Z/ZP to default
 - [x] Steal Webpack require and use it in our LunAST instance

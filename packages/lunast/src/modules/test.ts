@@ -113,3 +113,11 @@ register({
     return false;
   }
 });
+
+// Parse all modules to demonstrate speed loss
+/*register({
+  name: "AllModules",
+  process({ id, ast, lunast }) {
+    return false;
+  }
+});*/
