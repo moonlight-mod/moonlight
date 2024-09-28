@@ -2,6 +2,9 @@
 
 - [ ] Experiment more! We need to know what's bad with this
 - [ ] Write utility functions for imports, exports, etc.
+  - [ ] Imports
+  - [ ] Exports
+  - [ ] Constant bindings for an object
 - [ ] Map Z/ZP to default
 - [x] Steal Webpack require and use it in our LunAST instance
 - [ ] Map `import` statements to LunAST
@@ -11,6 +14,7 @@
 - [ ] Run in parallel with service workers
   - This is gonna require making Webpack entrypoint async and us doing kickoff ourselves
 - [ ] Support lazy loaded chunks
+  - Works right now, but will break when caching is implemented
 - [ ] Split into a new repo on GitHub, publish to NPM maybe
 - [ ] Implement caching based off of the client build and LunAST commit
   - Means you only have to have a long client start once per client build

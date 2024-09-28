@@ -8,8 +8,7 @@ register({
   find: "marginCenterHorz:",
   process({ ast }) {
     const exports = getExports(ast);
-    // eslint-disable-next-line no-console
-    console.log(exports);
+    // console.log(exports);
     return Object.keys(exports).length > 0;
   }
 });
@@ -39,7 +38,12 @@ register({
   },
   "balls"
 )`)!;
-    for (const node of Object.values(getters)) {
+    for (const data of Object.values(getters)) {
+      if (!is.identifier(data.argument)) continue;
+
+      const node = data.scope.getOwnBinding(data.argument.name);
+      if (!node) continue;
+
       const body = node.path.get<BlockStatement>("body");
       body.replaceWith(replacement);
     }
@@ -56,7 +60,11 @@ register({
     const getters = getPropertyGetters(ast);
     const fields = [];
 
-    for (const [name, node] of Object.entries(getters)) {
+    for (const [name, data] of Object.entries(getters)) {
+      if (!is.identifier(data.argument)) continue;
+      const node = data.scope.getOwnBinding(data.argument.name);
+      if (!node) continue;
+
       let isSupportsCopy = false;
       traverse(node.path.node!, {
         MemberExpression(path) {

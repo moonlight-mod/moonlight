@@ -1,7 +1,8 @@
 import type { Processor } from "./remap";
-import { traverse, is, Binding } from "estree-toolkit";
+import { traverse, is, Scope } from "estree-toolkit";
 // FIXME something's fishy with these types
 import type {
+  Expression,
   ExpressionStatement,
   ObjectExpression,
   Program,
@@ -86,12 +87,19 @@ export function getExports(ast: Program) {
   return ret;
 }
 
+export type PropertyGetter = {
+  argument: Expression;
+  scope: Scope;
+};
+
+// TODO: util function to resolve the value of an expression
 export function getPropertyGetters(ast: Program) {
-  const ret: Record<string, Binding> = {};
+  const ret: Record<string, PropertyGetter> = {};
 
   traverse(ast, {
     $: { scope: true },
     CallExpression(path) {
+      if (path.scope == null) return;
       if (!is.callExpression(path.node)) return;
       if (!is.memberExpression(path.node.callee)) return;
       if (!is.identifier(path.node?.callee?.property)) return;
@@ -111,15 +119,11 @@ export function getPropertyGetters(ast: Program) {
         const returnStatement = property.value.body.body.find(
           (node): node is ReturnStatement => is.returnStatement(node)
         );
-        if (!returnStatement) continue;
-        if (!is.identifier(returnStatement.argument)) continue;
-
-        const binding = path.scope?.getOwnBinding(
-          returnStatement.argument.name
-        );
-        if (!binding) continue;
-        if (!binding.path.node) continue;
-        ret[property.key.name] = binding;
+        if (!returnStatement || !returnStatement.argument) continue;
+        ret[property.key.name] = {
+          argument: returnStatement.argument,
+          scope: path.scope
+        };
       }
 
       this.stop();
@@ -127,6 +131,11 @@ export function getPropertyGetters(ast: Program) {
   });
 
   return ret;
+}
+
+// The ESTree types are mismatched with estree-toolkit, but ESTree is a standard so this is fine
+export function parseFixed(code: string): Program {
+  return parse(code) as any as Program;
 }
 
 export function magicAST(code: string) {

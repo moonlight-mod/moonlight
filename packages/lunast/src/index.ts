@@ -1,7 +1,6 @@
 import { RemapField, RemapModule, RemapType } from "./types";
 import { Remapped } from "./modules";
-import { getProcessors } from "./utils";
-import { parse } from "meriyah";
+import { getProcessors, parseFixed } from "./utils";
 import { Processor, ProcessorState } from "./remap";
 import { generate } from "astring";
 
@@ -51,11 +50,10 @@ export default class LunAST {
       );
     if (available.length === 0) return null;
 
-    const module = parse(code);
+    const module = parseFixed(code);
     let dirty = false;
     const state: ProcessorState = {
       id,
-      // @ts-expect-error The ESTree types are mismatched with estree-toolkit, but ESTree is a standard so this is fine
       ast: module,
       lunast: this,
       markDirty: () => {

@@ -75,6 +75,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
   }
 
   for (const [id, func] of Object.entries(entry)) {
+    if (func.__moonlight === true) continue;
     let moduleString = Object.hasOwn(moduleCache, id)
       ? moduleCache[id]
       : func.toString().replace(/\n/g, "");
@@ -150,13 +151,17 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       }
     }
 
-    let parsed = moonlight.lunast.parseScript(id, `(${moduleString})`);
-    if (parsed != null) {
-      // parseScript adds an extra ; for some reason
-      parsed = parsed.trimEnd().substring(0, parsed.lastIndexOf(";"));
-      if (patchModule(id, "lunast", parsed)) {
-        moduleString = parsed;
+    try {
+      let parsed = moonlight.lunast.parseScript(id, `(\n${moduleString}\n)`);
+      if (parsed != null) {
+        // parseScript adds an extra ; for some reason
+        parsed = parsed.trimEnd().substring(0, parsed.lastIndexOf(";"));
+        if (patchModule(id, "lunast", parsed)) {
+          moduleString = parsed;
+        }
       }
+    } catch (e) {
+      logger.error("Failed to parse script for LunAST", id, e);
     }
 
     if (moonlightNode.config.patchAll === true) {
