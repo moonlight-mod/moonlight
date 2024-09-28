@@ -344,6 +344,8 @@ export async function installWebpackPatcher() {
         injectModules(modules);
       }
 
+      moonlight.lunast.setDefaultRequire(this);
+
       Object.defineProperty(this, "m", {
         value: modules,
         configurable: true,
