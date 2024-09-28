@@ -1,17 +1,8 @@
 import { traverse, is } from "estree-toolkit";
-import { getExports, getPropertyGetters, register, magicAST } from "../utils";
+import { getPropertyGetters, register, magicAST } from "../utils";
 import { BlockStatement } from "estree-toolkit/dist/generated/types";
 
 // These aren't actual modules yet, I'm just using this as a testbed for stuff
-register({
-  name: "Margin",
-  find: "marginCenterHorz:",
-  process({ ast }) {
-    const exports = getExports(ast);
-    // console.log(exports);
-    return Object.keys(exports).length > 0;
-  }
-});
 
 // Exports example
 /*register({
@@ -20,6 +11,20 @@ register({
   process({ ast }) {
     const exports = getExports(ast);
     return Object.keys(exports).length > 0;
+  }
+});
+
+register({
+  name: "FluxDispatcher",
+  find: "addBreadcrumb:",
+  process({ id, ast, lunast }) {
+    const exports = getExports(ast);
+    for (const [name, data] of Object.entries(exports)) {
+      if (!is.identifier(data.argument)) continue;
+      const binding = data.scope.getOwnBinding(data.argument.name);
+      console.log(name, binding);
+    }
+    return false;
   }
 });*/
 
@@ -53,6 +58,7 @@ register({
   }
 });
 
+// Remapping example
 register({
   name: "ClipboardUtils",
   find: 'document.queryCommandEnabled("copy")',

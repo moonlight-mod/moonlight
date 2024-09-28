@@ -1,12 +1,11 @@
 import type { Processor } from "./remap";
-import { traverse, is, Scope } from "estree-toolkit";
+import { traverse, is, Scope, Binding } from "estree-toolkit";
 // FIXME something's fishy with these types
 import type {
   Expression,
   ExpressionStatement,
   ObjectExpression,
   Program,
-  Property,
   ReturnStatement
 } from "estree-toolkit/dist/generated/types";
 import { parse } from "meriyah";
@@ -22,12 +21,19 @@ export function getProcessors() {
   return [...processors];
 }
 
+export type ExpressionWithScope = {
+  argument: Expression;
+  scope: Scope;
+};
+
 export function getExports(ast: Program) {
-  const ret: Record<string, Property["value"]> = {};
+  const ret: Record<string, ExpressionWithScope> = {};
 
   traverse(ast, {
     $: { scope: true },
     BlockStatement(path) {
+      if (path.scope == null) return;
+
       // Walk up to make sure we are indeed the top level
       let parent = path.parentPath;
       while (!is.program(parent)) {
@@ -51,7 +57,7 @@ export function getExports(ast: Program) {
       for (let i = 0; i < path.parent.params.length; i++) {
         const param = path.parent.params[i];
         if (!is.identifier(param)) continue;
-        const binding = path.scope?.getBinding(param.name);
+        const binding: Binding | undefined = path.scope!.getBinding(param.name);
         if (!binding) continue;
 
         // module
@@ -72,13 +78,30 @@ export function getExports(ast: Program) {
             for (const property of exports.properties) {
               if (!is.property(property)) continue;
               if (!is.identifier(property.key)) continue;
-              ret[property.key.name] = property.value;
+              if (!is.expression(property.value)) continue;
+              ret[property.key.name] = {
+                argument: property.value,
+                scope: path.scope
+              };
             }
           }
         }
         // TODO: exports
         else if (i === 1) {
-          // console.log("getExports:", path, param, binding);
+          for (const reference of binding.references) {
+            if (!is.identifier(reference.node)) continue;
+            if (reference.parentPath == null) continue;
+            if (!is.memberExpression(reference.parentPath.node)) continue;
+            if (!is.identifier(reference.parentPath.node.property)) continue;
+
+            const assignmentExpression = reference.parentPath.parentPath?.node;
+            if (!is.assignmentExpression(assignmentExpression)) continue;
+
+            ret[reference.parentPath.node.property.name] = {
+              argument: assignmentExpression.right,
+              scope: path.scope
+            };
+          }
         }
       }
     }
@@ -87,14 +110,9 @@ export function getExports(ast: Program) {
   return ret;
 }
 
-export type PropertyGetter = {
-  argument: Expression;
-  scope: Scope;
-};
-
 // TODO: util function to resolve the value of an expression
 export function getPropertyGetters(ast: Program) {
-  const ret: Record<string, PropertyGetter> = {};
+  const ret: Record<string, ExpressionWithScope> = {};
 
   traverse(ast, {
     $: { scope: true },
