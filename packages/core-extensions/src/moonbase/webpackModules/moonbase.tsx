@@ -11,8 +11,10 @@ function addSection(name: string, element: React.FunctionComponent) {
     stores: [MoonbaseSettingsStore],
     element: () => {
       // Require it here because lazy loading SUX
-      const SettingsNotice =
-        spacepack.findByCode("onSaveButtonColor")[0].exports.Z;
+      const SettingsNotice = spacepack.findByCode(
+        "onSaveButtonColor",
+        "FocusRingScope"
+      )[0].exports.Z;
       return (
         <SettingsNotice
           submitting={MoonbaseSettingsStore.submitting}
