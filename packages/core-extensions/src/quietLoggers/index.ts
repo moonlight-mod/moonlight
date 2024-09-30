@@ -10,8 +10,8 @@ const loggerFixes: Patch[] = [
   {
     find: '"./ggsans-800-extrabolditalic.woff2":',
     replace: {
-      match: /\.then\(function\(\){var.+?"MODULE_NOT_FOUND",.\}\)/,
-      replacement: ".then(()=>(()=>{}))"
+      match: /throw .+?,./,
+      replacement: "return{}"
     }
   },
   {
@@ -36,17 +36,17 @@ const stubPatches = [
   ['="RunningGameStore"', /.\.info\("games",{.+?}\),/],
   [
     '"[BUILD INFO] Release Channel: "',
-    /new .{1,2}\.default\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/
+    /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/
   ],
   [
-    '.AnalyticEvents.APP_NATIVE_CRASH,"Storage"',
+    '.APP_NATIVE_CRASH,"Storage"',
     /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/
   ],
   [
-    '.AnalyticEvents.APP_NATIVE_CRASH,"Storage"',
+    '.APP_NATIVE_CRASH,"Storage"',
     'console.log("AppCrashedFatalReport: getLastCrash not supported.");'
   ],
-  ['"[NATIVE INFO] ', /new .{1,2}\.default\(\)\.log\("\[NATIVE INFO] .+?\)\),/],
+  ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
   ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
   [
     'throw Error("Messages are still loading.");',

@@ -1,9 +1,4 @@
-import {
-  DangerIconSVG,
-  DownloadIconSVG,
-  ExtensionState,
-  TrashIconSVG
-} from "../../../types";
+import { ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 
 import React from "@moonlight-mod/wp/common_react";
@@ -22,19 +17,14 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const UserProfileClasses = spacepack.findByCode(
-  "tabBarContainer",
-  "topSection"
+const { DownloadIcon, TrashIcon, CircleWarningIcon } = CommonComponents;
+
+const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
+const TabBarClasses = spacepack.findByExports(
+  "tabBar",
+  "tabBarItem",
+  "headerContentWrapper"
 )[0].exports;
-
-const DownloadIcon =
-  spacepack.findByCode(DownloadIconSVG)[0].exports.DownloadIcon;
-const TrashIcon = spacepack.findByCode(TrashIconSVG)[0].exports.default;
-const DangerIcon =
-  spacepack.findByCode(DangerIconSVG)[0].exports.CircleExclamationPointIcon;
-
-const PanelButton =
-  spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.default;
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -136,7 +126,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               {restartNeeded && (
                 <PanelButton
                   icon={() => (
-                    <DangerIcon
+                    <CircleWarningIcon
                       color={CommonComponents.tokens.colors.STATUS_DANGER}
                     />
                   )}
@@ -157,46 +147,42 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         </Flex>
       </div>
 
-      <div className={UserProfileClasses.body}>
+      <div>
         {(description != null || settings != null) && (
-          <div
-            className={UserProfileClasses.tabBarContainer}
+          <TabBar
+            selectedItem={tab}
+            type="top"
+            onItemSelect={setTab}
+            className={TabBarClasses.tabBar}
             style={{
-              padding: "0 10px"
+              padding: "0 20px"
             }}
           >
-            <TabBar
-              selectedItem={tab}
-              type="top"
-              onItemSelect={setTab}
-              className={UserProfileClasses.tabBar}
+            <TabBar.Item
+              className={TabBarClasses.tabBarItem}
+              id={ExtensionPage.Info}
             >
+              Info
+            </TabBar.Item>
+
+            {description != null && (
               <TabBar.Item
-                className={UserProfileClasses.tabBarItem}
-                id={ExtensionPage.Info}
+                className={TabBarClasses.tabBarItem}
+                id={ExtensionPage.Description}
               >
-                Info
+                Description
               </TabBar.Item>
+            )}
 
-              {description != null && (
-                <TabBar.Item
-                  className={UserProfileClasses.tabBarItem}
-                  id={ExtensionPage.Description}
-                >
-                  Description
-                </TabBar.Item>
-              )}
-
-              {settings != null && (
-                <TabBar.Item
-                  className={UserProfileClasses.tabBarItem}
-                  id={ExtensionPage.Settings}
-                >
-                  Settings
-                </TabBar.Item>
-              )}
-            </TabBar>
-          </div>
+            {settings != null && (
+              <TabBar.Item
+                className={TabBarClasses.tabBarItem}
+                id={ExtensionPage.Settings}
+              >
+                Settings
+              </TabBar.Item>
+            )}
+          </TabBar>
         )}
 
         <Flex

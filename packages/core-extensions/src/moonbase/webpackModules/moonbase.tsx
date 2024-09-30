@@ -7,14 +7,16 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { MenuItem } from "@moonlight-mod/wp/common_components";
 
 const { open } = spacepack.findByExports("setSection", "clearSubsection")[0]
-  .exports.default;
+  .exports.Z;
 
 settings.addSection("moonbase", "Moonbase", Moonbase, null, -2, {
   stores: [MoonbaseSettingsStore],
   element: () => {
     // Require it here because lazy loading SUX
-    const SettingsNotice =
-      spacepack.findByCode("onSaveButtonColor")[0].exports.default;
+    const SettingsNotice = spacepack.findByCode(
+      "onSaveButtonColor",
+      "FocusRingScope"
+    )[0].exports.Z;
     return (
       <SettingsNotice
         submitting={MoonbaseSettingsStore.submitting}

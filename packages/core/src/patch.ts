@@ -330,12 +330,23 @@ export async function installWebpackPatcher() {
     }
   });
 
-  registerWebpackModule({
-    ext: "moonlight",
-    id: "fix_rspack_init_modules",
-    entrypoint: true,
-    run: function (module, exports, require) {
-      patchModules(require.m);
+  Object.defineProperty(Function.prototype, "m", {
+    configurable: true,
+    set(modules: any) {
+      const { stack } = new Error();
+      if (stack!.includes("/assets/") && !Array.isArray(modules)) {
+        patchModules(modules);
+        if (!window.webpackChunkdiscord_app)
+          window.webpackChunkdiscord_app = [];
+        injectModules(modules);
+      }
+
+      Object.defineProperty(this, "m", {
+        value: modules,
+        configurable: true,
+        enumerable: true,
+        writable: true
+      });
     }
   });
 }

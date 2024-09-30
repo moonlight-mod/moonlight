@@ -1,7 +1,5 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
 
-import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
-
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {
     dependencies: [
@@ -16,13 +14,10 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       { ext: "common", id: "react" },
       { ext: "common", id: "components" },
       { ext: "moonbase", id: "stores" },
-      DownloadIconSVG,
-      TrashIconSVG,
-      CircleXIconSVG,
       "Masks.PANEL_BUTTON",
-      "removeButtonContainer:",
+      "renderArtisanalHack(){",
       '"Missing channel in Channel.openChannelContextMenu"',
-      ".default.HEADER_BAR"
+      ".forumOrHome]:"
     ]
   },
 
