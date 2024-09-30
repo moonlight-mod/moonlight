@@ -1,1 +1,1 @@
-- Fixes for latest Discord
+- core-extensions/contextMenu: Fix patches
