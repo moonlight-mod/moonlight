@@ -17,8 +17,7 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { DownloadIcon, TrashIcon, CircleExclamationPointIcon } =
-  CommonComponents;
+const { DownloadIcon, TrashIcon, CircleWarningIcon } = CommonComponents;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports(
@@ -127,7 +126,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               {restartNeeded && (
                 <PanelButton
                   icon={() => (
-                    <CircleExclamationPointIcon
+                    <CircleWarningIcon
                       color={CommonComponents.tokens.colors.STATUS_DANGER}
                     />
                   )}
