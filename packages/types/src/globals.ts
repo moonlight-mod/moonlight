@@ -7,6 +7,7 @@ import {
   ProcessedExtensions
 } from "./extension";
 import EventEmitter from "events";
+import { EventPayloads, EventType, MoonlightEventEmitter } from "./core/event";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -39,6 +40,15 @@ export type MoonlightWeb = {
   unpatched: Set<IdentifiedPatch>;
   pendingModules: Set<IdentifiedWebpackModule>;
   enabledExtensions: Set<string>;
+  events: MoonlightEventEmitter<EventType, EventPayloads>;
+  patchingInternals: {
+    onModuleLoad: (
+      moduleId: string | string[],
+      callback: (moduleId: string) => void
+    ) => void;
+    registerPatch: (patch: IdentifiedPatch) => void;
+    registerWebpackModule: (module: IdentifiedWebpackModule) => void;
+  };
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
