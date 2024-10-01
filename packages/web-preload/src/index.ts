@@ -7,8 +7,8 @@ import {
 } from "@moonlight-mod/core/patch";
 import { installStyles } from "@moonlight-mod/core/styles";
 import Logger from "@moonlight-mod/core/util/logger";
-import { createEventEmitter } from "core/src/util/event";
-import { EventPayloads, EventType } from "types/src/core/event";
+import { createEventEmitter } from "@moonlight-mod/core/util/event";
+import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
 
 (async () => {
   const logger = new Logger("web-preload");

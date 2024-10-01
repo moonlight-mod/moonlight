@@ -11,7 +11,7 @@ import {
 import Logger from "./util/logger";
 import calculateDependencies, { Dependency } from "./util/dependency";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
-import { EventType } from "types/src/core/event";
+import { EventType } from "@moonlight-mod/types/core/event";
 
 const logger = new Logger("core/patch");
 
