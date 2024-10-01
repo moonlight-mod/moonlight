@@ -1,5 +1,6 @@
 {
   "id": "disableSentry",
+  "apiLevel": 2,
   "meta": {
     "name": "Disable Sentry",
     "tagline": "Turns off Discord's error reporting systems",

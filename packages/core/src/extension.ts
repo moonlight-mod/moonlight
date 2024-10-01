@@ -8,6 +8,8 @@ import { readConfig } from "./config";
 import requireImport from "./util/import";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 
+export const API_LEVEL: number = 2;
+
 function findManifests(dir: string): string[] {
   const fs = requireImport("fs");
   const path = requireImport("path");
@@ -44,6 +46,10 @@ function loadDetectedExtensions(
     const manifest: ExtensionManifest = JSON.parse(
       fs.readFileSync(manifestPath, "utf8")
     );
+    const level = manifest.apiLevel ?? 1;
+    if (level < API_LEVEL) {
+      continue;
+    }
 
     const webPath = path.join(dir, "index.js");
     const nodePath = path.join(dir, "node.js");

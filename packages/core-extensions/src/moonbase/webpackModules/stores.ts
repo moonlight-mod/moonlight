@@ -46,6 +46,9 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
       for (const [repo, exts] of Object.entries(ret)) {
         try {
           for (const ext of exts) {
+            const level = ext.apiLevel ?? 1;
+            if (level < window.moonlight.apiLevel) continue;
+
             const uniqueId = this.extensionIndex++;
             const extensionData = {
               id: ext.id,

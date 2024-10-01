@@ -41,6 +41,7 @@ export type MoonlightWeb = {
   unpatched: Set<IdentifiedPatch>;
   pendingModules: Set<IdentifiedWebpackModule>;
   enabledExtensions: Set<string>;
+  apiLevel: number;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;

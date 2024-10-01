@@ -1,5 +1,6 @@
 {
   "id": "contextMenu",
+  "apiLevel": 2,
   "meta": {
     "name": "Context Menu",
     "tagline": "A library for patching and creating context menus",

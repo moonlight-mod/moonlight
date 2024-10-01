@@ -1,5 +1,6 @@
 {
   "id": "common",
+  "apiLevel": 2,
   "meta": {
     "name": "Common",
     "tagline": "A *lot* of common clientmodding utilities from the Discord client",
