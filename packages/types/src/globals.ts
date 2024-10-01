@@ -8,6 +8,7 @@ import type {
 } from "./extension";
 import type EventEmitter from "events";
 import type LunAST from "@moonlight-mod/lunast";
+import type Moonmap from "@moonlight-mod/moonmap";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -46,6 +47,7 @@ export type MoonlightWeb = {
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
   lunast: LunAST;
+  moonmap: Moonmap;
 };
 
 export enum MoonlightEnv {

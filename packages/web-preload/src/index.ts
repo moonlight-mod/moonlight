@@ -3,6 +3,8 @@ import { installWebpackPatcher } from "@moonlight-mod/core/patch";
 import { installStyles } from "@moonlight-mod/core/styles";
 import Logger from "@moonlight-mod/core/util/logger";
 import LunAST from "@moonlight-mod/lunast";
+import Moonmap from "@moonlight-mod/moonmap";
+import loadMappings from "@moonlight-mod/mappings";
 
 (async () => {
   const logger = new Logger("web-preload");
@@ -18,10 +20,12 @@ import LunAST from "@moonlight-mod/lunast";
     getLogger(id) {
       return new Logger(id);
     },
-    lunast: new LunAST()
+    lunast: new LunAST(),
+    moonmap: new Moonmap()
   };
 
   try {
+    loadMappings(window.moonlight.moonmap, window.moonlight.lunast);
     await loadProcessedExtensions(moonlightNode.processedExtensions);
     await installWebpackPatcher();
   } catch (e) {

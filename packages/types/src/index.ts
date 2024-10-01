@@ -19,6 +19,9 @@ export * from "./globals";
 export * from "./logger";
 export * as constants from "./constants";
 
+export type { AST } from "@moonlight-mod/lunast";
+export { ModuleExport, ModuleExportType } from "@moonlight-mod/moonmap";
+
 declare global {
   const MOONLIGHT_ENV: MoonlightEnv;
   const MOONLIGHT_PROD: boolean;

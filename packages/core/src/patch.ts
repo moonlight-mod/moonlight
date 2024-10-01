@@ -78,6 +78,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
   for (const [id, func] of Object.entries(entry)) {
     if (!Object.hasOwn(moduleCache, id) && func.__moonlight !== true) {
       moduleCache[id] = func.toString().replace(/\n/g, "");
+      moonlight.moonmap.parseScript(id, moduleCache[id]);
     }
   }
 
@@ -162,13 +163,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       const parsed = moonlight.lunast.parseScript(id, moduleString);
       if (parsed != null) {
         for (const [parsedId, parsedScript] of Object.entries(parsed)) {
-          // parseScript adds an extra ; for some reason
-          const fixedScript = parsedScript
-            .trimEnd()
-            .substring(0, parsedScript.lastIndexOf(";"));
-
-          if (patchModule(parsedId, "lunast", fixedScript)) {
-            moduleCache[parsedId] = fixedScript;
+          if (patchModule(parsedId, "lunast", parsedScript)) {
+            moduleCache[parsedId] = parsedScript;
           }
         }
       }
@@ -238,6 +234,13 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
   const entrypoints: string[] = [];
   let inject = false;
 
+  for (const [name, func] of Object.entries(
+    moonlight.moonmap.getWebpackModules("window.moonlight.moonmap")
+  )) {
+    modules[name] = func;
+    inject = true;
+  }
+
   for (const [_modId, mod] of Object.entries(entry)) {
     const modStr = mod.toString();
     for (const wpModule of webpackModules) {
@@ -302,6 +305,10 @@ declare global {
   }
 }
 
+function moduleSourceGetter(id: string) {
+  return moduleCache[id] ?? null;
+}
+
 /*
   Webpack modules are bundled into an array of arrays that hold each function.
   Since we run code before Discord, we can create our own Webpack array and
@@ -313,9 +320,8 @@ declare global {
 export async function installWebpackPatcher() {
   await handleModuleDependencies();
 
-  moonlight.lunast.setModuleSourceGetter((id) => {
-    return moduleCache[id] ?? null;
-  });
+  moonlight.lunast.setModuleSourceGetter(moduleSourceGetter);
+  moonlight.moonmap.setModuleSourceGetter(moduleSourceGetter);
 
   let realWebpackJsonp: WebpackJsonp | null = null;
   Object.defineProperty(window, "webpackChunkdiscord_app", {
@@ -375,8 +381,6 @@ export async function installWebpackPatcher() {
           window.webpackChunkdiscord_app = [];
         injectModules(modules);
       }
-
-      moonlight.lunast.setDefaultRequire(this);
 
       Object.defineProperty(this, "m", {
         value: modules,

@@ -9,7 +9,8 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "@moonlight-mod/lunast": "workspace:*",
+    "@moonlight-mod/lunast": "git+https://github.com/moonlight-mod/lunast.git",
+    "@moonlight-mod/moonmap": "git+https://github.com/moonlight-mod/moonmap.git",
     "@types/flux": "^3.1.12",
     "@types/react": "^18.2.22",
     "csstype": "^3.1.2",
