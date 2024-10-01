@@ -199,29 +199,35 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 */
 let chunkId = Number.MAX_SAFE_INTEGER;
 
+function depToString(x: ExplicitExtensionDependency) {
+  return x.ext != null ? `${x.ext}_${x.id}` : x.id;
+}
+
 function handleModuleDependencies() {
   const modules = Array.from(webpackModules.values());
 
   const dependencies: Dependency<string, IdentifiedWebpackModule>[] =
     modules.map((wp) => {
       return {
-        id: `${wp.ext}_${wp.id}`,
+        id: depToString(wp),
         data: wp
       };
     });
 
   const [sorted, _] = calculateDependencies(dependencies, {
     fetchDep: (id) => {
-      return modules.find((x) => id === `${x.ext}_${x.id}`) ?? null;
+      return modules.find((x) => id === depToString(x)) ?? null;
     },
 
     getDeps: (item) => {
       const deps = item.data?.dependencies ?? [];
       return (
         deps.filter(
-          (dep) => !(dep instanceof RegExp || typeof dep === "string")
+          (dep) =>
+            !(dep instanceof RegExp || typeof dep === "string") &&
+            dep.ext != null
         ) as ExplicitExtensionDependency[]
-      ).map((x) => `${x.ext}_${x.id}`);
+      ).map(depToString);
     }
   });
 
@@ -234,17 +240,10 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
   const entrypoints: string[] = [];
   let inject = false;
 
-  for (const [name, func] of Object.entries(
-    moonlight.moonmap.getWebpackModules("window.moonlight.moonmap")
-  )) {
-    modules[name] = func;
-    inject = true;
-  }
-
   for (const [_modId, mod] of Object.entries(entry)) {
     const modStr = mod.toString();
     for (const wpModule of webpackModules) {
-      const id = wpModule.ext + "_" + wpModule.id;
+      const id = depToString(wpModule);
       if (wpModule.dependencies) {
         const deps = new Set(wpModule.dependencies);
 
@@ -257,9 +256,11 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
             } else if (dep instanceof RegExp) {
               if (dep.test(modStr)) deps.delete(dep);
             } else if (
-              injectedWpModules.find(
-                (x) => x.ext === dep.ext && x.id === dep.id
-              )
+              dep.ext != null
+                ? injectedWpModules.find(
+                    (x) => x.ext === dep.ext && x.id === dep.id
+                  )
+                : injectedWpModules.find((x) => x.id === dep.id)
             ) {
               deps.delete(dep);
             }
@@ -287,6 +288,14 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
       if (wpModule.entrypoint) entrypoints.push(id);
     }
     if (!webpackModules.size) break;
+  }
+
+  for (const [name, func] of Object.entries(
+    moonlight.moonmap.getWebpackModules("window.moonlight.moonmap")
+  )) {
+    injectedWpModules.push({ id: name, run: func });
+    modules[name] = func;
+    inject = true;
   }
 
   if (inject) {

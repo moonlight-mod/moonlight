@@ -1,7 +1,7 @@
 /// <reference types="standalone-electron-types" />
 /// <reference types="react" />
-/// <reference types="flux" />
 /// <reference types="./import" />
+/// <reference types="./mappings" />
 /* eslint-disable no-var */
 
 import {

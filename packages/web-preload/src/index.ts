@@ -1,6 +1,6 @@
 import { loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
-import { API_LEVEL } from "@moonlight-mod/core/extension";
 import { installWebpackPatcher } from "@moonlight-mod/core/patch";
+import { constants } from "@moonlight-mod/types";
 import { installStyles } from "@moonlight-mod/core/styles";
 import Logger from "@moonlight-mod/core/util/logger";
 import LunAST from "@moonlight-mod/lunast";
@@ -11,7 +11,7 @@ import loadMappings from "@moonlight-mod/mappings";
   const logger = new Logger("web-preload");
 
   window.moonlight = {
-    apiLevel: API_LEVEL,
+    apiLevel: constants.apiLevel,
     unpatched: new Set(),
     pendingModules: new Set(),
     enabledExtensions: new Set(),

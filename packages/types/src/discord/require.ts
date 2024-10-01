@@ -1,11 +1,4 @@
-import {
-  Spacepack,
-  CommonReact,
-  CommonFlux,
-  Settings,
-  CommonComponents,
-  CommonFluxDispatcher
-} from "../coreExtensions";
+import { Spacepack, Settings, CommonComponents } from "../coreExtensions";
 import { ContextMenu, EvilItemParser } from "../coreExtensions/contextMenu";
 import { Markdown } from "../coreExtensions/markdown";
 
@@ -16,11 +9,6 @@ declare function WebpackRequire(id: "spacepack_spacepack"): {
 };
 
 declare function WebpackRequire(id: "common_components"): CommonComponents;
-declare function WebpackRequire(id: "common_flux"): CommonFlux;
-declare function WebpackRequire(
-  id: "common_fluxDispatcher"
-): CommonFluxDispatcher;
-declare function WebpackRequire(id: "common_react"): CommonReact;
 
 declare function WebpackRequire(id: "settings_settings"): {
   Settings: Settings;

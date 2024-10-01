@@ -4,7 +4,7 @@ const logLevels = Object.values(LogLevel).filter(
   (v) => typeof v === "string"
 ) as string[];
 
-import React from "@moonlight-mod/wp/common_react";
+import React from "@moonlight-mod/wp/discord/packages/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import {
   FormDivider,

@@ -1,12 +1,11 @@
-import { FluxDefault, Store } from "./discord/common/Flux";
 import { CommonComponents as CommonComponents_ } from "./coreExtensions/components";
-import { Dispatcher } from "flux";
 import React, { ReactElement } from "react";
 import {
   WebpackModule,
   WebpackModuleFunc,
   WebpackRequireType
 } from "./discord";
+import type { Store } from "@moonlight-mod/mappings/discord/packages/flux";
 
 export type Spacepack = {
   inspect: (module: number | string) => WebpackModuleFunc | null;
@@ -73,32 +72,7 @@ export type Settings = {
   _mutateSections: (sections: SettingsSection[]) => SettingsSection[];
 };
 
-export type CommonReact = typeof import("react");
-export type CommonFlux = FluxDefault;
 export type CommonComponents = CommonComponents_; // lol
-export type CommonFluxDispatcher = Dispatcher<any> & {
-  dispatch: (payload: any) => void;
-  isDispatching: () => boolean;
-
-  addInterceptor: (interceptor: (event: any) => boolean | undefined) => void;
-
-  flushWaitQueue: () => void;
-  wait: (callback: () => void) => void;
-
-  subscribe: (eventType: string, callback: (event: any) => void) => void;
-  unsubscribe: (eventType: string, callback: (event: any) => void) => void;
-
-  register: (
-    name: string,
-    actionHandlers: Record<string, (event: any) => void>,
-    storeDidChange: (event: any) => void,
-    band: number,
-    token: string
-  ) => number;
-
-  createToken: () => string;
-  addDependencies: (id: string, deps: string[]) => void;
-};
 
 export * as Markdown from "./coreExtensions/markdown";
 export * as ContextMenu from "./coreExtensions/contextMenu";

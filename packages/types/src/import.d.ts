@@ -10,25 +10,7 @@ declare module "@moonlight-mod/wp/common_components" {
   export = CommonComponent;
 }
 
-declare module "@moonlight-mod/wp/common_flux" {
-  import { CoreExtensions } from "@moonlight-mod/types";
-  const Flux: CoreExtensions.CommonFlux;
-  // FIXME: This is wrong, the default export differs from the named exports.
-  export = Flux;
-}
-
-declare module "@moonlight-mod/wp/common_fluxDispatcher" {
-  import { CoreExtensions } from "@moonlight-mod/types";
-  const Dispatcher: CoreExtensions.CommonFluxDispatcher;
-  export default Dispatcher;
-}
-
 declare module "@moonlight-mod/wp/common_stores";
-
-declare module "@moonlight-mod/wp/common_react" {
-  import React from "react";
-  export = React;
-}
 
 declare module "@moonlight-mod/wp/settings_settings" {
   import { CoreExtensions } from "@moonlight-mod/types";

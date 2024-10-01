@@ -1,7 +1,7 @@
 import { ExtensionTag } from "@moonlight-mod/types";
 import { MoonbaseExtension } from "../../../types";
 
-import React from "@moonlight-mod/wp/common_react";
+import React from "@moonlight-mod/wp/discord/packages/react";
 import CommonComponents from "@moonlight-mod/wp/common_components";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 

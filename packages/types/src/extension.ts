@@ -101,7 +101,7 @@ export type Patch = {
 };
 
 export type ExplicitExtensionDependency = {
-  ext: string;
+  ext?: string;
   id: string;
 };
 

@@ -1,4 +1,4 @@
-import Flux from "@moonlight-mod/wp/common_flux";
+import Flux from "@moonlight-mod/wp/discord/packages/flux";
 
 module.exports = new Proxy(
   {},

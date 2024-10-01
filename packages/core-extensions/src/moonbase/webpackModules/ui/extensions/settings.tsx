@@ -9,9 +9,9 @@ import {
 
 import { ExtensionState, MoonbaseExtension } from "../../../types";
 
-import React from "@moonlight-mod/wp/common_react";
+import React from "@moonlight-mod/wp/discord/packages/react";
 import CommonComponents from "@moonlight-mod/wp/common_components";
-import * as Flux from "@moonlight-mod/wp/common_flux";
+import Flux from "@moonlight-mod/wp/discord/packages/flux";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 type SettingsProps = {

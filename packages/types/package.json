@@ -11,8 +11,7 @@
   "dependencies": {
     "@moonlight-mod/lunast": "git+https://github.com/moonlight-mod/lunast.git",
     "@moonlight-mod/moonmap": "git+https://github.com/moonlight-mod/moonmap.git",
-    "@types/flux": "^3.1.12",
-    "@types/react": "^18.2.22",
+    "@moonlight-mod/mappings": "git+https://github.com/moonlight-mod/mappings.git",
     "csstype": "^3.1.2",
     "standalone-electron-types": "^1.0.0"
   }

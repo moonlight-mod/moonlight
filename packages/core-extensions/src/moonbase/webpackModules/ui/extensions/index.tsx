@@ -3,9 +3,9 @@ import { ExtensionState } from "../../../types";
 import FilterBar, { Filter, defaultFilter } from "./filterBar";
 import ExtensionCard from "./card";
 
-import React from "@moonlight-mod/wp/common_react";
+import React from "@moonlight-mod/wp/discord/packages/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import * as Flux from "@moonlight-mod/wp/common_flux";
+import Flux from "@moonlight-mod/wp/discord/packages/flux";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 

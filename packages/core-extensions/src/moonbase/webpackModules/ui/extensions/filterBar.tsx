@@ -1,8 +1,8 @@
 import { tagNames } from "./info";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import React from "@moonlight-mod/wp/common_react";
-import * as Flux from "@moonlight-mod/wp/common_flux";
+import React from "@moonlight-mod/wp/discord/packages/react";
+import Flux from "@moonlight-mod/wp/discord/packages/flux";
 import { WindowStore } from "@moonlight-mod/wp/common_stores";
 import {
   Button,

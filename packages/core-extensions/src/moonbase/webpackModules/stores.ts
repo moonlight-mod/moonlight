@@ -1,7 +1,7 @@
 import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
 import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
-import Flux from "@moonlight-mod/wp/common_flux";
-import Dispatcher from "@moonlight-mod/wp/common_fluxDispatcher";
+import Flux from "@moonlight-mod/wp/discord/packages/flux";
+import { Dispatcher } from "@moonlight-mod/wp/discord/Dispatcher";
 
 const natives: MoonbaseNatives = moonlight.getNatives("moonbase");
 const logger = moonlight.getLogger("moonbase");

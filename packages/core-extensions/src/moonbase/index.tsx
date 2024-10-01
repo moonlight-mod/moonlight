@@ -3,15 +3,15 @@ import { ExtensionWebExports } from "@moonlight-mod/types";
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {
     dependencies: [
-      { ext: "common", id: "flux" },
-      { ext: "common", id: "fluxDispatcher" }
+      { id: "discord/packages/flux" },
+      { id: "discord/Dispatcher" }
     ]
   },
 
   ui: {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
-      { ext: "common", id: "react" },
+      { id: "discord/packages/react" },
       { ext: "common", id: "components" },
       { ext: "moonbase", id: "stores" },
       "Masks.PANEL_BUTTON",
@@ -25,7 +25,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
       { ext: "settings", id: "settings" },
-      { ext: "common", id: "react" },
+      { id: "discord/packages/react" },
       { ext: "moonbase", id: "ui" }
     ],
     entrypoint: true
