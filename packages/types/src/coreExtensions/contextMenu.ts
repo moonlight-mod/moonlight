@@ -27,44 +27,49 @@ export type MenuGroup = React.FunctionComponent<{
   color?: string;
   children: React.ReactComponentElement<MenuElement>[];
 }>;
-export type MenuItem = React.FunctionComponent<{
-  id: any;
-  dontCloseOnActionIfHoldingShiftKey?: boolean;
-} & ({
-  label: string;
-  subtext?: string;
-  color?: string;
-  hint?: string;
-  disabled?: boolean;
-  icon?: any;
-  showIconFirst?: boolean;
-  imageUrl?: string;
+export type MenuItem = React.FunctionComponent<
+  {
+    id: any;
+    dontCloseOnActionIfHoldingShiftKey?: boolean;
+  } & (
+    | {
+        label: string;
+        subtext?: string;
+        color?: string;
+        hint?: string;
+        disabled?: boolean;
+        icon?: any;
+        showIconFirst?: boolean;
+        imageUrl?: string;
 
-  className?: string;
-  focusedClassName?: string;
-  subMenuIconClassName?: string;
+        className?: string;
+        focusedClassName?: string;
+        subMenuIconClassName?: string;
 
-  action?: () => void;
-  onFocus?: () => void;
+        action?: () => void;
+        onFocus?: () => void;
 
-  iconProps?: any;
-  sparkle?: any;
+        iconProps?: any;
+        sparkle?: any;
 
-  children?: React.ReactComponentElement<MenuElement>[];
-  onChildrenScroll?: any;
-  childRowHeight?: any;
-  listClassName?: string;
-  subMenuClassName?: string;
-} | {
-  color?: string;
-  disabled?: boolean;
-  keepItemStyles?: boolean;
+        children?: React.ReactComponentElement<MenuElement>[];
+        onChildrenScroll?: any;
+        childRowHeight?: any;
+        listClassName?: string;
+        subMenuClassName?: string;
+      }
+    | {
+        color?: string;
+        disabled?: boolean;
+        keepItemStyles?: boolean;
 
-  action?: () => void;
+        action?: () => void;
 
-  render: any;
-  navigable?: boolean;
-})>;
+        render: any;
+        navigable?: boolean;
+      }
+  )
+>;
 export type MenuCheckboxItem = React.FunctionComponent<{
   id: any;
   label: string;
@@ -84,19 +89,24 @@ export type MenuRadioItem = React.FunctionComponent<{
   disabled?: boolean;
   action?: () => void;
 }>;
-export type MenuControlItem = React.FunctionComponent<{
-  id: any;
-  label: string;
-  color?: string;
-  disabled?: boolean;
-  showDefaultFocus?: boolean;
-} & ({
-  control: any;
-} | {
-  control?: undefined;
-  interactive?: boolean;
-  children?: React.ReactComponentElement<MenuElement>[];
-})>;
+export type MenuControlItem = React.FunctionComponent<
+  {
+    id: any;
+    label: string;
+    color?: string;
+    disabled?: boolean;
+    showDefaultFocus?: boolean;
+  } & (
+    | {
+        control: any;
+      }
+    | {
+        control?: undefined;
+        interactive?: boolean;
+        children?: React.ReactComponentElement<MenuElement>[];
+      }
+  )
+>;
 /* eslint-disable prettier/prettier */
 
 export type ContextMenu = {

@@ -5,8 +5,7 @@ export const patches: Patch[] = [
     find: "Menu API only allows Items and groups of Items as children.",
     replace: [
       {
-        match:
-          /(?<=let{navId[^}]+?}=(.),(.)=function .\(.\){.+(?=,.=function))/,
+        match: /(?<=let{navId[^}]+?}=(.),(.)=.\(.\))/,
         replacement: (_, props, items) =>
           `,__contextMenu=!${props}.__contextMenu_evilMenu&&require("contextMenu_contextMenu")._patchMenu(${props}, ${items})`
       }
