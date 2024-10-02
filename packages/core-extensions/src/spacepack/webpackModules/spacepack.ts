@@ -21,6 +21,10 @@ export const spacepack: Spacepack = {
       module = module.toString();
     }
 
+    if (module in moonlight.moonmap.modules) {
+      module = moonlight.moonmap.modules[module];
+    }
+
     if (!(module in modules)) {
       return null;
     }
