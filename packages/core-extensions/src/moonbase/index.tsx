@@ -12,7 +12,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
       { id: "discord/packages/react" },
-      { ext: "common", id: "components" },
+      { id: "discord/components/common/index" },
       { ext: "moonbase", id: "stores" },
       "Masks.PANEL_BUTTON",
       "renderArtisanalHack(){",

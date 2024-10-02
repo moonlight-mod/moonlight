@@ -1,6 +1,9 @@
 import React from "@moonlight-mod/wp/discord/packages/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { Text, TabBar } from "@moonlight-mod/wp/common_components";
+import {
+  Text,
+  TabBar
+} from "@moonlight-mod/wp/discord/components/common/index";
 import Flux from "@moonlight-mod/wp/discord/packages/flux";
 import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
 

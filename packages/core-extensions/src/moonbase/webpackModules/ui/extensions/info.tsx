@@ -2,7 +2,7 @@ import { ExtensionTag } from "@moonlight-mod/types";
 import { MoonbaseExtension } from "../../../types";
 
 import React from "@moonlight-mod/wp/discord/packages/react";
-import CommonComponents from "@moonlight-mod/wp/common_components";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 type Dependency = {
@@ -55,16 +55,14 @@ function InfoSection({
         marginRight: "1em"
       }}
     >
-      <CommonComponents.Text
+      <Components.Text
         variant="eyebrow"
         className={UserInfoClasses.userInfoSectionHeader}
       >
         {title}
-      </CommonComponents.Text>
+      </Components.Text>
 
-      <CommonComponents.Text variant="text-sm/normal">
-        {children}
-      </CommonComponents.Text>
+      <Components.Text variant="text-sm/normal">{children}</Components.Text>
     </div>
   );
 }

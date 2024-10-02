@@ -2,9 +2,10 @@ import { ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import CommonComponents from "@moonlight-mod/wp/common_components";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/discord/packages/react";
 import Flux from "@moonlight-mod/wp/discord/packages/flux";
+import { Flex } from "@moonlight-mod/wp/discord/uikit/Flex";
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
@@ -17,7 +18,7 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { DownloadIcon, TrashIcon, CircleWarningIcon } = CommonComponents;
+const { DownloadIcon, TrashIcon, CircleWarningIcon } = Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports(
@@ -25,6 +26,20 @@ const TabBarClasses = spacepack.findByExports(
   "tabBarItem",
   "headerContentWrapper"
 )[0].exports;
+
+const CardClasses: Record<string, string> = {};
+spacepack
+  .lazyLoad(
+    "renderArtisanalHack",
+    /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"ChannelSettings"/,
+    /webpackId:(\d+),name:"ChannelSettings"/
+  )
+  .then(() =>
+    Object.assign(
+      CardClasses,
+      spacepack.findByExports("card", "cardHeader", "inModal")[0].exports
+    )
+  );
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -46,16 +61,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   // Why it work like that :sob:
   if (ext == null) return <></>;
 
-  const {
-    Card,
-    CardClasses,
-    Flex,
-    Text,
-    MarkdownParser,
-    Switch,
-    TabBar,
-    Button
-  } = CommonComponents;
+  const { Card, Text, Switch, TabBar, Button } = Components;
+  const { MarkupUtils } = require("discord/modules/markup/MarkupUtils");
 
   const tagline = ext.manifest?.meta?.tagline;
   const settings = ext.manifest?.settings;
@@ -72,9 +79,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           </Flex>
 
           {tagline != null && (
-            <Text variant="text-sm/normal">
-              {MarkdownParser.parse(tagline)}
-            </Text>
+            <Text variant="text-sm/normal">{MarkupUtils.parse(tagline)}</Text>
           )}
         </Flex>
 
@@ -127,7 +132,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 <PanelButton
                   icon={() => (
                     <CircleWarningIcon
-                      color={CommonComponents.tokens.colors.STATUS_DANGER}
+                      color={Components.tokens.colors.STATUS_DANGER}
                     />
                   )}
                   onClick={() => window.location.reload()}
@@ -195,7 +200,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
           {tab === ExtensionPage.Description && (
             <Text variant="text-md/normal">
-              {MarkdownParser.parse(description ?? "*No description*")}
+              {MarkupUtils.parse(description ?? "*No description*")}
             </Text>
           )}
           {tab === ExtensionPage.Settings && <Settings ext={ext} />}

@@ -14,8 +14,8 @@ import {
   MenuGroup,
   MenuCheckboxItem,
   MenuItem
-} from "@moonlight-mod/wp/common_components";
-import CommonComponents from "@moonlight-mod/wp/common_components";
+} from "@moonlight-mod/wp/discord/components/common/index";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 export enum Filter {
   Core = 1 << 0,
@@ -52,7 +52,7 @@ const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
   .Z;
 
 const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } =
-  CommonComponents;
+  Components;
 
 function toggleTag(
   selectedTags: Set<string>,

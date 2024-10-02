@@ -10,9 +10,10 @@ import {
 import { ExtensionState, MoonbaseExtension } from "../../../types";
 
 import React from "@moonlight-mod/wp/discord/packages/react";
-import CommonComponents from "@moonlight-mod/wp/common_components";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import Flux from "@moonlight-mod/wp/discord/packages/flux";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { Flex } from "@moonlight-mod/wp/discord/uikit/Flex";
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -48,7 +49,7 @@ function useConfigEntry<T>(uniqueId: number, name: string) {
 }
 
 function Boolean({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormSwitch } = CommonComponents;
+  const { FormSwitch } = Components;
   const { value, displayName, description } = useConfigEntry<boolean>(
     ext.uniqueId,
     name
@@ -71,7 +72,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function Number({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, Slider } = CommonComponents;
+  const { FormItem, FormText, Slider } = Components;
   const { value, displayName, description } = useConfigEntry<number>(
     ext.uniqueId,
     name
@@ -99,7 +100,7 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function String({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextInput } = CommonComponents;
+  const { FormItem, FormText, TextInput } = Components;
   const { value, displayName, description } = useConfigEntry<string>(
     ext.uniqueId,
     name
@@ -122,7 +123,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextArea } = CommonComponents;
+  const { FormItem, FormText, TextArea } = Components;
   const { value, displayName, description } = useConfigEntry<string>(
     ext.uniqueId,
     name
@@ -147,7 +148,7 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function Select({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, SingleSelect } = CommonComponents;
+  const { FormItem, FormText, SingleSelect } = Components;
   const { value, displayName, description } = useConfigEntry<string>(
     ext.uniqueId,
     name
@@ -179,7 +180,7 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
 
 function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, Select, useVariableSelect, multiSelect } =
-    CommonComponents;
+    Components;
   const { value, displayName, description } = useConfigEntry<string | string[]>(
     ext.uniqueId,
     name
@@ -219,7 +220,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
 
 const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
   .exports;
-const CircleXIcon = CommonComponents.CircleXIcon;
+const CircleXIcon = Components.CircleXIcon;
 function RemoveEntryButton({
   onClick,
   disabled
@@ -227,7 +228,7 @@ function RemoveEntryButton({
   onClick: () => void;
   disabled: boolean;
 }) {
-  const { Tooltip, Clickable } = CommonComponents;
+  const { Tooltip, Clickable } = Components;
   return (
     <div className={RemoveButtonClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
@@ -246,7 +247,7 @@ function RemoveEntryButton({
 }
 
 function List({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
+  const { FormItem, FormText, TextInput, Button } = Components;
   const { value, displayName, description } = useConfigEntry<string[]>(
     ext.uniqueId,
     name
@@ -312,7 +313,7 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextInput, Button, Flex } = CommonComponents;
+  const { FormItem, FormText, TextInput, Button, Flex } = Components;
   const { value, displayName, description } = useConfigEntry<
     Record<string, string>
   >(ext.uniqueId, name);
@@ -406,7 +407,7 @@ function Setting({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 export default function Settings({ ext }: { ext: MoonbaseExtension }) {
-  const { Flex } = CommonComponents;
+  const { Flex } = Components;
   return (
     <Flex className="moonbase-settings" direction={Flex.Direction.VERTICAL}>
       {Object.entries(ext.manifest.settings!).map(([name, setting]) => (

@@ -3,7 +3,7 @@ import {
   WebpackModuleFunc,
   WebpackRequireType
 } from "@moonlight-mod/types";
-import { Spacepack } from "@moonlight-mod/types/coreExtensions";
+import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
 
 const webpackRequire = require as unknown as WebpackRequireType;
 const cache = webpackRequire.c;

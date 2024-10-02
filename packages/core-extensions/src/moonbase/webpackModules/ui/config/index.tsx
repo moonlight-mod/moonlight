@@ -12,13 +12,13 @@ import {
   FormText,
   FormSwitch,
   TextInput,
-  Flex,
   Button,
   SingleSelect,
   Tooltip,
   Clickable
-} from "@moonlight-mod/wp/common_components";
-import CommonComponents from "@moonlight-mod/wp/common_components";
+} from "@moonlight-mod/wp/discord/components/common/index";
+import { Flex } from "@moonlight-mod/wp/discord/uikit/Flex";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
@@ -38,7 +38,7 @@ spacepack
         .exports)
   );
 
-const { CircleXIcon } = CommonComponents;
+const { CircleXIcon } = Components;
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (
     <div className={RemoveButtonClasses.removeButtonContainer}>
