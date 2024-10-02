@@ -1,70 +1,102 @@
-export type MoonlightEventCallback = (data: string) => void;
+import { MoonlightEventEmitter } from "@moonlight-mod/types/core/event";
 
-export interface MoonlightEventEmitter {
-  dispatchEvent: (id: string, data: string) => void;
-  addEventListener: (id: string, cb: MoonlightEventCallback) => void;
-  removeEventListener: (id: string, cb: MoonlightEventCallback) => void;
-}
-
-function nodeMethod(): MoonlightEventEmitter {
+function nodeMethod<
+  EventId extends string = string,
+  EventData = Record<EventId, any>
+>(): MoonlightEventEmitter<EventId, EventData> {
   const EventEmitter = require("events");
   const eventEmitter = new EventEmitter();
-  const listeners = new Map<MoonlightEventCallback, (...args: any[]) => void>();
+  const listeners = new Map<(data: EventData) => void, (e: Event) => void>();
 
   return {
-    dispatchEvent: (id: string, data: string) => {
-      eventEmitter.emit(id, data);
+    dispatchEvent: <Id extends keyof EventData>(
+      id: Id,
+      data: EventData[Id]
+    ) => {
+      eventEmitter.emit(id as string, data);
     },
 
-    addEventListener: (id: string, cb: (data: string) => void) => {
-      if (listeners.has(cb)) return;
+    addEventListener: <Id extends keyof EventData>(
+      id: Id,
+      cb: (data: EventData[Id]) => void
+    ) => {
+      const untyped = cb as (data: EventData) => void;
+      if (listeners.has(untyped)) return;
 
-      function listener(data: string) {
-        cb(data);
+      function listener(e: Event) {
+        const event = e as CustomEvent<string>;
+        cb(event as EventData[Id]);
       }
 
-      listeners.set(cb, listener);
-      eventEmitter.on(id, listener);
+      listeners.set(untyped, listener);
+      eventEmitter.on(id as string, listener);
     },
 
-    removeEventListener: (id: string, cb: (data: string) => void) => {
-      const listener = listeners.get(cb);
+    removeEventListener: <Id extends keyof EventData>(
+      id: Id,
+      cb: (data: EventData[Id]) => void
+    ) => {
+      const untyped = cb as (data: EventData) => void;
+      const listener = listeners.get(untyped);
       if (listener == null) return;
-      listeners.delete(cb);
-      eventEmitter.off(id, listener);
+      listeners.delete(untyped);
+      eventEmitter.off(id as string, listener);
     }
   };
 }
 
-export function createEventEmitter(): MoonlightEventEmitter {
-  webPreload: {
-    const eventEmitter = new EventTarget();
-    const listeners = new Map<MoonlightEventCallback, (e: Event) => void>();
+function webMethod<
+  EventId extends string = string,
+  EventData = Record<EventId, any>
+>(): MoonlightEventEmitter<EventId, EventData> {
+  const eventEmitter = new EventTarget();
+  const listeners = new Map<(data: EventData) => void, (e: Event) => void>();
 
-    return {
-      dispatchEvent: (id: string, data: string) => {
-        eventEmitter.dispatchEvent(new CustomEvent(id, { detail: data }));
-      },
+  return {
+    dispatchEvent: <Id extends keyof EventData>(
+      id: Id,
+      data: EventData[Id]
+    ) => {
+      eventEmitter.dispatchEvent(
+        new CustomEvent(id as string, { detail: data })
+      );
+    },
 
-      addEventListener: (id: string, cb: (data: string) => void) => {
-        if (listeners.has(cb)) return;
+    addEventListener: <Id extends keyof EventData>(
+      id: Id,
+      cb: (data: EventData[Id]) => void
+    ) => {
+      const untyped = cb as (data: EventData) => void;
+      if (listeners.has(untyped)) return;
 
-        function listener(e: Event) {
-          const event = e as CustomEvent<string>;
-          cb(event.detail);
-        }
-
-        listeners.set(cb, listener);
-        eventEmitter.addEventListener(id, listener);
-      },
-
-      removeEventListener: (id: string, cb: (data: string) => void) => {
-        const listener = listeners.get(cb);
-        if (listener == null) return;
-        listeners.delete(cb);
-        eventEmitter.removeEventListener(id, listener);
+      function listener(e: Event) {
+        const event = e as CustomEvent<string>;
+        cb(event.detail as EventData[Id]);
       }
-    };
+
+      listeners.set(untyped, listener);
+      eventEmitter.addEventListener(id as string, listener);
+    },
+
+    removeEventListener: <Id extends keyof EventData>(
+      id: Id,
+      cb: (data: EventData[Id]) => void
+    ) => {
+      const untyped = cb as (data: EventData) => void;
+      const listener = listeners.get(untyped);
+      if (listener == null) return;
+      listeners.delete(untyped);
+      eventEmitter.removeEventListener(id as string, listener);
+    }
+  };
+}
+
+export function createEventEmitter<
+  EventId extends string = string,
+  EventData = Record<EventId, any>
+>(): MoonlightEventEmitter<EventId, EventData> {
+  webPreload: {
+    return webMethod();
   }
 
   nodePreload: {
