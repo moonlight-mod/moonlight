@@ -3,9 +3,6 @@
   "private": true,
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
-    "@moonlight-mod/types": "workspace:*",
-    "@moonlight-mod/lunast": "git+https://github.com/moonlight-mod/lunast.git",
-    "@moonlight-mod/mappings": "github:moonlight-mod/mappings",
-    "@moonlight-mod/moonmap": "git+https://github.com/moonlight-mod/moonmap.git"
+    "@moonlight-mod/types": "workspace:*"
   }
 }

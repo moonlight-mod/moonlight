@@ -5,8 +5,6 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "@moonlight-mod/types": "workspace:*",
-    "@moonlight-mod/lunast": "git+https://github.com/moonlight-mod/lunast.git",
-    "@moonlight-mod/moonmap": "git+https://github.com/moonlight-mod/moonmap.git"
+    "@moonlight-mod/types": "workspace:*"
   }
 }
