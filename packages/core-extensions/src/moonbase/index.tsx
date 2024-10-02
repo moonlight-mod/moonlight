@@ -11,7 +11,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
   ui: {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
-      { id: "discord/packages/react" },
+      { id: "react" },
       { id: "discord/components/common/index" },
       { ext: "moonbase", id: "stores" },
       "Masks.PANEL_BUTTON",
@@ -25,7 +25,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
       { ext: "settings", id: "settings" },
-      { id: "discord/packages/react" },
+      { id: "react" },
       { ext: "moonbase", id: "ui" }
     ],
     entrypoint: true

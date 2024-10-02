@@ -1,8 +1,8 @@
 import { tagNames } from "./info";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import React from "@moonlight-mod/wp/discord/packages/react";
-import Flux from "@moonlight-mod/wp/discord/packages/flux";
+import * as React from "@moonlight-mod/wp/react";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { WindowStore } from "@moonlight-mod/wp/common_stores";
 import {
   Button,
@@ -51,6 +51,7 @@ spacepack
 const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
   .Z;
 
+// FIXME: type component keys
 const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } =
   Components;
 
@@ -217,7 +218,7 @@ export default function FilterBar({
   selectedTags: Set<string>;
   setSelectedTags: (tags: Set<string>) => void;
 }) {
-  const windowSize = Flux.useStateFromStores([WindowStore], () =>
+  const windowSize = useStateFromStores([WindowStore], () =>
     WindowStore.windowSize()
   );
 

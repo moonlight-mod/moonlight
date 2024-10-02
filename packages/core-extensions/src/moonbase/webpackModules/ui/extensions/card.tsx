@@ -3,9 +3,10 @@ import { ExtensionLoadSource } from "@moonlight-mod/types";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
-import React from "@moonlight-mod/wp/discord/packages/react";
-import Flux from "@moonlight-mod/wp/discord/packages/flux";
-import { Flex } from "@moonlight-mod/wp/discord/uikit/Flex";
+import React from "@moonlight-mod/wp/react";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
@@ -45,7 +46,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
   const [restartNeeded, setRestartNeeded] = React.useState(false);
 
-  const { ext, enabled, busy, update, conflicting } = Flux.useStateFromStores(
+  const { ext, enabled, busy, update, conflicting } = useStateFromStores(
     [MoonbaseSettingsStore],
     () => {
       return {
@@ -62,7 +63,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   if (ext == null) return <></>;
 
   const { Card, Text, Switch, TabBar, Button } = Components;
-  const { MarkupUtils } = require("discord/modules/markup/MarkupUtils");
 
   const tagline = ext.manifest?.meta?.tagline;
   const settings = ext.manifest?.settings;

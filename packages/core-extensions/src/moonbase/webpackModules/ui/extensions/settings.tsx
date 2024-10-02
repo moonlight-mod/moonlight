@@ -9,11 +9,13 @@ import {
 
 import { ExtensionState, MoonbaseExtension } from "../../../types";
 
-import React from "@moonlight-mod/wp/discord/packages/react";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
-import Flux from "@moonlight-mod/wp/discord/packages/flux";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { Flex } from "@moonlight-mod/wp/discord/uikit/Flex";
+import React from "@moonlight-mod/wp/react";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+
+import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -26,10 +28,8 @@ type SettingsComponent = React.ComponentType<SettingsProps>;
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
-
 function useConfigEntry<T>(uniqueId: number, name: string) {
-  return Flux.useStateFromStores(
+  return useStateFromStores(
     [MoonbaseSettingsStore],
     () => {
       return {
@@ -220,7 +220,10 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
 
 const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
   .exports;
-const CircleXIcon = Components.CircleXIcon;
+
+// FIXME: type component keys
+const { CircleXIcon } = Components;
+
 function RemoveEntryButton({
   onClick,
   disabled
@@ -313,7 +316,7 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextInput, Button, Flex } = Components;
+  const { FormItem, FormText, TextInput, Button } = Components;
   const { value, displayName, description } = useConfigEntry<
     Record<string, string>
   >(ext.uniqueId, name);
@@ -407,7 +410,6 @@ function Setting({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 export default function Settings({ ext }: { ext: MoonbaseExtension }) {
-  const { Flex } = Components;
   return (
     <Flex className="moonbase-settings" direction={Flex.Direction.VERTICAL}>
       {Object.entries(ext.manifest.settings!).map(([name, setting]) => (

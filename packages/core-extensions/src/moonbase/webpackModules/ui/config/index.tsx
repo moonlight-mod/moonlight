@@ -4,7 +4,7 @@ const logLevels = Object.values(LogLevel).filter(
   (v) => typeof v === "string"
 ) as string[];
 
-import React from "@moonlight-mod/wp/discord/packages/react";
+import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import {
   FormDivider,
@@ -17,7 +17,7 @@ import {
   Tooltip,
   Clickable
 } from "@moonlight-mod/wp/discord/components/common/index";
-import { Flex } from "@moonlight-mod/wp/discord/uikit/Flex";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
@@ -38,7 +38,9 @@ spacepack
         .exports)
   );
 
+// FIXME: type component keys
 const { CircleXIcon } = Components;
+
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (
     <div className={RemoveButtonClasses.removeButtonContainer}>
