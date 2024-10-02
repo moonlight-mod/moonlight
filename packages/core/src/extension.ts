@@ -45,7 +45,7 @@ function loadDetectedExtensions(
       fs.readFileSync(manifestPath, "utf8")
     );
     const level = manifest.apiLevel ?? 1;
-    if (level < constants.apiLevel) {
+    if (level !== constants.apiLevel) {
       continue;
     }
 

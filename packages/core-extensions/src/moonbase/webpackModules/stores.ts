@@ -47,7 +47,7 @@ class MoonbaseSettingsStore extends Store<any> {
         try {
           for (const ext of exts) {
             const level = ext.apiLevel ?? 1;
-            if (level < window.moonlight.apiLevel) continue;
+            if (level !== window.moonlight.apiLevel) continue;
 
             const uniqueId = this.extensionIndex++;
             const extensionData = {
