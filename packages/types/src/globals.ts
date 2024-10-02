@@ -9,6 +9,7 @@ import type {
 import type EventEmitter from "events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
+import { EventPayloads, EventType, MoonlightEventEmitter } from "./core/event";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -42,6 +43,15 @@ export type MoonlightWeb = {
   pendingModules: Set<IdentifiedWebpackModule>;
   enabledExtensions: Set<string>;
   apiLevel: number;
+  events: MoonlightEventEmitter<EventType, EventPayloads>;
+  patchingInternals: {
+    onModuleLoad: (
+      moduleId: string | string[],
+      callback: (moduleId: string) => void
+    ) => void;
+    registerPatch: (patch: IdentifiedPatch) => void;
+    registerWebpackModule: (module: IdentifiedWebpackModule) => void;
+  };
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;

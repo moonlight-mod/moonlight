@@ -11,12 +11,16 @@ import {
 import Logger from "./util/logger";
 import calculateDependencies, { Dependency } from "./util/dependency";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
+import { EventType } from "@moonlight-mod/types/core/event";
 
 const logger = new Logger("core/patch");
 
 // Can't be Set because we need splice
 const patches: IdentifiedPatch[] = [];
 let webpackModules: Set<IdentifiedWebpackModule> = new Set();
+
+const moduleLoadSubscriptions: Map<string, ((moduleId: string) => void)[]> =
+  new Map();
 
 export function registerPatch(patch: IdentifiedPatch) {
   patches.push(patch);
@@ -27,6 +31,25 @@ export function registerWebpackModule(wp: IdentifiedWebpackModule) {
   webpackModules.add(wp);
   if (wp.dependencies?.length) {
     moonlight.pendingModules.add(wp);
+  }
+}
+
+export function onModuleLoad(
+  module: string | string[],
+  callback: (moduleId: string) => void
+): void {
+  let moduleIds = module;
+
+  if (typeof module === "string") {
+    moduleIds = [module];
+  }
+
+  for (const moduleId of moduleIds) {
+    if (moduleLoadSubscriptions.has(moduleId)) {
+      moduleLoadSubscriptions.get(moduleId)?.push(callback);
+    } else {
+      moduleLoadSubscriptions.set(moduleId, [callback]);
+    }
   }
 }
 
@@ -189,6 +212,21 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         entry[id].__moonlight = true;
       }
     }
+
+    // Dispatch module load event subscription
+    if (moduleLoadSubscriptions.has(id)) {
+      const loadCallbacks = moduleLoadSubscriptions.get(id)!;
+      for (const callback of loadCallbacks) {
+        try {
+          callback(id);
+        } catch (e) {
+          logger.error("Error in module load subscription: " + e);
+        }
+      }
+      moduleLoadSubscriptions.delete(id);
+    }
+
+    moduleCache[id] = moduleString;
   }
 }
 
@@ -343,6 +381,12 @@ export async function installWebpackPatcher() {
       const realPush = jsonp.push;
       if (jsonp.push.__moonlight !== true) {
         jsonp.push = (items) => {
+          moonlight.events.dispatchEvent(EventType.ChunkLoad, {
+            chunkId: items[0],
+            modules: items[1],
+            require: items[2]
+          });
+
           patchModules(items[1]);
 
           try {
@@ -385,7 +429,11 @@ export async function installWebpackPatcher() {
     set(modules: any) {
       const { stack } = new Error();
       if (stack!.includes("/assets/") && !Array.isArray(modules)) {
+        moonlight.events.dispatchEvent(EventType.ChunkLoad, {
+          modules: modules
+        });
         patchModules(modules);
+
         if (!window.webpackChunkdiscord_app)
           window.webpackChunkdiscord_app = [];
         injectModules(modules);

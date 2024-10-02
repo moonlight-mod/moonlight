@@ -10,6 +10,7 @@ import { registerPatch, registerWebpackModule } from "../patch";
 import calculateDependencies from "../util/dependency";
 import { createEventEmitter } from "../util/event";
 import { registerStyles } from "../styles";
+import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
 
 const logger = new Logger("core/extension/loader");
 
@@ -159,7 +160,7 @@ export async function loadProcessedExtensions({
   extensions,
   dependencyGraph
 }: ProcessedExtensions) {
-  const eventEmitter = createEventEmitter();
+  const eventEmitter = createEventEmitter<EventType, EventPayloads>();
   const finished: Set<string> = new Set();
 
   logger.trace(
@@ -181,11 +182,11 @@ export async function loadProcessedExtensions({
           }
 
           function done() {
-            eventEmitter.removeEventListener("ext-ready", cb);
+            eventEmitter.removeEventListener(EventType.ExtensionLoad, cb);
             r();
           }
 
-          eventEmitter.addEventListener("ext-ready", cb);
+          eventEmitter.addEventListener(EventType.ExtensionLoad, cb);
           if (finished.has(dep)) done();
         })
     );
@@ -201,7 +202,7 @@ export async function loadProcessedExtensions({
     await loadExt(ext);
 
     finished.add(ext.id);
-    eventEmitter.dispatchEvent("ext-ready", ext.id);
+    eventEmitter.dispatchEvent(EventType.ExtensionLoad, ext.id);
     logger.debug(`Loaded "${ext.id}"`);
   }
 
