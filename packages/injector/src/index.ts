@@ -15,6 +15,7 @@ import {
 } from "@moonlight-mod/core/extension/loader";
 import EventEmitter from "node:events";
 import { join, resolve } from "node:path";
+import persist from "@moonlight-mod/core/persist";
 
 const logger = new Logger("injector");
 
@@ -232,6 +233,10 @@ export async function inject(asarPath: string) {
   }
 
   if (isMoonlightDesktop) return;
+
+  if (!hasOpenAsar && !isMoonlightDesktop) {
+    persist(asarPath);
+  }
 
   // Need to do this instead of require() or it breaks require.main
   // @ts-expect-error Module internals
