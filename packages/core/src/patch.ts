@@ -6,7 +6,8 @@ import {
   IdentifiedWebpackModule,
   WebpackJsonp,
   WebpackJsonpEntry,
-  WebpackModuleFunc
+  WebpackModuleFunc,
+  WebpackRequireType
 } from "@moonlight-mod/types";
 import Logger from "./util/logger";
 import calculateDependencies, { Dependency } from "./util/dependency";
@@ -18,6 +19,7 @@ const logger = new Logger("core/patch");
 // Can't be Set because we need splice
 const patches: IdentifiedPatch[] = [];
 let webpackModules: Set<IdentifiedWebpackModule> = new Set();
+let webpackRequire: WebpackRequireType | null = null;
 
 const moduleLoadSubscriptions: Map<string, ((moduleId: string) => void)[]> =
   new Map();
@@ -336,6 +338,12 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
     inject = true;
   }
 
+  if (webpackRequire != null) {
+    for (const id of moonlight.moonmap.getLazyModules()) {
+      webpackRequire.e(id);
+    }
+  }
+
   if (inject) {
     logger.debug("Injecting modules:", modules, entrypoints);
     window.webpackChunkdiscord_app.push([
@@ -369,6 +377,16 @@ export async function installWebpackPatcher() {
 
   moonlight.lunast.setModuleSourceGetter(moduleSourceGetter);
   moonlight.moonmap.setModuleSourceGetter(moduleSourceGetter);
+
+  const wpRequireFetcher: WebpackModuleFunc = (module, exports, require) => {
+    webpackRequire = require;
+  };
+  wpRequireFetcher.__moonlight = true;
+  webpackModules.add({
+    id: "moonlight",
+    entrypoint: true,
+    run: wpRequireFetcher
+  });
 
   let realWebpackJsonp: WebpackJsonp | null = null;
   Object.defineProperty(window, "webpackChunkdiscord_app", {

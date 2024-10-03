@@ -7,6 +7,7 @@ import React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/IntegrationCard.css";
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
@@ -27,20 +28,6 @@ const TabBarClasses = spacepack.findByExports(
   "tabBarItem",
   "headerContentWrapper"
 )[0].exports;
-
-const CardClasses: Record<string, string> = {};
-spacepack
-  .lazyLoad(
-    "renderArtisanalHack",
-    /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"ChannelSettings"/,
-    /webpackId:(\d+),name:"ChannelSettings"/
-  )
-  .then(() =>
-    Object.assign(
-      CardClasses,
-      spacepack.findByExports("card", "cardHeader", "inModal")[0].exports
-    )
-  );
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -69,8 +56,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const description = ext.manifest?.meta?.description;
 
   return (
-    <Card editable={true} className={CardClasses.card}>
-      <div className={CardClasses.cardHeader}>
+    <Card editable={true} className={IntegrationCard.card}>
+      <div className={IntegrationCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
           <Flex direction={Flex.Direction.HORIZONTAL}>
             <Text variant="text-md/semibold">

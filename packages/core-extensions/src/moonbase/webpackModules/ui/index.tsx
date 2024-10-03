@@ -6,7 +6,6 @@ import {
 } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
-import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 
 import ExtensionsPage from "./extensions";
 import ConfigPage from "./config";
@@ -19,6 +18,7 @@ const { setSection, clearSubsection } = spacepack.findByExports(
   "setSection",
   "clearSubsection"
 )[0].exports.Z;
+const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
 export const pages: {
   id: string;

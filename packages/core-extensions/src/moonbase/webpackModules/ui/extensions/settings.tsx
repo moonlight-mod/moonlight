@@ -15,8 +15,6 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
-import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
-
 type SettingsProps = {
   ext: MoonbaseExtension;
   name: string;
@@ -27,6 +25,7 @@ type SettingsProps = {
 type SettingsComponent = React.ComponentType<SettingsProps>;
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
 function useConfigEntry<T>(uniqueId: number, name: string) {
   return useStateFromStores(

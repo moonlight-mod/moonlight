@@ -14,8 +14,8 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       { id: "react" },
       { id: "discord/components/common/index" },
       { ext: "moonbase", id: "stores" },
+      { id: "discord/modules/guild_settings/IntegrationCard.css" },
       "Masks.PANEL_BUTTON",
-      "renderArtisanalHack(){",
       '"Missing channel in Channel.openChannelContextMenu"',
       ".forumOrHome]:"
     ]

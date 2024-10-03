@@ -29,20 +29,14 @@ declare module "@moonlight-mod/wp/discord/packages/flux" {
   export = _;
 }
 
-declare module "@moonlight-mod/wp/react" {
-  import { MappedModules } from "@moonlight-mod/mappings";
-  const _: MappedModules.react;
-  export = _;
-}
-
 declare module "@moonlight-mod/wp/discord/uikit/Flex" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _: MappedModules["discord/uikit/Flex"];
   export = _;
 }
 
-declare module "@moonlight-mod/wp/discord/styles/shared/Margins.css" {
+declare module "@moonlight-mod/wp/react" {
   import { MappedModules } from "@moonlight-mod/mappings";
-  const _: MappedModules["discord/styles/shared/Margins.css"];
+  const _: MappedModules["react"];
   export = _;
 }
