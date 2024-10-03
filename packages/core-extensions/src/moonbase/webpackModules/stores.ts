@@ -1,12 +1,12 @@
 import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
 import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
-import Flux from "@moonlight-mod/wp/common_flux";
-import Dispatcher from "@moonlight-mod/wp/common_fluxDispatcher";
+import { Store } from "@moonlight-mod/wp/discord/packages/flux";
+import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 
 const natives: MoonbaseNatives = moonlight.getNatives("moonbase");
 const logger = moonlight.getLogger("moonbase");
 
-class MoonbaseSettingsStore extends Flux.Store<any> {
+class MoonbaseSettingsStore extends Store<any> {
   private origConfig: Config;
   private config: Config;
   private extensionIndex: number;
@@ -46,6 +46,9 @@ class MoonbaseSettingsStore extends Flux.Store<any> {
       for (const [repo, exts] of Object.entries(ret)) {
         try {
           for (const ext of exts) {
+            const level = ext.apiLevel ?? 1;
+            if (level !== window.moonlight.apiLevel) continue;
+
             const uniqueId = this.extensionIndex++;
             const extensionData = {
               id: ext.id,

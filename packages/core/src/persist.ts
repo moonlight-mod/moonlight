@@ -11,6 +11,16 @@ import Logger from "./util/logger";
 const logger = new Logger("core/persist");
 
 export default function persist(asarPath: string) {
+  try {
+    if (process.platform === "win32") {
+      persistWin32(asarPath);
+    }
+  } catch (e) {
+    logger.error(`Failed to persist moonlight: ${e}`);
+  }
+}
+
+function persistWin32(asarPath: string) {
   const updaterModule = require(join(asarPath, "common", "updater"));
   const updater = updaterModule.Updater;
 

@@ -1,5 +1,6 @@
 {
   "id": "quietLoggers",
+  "apiLevel": 2,
   "meta": {
     "name": "Quiet Loggers",
     "tagline": "Quiet errors on startup, and disable unnecesary loggers",

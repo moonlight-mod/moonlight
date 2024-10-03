@@ -1,7 +1,7 @@
 /// <reference types="standalone-electron-types" />
 /// <reference types="react" />
-/// <reference types="flux" />
 /// <reference types="./import" />
+/// <reference types="./mappings" />
 /* eslint-disable no-var */
 
 import {
@@ -18,6 +18,9 @@ export * as CoreExtensions from "./coreExtensions";
 export * from "./globals";
 export * from "./logger";
 export * as constants from "./constants";
+
+export type { AST } from "@moonlight-mod/lunast";
+export { ModuleExport, ModuleExportType } from "@moonlight-mod/moonmap";
 
 declare global {
   const MOONLIGHT_ENV: MoonlightEnv;

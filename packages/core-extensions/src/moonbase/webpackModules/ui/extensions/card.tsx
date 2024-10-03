@@ -1,10 +1,13 @@
 import { ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 
-import React from "@moonlight-mod/wp/common_react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import CommonComponents from "@moonlight-mod/wp/common_components";
-import * as Flux from "@moonlight-mod/wp/common_flux";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import React from "@moonlight-mod/wp/react";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/IntegrationCard.css";
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
@@ -17,7 +20,7 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { DownloadIcon, TrashIcon, CircleWarningIcon } = CommonComponents;
+const { DownloadIcon, TrashIcon, CircleWarningIcon } = Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports(
@@ -30,7 +33,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
   const [restartNeeded, setRestartNeeded] = React.useState(false);
 
-  const { ext, enabled, busy, update, conflicting } = Flux.useStateFromStores(
+  const { ext, enabled, busy, update, conflicting } = useStateFromStores(
     [MoonbaseSettingsStore],
     () => {
       return {
@@ -46,24 +49,15 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   // Why it work like that :sob:
   if (ext == null) return <></>;
 
-  const {
-    Card,
-    CardClasses,
-    Flex,
-    Text,
-    MarkdownParser,
-    Switch,
-    TabBar,
-    Button
-  } = CommonComponents;
+  const { Card, Text, Switch, TabBar, Button } = Components;
 
   const tagline = ext.manifest?.meta?.tagline;
   const settings = ext.manifest?.settings;
   const description = ext.manifest?.meta?.description;
 
   return (
-    <Card editable={true} className={CardClasses.card}>
-      <div className={CardClasses.cardHeader}>
+    <Card editable={true} className={IntegrationCard.card}>
+      <div className={IntegrationCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
           <Flex direction={Flex.Direction.HORIZONTAL}>
             <Text variant="text-md/semibold">
@@ -72,9 +66,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           </Flex>
 
           {tagline != null && (
-            <Text variant="text-sm/normal">
-              {MarkdownParser.parse(tagline)}
-            </Text>
+            <Text variant="text-sm/normal">{MarkupUtils.parse(tagline)}</Text>
           )}
         </Flex>
 
@@ -127,7 +119,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 <PanelButton
                   icon={() => (
                     <CircleWarningIcon
-                      color={CommonComponents.tokens.colors.STATUS_DANGER}
+                      color={Components.tokens.colors.STATUS_DANGER}
                     />
                   )}
                   onClick={() => window.location.reload()}
@@ -195,7 +187,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
           {tab === ExtensionPage.Description && (
             <Text variant="text-md/normal">
-              {MarkdownParser.parse(description ?? "*No description*")}
+              {MarkupUtils.parse(description ?? "*No description*")}
             </Text>
           )}
           {tab === ExtensionPage.Settings && <Settings ext={ext} />}

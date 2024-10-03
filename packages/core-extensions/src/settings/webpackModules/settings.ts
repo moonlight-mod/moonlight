@@ -1,7 +1,7 @@
 import {
   SettingsSection,
   Settings as SettingsType
-} from "@moonlight-mod/types/coreExtensions";
+} from "@moonlight-mod/types/coreExtensions/settings";
 
 export const Settings: SettingsType = {
   ourSections: [],

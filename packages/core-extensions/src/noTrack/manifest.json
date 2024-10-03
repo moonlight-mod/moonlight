@@ -1,5 +1,6 @@
 {
   "id": "noTrack",
+  "apiLevel": 2,
   "meta": {
     "name": "No Track",
     "tagline": "Disables /api/science and analytics",

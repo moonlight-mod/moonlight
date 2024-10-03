@@ -17,8 +17,7 @@ const logger = new Logger("core/extension/loader");
 async function loadExt(ext: DetectedExtension) {
   webPreload: {
     if (ext.scripts.web != null) {
-      const source =
-        ext.scripts.web + "\n//# sourceURL=file:///" + ext.scripts.webPath;
+      const source = ext.scripts.web;
       const fn = new Function("require", "module", "exports", source);
 
       const module = { id: ext.id, exports: {} };

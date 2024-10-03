@@ -1,5 +1,6 @@
 {
   "id": "experiments",
+  "apiLevel": 2,
   "meta": {
     "name": "Experiments",
     "tagline": "Allows you to configure Discord's internal A/B testing features",

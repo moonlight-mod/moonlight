@@ -1,10 +1,10 @@
-import Flux from "@moonlight-mod/wp/common_flux";
+import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 
 module.exports = new Proxy(
   {},
   {
     get: function (target, key, receiver) {
-      const allStores = Flux.Store.getAll();
+      const allStores = Store.getAll();
 
       let targetStore;
       for (const store of allStores) {

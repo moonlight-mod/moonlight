@@ -1,5 +1,6 @@
 {
   "id": "moonbase",
+  "apiLevel": 2,
   "meta": {
     "name": "Moonbase",
     "tagline": "The official settings UI for moonlight",

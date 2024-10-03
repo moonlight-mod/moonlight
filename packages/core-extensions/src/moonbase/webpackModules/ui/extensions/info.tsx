@@ -1,8 +1,8 @@
 import { ExtensionTag } from "@moonlight-mod/types";
 import { MoonbaseExtension } from "../../../types";
 
-import React from "@moonlight-mod/wp/common_react";
-import CommonComponents from "@moonlight-mod/wp/common_components";
+import React from "@moonlight-mod/wp/react";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 type Dependency = {
@@ -42,6 +42,9 @@ const UserInfoClasses = spacepack.findByCode(
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
+// FIXME: type component keys
+const { Text } = Components;
+
 function InfoSection({
   title,
   children
@@ -55,16 +58,11 @@ function InfoSection({
         marginRight: "1em"
       }}
     >
-      <CommonComponents.Text
-        variant="eyebrow"
-        className={UserInfoClasses.userInfoSectionHeader}
-      >
+      <Text variant="eyebrow" className={UserInfoClasses.userInfoSectionHeader}>
         {title}
-      </CommonComponents.Text>
+      </Text>
 
-      <CommonComponents.Text variant="text-sm/normal">
-        {children}
-      </CommonComponents.Text>
+      <Text variant="text-sm/normal">{children}</Text>
     </div>
   );
 }

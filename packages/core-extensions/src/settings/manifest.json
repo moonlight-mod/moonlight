@@ -1,5 +1,6 @@
 {
   "id": "settings",
+  "apiLevel": 2,
   "meta": {
     "name": "Settings",
     "tagline": "An API for adding to Discord's settings menu",

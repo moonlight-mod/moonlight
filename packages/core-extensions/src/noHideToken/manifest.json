@@ -1,5 +1,6 @@
 {
   "id": "noHideToken",
+  "apiLevel": 2,
   "meta": {
     "name": "No Hide Token",
     "tagline": "Disables removal of token from localStorage when opening dev tools",

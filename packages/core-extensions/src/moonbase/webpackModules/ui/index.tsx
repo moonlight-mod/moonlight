@@ -1,13 +1,14 @@
-import React from "@moonlight-mod/wp/common_react";
+import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { Text, TabBar } from "@moonlight-mod/wp/common_components";
-import * as Flux from "@moonlight-mod/wp/common_flux";
+import {
+  Text,
+  TabBar
+} from "@moonlight-mod/wp/discord/components/common/index";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
 
 import ExtensionsPage from "./extensions";
 import ConfigPage from "./config";
-
-const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
 const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
 const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0]
@@ -17,6 +18,7 @@ const { setSection, clearSubsection } = spacepack.findByExports(
   "setSection",
   "clearSubsection"
 )[0].exports.Z;
+const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
 export const pages: {
   id: string;
@@ -36,7 +38,7 @@ export const pages: {
 ];
 
 export function Moonbase(props: { initialTab?: number } = {}) {
-  const subsection = Flux.useStateFromStores(
+  const subsection = useStateFromStores(
     [UserSettingsModalStore],
     () => UserSettingsModalStore.getSubsection() ?? 0
   );

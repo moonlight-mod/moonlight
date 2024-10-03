@@ -1,10 +1,10 @@
 import settings from "@moonlight-mod/wp/settings_settings";
-import React from "@moonlight-mod/wp/common_react";
+import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { Moonbase, pages } from "@moonlight-mod/wp/moonbase_ui";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import { MenuItem } from "@moonlight-mod/wp/common_components";
+import { MenuItem } from "@moonlight-mod/wp/discord/components/common/index";
 
 const { open } = spacepack.findByExports("setSection", "clearSubsection")[0]
   .exports.Z;

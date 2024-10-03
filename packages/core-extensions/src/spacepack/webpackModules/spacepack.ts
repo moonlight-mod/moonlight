@@ -3,7 +3,7 @@ import {
   WebpackModuleFunc,
   WebpackRequireType
 } from "@moonlight-mod/types";
-import { Spacepack } from "@moonlight-mod/types/coreExtensions";
+import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
 
 const webpackRequire = require as unknown as WebpackRequireType;
 const cache = webpackRequire.c;
@@ -19,6 +19,10 @@ export const spacepack: Spacepack = {
   inspect: (module: number | string) => {
     if (typeof module === "number") {
       module = module.toString();
+    }
+
+    if (module in moonlight.moonmap.modules) {
+      module = moonlight.moonmap.modules[module];
     }
 
     if (!(module in modules)) {
