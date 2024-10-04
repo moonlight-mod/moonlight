@@ -49,11 +49,26 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   // Why it work like that :sob:
   if (ext == null) return <></>;
 
-  const { Card, Text, Switch, TabBar, Button } = Components;
+  const { Card, Text, FormSwitch, TabBar, Button } = Components;
 
   const tagline = ext.manifest?.meta?.tagline;
   const settings = ext.manifest?.settings;
   const description = ext.manifest?.meta?.description;
+  const enabledDependants = useStateFromStores([MoonbaseSettingsStore], () =>
+    Object.keys(MoonbaseSettingsStore.extensions)
+      .filter((uniqueId) => {
+        const potentialDependant = MoonbaseSettingsStore.getExtension(
+          parseInt(uniqueId)
+        );
+
+        return (
+          potentialDependant.manifest.dependencies?.includes(ext.id) &&
+          MoonbaseSettingsStore.getExtensionEnabled(parseInt(uniqueId))
+        );
+      })
+      .map((a) => MoonbaseSettingsStore.getExtension(parseInt(a)))
+  );
+  const implicitlyEnabled = enabledDependants.length > 0;
 
   return (
     <Card editable={true} className={IntegrationCard.card}>
@@ -127,8 +142,18 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 />
               )}
 
-              <Switch
-                checked={enabled}
+              <FormSwitch
+                value={enabled || implicitlyEnabled}
+                disabled={implicitlyEnabled}
+                tooltipNote={
+                  implicitlyEnabled
+                    ? `This extension is a dependency of the following enabled extension${
+                        enabledDependants.length > 1 ? "s" : ""
+                      }: ${enabledDependants
+                        .map((a) => a.manifest.meta!.name)
+                        .join(", ")}`
+                    : undefined
+                }
                 onChange={() => {
                   setRestartNeeded(true);
                   MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
