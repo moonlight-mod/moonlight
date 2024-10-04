@@ -35,6 +35,7 @@ declare global {
   var moonlightNode: MoonlightNode;
   var moonlight: MoonlightWeb;
 
-  var _moonlightLoad: () => Promise<void>;
+  var _moonlightBrowserInit: () => Promise<void>;
+  var _moonlightBrowserLoad: () => Promise<void>;
   var _moonlightBrowserFS: MoonlightBrowserFS | undefined;
 }

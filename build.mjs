@@ -121,20 +121,30 @@ async function build(name, entry) {
         dest: "./dist/browser/manifest.json"
       })
     );
-    plugins.push(
-      copyStaticFiles({
-        src: "./packages/browser/modifyResponseHeaders.json",
-        dest: "./dist/browser/modifyResponseHeaders.json"
-      })
-    );
-    if (mv2) {
+
+    if (!mv2) {
       plugins.push(
         copyStaticFiles({
-          src: "./packages/browser/src/background.js",
-          dest: "./dist/browser/background.js"
+          src: "./packages/browser/modifyResponseHeaders.json",
+          dest: "./dist/browser/modifyResponseHeaders.json"
+        })
+      );
+      plugins.push(
+        copyStaticFiles({
+          src: "./packages/browser/blockLoading.json",
+          dest: "./dist/browser/blockLoading.json"
         })
       );
     }
+
+    plugins.push(
+      copyStaticFiles({
+        src: mv2
+          ? "./packages/browser/src/background-mv2.js"
+          : "./packages/browser/src/background.js",
+        dest: "./dist/browser/background.js"
+      })
+    );
   }
 
   /** @type {import("esbuild").BuildOptions} */

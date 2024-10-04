@@ -246,13 +246,15 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
   }
 
   const fs = getFS();
-  ret.push(
-    ...(await loadDetectedExtensions(
-      fs,
-      "/extensions",
-      ExtensionLoadSource.Normal
-    ))
-  );
+  if (await fs.exists("/extensions")) {
+    ret.push(
+      ...(await loadDetectedExtensions(
+        fs,
+        "/extensions",
+        ExtensionLoadSource.Normal
+      ))
+    );
+  }
 
   return ret;
 }

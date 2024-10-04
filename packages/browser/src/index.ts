@@ -4,14 +4,11 @@ import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { loadExtensions } from "@moonlight-mod/core/extension/loader";
 import { MoonlightBrowserFS, MoonlightNode } from "@moonlight-mod/types";
-
 import { IndexedDB } from "@zenfs/dom";
 import { configure } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
 
-// Mostly copy pasted from node-preload, FIXME
-// TODO: is this safe an in IIFE?
-(async () => {
+window._moonlightBrowserInit = async () => {
   // Set up a virtual filesystem with IndexedDB
   await configure({
     mounts: {
@@ -131,5 +128,5 @@ import * as fs from "@zenfs/core/promises";
   });
 
   // This is set by web-preload for us
-  await window._moonlightLoad();
-})();
+  await window._moonlightBrowserLoad();
+};

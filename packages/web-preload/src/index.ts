@@ -56,5 +56,5 @@ async function load() {
 if (MOONLIGHT_ENV === "web-preload") {
   load();
 } else {
-  window._moonlightLoad = load;
+  window._moonlightBrowserLoad = load;
 }
