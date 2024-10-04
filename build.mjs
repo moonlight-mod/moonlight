@@ -14,6 +14,7 @@ const config = {
 const prod = process.env.NODE_ENV === "production";
 const watch = process.argv.includes("--watch");
 const browser = process.argv.includes("--browser");
+const mv2 = process.argv.includes("--mv2");
 
 const external = [
   "electron",
@@ -114,7 +115,9 @@ async function build(name, entry) {
   if (name === "browser") {
     plugins.push(
       copyStaticFiles({
-        src: "./packages/browser/manifest.json",
+        src: mv2
+          ? "./packages/browser/manifestv2.json"
+          : "./packages/browser/manifest.json",
         dest: "./dist/browser/manifest.json"
       })
     );
@@ -124,20 +127,14 @@ async function build(name, entry) {
         dest: "./dist/browser/modifyResponseHeaders.json"
       })
     );
-
-    // This sucks lmfao
-    plugins.push({
-      name: "browserPath",
-      setup(build) {
-        build.onResolve({ filter: /^path$/ }, () => {
-          const index =
-            "./packages/browser/node_modules/path-browserify/index.js";
-          return {
-            path: path.resolve(index)
-          };
-        });
-      }
-    });
+    if (mv2) {
+      plugins.push(
+        copyStaticFiles({
+          src: "./packages/browser/src/background.js",
+          dest: "./dist/browser/background.js"
+        })
+      );
+    }
   }
 
   /** @type {import("esbuild").BuildOptions} */
