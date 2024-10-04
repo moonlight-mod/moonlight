@@ -38,6 +38,10 @@ async function installExtension(
   const files = extractAsar(buffer);
   for (const [file, buf] of Object.entries(files)) {
     const nodeBuf = Buffer.from(buf);
+    const fullFile = path.join(dir, file);
+    const fullDir = path.dirname(fullFile);
+
+    if (!fs.existsSync(fullDir)) fs.mkdirSync(fullDir, { recursive: true });
     fs.writeFileSync(path.join(dir, file), nodeBuf);
   }
 }
