@@ -6,14 +6,15 @@ import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { constants } from "@moonlight-mod/types";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { getExtensionsPath } from "@moonlight-mod/core/util/data";
-import Logger from "@moonlight-mod/core/util/logger";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import {
   loadExtensions,
   loadProcessedExtensions
 } from "@moonlight-mod/core/extension/loader";
 
 async function injectGlobals() {
-  const config = readConfig();
+  const config = await readConfig();
+  initLogger(config);
   const extensions = await getExtensions();
   const processedExtensions = await loadExtensions(extensions);
 

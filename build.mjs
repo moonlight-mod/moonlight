@@ -20,8 +20,6 @@ const external = [
   "fs",
   "path",
   "module",
-  "events",
-  "original-fs", // wtf asar?
   "discord", // mappings
 
   // Silence an esbuild warning
@@ -79,10 +77,20 @@ async function build(name, entry) {
   if (name === "browser") outfile = path.join("./dist", "browser", "index.js");
 
   const dropLabels = [];
-  if (name !== "injector") dropLabels.push("injector");
-  if (name !== "node-preload") dropLabels.push("nodePreload");
-  if (name !== "web-preload") dropLabels.push("webPreload");
-  if (name !== "browser") dropLabels.push("browser");
+  const labels = {
+    injector: ["injector"],
+    nodePreload: ["node-preload"],
+    webPreload: ["web-preload"],
+    browser: ["browser"],
+
+    webTarget: ["web-preload", "browser"],
+    nodeTarget: ["node-preload", "injector"]
+  };
+  for (const [label, targets] of Object.entries(labels)) {
+    if (!targets.includes(name)) {
+      dropLabels.push(label);
+    }
+  }
 
   const define = {
     MOONLIGHT_ENV: `"${name}"`,
@@ -116,6 +124,20 @@ async function build(name, entry) {
         dest: "./dist/browser/modifyResponseHeaders.json"
       })
     );
+
+    // This sucks lmfao
+    plugins.push({
+      name: "browserPath",
+      setup(build) {
+        build.onResolve({ filter: /^path$/ }, () => {
+          const index =
+            "./packages/browser/node_modules/path-browserify/index.js";
+          return {
+            path: path.resolve(index)
+          };
+        });
+      }
+    });
   }
 
   /** @type {import("esbuild").BuildOptions} */

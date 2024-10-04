@@ -78,11 +78,7 @@ function loadExtWeb(ext: DetectedExtension) {
 }
 
 async function loadExt(ext: DetectedExtension) {
-  webPreload: {
-    loadExtWeb(ext);
-  }
-
-  browser: {
+  webTarget: {
     loadExtWeb(ext);
   }
 
@@ -125,7 +121,7 @@ async function loadExt(ext: DetectedExtension) {
 export async function loadExtensions(
   exts: DetectedExtension[]
 ): Promise<ProcessedExtensions> {
-  const config = readConfig();
+  const config = await readConfig();
   const items = exts
     .map((ext) => {
       return {
@@ -213,13 +209,7 @@ export async function loadProcessedExtensions({
     logger.debug(`Loaded "${ext.id}"`);
   }
 
-  webPreload: {
-    for (const ext of extensions) {
-      moonlight.enabledExtensions.add(ext.id);
-    }
-  }
-
-  browser: {
+  webTarget: {
     for (const ext of extensions) {
       moonlight.enabledExtensions.add(ext.id);
     }

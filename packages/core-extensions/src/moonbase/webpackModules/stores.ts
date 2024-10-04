@@ -7,11 +7,13 @@ import {
 } from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
+import extractAsar from "@moonlight-mod/core/asar";
 
 const logger = moonlight.getLogger("moonbase");
 
-let natives: MoonbaseNatives | undefined = moonlight.getNatives("moonbase");
-if (!natives) {
+let natives: MoonbaseNatives = moonlight.getNatives("moonbase");
+if (window._moonlightBrowserFS != null) {
+  const browserFS = window._moonlightBrowserFS!;
   natives = {
     fetchRepositories: async (repos) => {
       const ret: Record<string, RepositoryManifest[]> = {};
@@ -29,10 +31,25 @@ if (!natives) {
       return ret;
     },
     installExtension: async (manifest, url, repo) => {
-      // TODO
+      const req = await fetch(url);
+      const buffer = await req.arrayBuffer();
+
+      if (await browserFS.exists("/extensions/" + manifest.id)) {
+        await browserFS.rmdir("/extensions/" + manifest.id);
+      }
+
+      const files = extractAsar(buffer);
+      for (const [file, data] of Object.entries(files)) {
+        const path =
+          "/extensions/" +
+          manifest.id +
+          (file.startsWith("/") ? file : `/${file}`);
+        await browserFS.mkdir(browserFS.dirname(path));
+        await browserFS.writeFile(path, data);
+      }
     },
     deleteExtension: async (id) => {
-      // TODO
+      browserFS.rmdir("/extensions/" + id);
     },
     getExtensionConfig: (id, key) => {
       const config = moonlightNode.config.extensions[id];

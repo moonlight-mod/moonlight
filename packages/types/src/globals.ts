@@ -38,6 +38,23 @@ export type MoonlightNode = {
   writeConfig: (config: Config) => void;
 };
 
+export type MoonlightBrowserFS = {
+  readFile: (path: string) => Promise<Uint8Array>;
+  writeFile: (path: string, data: Uint8Array) => Promise<void>;
+  unlink: (path: string) => Promise<void>;
+
+  readdir: (path: string) => Promise<string[]>;
+  mkdir: (path: string) => Promise<void>;
+  rmdir: (path: string) => Promise<void>;
+
+  exists: (path: string) => Promise<boolean>;
+  isFile: (path: string) => Promise<boolean>;
+
+  join: (...parts: string[]) => string;
+  dirname: (path: string) => string;
+  parts: (path: string) => string[];
+};
+
 export type MoonlightWeb = {
   unpatched: Set<IdentifiedPatch>;
   pendingModules: Set<IdentifiedWebpackModule>;

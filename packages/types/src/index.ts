@@ -5,6 +5,7 @@
 /* eslint-disable no-var */
 
 import {
+  MoonlightBrowserFS,
   MoonlightEnv,
   MoonlightHost,
   MoonlightNode,
@@ -35,4 +36,5 @@ declare global {
   var moonlight: MoonlightWeb;
 
   var _moonlightLoad: () => Promise<void>;
+  var _moonlightBrowserFS: MoonlightBrowserFS | undefined;
 }
