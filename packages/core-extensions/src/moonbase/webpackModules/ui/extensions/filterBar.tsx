@@ -1,13 +1,8 @@
 import { tagNames } from "./info";
-import {
-  ArrowsUpDownIconSVG,
-  ChevronSmallDownIconSVG,
-  ChevronSmallUpIconSVG
-} from "../../../types";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import React from "@moonlight-mod/wp/common_react";
-import * as Flux from "@moonlight-mod/wp/common_flux";
+import * as React from "@moonlight-mod/wp/react";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { WindowStore } from "@moonlight-mod/wp/common_stores";
 import {
   Button,
@@ -19,7 +14,8 @@ import {
   MenuGroup,
   MenuCheckboxItem,
   MenuItem
-} from "@moonlight-mod/wp/common_components";
+} from "@moonlight-mod/wp/discord/components/common/index";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 export enum Filter {
   Core = 1 << 0,
@@ -32,30 +28,32 @@ export enum Filter {
 }
 export const defaultFilter = ~(~0 << 7);
 
-const modPromise = spacepack.lazyLoad(
-  '"Missing channel in Channel.openChannelContextMenu"',
-  /e\("(\d+)"\)/g,
-  /webpackId:"(.+?)"/
-);
-
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
   .exports;
-const FilterDialogClasses = spacepack.findByCode(
-  "countContainer:",
-  "tagContainer:"
-)[0].exports;
-const FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0]
-  .exports;
+
+let FilterDialogClasses: any;
+let FilterBarClasses: any;
+spacepack
+  .lazyLoad(
+    '"Missing channel in Channel.openChannelContextMenu"',
+    /e\("(\d+)"\)/g,
+    /webpackId:(\d+?),/
+  )
+  .then(() => {
+    FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0].exports;
+    FilterDialogClasses = spacepack.findByCode(
+      "countContainer:",
+      "tagContainer:"
+    )[0].exports;
+  });
 
 const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
-  .default;
+  .Z;
 
-const ChevronSmallDownIcon = spacepack.findByCode(ChevronSmallDownIconSVG)[0]
-  .exports.default;
-const ChevronSmallUpIcon = spacepack.findByCode(ChevronSmallUpIconSVG)[0]
-  .exports.default;
-let ArrowsUpDownIcon: React.FunctionComponent;
+// FIXME: type component keys
+const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } =
+  Components;
 
 function toggleTag(
   selectedTags: Set<string>,
@@ -209,7 +207,7 @@ function TagButtonPopout({
   );
 }
 
-function FilterBar({
+export default function FilterBar({
   filter,
   setFilter,
   selectedTags,
@@ -220,7 +218,7 @@ function FilterBar({
   selectedTags: Set<string>;
   setSelectedTags: (tags: Set<string>) => void;
 }) {
-  const windowSize = Flux.useStateFromStores([WindowStore], () =>
+  const windowSize = useStateFromStores([WindowStore], () =>
     WindowStore.windowSize()
   );
 
@@ -274,7 +272,7 @@ function FilterBar({
             className={FilterBarClasses.sortDropdown}
             innerClassName={FilterBarClasses.sortDropdownInner}
           >
-            <ArrowsUpDownIcon />
+            <ArrowsUpDownIcon size="xs" />
             <Text
               className={FilterBarClasses.sortDropdownText}
               variant="text-sm/medium"
@@ -283,9 +281,9 @@ function FilterBar({
               Sort & filter
             </Text>
             {isShown ? (
-              <ChevronSmallUpIcon size={20} />
+              <ChevronSmallUpIcon size={"custom"} width={20} />
             ) : (
-              <ChevronSmallDownIcon size={20} />
+              <ChevronSmallDownIcon size={"custom"} width={20} />
             )}
           </Button>
         )}
@@ -347,9 +345,9 @@ function FilterBar({
               <>All</>
             )}
             {isShown ? (
-              <ChevronSmallUpIcon size={20} />
+              <ChevronSmallUpIcon size={"custom"} width={20} />
             ) : (
-              <ChevronSmallDownIcon size={20} />
+              <ChevronSmallDownIcon size={"custom"} width={20} />
             )}
           </Button>
         )}
@@ -357,14 +355,3 @@ function FilterBar({
     </div>
   );
 }
-
-// TODO: spacepack lazy loading utils
-export default React.lazy(() =>
-  modPromise.then(async () => {
-    await modPromise;
-    ArrowsUpDownIcon ??=
-      spacepack.findByCode(ArrowsUpDownIconSVG)[0].exports.default;
-
-    return { default: FilterBar };
-  })
-);

@@ -1,28 +1,23 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
 
-import { CircleXIconSVG, DownloadIconSVG, TrashIconSVG } from "./types";
-
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {
     dependencies: [
-      { ext: "common", id: "flux" },
-      { ext: "common", id: "fluxDispatcher" }
+      { id: "discord/packages/flux" },
+      { id: "discord/Dispatcher" }
     ]
   },
 
   ui: {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
-      { ext: "common", id: "react" },
-      { ext: "common", id: "components" },
+      { id: "react" },
+      { id: "discord/components/common/index" },
       { ext: "moonbase", id: "stores" },
-      DownloadIconSVG,
-      TrashIconSVG,
-      CircleXIconSVG,
+      { id: "discord/modules/guild_settings/IntegrationCard.css" },
       "Masks.PANEL_BUTTON",
-      "removeButtonContainer:",
       '"Missing channel in Channel.openChannelContextMenu"',
-      ".default.HEADER_BAR"
+      ".forumOrHome]:"
     ]
   },
 
@@ -30,7 +25,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
       { ext: "settings", id: "settings" },
-      { ext: "common", id: "react" },
+      { id: "react" },
       { ext: "moonbase", id: "ui" }
     ],
     entrypoint: true

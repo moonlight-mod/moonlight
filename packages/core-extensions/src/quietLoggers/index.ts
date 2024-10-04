@@ -10,8 +10,8 @@ const loggerFixes: Patch[] = [
   {
     find: '"./ggsans-800-extrabolditalic.woff2":',
     replace: {
-      match: /\.then\(function\(\){var.+?"MODULE_NOT_FOUND",.\}\)/,
-      replacement: ".then(()=>(()=>{}))"
+      match: /throw .+?,./,
+      replacement: "return{}"
     }
   },
   {
@@ -36,36 +36,35 @@ const stubPatches = [
   ['="RunningGameStore"', /.\.info\("games",{.+?}\),/],
   [
     '"[BUILD INFO] Release Channel: "',
-    /new .{1,2}\.default\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/
+    /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/
   ],
   [
-    '.AnalyticEvents.APP_NATIVE_CRASH,"Storage"',
+    '.APP_NATIVE_CRASH,"Storage"',
     /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/
   ],
   [
-    '.AnalyticEvents.APP_NATIVE_CRASH,"Storage"',
+    '.APP_NATIVE_CRASH,"Storage"',
     'console.log("AppCrashedFatalReport: getLastCrash not supported.");'
   ],
-  ['"[NATIVE INFO] ', /new .{1,2}\.default\(\)\.log\("\[NATIVE INFO] .+?\)\),/],
+  ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
   ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
   [
-    'throw new Error("Messages are still loading.");',
-    /console\.warn\("Unsupported Locale",.\);/
+    'throw Error("Messages are still loading.");',
+    /console\.warn\("Unsupported Locale",.\),/
   ],
-  ["_dispatchWithDevtools=", /.\.has\(.\.type\)&&.\.log\(.+?\);/],
-  ["_dispatchWithDevtools=", /.\.totalTime>100&&.\.log\(.+?\);0;/],
+  ["}_dispatchWithDevtools(", /.\.totalTime>100&&.\.verbose\(.+?\);/],
   [
     '"NativeDispatchUtils"',
     /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/
-  ],
-  [
-    'Error("Messages are still loading.")',
-    /console\.warn\("Unsupported Locale",.\),/
   ],
   ['("DatabaseManager")', /.\.log\("removing database \(user: ".+?\)\),/],
   [
     '"Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch. Action: "',
     /.\.has\(.\.type\)&&.\.log\(.+?\.type\)\),/
+  ],
+  [
+    'console.warn("Window state not initialized"',
+    /console\.warn\("Window state not initialized",.\),/
   ]
 ];
 
@@ -77,7 +76,8 @@ const simplePatches = [
   [
     /console\.warn\("\[DEPRECATED\] Please use `subscribeWithSelector` middleware"\)/g,
     "/*$&*/"
-  ]
+  ],
+  ["this.getDebugLogging()", "false"]
 ] as { [0]: string | RegExp; [1]: string }[];
 
 export const patches: Patch[] = [

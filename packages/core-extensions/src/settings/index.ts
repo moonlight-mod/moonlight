@@ -3,11 +3,11 @@ import { ExtensionWebExports } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: ".UserSettingsSections.HOTSPOT_OPTIONS",
+    find: '"useGenerateUserSettingsSections"',
     replace: {
-      match: /return(\[.+?\.CUSTOM,element:.+?}\])}/,
-      replacement: (_, arr) =>
-        `return require("settings_settings").Settings._mutateSections(${arr})}`
+      match: /(?<=\.push\(.+?\)}\)\)}\),)./,
+      replacement: (sections: string) =>
+        `require("settings_settings").Settings._mutateSections(${sections})`
     }
   },
   {
@@ -16,7 +16,7 @@ export const patches: Patch[] = [
       match: /children:\[(.)\.map\(.+?\),children:.\((.)\)/,
       replacement: (orig, sections, section) =>
         `${orig.replace(
-          /Object\.values\(.\.UserSettingsSections\)/,
+          /Object\.values\(.\..+?\)/,
           (orig) =>
             `[...require("settings_settings").Settings.sectionNames,...${orig}]`
         )}??${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`

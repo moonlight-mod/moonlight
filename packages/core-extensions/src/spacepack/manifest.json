@@ -1,5 +1,6 @@
 {
   "id": "spacepack",
+  "apiLevel": 2,
   "meta": {
     "name": "Spacepack",
     "tagline": "Search utilities across all Webpack modules",

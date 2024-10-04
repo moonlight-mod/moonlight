@@ -6,17 +6,23 @@ import {
   IdentifiedWebpackModule,
   WebpackJsonp,
   WebpackJsonpEntry,
-  WebpackModuleFunc
+  WebpackModuleFunc,
+  WebpackRequireType
 } from "@moonlight-mod/types";
 import Logger from "./util/logger";
 import calculateDependencies, { Dependency } from "./util/dependency";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
+import { EventType } from "@moonlight-mod/types/core/event";
 
 const logger = new Logger("core/patch");
 
 // Can't be Set because we need splice
 const patches: IdentifiedPatch[] = [];
 let webpackModules: Set<IdentifiedWebpackModule> = new Set();
+let webpackRequire: WebpackRequireType | null = null;
+
+const moduleLoadSubscriptions: Map<string, ((moduleId: string) => void)[]> =
+  new Map();
 
 export function registerPatch(patch: IdentifiedPatch) {
   patches.push(patch);
@@ -27,6 +33,25 @@ export function registerWebpackModule(wp: IdentifiedWebpackModule) {
   webpackModules.add(wp);
   if (wp.dependencies?.length) {
     moonlight.pendingModules.add(wp);
+  }
+}
+
+export function onModuleLoad(
+  module: string | string[],
+  callback: (moduleId: string) => void
+): void {
+  let moduleIds = module;
+
+  if (typeof module === "string") {
+    moduleIds = [module];
+  }
+
+  for (const moduleId of moduleIds) {
+    if (moduleLoadSubscriptions.has(moduleId)) {
+      moduleLoadSubscriptions.get(moduleId)?.push(callback);
+    } else {
+      moduleLoadSubscriptions.set(moduleId, [callback]);
+    }
   }
 }
 
@@ -43,12 +68,51 @@ const moduleCache: Record<string, string> = {};
 const patched: Record<string, Array<string>> = {};
 
 function patchModules(entry: WebpackJsonpEntry[1]) {
-  for (const [id, func] of Object.entries(entry)) {
-    let moduleString = Object.prototype.hasOwnProperty.call(moduleCache, id)
-      ? moduleCache[id]
-      : func.toString().replace(/\n/g, "");
+  function patchModule(id: string, patchId: string, replaced: string) {
+    // Store what extensions patched what modules for easier debugging
+    patched[id] = patched[id] || [];
+    patched[id].push(patchId);
 
-    for (const patch of patches) {
+    // Webpack module arguments are minified, so we replace them with consistent names
+    // We have to wrap it so things don't break, though
+    const patchedStr = patched[id].sort().join(", ");
+
+    const wrapped =
+      `(${replaced}).apply(this, arguments)\n` +
+      `// Patched by moonlight: ${patchedStr}\n` +
+      `//# sourceURL=Webpack-Module-${id}`;
+
+    try {
+      const func = new Function(
+        "module",
+        "exports",
+        "require",
+        wrapped
+      ) as WebpackModuleFunc;
+      entry[id] = func;
+      entry[id].__moonlight = true;
+      return true;
+    } catch (e) {
+      logger.warn("Error constructing function for patch", patchId, e);
+      patched[id].pop();
+      return false;
+    }
+  }
+
+  // Populate the module cache
+  for (const [id, func] of Object.entries(entry)) {
+    if (!Object.hasOwn(moduleCache, id) && func.__moonlight !== true) {
+      moduleCache[id] = func.toString().replace(/\n/g, "");
+      moonlight.moonmap.parseScript(id, moduleCache[id]);
+    }
+  }
+
+  for (const [id, func] of Object.entries(entry)) {
+    if (func.__moonlight === true) continue;
+    let moduleString = moduleCache[id];
+
+    for (let i = 0; i < patches.length; i++) {
+      const patch = patches[i];
       if (patch.prerequisite != null && !patch.prerequisite()) {
         continue;
       }
@@ -99,31 +163,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
             continue;
           }
 
-          // Store what extensions patched what modules for easier debugging
-          patched[id] = patched[id] || [];
-          patched[id].push(`${patch.ext}#${patch.id}`);
-
-          // Webpack module arguments are minified, so we replace them with consistent names
-          // We have to wrap it so things don't break, though
-          const patchedStr = patched[id].sort().join(", ");
-
-          const wrapped =
-            `(${replaced}).apply(this, arguments)\n` +
-            `// Patched by moonlight: ${patchedStr}\n` +
-            `//# sourceURL=Webpack-Module-${id}`;
-
-          try {
-            const func = new Function(
-              "module",
-              "exports",
-              "require",
-              wrapped
-            ) as WebpackModuleFunc;
-            entry[id] = func;
-            entry[id].__moonlight = true;
+          if (patchModule(id, `${patch.ext}#${patch.id}`, replaced)) {
             moduleString = replaced;
-          } catch (e) {
-            logger.warn("Error constructing function for patch", e);
           }
         } else if (replace.type === PatchReplaceType.Module) {
           // Directly replace the module with a new one
@@ -136,12 +177,24 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         }
 
         if (shouldRemove) {
-          patches.splice(
-            patches.findIndex((p) => p.ext === patch.ext && p.id === patch.id),
-            1
-          );
+          patches.splice(i--, 1);
         }
       }
+    }
+
+    moduleCache[id] = moduleString;
+
+    try {
+      const parsed = moonlight.lunast.parseScript(id, moduleString);
+      if (parsed != null) {
+        for (const [parsedId, parsedScript] of Object.entries(parsed)) {
+          if (patchModule(parsedId, "lunast", parsedScript)) {
+            moduleCache[parsedId] = parsedScript;
+          }
+        }
+      }
+    } catch (e) {
+      logger.error("Failed to parse script for LunAST", id, e);
     }
 
     if (moonlightNode.config.patchAll === true) {
@@ -150,7 +203,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         !entry[id].__moonlight
       ) {
         const wrapped =
-          `(${moduleString}).apply(this, arguments)\n` +
+          `(${moduleCache[id]}).apply(this, arguments)\n` +
           `//# sourceURL=Webpack-Module-${id}`;
         entry[id] = new Function(
           "module",
@@ -160,6 +213,19 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         ) as WebpackModuleFunc;
         entry[id].__moonlight = true;
       }
+    }
+
+    // Dispatch module load event subscription
+    if (moduleLoadSubscriptions.has(id)) {
+      const loadCallbacks = moduleLoadSubscriptions.get(id)!;
+      for (const callback of loadCallbacks) {
+        try {
+          callback(id);
+        } catch (e) {
+          logger.error("Error in module load subscription: " + e);
+        }
+      }
+      moduleLoadSubscriptions.delete(id);
     }
 
     moduleCache[id] = moduleString;
@@ -173,29 +239,35 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 */
 let chunkId = Number.MAX_SAFE_INTEGER;
 
+function depToString(x: ExplicitExtensionDependency) {
+  return x.ext != null ? `${x.ext}_${x.id}` : x.id;
+}
+
 function handleModuleDependencies() {
   const modules = Array.from(webpackModules.values());
 
   const dependencies: Dependency<string, IdentifiedWebpackModule>[] =
     modules.map((wp) => {
       return {
-        id: `${wp.ext}_${wp.id}`,
+        id: depToString(wp),
         data: wp
       };
     });
 
   const [sorted, _] = calculateDependencies(dependencies, {
     fetchDep: (id) => {
-      return modules.find((x) => id === `${x.ext}_${x.id}`) ?? null;
+      return modules.find((x) => id === depToString(x)) ?? null;
     },
 
     getDeps: (item) => {
       const deps = item.data?.dependencies ?? [];
       return (
         deps.filter(
-          (dep) => !(dep instanceof RegExp || typeof dep === "string")
+          (dep) =>
+            !(dep instanceof RegExp || typeof dep === "string") &&
+            dep.ext != null
         ) as ExplicitExtensionDependency[]
-      ).map((x) => `${x.ext}_${x.id}`);
+      ).map(depToString);
     }
   });
 
@@ -211,7 +283,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
   for (const [_modId, mod] of Object.entries(entry)) {
     const modStr = mod.toString();
     for (const wpModule of webpackModules) {
-      const id = wpModule.ext + "_" + wpModule.id;
+      const id = depToString(wpModule);
       if (wpModule.dependencies) {
         const deps = new Set(wpModule.dependencies);
 
@@ -224,9 +296,11 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
             } else if (dep instanceof RegExp) {
               if (dep.test(modStr)) deps.delete(dep);
             } else if (
-              injectedWpModules.find(
-                (x) => x.ext === dep.ext && x.id === dep.id
-              )
+              dep.ext != null
+                ? injectedWpModules.find(
+                    (x) => x.ext === dep.ext && x.id === dep.id
+                  )
+                : injectedWpModules.find((x) => x.id === dep.id)
             ) {
               deps.delete(dep);
             }
@@ -256,6 +330,20 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
     if (!webpackModules.size) break;
   }
 
+  for (const [name, func] of Object.entries(
+    moonlight.moonmap.getWebpackModules("window.moonlight.moonmap")
+  )) {
+    injectedWpModules.push({ id: name, run: func });
+    modules[name] = func;
+    inject = true;
+  }
+
+  if (webpackRequire != null) {
+    for (const id of moonlight.moonmap.getLazyModules()) {
+      webpackRequire.e(id);
+    }
+  }
+
   if (inject) {
     logger.debug("Injecting modules:", modules, entrypoints);
     window.webpackChunkdiscord_app.push([
@@ -272,6 +360,10 @@ declare global {
   }
 }
 
+function moduleSourceGetter(id: string) {
+  return moduleCache[id] ?? null;
+}
+
 /*
   Webpack modules are bundled into an array of arrays that hold each function.
   Since we run code before Discord, we can create our own Webpack array and
@@ -282,6 +374,19 @@ declare global {
 */
 export async function installWebpackPatcher() {
   await handleModuleDependencies();
+
+  moonlight.lunast.setModuleSourceGetter(moduleSourceGetter);
+  moonlight.moonmap.setModuleSourceGetter(moduleSourceGetter);
+
+  const wpRequireFetcher: WebpackModuleFunc = (module, exports, require) => {
+    webpackRequire = require;
+  };
+  wpRequireFetcher.__moonlight = true;
+  webpackModules.add({
+    id: "moonlight",
+    entrypoint: true,
+    run: wpRequireFetcher
+  });
 
   let realWebpackJsonp: WebpackJsonp | null = null;
   Object.defineProperty(window, "webpackChunkdiscord_app", {
@@ -294,6 +399,12 @@ export async function installWebpackPatcher() {
       const realPush = jsonp.push;
       if (jsonp.push.__moonlight !== true) {
         jsonp.push = (items) => {
+          moonlight.events.dispatchEvent(EventType.ChunkLoad, {
+            chunkId: items[0],
+            modules: items[1],
+            require: items[2]
+          });
+
           patchModules(items[1]);
 
           try {
@@ -331,12 +442,27 @@ export async function installWebpackPatcher() {
     }
   });
 
-  registerWebpackModule({
-    ext: "moonlight",
-    id: "fix_rspack_init_modules",
-    entrypoint: true,
-    run: function (module, exports, require) {
-      patchModules(require.m);
+  Object.defineProperty(Function.prototype, "m", {
+    configurable: true,
+    set(modules: any) {
+      const { stack } = new Error();
+      if (stack!.includes("/assets/") && !Array.isArray(modules)) {
+        moonlight.events.dispatchEvent(EventType.ChunkLoad, {
+          modules: modules
+        });
+        patchModules(modules);
+
+        if (!window.webpackChunkdiscord_app)
+          window.webpackChunkdiscord_app = [];
+        injectModules(modules);
+      }
+
+      Object.defineProperty(this, "m", {
+        value: modules,
+        configurable: true,
+        enumerable: true,
+        writable: true
+      });
     }
   });
 }

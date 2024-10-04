@@ -1,4 +1,4 @@
-import load from "@moonlight-mod/web-preload";
+import "@moonlight-mod/web-preload";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import Logger from "@moonlight-mod/core/util/logger";
 import { getExtensions } from "@moonlight-mod/core/extension";
@@ -45,5 +45,5 @@ import { loadExtensions } from "@moonlight-mod/core/extension/loader";
     }
   });
 
-  await load();
+  await window._moonlightLoad();
 })();

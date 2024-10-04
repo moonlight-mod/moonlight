@@ -12,11 +12,21 @@ const defaultConfig: Config = {
   repositories: ["https://moonlight-mod.github.io/extensions-dist/repo.json"]
 };
 
+function writeConfigNode(config: Config) {
+  const fs = requireImport("fs");
+  const configPath = getConfigPath();
+  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+  return;
+}
+
 export function writeConfig(config: Config) {
   nodePreload: {
-    const fs = requireImport("fs");
-    const configPath = getConfigPath();
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    writeConfigNode(config);
+    return;
+  }
+
+  injector: {
+    writeConfigNode(config);
     return;
   }
 

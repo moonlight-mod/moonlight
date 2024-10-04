@@ -22,6 +22,7 @@ const external = [
   "module",
   "events",
   "original-fs", // wtf asar?
+  "discord", // mappings
 
   // Silence an esbuild warning
   "./node-preload.js"

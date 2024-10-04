@@ -44,6 +44,10 @@ function loadDetectedExtensions(
     const manifest: ExtensionManifest = JSON.parse(
       fs.readFileSync(manifestPath, "utf8")
     );
+    const level = manifest.apiLevel ?? 1;
+    if (level !== constants.apiLevel) {
+      continue;
+    }
 
     const webPath = path.join(dir, "index.js");
     const nodePath = path.join(dir, "node.js");

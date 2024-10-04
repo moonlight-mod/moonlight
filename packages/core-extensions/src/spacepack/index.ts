@@ -1,5 +1,5 @@
 import { ExtensionWebExports } from "@moonlight-mod/types";
-import { Spacepack } from "@moonlight-mod/types/coreExtensions";
+import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
 
 declare global {
   interface Window {

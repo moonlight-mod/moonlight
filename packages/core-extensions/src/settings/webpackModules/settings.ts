@@ -1,11 +1,12 @@
 import {
   SettingsSection,
   Settings as SettingsType
-} from "@moonlight-mod/types/coreExtensions";
+} from "@moonlight-mod/types/coreExtensions/settings";
 
 export const Settings: SettingsType = {
   ourSections: [],
   sectionNames: [],
+  sectionMenuItems: {},
 
   addSection: (section, label, element, color = null, pos, notice) => {
     const data: SettingsSection = {
@@ -18,8 +19,15 @@ export const Settings: SettingsType = {
     };
 
     Settings.ourSections.push(data);
-    Settings.sectionNames.push(label);
+    Settings.sectionNames.push(section);
     return data;
+  },
+  addSectionMenuItems(section, ...newItems) {
+    const data = Settings.ourSections.find((x) => x.section === section);
+    if (!data || !("element" in data))
+      throw new Error(`Could not find section "${section}"`);
+    (Settings.sectionMenuItems[section] ??= []).push(...newItems);
+    data._moonlight_submenu ??= () => Settings.sectionMenuItems[section];
   },
 
   addDivider: (pos = null) => {

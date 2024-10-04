@@ -1,11 +1,10 @@
 import { LogLevel } from "@moonlight-mod/types";
-import { CircleXIconSVG } from "../../../types";
 
 const logLevels = Object.values(LogLevel).filter(
   (v) => typeof v === "string"
 ) as string[];
 
-import React from "@moonlight-mod/wp/common_react";
+import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import {
   FormDivider,
@@ -13,21 +12,35 @@ import {
   FormText,
   FormSwitch,
   TextInput,
-  Flex,
   Button,
   SingleSelect,
   Tooltip,
   Clickable
-} from "@moonlight-mod/wp/common_components";
+} from "@moonlight-mod/wp/discord/components/common/index";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 const FormClasses = spacepack.findByCode("dividerDefault:")[0].exports;
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
-const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
-  .exports;
-const CircleXIcon = spacepack.findByCode(CircleXIconSVG)[0].exports.default;
+let RemoveButtonClasses: any;
+spacepack
+  .lazyLoad(
+    "renderArtisanalHack",
+    /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
+    /webpackId:(\d+),name:"GuildSettings"/
+  )
+  .then(
+    () =>
+      (RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
+        .exports)
+  );
+
+// FIXME: type component keys
+const { CircleXIcon } = Components;
+
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (
     <div className={RemoveButtonClasses.removeButtonContainer}>

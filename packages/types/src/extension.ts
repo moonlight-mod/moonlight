@@ -30,6 +30,7 @@ export type ExtensionAuthor =
 export type ExtensionManifest = {
   id: string;
   version?: string;
+  apiLevel?: number;
 
   meta?: {
     name?: string;
@@ -100,7 +101,7 @@ export type Patch = {
 };
 
 export type ExplicitExtensionDependency = {
-  ext: string;
+  ext?: string;
   id: string;
 };
 

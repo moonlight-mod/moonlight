@@ -1,6 +1,6 @@
 {
   "name": "@moonlight-mod/types",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
@@ -9,8 +9,10 @@
     "./*": "./src/*.ts"
   },
   "dependencies": {
-    "@types/flux": "^3.1.12",
-    "@types/react": "^18.2.22",
+    "@moonlight-mod/lunast": "^1.0.0",
+    "@moonlight-mod/mappings": "^1.0.0",
+    "@moonlight-mod/moonmap": "^1.0.2",
+    "@types/react": "^18.3.10",
     "csstype": "^3.1.2",
     "standalone-electron-types": "^1.0.0"
   }
