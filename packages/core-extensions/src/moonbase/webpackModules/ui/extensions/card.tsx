@@ -145,6 +145,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               <FormSwitch
                 value={enabled || implicitlyEnabled}
                 disabled={implicitlyEnabled}
+                hideBorder={true}
+                style={{ marginBottom: "0px" }}
                 tooltipNote={
                   implicitlyEnabled
                     ? `This extension is a dependency of the following enabled extension${
