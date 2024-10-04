@@ -8,7 +8,7 @@ import Module from "node:module";
 import { constants } from "@moonlight-mod/types";
 import { readConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
-import Logger from "@moonlight-mod/core/util/logger";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import {
   loadExtensions,
   loadProcessedExtensions
@@ -161,8 +161,9 @@ Object.defineProperty(BrowserWindow, "name", {
 export async function inject(asarPath: string) {
   isMoonlightDesktop = asarPath === "moonlightDesktop";
   try {
-    const config = readConfig();
-    const extensions = getExtensions();
+    const config = await readConfig();
+    initLogger(config);
+    const extensions = await getExtensions();
 
     // Duplicated in node-preload... oops
     // eslint-disable-next-line no-inner-declarations

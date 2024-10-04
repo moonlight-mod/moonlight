@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+  "name": "moonlight",
+  "description": "Yet another Discord mod",
+  "version": "1.1.0",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "scripting",
+    "webNavigation",
+    "https://*.discord.com/assets/*.js",
+    "https://*.discord.com/*"
+  ],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "js": ["index.js"],
+      "matches": ["https://*.discord.com/*"],
+      "run_at": "document_start",
+      "world": "MAIN"
+    }
+  ]
+}

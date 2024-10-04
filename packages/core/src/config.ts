@@ -13,40 +13,59 @@ const defaultConfig: Config = {
 };
 
 export function writeConfig(config: Config) {
-  const fs = requireImport("fs");
-  const configPath = getConfigPath();
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-}
-
-function readConfigNode(): Config {
-  const fs = requireImport("fs");
-  const configPath = getConfigPath();
-
-  if (!fs.existsSync(configPath)) {
-    writeConfig(defaultConfig);
-    return defaultConfig;
+  browser: {
+    const enc = new TextEncoder().encode(JSON.stringify(config, null, 2));
+    window._moonlightBrowserFS!.writeFile("/config.json", enc);
+    return;
   }
 
-  let config: Config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+  nodeTarget: {
+    const fs = requireImport("fs");
+    const configPath = getConfigPath();
+    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+    return;
+  }
 
-  // Assign the default values if they don't exist (newly added)
-  config = { ...defaultConfig, ...config };
-  writeConfig(config);
-
-  return config;
+  throw new Error("Called writeConfig() in an impossible environment");
 }
 
-export function readConfig(): Config {
+export async function readConfig(): Promise<Config> {
   webPreload: {
     return moonlightNode.config;
   }
 
-  nodePreload: {
-    return readConfigNode();
+  browser: {
+    if (await window._moonlightBrowserFS!.exists("/config.json")) {
+      const file = await window._moonlightBrowserFS!.readFile("/config.json");
+      const configStr = new TextDecoder().decode(file);
+      let config: Config = JSON.parse(configStr);
+
+      config = { ...defaultConfig, ...config };
+      writeConfig(config);
+
+      return config;
+    } else {
+      writeConfig(defaultConfig);
+      return defaultConfig;
+    }
   }
 
-  injector: {
-    return readConfigNode();
+  nodeTarget: {
+    const fs = requireImport("fs");
+    const configPath = getConfigPath();
+
+    if (!fs.existsSync(configPath)) {
+      writeConfig(defaultConfig);
+      return defaultConfig;
+    }
+
+    let config: Config = JSON.parse(fs.readFileSync(configPath, "utf8"));
+
+    // Assign the default values if they don't exist (newly added)
+    config = { ...defaultConfig, ...config };
+    writeConfig(config);
+
+    return config;
   }
 
   throw new Error("Called readConfig() in an impossible environment");

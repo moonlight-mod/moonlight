@@ -5,6 +5,7 @@
 /* eslint-disable no-var */
 
 import {
+  MoonlightBrowserFS,
   MoonlightEnv,
   MoonlightHost,
   MoonlightNode,
@@ -28,8 +29,13 @@ declare global {
   const MOONLIGHT_INJECTOR: boolean;
   const MOONLIGHT_NODE_PRELOAD: boolean;
   const MOONLIGHT_WEB_PRELOAD: boolean;
+  const MOONLIGHT_BROWSER: boolean;
 
   var moonlightHost: MoonlightHost;
   var moonlightNode: MoonlightNode;
   var moonlight: MoonlightWeb;
+
+  var _moonlightBrowserInit: () => Promise<void>;
+  var _moonlightBrowserLoad: () => Promise<void>;
+  var _moonlightBrowserFS: MoonlightBrowserFS | undefined;
 }

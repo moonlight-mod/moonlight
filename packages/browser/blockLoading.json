@@ -1,0 +1,13 @@
+[
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*://discord.com/assets/*.js",
+      "resourceTypes": ["script"]
+    }
+  }
+]

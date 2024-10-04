@@ -1,6 +1,7 @@
 {
   "name": "@moonlight-mod/web-preload",
   "private": true,
+  "main": "src/index.ts",
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/lunast": "^1.0.0",

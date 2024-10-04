@@ -2,7 +2,7 @@
   "name": "@moonlight-mod/core-extensions",
   "private": true,
   "dependencies": {
-    "@electron/asar": "^3.2.5",
-    "@moonlight-mod/types": "workspace:*"
+    "@moonlight-mod/types": "workspace:*",
+    "@moonlight-mod/core": "workspace:*"
   }
 }

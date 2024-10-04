@@ -7,14 +7,15 @@ import {
 } from "@moonlight-mod/core/patch";
 import { constants } from "@moonlight-mod/types";
 import { installStyles } from "@moonlight-mod/core/styles";
-import Logger from "@moonlight-mod/core/util/logger";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import LunAST from "@moonlight-mod/lunast";
 import Moonmap from "@moonlight-mod/moonmap";
 import loadMappings from "@moonlight-mod/mappings";
 import { createEventEmitter } from "@moonlight-mod/core/util/event";
 import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
 
-(async () => {
+async function load() {
+  initLogger(moonlightNode.config);
   const logger = new Logger("web-preload");
 
   window.moonlight = {
@@ -50,4 +51,10 @@ import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
   window.addEventListener("DOMContentLoaded", () => {
     installStyles();
   });
-})();
+}
+
+if (MOONLIGHT_ENV === "web-preload") {
+  load();
+} else {
+  window._moonlightBrowserLoad = load;
+}

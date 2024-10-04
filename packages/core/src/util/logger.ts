@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { LogLevel } from "@moonlight-mod/types/logger";
-import { readConfig } from "../config";
+import { Config } from "@moonlight-mod/types";
 
 const colors = {
   [LogLevel.SILLY]: "#EDD3E9",
@@ -11,15 +11,7 @@ const colors = {
   [LogLevel.ERROR]: "#FF0000"
 };
 
-const config = readConfig();
 let maxLevel = LogLevel.INFO;
-if (config.loggerLevel != null) {
-  const enumValue =
-    LogLevel[config.loggerLevel.toUpperCase() as keyof typeof LogLevel];
-  if (enumValue != null) {
-    maxLevel = enumValue;
-  }
-}
 
 export default class Logger {
   private name: string;
@@ -57,7 +49,7 @@ export default class Logger {
     const logLevel = LogLevel[level].toUpperCase();
     if (maxLevel > level) return;
 
-    if (MOONLIGHT_WEB_PRELOAD) {
+    if (MOONLIGHT_WEB_PRELOAD || MOONLIGHT_BROWSER) {
       args = [
         `%c[${logLevel}]`,
         `background-color: ${colors[level]}; color: #FFFFFF;`,
@@ -89,6 +81,16 @@ export default class Logger {
       case LogLevel.ERROR:
         console.error(...args);
         break;
+    }
+  }
+}
+
+export function initLogger(config: Config) {
+  if (config.loggerLevel != null) {
+    const enumValue =
+      LogLevel[config.loggerLevel.toUpperCase() as keyof typeof LogLevel];
+    if (enumValue != null) {
+      maxLevel = enumValue;
     }
   }
 }

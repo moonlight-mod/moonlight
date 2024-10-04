@@ -6,16 +6,17 @@ import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { constants } from "@moonlight-mod/types";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { getExtensionsPath } from "@moonlight-mod/core/util/data";
-import Logger from "@moonlight-mod/core/util/logger";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import {
   loadExtensions,
   loadProcessedExtensions
 } from "@moonlight-mod/core/extension/loader";
 
 async function injectGlobals() {
-  const config = readConfig();
-  const extensions = getExtensions();
-  const processed = await loadExtensions(extensions);
+  const config = await readConfig();
+  initLogger(config);
+  const extensions = await getExtensions();
+  const processedExtensions = await loadExtensions(extensions);
 
   function getConfig(ext: string) {
     const val = config.extensions[ext];
@@ -25,8 +26,8 @@ async function injectGlobals() {
 
   global.moonlightNode = {
     config,
-    extensions: getExtensions(),
-    processedExtensions: processed,
+    extensions,
+    processedExtensions,
     nativesCache: {},
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {
@@ -48,7 +49,7 @@ async function injectGlobals() {
     writeConfig
   };
 
-  await loadProcessedExtensions(processed);
+  await loadProcessedExtensions(processedExtensions);
   contextBridge.exposeInMainWorld("moonlightNode", moonlightNode);
 
   const extCors = moonlightNode.processedExtensions.extensions

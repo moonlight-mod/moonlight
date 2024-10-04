@@ -14,6 +14,8 @@
   "scripts": {
     "build": "node build.mjs",
     "dev": "node build.mjs --watch",
+    "browser": "node build.mjs --browser",
+    "browser-mv2": "node build.mjs --browser --mv2",
     "lint": "eslint packages",
     "lint:fix": "eslint packages",
     "lint:report": "eslint --output-file eslint_report.json --format json packages",
