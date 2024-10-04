@@ -2,6 +2,7 @@ import { MoonbaseNatives, RepositoryManifest } from "./types";
 import fs from "fs";
 import path from "path";
 import extractAsar from "@moonlight-mod/core/asar";
+import { repoUrlFile } from "@moonlight-mod/types/constants";
 
 const logger = moonlightNode.getLogger("moonbase");
 
@@ -33,7 +34,6 @@ async function installExtension(
   if (fs.existsSync(dir)) fs.rmdirSync(dir, { recursive: true });
   fs.mkdirSync(dir, { recursive: true });
 
-  // for some reason i just can't .writeFileSync() a file that ends in .asar???
   const buffer = await req.arrayBuffer();
   const files = extractAsar(buffer);
   for (const [file, buf] of Object.entries(files)) {
@@ -44,6 +44,8 @@ async function installExtension(
     if (!fs.existsSync(fullDir)) fs.mkdirSync(fullDir, { recursive: true });
     fs.writeFileSync(path.join(dir, file), nodeBuf);
   }
+
+  fs.writeFileSync(path.join(dir, repoUrlFile), repo);
 }
 
 async function deleteExtension(id: string) {

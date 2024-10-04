@@ -8,6 +8,7 @@ import {
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import extractAsar from "@moonlight-mod/core/asar";
+import { repoUrlFile } from "@moonlight-mod/types/constants";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -47,6 +48,11 @@ if (window._moonlightBrowserFS != null) {
         await browserFS.mkdir(browserFS.dirname(path));
         await browserFS.writeFile(path, data);
       }
+
+      await browserFS.writeFile(
+        `/extensions/${manifest.id}/` + repoUrlFile,
+        new TextEncoder().encode(repo)
+      );
     },
     deleteExtension: async (id) => {
       browserFS.rmdir("/extensions/" + id);
