@@ -1,5 +1,9 @@
 <h3 align="center">
-  <img src="./img/wordmark.png" alt="moonlight" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./img/wordmark-light.png">
+    <source media="(prefers-color-scheme: light)" srcset="./img/wordmark.png">
+    <img src="./img/wordmark.png" alt="moonlight" />
+  </picture>
 
 <a href="https://discord.gg/FdZBTFCP6F">Discord server</a>
 \- <a href="https://github.com/moonlight-mod/moonlight">GitHub</a>
