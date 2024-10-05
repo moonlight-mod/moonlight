@@ -75,7 +75,8 @@ const taggedBuildLog = (tag) => ({
 
 async function build(name, entry) {
   let outfile = path.join("./dist", name + ".js");
-  if (name === "browser") outfile = path.join("./dist", "browser", "index.js");
+  const browserDir = mv2 ? "browser-mv2" : "browser";
+  if (name === "browser") outfile = path.join("./dist", browserDir, "index.js");
 
   const dropLabels = [];
   const labels = {
@@ -118,7 +119,7 @@ async function build(name, entry) {
         src: mv2
           ? "./packages/browser/manifestv2.json"
           : "./packages/browser/manifest.json",
-        dest: "./dist/browser/manifest.json"
+        dest: `./dist/${browserDir}/manifest.json`
       })
     );
 
@@ -126,13 +127,13 @@ async function build(name, entry) {
       plugins.push(
         copyStaticFiles({
           src: "./packages/browser/modifyResponseHeaders.json",
-          dest: "./dist/browser/modifyResponseHeaders.json"
+          dest: `./dist/${browserDir}/modifyResponseHeaders.json`
         })
       );
       plugins.push(
         copyStaticFiles({
           src: "./packages/browser/blockLoading.json",
-          dest: "./dist/browser/blockLoading.json"
+          dest: `./dist/${browserDir}/blockLoading.json`
         })
       );
     }
@@ -142,7 +143,7 @@ async function build(name, entry) {
         src: mv2
           ? "./packages/browser/src/background-mv2.js"
           : "./packages/browser/src/background.js",
-        dest: "./dist/browser/background.js"
+        dest: `./dist/${browserDir}/background.js`
       })
     );
   }
