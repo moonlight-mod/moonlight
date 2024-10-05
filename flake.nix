@@ -2,9 +2,9 @@
   description = "Yet another Discord mod";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils";
-    pnpm2nix.url = "github:mojotech/pnpm2nix-nzbr";
+    pnpm2nix.url = "github:NotNite/pnpm2nix-nzbr";
   };
 
   outputs = { self, nixpkgs, flake-utils, pnpm2nix }:
