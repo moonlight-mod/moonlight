@@ -1,5 +1,59 @@
 import { Patch } from "@moonlight-mod/types";
 
+const logger = moonlight.getLogger("rocketship");
+const getDisplayMediaOrig = navigator.mediaDevices.getDisplayMedia;
+
+async function getVenmicStream() {
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    logger.debug("Devices:", devices);
+
+    // This isn't vencord :(
+    const id = devices.find((device) => device.label === "vencord-screen-share")
+      ?.deviceId;
+    if (!id) return null;
+    logger.debug("Got venmic device ID:", id);
+
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        deviceId: {
+          exact: id
+        },
+        autoGainControl: false,
+        echoCancellation: false,
+        noiseSuppression: false
+      }
+    });
+
+    return stream.getAudioTracks();
+  } catch (error) {
+    logger.warn("Failed to get venmic stream:", error);
+    return null;
+  }
+}
+
+navigator.mediaDevices.getDisplayMedia = async function getDisplayMediaRedirect(
+  options
+) {
+  const orig = await getDisplayMediaOrig.call(this, options);
+
+  const venmic = await getVenmicStream();
+  logger.debug("venmic", venmic);
+  if (venmic != null) {
+    // venmic will be proxying all audio, so we need to remove the original
+    // tracks to not cause overlap
+    for (const track of orig.getAudioTracks()) {
+      orig.removeTrack(track);
+    }
+
+    for (const track of venmic) {
+      orig.addTrack(track);
+    }
+  }
+
+  return orig;
+};
+
 export const patches: Patch[] = [
   {
     find: "RustAudioDeviceModule",

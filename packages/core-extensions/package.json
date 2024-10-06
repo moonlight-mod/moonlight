@@ -2,7 +2,8 @@
   "name": "@moonlight-mod/core-extensions",
   "private": true,
   "dependencies": {
+    "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*",
-    "@moonlight-mod/core": "workspace:*"
+    "@vencord/venmic": "^6.1.0"
   }
 }
