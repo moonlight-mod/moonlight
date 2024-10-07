@@ -21,6 +21,7 @@ const logger = new Logger("injector");
 
 let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
+let blockedUrls: RegExp[] = [];
 let isMoonlightDesktop = false;
 let hasOpenAsar = false;
 let openAsarConfigPreload: string | undefined;
@@ -39,6 +40,39 @@ ipcMain.handle(constants.ipcMessageBox, (_, opts) => {
 });
 ipcMain.handle(constants.ipcSetCorsList, (_, list) => {
   corsAllow = list;
+});
+
+const reEscapeRegExp = /[\\^$.*+?()[\]{}|]/g;
+const reMatchPattern =
+  /^(?<scheme>\*|[a-z][a-z0-9+.-]*):\/\/(?<host>.+?)\/(?<path>.+)?$/;
+
+const escapeRegExp = (s: string) => s.replace(reEscapeRegExp, "\\$&");
+ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
+  // We compile the patterns into a RegExp based on a janky match pattern-like syntax
+  const compiled = list
+    .map((pattern) => {
+      const match = pattern.match(reMatchPattern);
+      if (!match?.groups) return;
+
+      let regex = "";
+      if (match.groups.scheme === "*") regex += ".+?";
+      else regex += escapeRegExp(match.groups.scheme);
+      regex += ":\\/\\/";
+
+      const parts = match.groups.host.split(".");
+      if (parts[0] === "*") {
+        parts.shift();
+        regex += "(?:.+?\\.)?";
+      }
+      regex += escapeRegExp(parts.join("."));
+
+      regex += "\\/" + escapeRegExp(match.groups.path).replace("\\*", ".*?");
+
+      return new RegExp("^" + regex + "$");
+    })
+    .filter(Boolean) as RegExp[];
+
+  blockedUrls = compiled;
 });
 
 function patchCsp(headers: Record<string, string[]>) {
@@ -116,6 +150,12 @@ class BrowserWindow extends ElectronBrowserWindow {
 
         cb({ cancel: false, responseHeaders: details.responseHeaders });
       }
+    });
+
+    // Allow plugins to block some URLs,
+    // this is needed because multiple webRequest handlers cannot be registered at once
+    this.webContents.session.webRequest.onBeforeRequest((details, cb) => {
+      cb({ cancel: blockedUrls.some((u) => u.test(details.url)) });
     });
 
     if (hasOpenAsar) {
