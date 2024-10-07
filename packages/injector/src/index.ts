@@ -183,6 +183,9 @@ export async function inject(asarPath: string) {
         dependencyGraph: new Map()
       },
 
+      version: MOONLIGHT_VERSION,
+      branch: MOONLIGHT_BRANCH,
+
       getConfig,
       getConfigOption: <T>(ext: string, name: string) => {
         const config = getConfig(ext);

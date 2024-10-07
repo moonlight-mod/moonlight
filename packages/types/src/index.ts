@@ -30,6 +30,8 @@ declare global {
   const MOONLIGHT_NODE_PRELOAD: boolean;
   const MOONLIGHT_WEB_PRELOAD: boolean;
   const MOONLIGHT_BROWSER: boolean;
+  const MOONLIGHT_BRANCH: string;
+  const MOONLIGHT_VERSION: string;
 
   var moonlightHost: MoonlightHost;
   var moonlightNode: MoonlightNode;

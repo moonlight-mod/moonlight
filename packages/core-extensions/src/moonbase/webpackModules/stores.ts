@@ -16,6 +16,11 @@ let natives: MoonbaseNatives = moonlight.getNatives("moonbase");
 if (window._moonlightBrowserFS != null) {
   const browserFS = window._moonlightBrowserFS!;
   natives = {
+    checkForMoonlightUpdate: async () => {
+      // TODO
+      return null;
+    },
+
     fetchRepositories: async (repos) => {
       const ret: Record<string, RepositoryManifest[]> = {};
 

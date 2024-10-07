@@ -30,6 +30,9 @@ async function load() {
       registerWebpackModule
     },
 
+    version: MOONLIGHT_VERSION,
+    branch: MOONLIGHT_BRANCH,
+
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
     getConfigOption: moonlightNode.getConfigOption.bind(moonlightNode),
     getNatives: moonlightNode.getNatives.bind(moonlightNode),
