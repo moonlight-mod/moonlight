@@ -55,6 +55,7 @@ navigator.mediaDevices.getDisplayMedia = async function getDisplayMediaRedirect(
 };
 
 export const patches: Patch[] = [
+  // "Ensure discord_voice is happy"
   {
     find: "RustAudioDeviceModule",
     replace: [
@@ -68,6 +69,7 @@ export const patches: Patch[] = [
       }
     ]
   },
+  // Remove Native media engine from list of choices
   {
     find: '.CAMERA_BACKGROUND_LIVE="cameraBackgroundLive"',
     replace: {
@@ -75,6 +77,7 @@ export const patches: Patch[] = [
       replacement: ""
     }
   },
+  // Stub out browser checks to allow us to use WebRTC voice on Embedded
   {
     find: "Using Unified Plan (",
     replace: {
