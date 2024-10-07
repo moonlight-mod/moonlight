@@ -10,7 +10,7 @@ export const patches: Patch[] = [
           `=require("markdown_markdown")._addRules({newline:${rules}}),${RULES}=(0,`
       },
       {
-        match: /(?<=var (.{1,2})={RULES:.+?})/,
+        match: /(?<=;(.{1,2}\.Z)={RULES:.+?})/,
         replacement: (_, rulesets) =>
           `;require("markdown_markdown")._applyRulesetBlacklist(${rulesets});`
       }
@@ -26,7 +26,7 @@ export const patches: Patch[] = [
       },
       {
         match:
-          /(originalMatch:.}=(.);)(.+?)case"emoticon":(return .+?;)(.+?)case"link":{(.+?)}default:/,
+          /(originalMatch:.}=(.);)(.+?)case"emoticon":(return .+?;)(.+?)case"subtext":{(.+?)}default:/,
         replacement: (
           _,
           start,
