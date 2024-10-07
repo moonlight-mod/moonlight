@@ -1,6 +1,5 @@
 import { join } from "node:path";
 import { Module } from "node:module";
-import { BrowserWindow } from "electron";
 
 const logger = moonlightHost.getLogger("disableSentry");
 
@@ -24,19 +23,3 @@ if (moonlightHost.asarPath !== "moonlightDesktop") {
     logger.error("Failed to stub Sentry host side:", err);
   }
 }
-
-moonlightHost.events.on("window-created", (window: BrowserWindow) => {
-  window.webContents.session.webRequest.onBeforeRequest(
-    {
-      urls: [
-        "https://*.sentry.io/*",
-        "https://*.discord.com/error-reporting-proxy/*",
-        "https://discord.com/assets/sentry.*.js",
-        "https://*.discord.com/assets/sentry.*.js"
-      ]
-    },
-    function (details, callback) {
-      callback({ cancel: true });
-    }
-  );
-});

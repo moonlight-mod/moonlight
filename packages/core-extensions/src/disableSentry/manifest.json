@@ -6,5 +6,11 @@
     "tagline": "Turns off Discord's error reporting systems",
     "authors": ["Cynosphere", "NotNite"],
     "tags": ["privacy"]
-  }
+  },
+  "blocked": [
+    "https://*.sentry.io/*",
+    "https://*.discord.com/error-reporting-proxy/*",
+    "https://discord.com/assets/sentry.*.js",
+    "https://*.discord.com/assets/sentry.*.js"
+  ]
 }

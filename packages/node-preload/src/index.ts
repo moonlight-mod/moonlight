@@ -52,9 +52,9 @@ async function injectGlobals() {
   await loadProcessedExtensions(processedExtensions);
   contextBridge.exposeInMainWorld("moonlightNode", moonlightNode);
 
-  const extCors = moonlightNode.processedExtensions.extensions
-    .map((x) => x.manifest.cors ?? [])
-    .flat();
+  const extCors = moonlightNode.processedExtensions.extensions.flatMap(
+    (x) => x.manifest.cors ?? []
+  );
 
   for (const repo of moonlightNode.config.repositories) {
     const url = new URL(repo);
@@ -63,6 +63,11 @@ async function injectGlobals() {
   }
 
   ipcRenderer.invoke(constants.ipcSetCorsList, extCors);
+
+  const extBlocked = moonlightNode.processedExtensions.extensions.flatMap(
+    (e) => e.manifest.blocked ?? []
+  );
+  ipcRenderer.invoke(constants.ipcSetBlockedList, extBlocked);
 }
 
 async function loadPreload() {
