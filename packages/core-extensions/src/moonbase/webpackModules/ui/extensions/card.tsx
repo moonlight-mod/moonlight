@@ -28,6 +28,8 @@ const TabBarClasses = spacepack.findByExports(
   "tabBarItem",
   "headerContentWrapper"
 )[0].exports;
+const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0]
+  .exports;
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -213,8 +215,17 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         >
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
           {tab === ExtensionPage.Description && (
-            <Text variant="text-md/normal">
-              {MarkupUtils.parse(description ?? "*No description*")}
+            <Text
+              variant="text-md/normal"
+              class={MarkupClasses.markup}
+              style={{ width: "100%" }}
+            >
+              {/* @ts-expect-error This type needs to be updated! */}
+              {MarkupUtils.parse(description ?? "*No description*", true, {
+                allowHeading: true,
+                allowLinks: true,
+                allowList: true
+              })}
             </Text>
           )}
           {tab === ExtensionPage.Settings && <Settings ext={ext} />}
