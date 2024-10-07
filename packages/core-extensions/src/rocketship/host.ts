@@ -52,15 +52,47 @@ moonlightHost.events.on(
   "window-created",
   (window: BrowserWindow, isMainWindow: boolean) => {
     if (!isMainWindow) return;
-
     const windowSession = window.webContents.session;
 
-    window.webContents.on("did-finish-load", () => {
-      windowSession.setPermissionRequestHandler(
-        (webContents, permission, callback) => {
-          if (permission === "media") callback(true);
+    windowSession.setPermissionRequestHandler(
+      (webcontents, permission, callback) => {
+        let cbResult = false;
+        function fakeCallback(result: boolean) {
+          cbResult = result;
         }
-      );
+
+        if (caughtPermissionRequestHandler) {
+          caughtPermissionRequestHandler(webcontents, permission, fakeCallback);
+        }
+
+        if (permission === "media" || permission === "display-capture") {
+          cbResult = true;
+        }
+
+        callback(cbResult);
+      }
+    );
+
+    let caughtPermissionRequestHandler:
+      | ((
+          webcontents: Electron.WebContents,
+          permission: string,
+          callback: (permissionGranted: boolean) => void
+        ) => void)
+      | undefined;
+
+    windowSession.setPermissionRequestHandler =
+      function catchSetPermissionRequestHandler(
+        handler: (
+          webcontents: Electron.WebContents,
+          permission: string,
+          callback: (permissionGranteda: boolean) => void
+        ) => void
+      ) {
+        caughtPermissionRequestHandler = handler;
+      };
+
+    window.webContents.on("did-finish-load", () => {
       windowSession.setPermissionCheckHandler((webContents, permission) => {
         if (permission === "media") return true;
         return false;
