@@ -220,7 +220,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               class={MarkupClasses.markup}
               style={{ width: "100%" }}
             >
-              {/* @ts-expect-error This type needs to be updated! */}
               {MarkupUtils.parse(description ?? "*No description*", true, {
                 allowHeading: true,
                 allowLinks: true,
