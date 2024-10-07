@@ -20,7 +20,8 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { DownloadIcon, TrashIcon, CircleWarningIcon } = Components;
+const { BeakerIcon, DownloadIcon, TrashIcon, CircleWarningIcon, Tooltip } =
+  Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports(
@@ -30,6 +31,10 @@ const TabBarClasses = spacepack.findByExports(
 )[0].exports;
 const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0]
   .exports;
+
+const BuildOverrideClasses = spacepack.findByExports(
+  "disabledButtonOverride"
+)[0].exports;
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -76,10 +81,21 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
     <Card editable={true} className={IntegrationCard.card}>
       <div className={IntegrationCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
-          <Flex direction={Flex.Direction.HORIZONTAL}>
+          <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
             <Text variant="text-md/semibold">
               {ext.manifest?.meta?.name ?? ext.id}
             </Text>
+            {ext.source.type === ExtensionLoadSource.Developer && (
+              <Tooltip text="This is a local extension" position="top">
+                {(props: any) => (
+                  <BeakerIcon
+                    {...props}
+                    class={BuildOverrideClasses.infoIcon}
+                    size="xs"
+                  />
+                )}
+              </Tooltip>
+            )}
           </Flex>
 
           {tagline != null && (
