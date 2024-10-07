@@ -11,12 +11,11 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: "window.DiscordSentry.addBreadcrumb",
+    find: "this._sentryUtils=",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /Z:function\(\){return .}/,
-      replacement:
-        'default:function(){return (...args)=>{moonlight.getLogger("disableSentry").debug("Sentry calling addBreadcrumb passthrough:", ...args);}}'
+      match: /(?<=this._sentryUtils=)./,
+      replacement: "undefined"
     }
   },
   {
