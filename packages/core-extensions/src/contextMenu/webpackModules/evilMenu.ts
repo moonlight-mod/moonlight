@@ -6,10 +6,8 @@ let code =
       "Menu API only allows Items and groups of Items as children."
     )[0].id
   ].toString();
-code = code.replace(
-  /onSelect:(.)}=(.),.=(.\(.\)),/,
-  `onSelect:$1}=$2;return $3;let `
-);
+code = code.replace(/,.=(?=function .\(.\){.+?,.=function)/, ";return ");
+code = code.replace(/,(?=__contextMenu)/, ";let ");
 const mod = new Function(
   "module",
   "exports",
@@ -18,7 +16,10 @@ const mod = new Function(
 );
 const exp: any = {};
 mod({}, exp, require);
-const Menu = spacepack.findFunctionByStrings(exp, "isUsingKeyboardNavigation")!;
+const Menu = spacepack.findFunctionByStrings(
+  exp,
+  "Menu API only allows Items and groups of Items as children."
+)!;
 module.exports = (el: any) => {
   return Menu({
     children: el,
