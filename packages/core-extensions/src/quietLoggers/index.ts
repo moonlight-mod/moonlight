@@ -8,10 +8,10 @@ const notXssDefensesOnly = () =>
 // that end up causing syntax errors by the normal patch
 const loggerFixes: Patch[] = [
   {
-    find: '"./ggsans-800-extrabolditalic.woff2":',
+    find: '"./gg-sans/ggsans-800-extrabolditalic.woff2":',
     replace: {
-      match: /throw .+?,./,
-      replacement: "return{}"
+      match: /var .=Error.+?;throw .+?,./,
+      replacement: ""
     }
   },
   {
