@@ -296,6 +296,30 @@ class MoonbaseSettingsStore extends Store<any> {
     this.emitChange();
   }
 
+  async getDependencies(uniqueId: number) {
+    const ext = this.getExtension(uniqueId);
+
+    let allDepsSatisfied = true;
+    for (const dep of ext.manifest.dependencies ?? []) {
+      const id = this.getExtensionUniqueId(dep);
+      const state =
+        id != null ? this.getExtension(id).state : ExtensionState.NotDownloaded;
+      if (id == null || state === ExtensionState.NotDownloaded) {
+        allDepsSatisfied = false;
+        break;
+      }
+    }
+
+    if (allDepsSatisfied) return null;
+
+    const deps: Record<string, MoonbaseExtension[]> = {};
+    for (const dep of ext.manifest.dependencies ?? []) {
+      deps[dep] = Object.values(this.extensions).filter((e) => e.id === dep);
+    }
+
+    return deps;
+  }
+
   async deleteExtension(uniqueId: number) {
     const ext = this.getExtension(uniqueId);
     if (ext == null) return;

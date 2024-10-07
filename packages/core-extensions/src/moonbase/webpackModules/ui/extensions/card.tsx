@@ -19,6 +19,7 @@ export enum ExtensionPage {
 }
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import doPopup from "./popup";
 
 const { BeakerIcon, DownloadIcon, TrashIcon, CircleWarningIcon, Tooltip } =
   Components;
@@ -113,8 +114,13 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               color={Button.Colors.BRAND}
               submitting={busy}
               disabled={conflicting}
-              onClick={() => {
-                MoonbaseSettingsStore.installExtension(uniqueId);
+              onClick={async () => {
+                await MoonbaseSettingsStore.installExtension(uniqueId);
+                const deps =
+                  await MoonbaseSettingsStore.getDependencies(uniqueId);
+                if (deps != null) {
+                  await doPopup();
+                }
               }}
             >
               Install
