@@ -1,13 +1,14 @@
 import { app, nativeTheme } from "electron";
 
-const config = moonlightHost.getConfig("nativeFixes") ?? {};
-
 const enabledFeatures = app.commandLine
   .getSwitchValue("enable-features")
   .split(",");
 
 moonlightHost.events.on("window-created", function (browserWindow) {
-  if (config.devtoolsThemeFix ?? true) {
+  if (
+    moonlightHost.getConfigOption<boolean>("nativeFixes", "devtoolsThemeFix") ??
+    true
+  ) {
     browserWindow.webContents.on("devtools-opened", () => {
       if (!nativeTheme.shouldUseDarkColors) return;
       nativeTheme.themeSource = "light";
@@ -18,7 +19,13 @@ moonlightHost.events.on("window-created", function (browserWindow) {
   }
 });
 
-if (config.disableRendererBackgrounding ?? true) {
+if (
+  moonlightHost.getConfigOption<boolean>(
+    "nativeFixes",
+    "disableRendererBackgrounding"
+  ) ??
+  true
+) {
   // Discord already disables UseEcoQoSForBackgroundProcess and some other
   // related features
   app.commandLine.appendSwitch("disable-renderer-backgrounding");
@@ -29,14 +36,23 @@ if (config.disableRendererBackgrounding ?? true) {
 }
 
 if (process.platform === "linux") {
-  if (config.linuxAutoscroll ?? false) {
+  if (
+    moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxAutoscroll") ??
+    false
+  ) {
     app.commandLine.appendSwitch(
       "enable-blink-features",
       "MiddleClickAutoscroll"
     );
   }
 
-  if (config.linuxSpeechDispatcher ?? true) {
+  if (
+    moonlightHost.getConfigOption<boolean>(
+      "nativeFixes",
+      "linuxSpeechDispatcher"
+    ) ??
+    true
+  ) {
     app.commandLine.appendSwitch("enable-speech-dispatcher");
   }
 }
@@ -44,7 +60,10 @@ if (process.platform === "linux") {
 // NOTE: Only tested if this appears on Windows, it should appear on all when
 //       hardware acceleration is disabled
 const noAccel = app.commandLine.hasSwitch("disable-gpu-compositing");
-if ((config.vaapi ?? true) && !noAccel) {
+if (
+  (moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapi") ?? true) &&
+  !noAccel
+) {
   enabledFeatures.push("VaapiVideoEncoder", "VaapiVideoDecoder");
   if (process.platform === "linux")
     enabledFeatures.push("VaapiVideoDecodeLinuxGL");
