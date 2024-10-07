@@ -121,6 +121,17 @@ class MoonbaseSettingsStore extends Store<any> {
             };
 
             if (this.alreadyExists(extensionData)) {
+              // Make sure the download URL is properly updated
+              for (const [id, e] of Object.entries(this.extensions)) {
+                if (e.id === ext.id && e.source.url === repo) {
+                  this.extensions[parseInt(id)].manifest = {
+                    ...e.manifest,
+                    download: ext.download
+                  };
+                  break;
+                }
+              }
+
               if (this.hasUpdate(extensionData)) {
                 this.updates[uniqueId] = {
                   version: ext.version!,
