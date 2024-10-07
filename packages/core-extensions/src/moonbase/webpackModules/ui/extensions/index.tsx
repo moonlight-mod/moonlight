@@ -96,7 +96,7 @@ export default function ExtensionsPage() {
         setSelectedTags={setSelectedTags}
       />
       {filtered.map((ext) => (
-        <ExtensionCard uniqueId={ext.uniqueId} key={ext.id} />
+        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
       ))}
     </>
   );
