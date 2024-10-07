@@ -1,0 +1,47 @@
+{
+  "id": "nativeFixes",
+  "meta": {
+    "name": "Native Fixes",
+    "tagline": "Various configurable fixes for Discord and Electron",
+    "authors": [
+      "Cynosphere",
+      "adryd"
+    ],
+    "tags": [
+      "fixes"
+    ]
+  },
+  "settings": {
+    "devtoolsThemeFix": {
+      "displayName": "Devtools Theme Fix",
+      "description": "Temporary workaround for devtools defaulting to light theme on Electron 32",
+      "type": "boolean",
+      "default": true
+    },
+    "disableRendererBackgrounding": {
+      "displayName": "Disable Renderer Backgrounding",
+      "description": "This is enabled by default as a power saving measure, but it breaks screensharing and websocket connections fairly often",
+      "type": "boolean",
+      "default": true
+    },
+    "linuxAutoscroll": {
+      "displayName": "Enable middle click autoscroll on Linux",
+      "description": "Requires manual configuration of your system to disable middle click paste, has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
+    },
+    "linuxSpeechDispatcher": {
+      "displayName": "Enable speech-dispatcher for TTS on Linux",
+      "description": "Has no effect on other operating systems",
+      "type": "boolean",
+      "default": true
+    },
+    "vaapi": {
+      "displayName": "Enable VAAPI features",
+      "description": "Provides additional hardware acceleration",
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "apiLevel": 2
+}
