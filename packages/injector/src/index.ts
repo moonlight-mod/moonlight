@@ -123,18 +123,19 @@ class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
     oldPreloadPath = opts.webPreferences!.preload;
 
-    // Only overwrite preload if its the actual main client window
-    if (opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1) {
+    const isMainWindow =
+      opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
+
+    if (isMainWindow)
       opts.webPreferences!.preload = require.resolve("./node-preload.js");
-    }
 
     // Event for modifying window options
-    moonlightHost.events.emit("window-options", opts);
+    moonlightHost.events.emit("window-options", opts, isMainWindow);
 
     super(opts);
 
     // Event for when a window is created
-    moonlightHost.events.emit("window-created", this);
+    moonlightHost.events.emit("window-created", this, isMainWindow);
 
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
