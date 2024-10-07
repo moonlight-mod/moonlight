@@ -6,5 +6,9 @@
     "tagline": "Disables /api/science and analytics",
     "authors": ["Cynosphere", "NotNite"],
     "tags": ["privacy"]
-  }
+  },
+  "blocked": [
+    "https://*.discord.com/api/v*/science",
+    "https://*.discord.com/api/v*/metrics"
+  ]
 }
