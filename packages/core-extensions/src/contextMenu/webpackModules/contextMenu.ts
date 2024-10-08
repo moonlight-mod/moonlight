@@ -31,7 +31,7 @@ export function addItem<T>(
 }
 
 export const patches: Patch[] = [];
-function _patchMenu(props: MenuProps, items: InternalItem[]) {
+export function _patchMenu(props: MenuProps, items: InternalItem[]) {
   const matches = patches.filter((p) => p.navId === props.navId);
   if (!matches.length) return;
 
@@ -43,7 +43,7 @@ function _patchMenu(props: MenuProps, items: InternalItem[]) {
 }
 
 let menuProps: any;
-function _saveProps(self: any, el: any) {
+export function _saveProps(self: any, el: any) {
   menuProps = el.props;
 
   const original = self.props.closeContextMenu;
@@ -54,12 +54,6 @@ function _saveProps(self: any, el: any) {
 
   return el;
 }
-
-module.exports = {
-  addItem,
-  _patchMenu,
-  _saveProps
-};
 
 // Unmangle Menu elements
 const code =
