@@ -5,9 +5,9 @@ export const patches: Patch[] = [
   {
     find: '"useGenerateUserSettingsSections"',
     replace: {
-      match: /(?<=\.push\(.+?\)}\)\)}\),)./,
-      replacement: (sections: string) =>
-        `require("settings_settings").Settings._mutateSections(${sections})`
+      match: /(?<=\.push\(.+?\)}\)\)}\),)(.+?)}/,
+      replacement: (_, sections: string) =>
+        `require("settings_settings").Settings._mutateSections(${sections})}`
     }
   },
   {
