@@ -12,7 +12,7 @@ async function checkForMoonlightUpdate() {
   try {
     if (moonlightNode.branch === MoonlightBranch.STABLE) {
       const req = await fetch(
-        `https://api.github.com/repos/${githubRepo}/releases/latest`,
+        `https://api.github.com/repos/${githubRepo}/releases/latest?_=${Date.now()}`,
         {
           headers: {
             "User-Agent": userAgent
@@ -22,7 +22,7 @@ async function checkForMoonlightUpdate() {
       const json: { name: string } = await req.json();
       return json.name !== moonlightNode.version ? json.name : null;
     } else if (moonlightNode.branch === MoonlightBranch.NIGHTLY) {
-      const req = await fetch(nightlyRefUrl, {
+      const req = await fetch(`${nightlyRefUrl}?_=${Date.now()}`, {
         headers: {
           "User-Agent": userAgent
         }
