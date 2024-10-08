@@ -1,4 +1,4 @@
-import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
+import { ExtensionWebpackModule } from "@moonlight-mod/types";
 
 export const webpackModules: Record<string, ExtensionWebpackModule> = {
   stores: {
@@ -33,49 +33,17 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
 
   updates: {
     dependencies: [
-      { id: "discord/Dispatcher" },
-      { ext: "moonbase", id: "stores" }
+      { id: "react" },
+      { ext: "moonbase", id: "stores" },
+      { ext: "notices", id: "notices" },
+      {
+        ext: "spacepack",
+        id: "spacepack"
+      }
     ],
     entrypoint: true
-  },
-
-  updatesNotice: {
-    dependencies: [
-      { id: "react" },
-      { id: "discord/Dispatcher" },
-      { id: "discord/components/common/index" },
-      { id: "discord/packages/flux" },
-      { ext: "spacepack", id: "spacepack" },
-      { ext: "moonbase", id: "stores" }
-    ]
   }
 };
-
-export const patches: Patch[] = [
-  {
-    find: ".GUILD_RAID_NOTIFICATION:",
-    replace: {
-      match:
-        /(?<=return(\(0,.\.jsx\))\(.+?\);)case .{1,2}\..{1,3}\.GUILD_RAID_NOTIFICATION:/,
-      replacement: (orig, createElement) =>
-        `case "__moonlight_updates":return${createElement}(require("moonbase_updatesNotice").default,{});${orig}`
-    }
-  },
-  {
-    find: '"NoticeStore"',
-    replace: [
-      {
-        match: /\[.{1,2}\..{1,3}\.CONNECT_SPOTIFY\]:{/,
-        replacement: (orig: string) =>
-          `__moonlight_updates:{predicate:()=>require("moonbase_stores").MoonbaseSettingsStore.shouldShowUpdateNotice()},${orig}`
-      },
-      {
-        match: /=\[(.{1,2}\..{1,3}\.QUARANTINED,)/g,
-        replacement: (_, orig) => `=["__moonlight_updates",${orig}`
-      }
-    ]
-  }
-];
 
 export const styles = [
   ".moonbase-settings > :first-child { margin-top: 0px; }",

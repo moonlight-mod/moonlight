@@ -18,29 +18,33 @@ if (window._moonlightBrowserFS != null) {
   const browserFS = window._moonlightBrowserFS!;
   natives = {
     checkForMoonlightUpdate: async () => {
-      // TODO
-      if (moonlight.branch === "stable") {
-        const req = await fetch(
-          `https://api.github.com/repos/${githubRepo}/releases/latest`,
-          {
+      try {
+        if (moonlight.branch === "stable") {
+          const req = await fetch(
+            `https://api.github.com/repos/${githubRepo}/releases/latest`,
+            {
+              headers: {
+                "User-Agent": userAgent
+              }
+            }
+          );
+          const json: { name: string } = await req.json();
+          return json.name !== moonlight.version ? json.name : null;
+        } else if (moonlight.branch === "nightly") {
+          const req = await fetch(nightlyRefUrl, {
             headers: {
               "User-Agent": userAgent
             }
-          }
-        );
-        const json: { name: string } = await req.json();
-        return json.name !== moonlight.version ? json.name : null;
-      } else if (moonlight.branch === "nightly") {
-        const req = await fetch(nightlyRefUrl, {
-          headers: {
-            "User-Agent": userAgent
-          }
-        });
-        const ref = (await req.text()).split("\n")[0];
-        return ref !== moonlight.version ? ref : null;
-      }
+          });
+          const ref = (await req.text()).split("\n")[0];
+          return ref !== moonlight.version ? ref : null;
+        }
 
-      return null;
+        return null;
+      } catch (e) {
+        logger.error("Error checking for moonlight update", e);
+        return null;
+      }
     },
 
     fetchRepositories: async (repos) => {
@@ -105,7 +109,7 @@ class MoonbaseSettingsStore extends Store<any> {
   installing: boolean;
 
   newVersion: string | null;
-  private updateNotice: boolean;
+  shouldShowNotice: boolean;
 
   extensions: { [id: number]: MoonbaseExtension };
   updates: { [id: number]: { version: string; download: string } };
@@ -122,7 +126,7 @@ class MoonbaseSettingsStore extends Store<any> {
     this.installing = false;
 
     this.newVersion = null;
-    this.updateNotice = false;
+    this.shouldShowNotice = false;
 
     this.extensions = {};
     this.updates = {};
@@ -137,48 +141,54 @@ class MoonbaseSettingsStore extends Store<any> {
       };
     }
 
-    natives!.fetchRepositories(this.config.repositories).then((ret) => {
-      for (const [repo, exts] of Object.entries(ret)) {
-        try {
-          for (const ext of exts) {
-            const level = ext.apiLevel ?? 1;
-            if (level !== window.moonlight.apiLevel) continue;
+    natives!
+      .fetchRepositories(this.config.repositories)
+      .then((ret) => {
+        for (const [repo, exts] of Object.entries(ret)) {
+          try {
+            for (const ext of exts) {
+              const level = ext.apiLevel ?? 1;
+              if (level !== window.moonlight.apiLevel) continue;
 
-            const uniqueId = this.extensionIndex++;
-            const extensionData = {
-              id: ext.id,
-              uniqueId,
-              manifest: ext,
-              source: { type: ExtensionLoadSource.Normal, url: repo },
-              state: ExtensionState.NotDownloaded
-            };
+              const uniqueId = this.extensionIndex++;
+              const extensionData = {
+                id: ext.id,
+                uniqueId,
+                manifest: ext,
+                source: { type: ExtensionLoadSource.Normal, url: repo },
+                state: ExtensionState.NotDownloaded
+              };
 
-            if (this.alreadyExists(extensionData)) {
-              if (this.hasUpdate(extensionData)) {
-                this.updates[uniqueId] = {
-                  version: ext.version!,
-                  download: ext.download
-                };
+              if (this.alreadyExists(extensionData)) {
+                if (this.hasUpdate(extensionData)) {
+                  this.updates[uniqueId] = {
+                    version: ext.version!,
+                    download: ext.download
+                  };
+                }
+
+                continue;
               }
 
-              continue;
+              this.extensions[uniqueId] = extensionData;
             }
-
-            this.extensions[uniqueId] = extensionData;
+          } catch (e) {
+            logger.error(`Error processing repository ${repo}`, e);
           }
-        } catch (e) {
-          logger.error(`Error processing repository ${repo}`, e);
         }
-      }
 
-      this.emitChange();
-    });
-
-    natives!.checkForMoonlightUpdate().then((version) => {
-      this.newVersion = version;
-
-      this.emitChange();
-    });
+        this.emitChange();
+      })
+      .then(natives!.checkForMoonlightUpdate)
+      .then((version) => {
+        this.newVersion = version;
+        this.emitChange();
+      })
+      .then(() => {
+        this.shouldShowNotice =
+          this.newVersion != null || Object.keys(this.updates).length > 0;
+        this.emitChange();
+      });
   }
 
   private alreadyExists(ext: MoonbaseExtension) {
@@ -381,20 +391,6 @@ class MoonbaseSettingsStore extends Store<any> {
     this.modified = false;
     this.config = this.clone(this.origConfig);
     this.emitChange();
-  }
-
-  showUpdateNotice() {
-    this.updateNotice = true;
-    //this.emitChange();
-  }
-
-  dismissUpdateNotice() {
-    this.updateNotice = false;
-    //this.emitChange();
-  }
-
-  shouldShowUpdateNotice() {
-    return this.updateNotice;
   }
 
   // Required because electron likes to make it immutable sometimes.

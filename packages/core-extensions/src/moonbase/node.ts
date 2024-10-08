@@ -8,28 +8,33 @@ import { githubRepo, userAgent, nightlyRefUrl } from "./consts";
 const logger = moonlightNode.getLogger("moonbase");
 
 async function checkForMoonlightUpdate() {
-  if (moonlightNode.branch === "stable") {
-    const req = await fetch(
-      `https://api.github.com/repos/${githubRepo}/releases/latest`,
-      {
+  try {
+    if (moonlightNode.branch === "stable") {
+      const req = await fetch(
+        `https://api.github.com/repos/${githubRepo}/releases/latest`,
+        {
+          headers: {
+            "User-Agent": userAgent
+          }
+        }
+      );
+      const json: { name: string } = await req.json();
+      return json.name !== moonlightNode.version ? json.name : null;
+    } else if (moonlightNode.branch === "nightly") {
+      const req = await fetch(nightlyRefUrl, {
         headers: {
           "User-Agent": userAgent
         }
-      }
-    );
-    const json: { name: string } = await req.json();
-    return json.name !== moonlightNode.version ? json.name : null;
-  } else if (moonlightNode.branch === "nightly") {
-    const req = await fetch(nightlyRefUrl, {
-      headers: {
-        "User-Agent": userAgent
-      }
-    });
-    const ref = (await req.text()).split("\n")[0];
-    return ref !== moonlightNode.version ? ref : null;
-  }
+      });
+      const ref = (await req.text()).split("\n")[0];
+      return ref !== moonlightNode.version ? ref : null;
+    }
 
-  return null;
+    return null;
+  } catch (e) {
+    logger.error("Error checking for moonlight update", e);
+    return null;
+  }
 }
 
 async function fetchRepositories(repos: string[]) {

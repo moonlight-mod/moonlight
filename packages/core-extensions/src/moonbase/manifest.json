@@ -6,7 +6,7 @@
     "tagline": "The official settings UI for moonlight",
     "authors": ["Cynosphere", "NotNite"]
   },
-  "dependencies": ["spacepack", "settings", "common"],
+  "dependencies": ["spacepack", "settings", "common", "notices"],
   "settings": {
     "sections": {
       "displayName": "Split into sections",
