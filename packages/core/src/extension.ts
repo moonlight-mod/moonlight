@@ -111,10 +111,6 @@ async function loadDetectedExtensions(
       const manifest: ExtensionManifest = JSON.parse(
         await fs.readFile(manifestPath)
       );
-      const level = manifest.apiLevel ?? 1;
-      if (level !== constants.apiLevel) {
-        continue;
-      }
 
       const webPath = fs.join(dir, "index.js");
       const nodePath = fs.join(dir, "node.js");

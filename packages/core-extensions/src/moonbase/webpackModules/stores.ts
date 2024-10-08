@@ -1,5 +1,6 @@
 import {
   Config,
+  constants,
   ExtensionLoadSource,
   MoonlightBranch
 } from "@moonlight-mod/types";
@@ -151,9 +152,6 @@ class MoonbaseSettingsStore extends Store<any> {
         for (const [repo, exts] of Object.entries(ret)) {
           try {
             for (const ext of exts) {
-              const level = ext.apiLevel ?? 1;
-              if (level !== window.moonlight.apiLevel) continue;
-
               const uniqueId = this.extensionIndex++;
               const extensionData = {
                 id: ext.id,
@@ -163,7 +161,11 @@ class MoonbaseSettingsStore extends Store<any> {
                 state: ExtensionState.NotDownloaded
               };
 
-              if (this.alreadyExists(extensionData)) {
+              const apiLevel = ext.apiLevel ?? 1;
+              if (apiLevel !== constants.apiLevel) continue;
+
+              const existing = this.getExisting(extensionData);
+              if (existing != null) {
                 // Make sure the download URL is properly updated
                 for (const [id, e] of Object.entries(this.extensions)) {
                   if (e.id === ext.id && e.source.url === repo) {
@@ -176,7 +178,7 @@ class MoonbaseSettingsStore extends Store<any> {
                 }
 
                 if (this.hasUpdate(extensionData)) {
-                  this.updates[uniqueId] = {
+                  this.updates[existing.uniqueId] = {
                     version: ext.version!,
                     download: ext.download
                   };
@@ -206,8 +208,8 @@ class MoonbaseSettingsStore extends Store<any> {
       });
   }
 
-  private alreadyExists(ext: MoonbaseExtension) {
-    return Object.values(this.extensions).some(
+  private getExisting(ext: MoonbaseExtension) {
+    return Object.values(this.extensions).find(
       (e) => e.id === ext.id && e.source.url === ext.source.url
     );
   }
