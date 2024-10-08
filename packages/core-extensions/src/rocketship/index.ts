@@ -107,5 +107,24 @@ export const patches: Patch[] = [
       match: /.\.isPlatformEmbedded/,
       replacement: "false"
     }
+  },
+  {
+    // Matching MediaEngineStore
+    find: '"displayName","MediaEngineStore")',
+    replace: [
+      // Prevent loading of krisp native module by stubbing out desktop checks
+      {
+        match:
+          /\(\(0,.\.isWindows\)\(\)\|\|\(0,.\.isLinux\)\(\)\|\|.+?&&!__OVERLAY__/,
+        replacement: (orig, macosPlatformCheck) => `false&&!__OVERLAY__`
+      },
+      // Enable loading of web krisp equivelant by replacing isWeb with true
+      {
+        match:
+          /\(0,.\.isWeb\)\(\)&&(.{1,2}\.supports\(.{1,2}\..{1,2}.NOISE_CANCELLATION)/,
+        replacement: (orig, supportsNoiseCancellation) =>
+          `true&&${supportsNoiseCancellation}`
+      }
+    ]
   }
 ];
