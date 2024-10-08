@@ -1,108 +1,13 @@
-import {
-  Config,
-  constants,
-  ExtensionLoadSource,
-  MoonlightBranch
-} from "@moonlight-mod/types";
-import {
-  ExtensionState,
-  MoonbaseExtension,
-  MoonbaseNatives,
-  RepositoryManifest
-} from "../types";
+import { Config, constants, ExtensionLoadSource } from "@moonlight-mod/types";
+import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
-import extractAsar from "@moonlight-mod/core/asar";
-import { repoUrlFile } from "@moonlight-mod/types/constants";
-import { githubRepo, userAgent, nightlyRefUrl } from "../consts";
+import getNatives from "../native";
 
 const logger = moonlight.getLogger("moonbase");
 
 let natives: MoonbaseNatives = moonlight.getNatives("moonbase");
-if (window._moonlightBrowserFS != null) {
-  const browserFS = window._moonlightBrowserFS!;
-  natives = {
-    checkForMoonlightUpdate: async () => {
-      try {
-        if (moonlight.branch === MoonlightBranch.STABLE) {
-          const req = await fetch(
-            `https://api.github.com/repos/${githubRepo}/releases/latest`,
-            {
-              headers: {
-                "User-Agent": userAgent
-              }
-            }
-          );
-          const json: { name: string } = await req.json();
-          return json.name !== moonlight.version ? json.name : null;
-        } else if (moonlight.branch === MoonlightBranch.NIGHTLY) {
-          const req = await fetch(nightlyRefUrl, {
-            headers: {
-              "User-Agent": userAgent
-            }
-          });
-          const ref = (await req.text()).split("\n")[0];
-          return ref !== moonlight.version ? ref : null;
-        }
-
-        return null;
-      } catch (e) {
-        logger.error("Error checking for moonlight update", e);
-        return null;
-      }
-    },
-
-    fetchRepositories: async (repos) => {
-      const ret: Record<string, RepositoryManifest[]> = {};
-
-      for (const repo of repos) {
-        try {
-          const req = await fetch(repo);
-          const json = await req.json();
-          ret[repo] = json;
-        } catch (e) {
-          logger.error(`Error fetching repository ${repo}`, e);
-        }
-      }
-
-      return ret;
-    },
-    installExtension: async (manifest, url, repo) => {
-      const req = await fetch(url);
-      const buffer = await req.arrayBuffer();
-
-      if (await browserFS.exists("/extensions/" + manifest.id)) {
-        await browserFS.rmdir("/extensions/" + manifest.id);
-      }
-
-      const files = extractAsar(buffer);
-      for (const [file, data] of Object.entries(files)) {
-        const path =
-          "/extensions/" +
-          manifest.id +
-          (file.startsWith("/") ? file : `/${file}`);
-        await browserFS.mkdir(browserFS.dirname(path));
-        await browserFS.writeFile(path, data);
-      }
-
-      await browserFS.writeFile(
-        `/extensions/${manifest.id}/` + repoUrlFile,
-        new TextEncoder().encode(repo)
-      );
-    },
-    deleteExtension: async (id) => {
-      browserFS.rmdir("/extensions/" + id);
-    },
-    getExtensionConfig: (id, key) => {
-      const config = moonlightNode.config.extensions[id];
-      if (typeof config === "object") {
-        return config.config?.[key];
-      }
-
-      return undefined;
-    }
-  };
-}
+if (!natives) natives = getNatives();
 
 class MoonbaseSettingsStore extends Store<any> {
   private origConfig: Config;
@@ -391,12 +296,8 @@ class MoonbaseSettingsStore extends Store<any> {
   writeConfig() {
     this.submitting = true;
 
-    try {
-      moonlightNode.writeConfig(this.config);
-      this.origConfig = this.clone(this.config);
-    } catch (e) {
-      logger.error("Error writing config", e);
-    }
+    moonlightNode.writeConfig(this.config);
+    this.origConfig = this.clone(this.config);
 
     this.submitting = false;
     this.modified = false;

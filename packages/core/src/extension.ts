@@ -2,81 +2,17 @@ import {
   ExtensionManifest,
   DetectedExtension,
   ExtensionLoadSource,
-  constants
+  constants,
+  MoonlightFS
 } from "@moonlight-mod/types";
 import { readConfig } from "./config";
-import requireImport from "./util/import";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 import Logger from "./util/logger";
+import getFS from "./fs";
 
 const logger = new Logger("core/extension");
 
-// This is kinda duplicated from the browser FS type but idc
-interface MoonlightFSWrapper {
-  readdir(path: string): Promise<string[]>;
-  exists(path: string): Promise<boolean>;
-  isFile(path: string): Promise<boolean>;
-  readFile(path: string): Promise<string>;
-  join(...parts: string[]): string;
-  dirname(path: string): string;
-}
-
-function getFS(): MoonlightFSWrapper {
-  browser: {
-    const fs = window._moonlightBrowserFS!;
-    return {
-      async readdir(path) {
-        return await fs.readdir(path);
-      },
-      async exists(path) {
-        return await fs.exists(path);
-      },
-      async isFile(path) {
-        return await fs.isFile(path);
-      },
-      async readFile(path) {
-        const buf = await fs.readFile(path);
-        const text = new TextDecoder().decode(buf);
-        return text;
-      },
-      join(...parts) {
-        return fs.join(...parts);
-      },
-      dirname(path) {
-        return fs.dirname(path);
-      }
-    };
-  }
-
-  const fs = requireImport("fs");
-  const path = requireImport("path");
-
-  return {
-    async readdir(path) {
-      return fs.readdirSync(path);
-    },
-    async exists(path) {
-      return fs.existsSync(path);
-    },
-    async isFile(path) {
-      return fs.statSync(path).isFile();
-    },
-    async readFile(path) {
-      return fs.readFileSync(path, "utf8");
-    },
-    join(...parts) {
-      return path.join(...parts);
-    },
-    dirname(dir) {
-      return path.dirname(dir);
-    }
-  };
-}
-
-async function findManifests(
-  fs: MoonlightFSWrapper,
-  dir: string
-): Promise<string[]> {
+async function findManifests(fs: MoonlightFS, dir: string): Promise<string[]> {
   const ret = [];
 
   if (await fs.exists(dir)) {
@@ -96,7 +32,7 @@ async function findManifests(
 }
 
 async function loadDetectedExtensions(
-  fs: MoonlightFSWrapper,
+  fs: MoonlightFS,
   dir: string,
   type: ExtensionLoadSource
 ): Promise<DetectedExtension[]> {
@@ -109,7 +45,7 @@ async function loadDetectedExtensions(
       const dir = fs.dirname(manifestPath);
 
       const manifest: ExtensionManifest = JSON.parse(
-        await fs.readFile(manifestPath)
+        await fs.readFileString(manifestPath)
       );
 
       const webPath = fs.join(dir, "index.js");
@@ -122,13 +58,13 @@ async function loadDetectedExtensions(
       }
 
       const web = (await fs.exists(webPath))
-        ? await fs.readFile(webPath)
+        ? await fs.readFileString(webPath)
         : undefined;
 
       let url: string | undefined = undefined;
       const urlPath = fs.join(dir, constants.repoUrlFile);
       if (type === ExtensionLoadSource.Normal && (await fs.exists(urlPath))) {
-        url = await fs.readFile(urlPath);
+        url = await fs.readFileString(urlPath);
       }
 
       const wpModules: Record<string, string> = {};
@@ -138,9 +74,8 @@ async function loadDetectedExtensions(
 
         for (const wpModuleFile of wpModulesFile) {
           if (wpModuleFile.endsWith(".js")) {
-            wpModules[wpModuleFile.replace(".js", "")] = await fs.readFile(
-              fs.join(wpModulesPath, wpModuleFile)
-            );
+            wpModules[wpModuleFile.replace(".js", "")] =
+              await fs.readFileString(fs.join(wpModulesPath, wpModuleFile));
           }
         }
       }
@@ -184,7 +119,7 @@ async function getExtensionsNative(): Promise<DetectedExtension[]> {
   res.push(
     ...(await loadDetectedExtensions(
       fs,
-      getExtensionsPath(),
+      await getExtensionsPath(),
       ExtensionLoadSource.Normal
     ))
   );
