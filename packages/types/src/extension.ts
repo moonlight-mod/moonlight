@@ -47,7 +47,9 @@ export type ExtensionManifest = {
   incompatible?: string[];
 
   settings?: Record<string, ExtensionSettingsManifest>;
+
   cors?: string[];
+  blocked?: string[];
 };
 
 export enum ExtensionLoadSource {

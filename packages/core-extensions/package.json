@@ -2,7 +2,7 @@
   "name": "@moonlight-mod/core-extensions",
   "private": true,
   "dependencies": {
-    "@moonlight-mod/types": "workspace:*",
-    "@moonlight-mod/core": "workspace:*"
+    "@moonlight-mod/core": "workspace:*",
+    "@moonlight-mod/types": "workspace:*"
   }
 }

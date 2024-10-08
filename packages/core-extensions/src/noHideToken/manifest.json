@@ -3,7 +3,8 @@
   "apiLevel": 2,
   "meta": {
     "name": "No Hide Token",
-    "tagline": "Disables removal of token from localStorage when opening dev tools",
+    "tagline": "Prevents you from being logged-out on hard-crash",
+    "description": "Prevents you from being logged-out on hard-crash by disabling removal of token from localStorage when opening dev tools",
     "authors": ["adryd"],
     "tags": ["dangerZone", "development"]
   }

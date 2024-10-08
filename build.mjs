@@ -158,7 +158,9 @@ async function build(name, entry) {
     entryPoints: [entry],
     outfile,
 
-    format: "cjs",
+    format: "iife",
+    globalName: "module.exports",
+
     platform: ["web-preload", "browser"].includes(name) ? "browser" : "node",
 
     treeShaking: true,
@@ -261,7 +263,8 @@ async function buildExt(ext, side, copyManifest, fileExt) {
     entryPoints,
     outdir,
 
-    format: "cjs",
+    format: "iife",
+    globalName: "module.exports",
     platform: "node",
 
     treeShaking: true,

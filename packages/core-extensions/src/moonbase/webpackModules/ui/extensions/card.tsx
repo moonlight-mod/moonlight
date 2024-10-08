@@ -20,13 +20,20 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { DownloadIcon, TrashIcon, CircleWarningIcon } = Components;
+const { BeakerIcon, DownloadIcon, TrashIcon, CircleWarningIcon, Tooltip } =
+  Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports(
   "tabBar",
   "tabBarItem",
   "headerContentWrapper"
+)[0].exports;
+const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0]
+  .exports;
+
+const BuildOverrideClasses = spacepack.findByExports(
+  "disabledButtonOverride"
 )[0].exports;
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
@@ -74,10 +81,21 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
     <Card editable={true} className={IntegrationCard.card}>
       <div className={IntegrationCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
-          <Flex direction={Flex.Direction.HORIZONTAL}>
+          <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
             <Text variant="text-md/semibold">
               {ext.manifest?.meta?.name ?? ext.id}
             </Text>
+            {ext.source.type === ExtensionLoadSource.Developer && (
+              <Tooltip text="This is a local extension" position="top">
+                {(props: any) => (
+                  <BeakerIcon
+                    {...props}
+                    class={BuildOverrideClasses.infoIcon}
+                    size="xs"
+                  />
+                )}
+              </Tooltip>
+            )}
           </Flex>
 
           {tagline != null && (
@@ -213,8 +231,16 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         >
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
           {tab === ExtensionPage.Description && (
-            <Text variant="text-md/normal">
-              {MarkupUtils.parse(description ?? "*No description*")}
+            <Text
+              variant="text-md/normal"
+              class={MarkupClasses.markup}
+              style={{ width: "100%" }}
+            >
+              {MarkupUtils.parse(description ?? "*No description*", true, {
+                allowHeading: true,
+                allowLinks: true,
+                allowList: true
+              })}
             </Text>
           )}
           {tab === ExtensionPage.Settings && <Settings ext={ext} />}
