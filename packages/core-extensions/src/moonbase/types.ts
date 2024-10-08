@@ -1,6 +1,7 @@
 import { DetectedExtension, ExtensionManifest } from "types/src";
 
 export type MoonbaseNatives = {
+  checkForMoonlightUpdate(): Promise<string | null>;
   fetchRepositories(
     repos: string[]
   ): Promise<Record<string, RepositoryManifest[]>>;

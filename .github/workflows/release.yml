@@ -29,6 +29,8 @@ jobs:
       - name: Build moonlight
         env:
           NODE_ENV: production
+          MOONLIGHT_BRANCH: stable
+          MOONLIGHT_VERSION: ${{ github.ref_name }}
         run: pnpm run build
       - name: Create archive
         run: |

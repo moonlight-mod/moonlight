@@ -18,6 +18,9 @@ export type MoonlightHost = {
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
 
+  version: string;
+  branch: string;
+
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   getLogger: (id: string) => Logger;
@@ -29,11 +32,15 @@ export type MoonlightNode = {
   processedExtensions: ProcessedExtensions;
   nativesCache: Record<string, any>;
 
+  version: string;
+  branch: string;
+
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
 
+  getMoonlightDir: () => string;
   getExtensionDir: (ext: string) => string;
   writeConfig: (config: Config) => void;
 };
@@ -69,6 +76,9 @@ export type MoonlightWeb = {
     registerPatch: (patch: IdentifiedPatch) => void;
     registerWebpackModule: (module: IdentifiedWebpackModule) => void;
   };
+
+  version: string;
+  branch: string;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;

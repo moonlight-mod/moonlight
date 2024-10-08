@@ -16,6 +16,9 @@ const watch = process.argv.includes("--watch");
 const browser = process.argv.includes("--browser");
 const mv2 = process.argv.includes("--mv2");
 
+const buildBranch = process.env.MOONLIGHT_BRANCH ?? "dev";
+const buildVersion = process.env.MOONLIGHT_VERSION ?? "dev";
+
 const external = [
   "electron",
   "fs",
@@ -96,7 +99,9 @@ async function build(name, entry) {
 
   const define = {
     MOONLIGHT_ENV: `"${name}"`,
-    MOONLIGHT_PROD: prod.toString()
+    MOONLIGHT_PROD: prod.toString(),
+    MOONLIGHT_BRANCH: `"${buildBranch}"`,
+    MOONLIGHT_VERSION: `"${buildVersion}"`
   };
 
   for (const iterName of [

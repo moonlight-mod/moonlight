@@ -9,6 +9,8 @@
     "scripting",
     "webNavigation",
     "https://*.discord.com/assets/*.js",
+    "https://moonlight-mod.github.io/*",
+    "https://api.github.com/*",
     "https://*.discord.com/*"
   ],
   "background": {

@@ -5,7 +5,10 @@ import path from "path";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { constants } from "@moonlight-mod/types";
 import { getExtensions } from "@moonlight-mod/core/extension";
-import { getExtensionsPath } from "@moonlight-mod/core/util/data";
+import {
+  getExtensionsPath,
+  getMoonlightDir
+} from "@moonlight-mod/core/util/data";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import {
   loadExtensions,
@@ -29,6 +32,10 @@ async function injectGlobals() {
     extensions,
     processedExtensions,
     nativesCache: {},
+
+    version: MOONLIGHT_VERSION,
+    branch: MOONLIGHT_BRANCH,
+
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {
       const config = getConfig(ext);
@@ -42,6 +49,9 @@ async function injectGlobals() {
       return new Logger(id);
     },
 
+    getMoonlightDir() {
+      return getMoonlightDir();
+    },
     getExtensionDir: (ext: string) => {
       const extPath = getExtensionsPath();
       return path.join(extPath, ext);

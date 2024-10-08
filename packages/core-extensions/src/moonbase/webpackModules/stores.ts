@@ -9,6 +9,7 @@ import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import extractAsar from "@moonlight-mod/core/asar";
 import { repoUrlFile } from "@moonlight-mod/types/constants";
+import { githubRepo, userAgent, nightlyRefUrl } from "../consts";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -16,6 +17,36 @@ let natives: MoonbaseNatives = moonlight.getNatives("moonbase");
 if (window._moonlightBrowserFS != null) {
   const browserFS = window._moonlightBrowserFS!;
   natives = {
+    checkForMoonlightUpdate: async () => {
+      try {
+        if (moonlight.branch === "stable") {
+          const req = await fetch(
+            `https://api.github.com/repos/${githubRepo}/releases/latest`,
+            {
+              headers: {
+                "User-Agent": userAgent
+              }
+            }
+          );
+          const json: { name: string } = await req.json();
+          return json.name !== moonlight.version ? json.name : null;
+        } else if (moonlight.branch === "nightly") {
+          const req = await fetch(nightlyRefUrl, {
+            headers: {
+              "User-Agent": userAgent
+            }
+          });
+          const ref = (await req.text()).split("\n")[0];
+          return ref !== moonlight.version ? ref : null;
+        }
+
+        return null;
+      } catch (e) {
+        logger.error("Error checking for moonlight update", e);
+        return null;
+      }
+    },
+
     fetchRepositories: async (repos) => {
       const ret: Record<string, RepositoryManifest[]> = {};
 
@@ -77,6 +108,9 @@ class MoonbaseSettingsStore extends Store<any> {
   submitting: boolean;
   installing: boolean;
 
+  newVersion: string | null;
+  shouldShowNotice: boolean;
+
   extensions: { [id: number]: MoonbaseExtension };
   updates: { [id: number]: { version: string; download: string } };
 
@@ -91,6 +125,9 @@ class MoonbaseSettingsStore extends Store<any> {
     this.submitting = false;
     this.installing = false;
 
+    this.newVersion = null;
+    this.shouldShowNotice = false;
+
     this.extensions = {};
     this.updates = {};
     for (const ext of moonlightNode.extensions) {
@@ -104,53 +141,65 @@ class MoonbaseSettingsStore extends Store<any> {
       };
     }
 
-    natives!.fetchRepositories(this.config.repositories).then((ret) => {
-      for (const [repo, exts] of Object.entries(ret)) {
-        try {
-          for (const ext of exts) {
-            const level = ext.apiLevel ?? 1;
-            if (level !== window.moonlight.apiLevel) continue;
+    natives!
+      .fetchRepositories(this.config.repositories)
+      .then((ret) => {
+        for (const [repo, exts] of Object.entries(ret)) {
+          try {
+            for (const ext of exts) {
+              const level = ext.apiLevel ?? 1;
+              if (level !== window.moonlight.apiLevel) continue;
 
-            const uniqueId = this.extensionIndex++;
-            const extensionData = {
-              id: ext.id,
-              uniqueId,
-              manifest: ext,
-              source: { type: ExtensionLoadSource.Normal, url: repo },
-              state: ExtensionState.NotDownloaded
-            };
+              const uniqueId = this.extensionIndex++;
+              const extensionData = {
+                id: ext.id,
+                uniqueId,
+                manifest: ext,
+                source: { type: ExtensionLoadSource.Normal, url: repo },
+                state: ExtensionState.NotDownloaded
+              };
 
-            if (this.alreadyExists(extensionData)) {
-              // Make sure the download URL is properly updated
-              for (const [id, e] of Object.entries(this.extensions)) {
-                if (e.id === ext.id && e.source.url === repo) {
-                  this.extensions[parseInt(id)].manifest = {
-                    ...e.manifest,
+              if (this.alreadyExists(extensionData)) {
+                // Make sure the download URL is properly updated
+                for (const [id, e] of Object.entries(this.extensions)) {
+                  if (e.id === ext.id && e.source.url === repo) {
+                    this.extensions[parseInt(id)].manifest = {
+                      ...e.manifest,
+                      download: ext.download
+                    };
+                    break;
+                  }
+                }
+
+                if (this.hasUpdate(extensionData)) {
+                  this.updates[uniqueId] = {
+                    version: ext.version!,
                     download: ext.download
                   };
-                  break;
                 }
+
+                continue;
               }
 
-              if (this.hasUpdate(extensionData)) {
-                this.updates[uniqueId] = {
-                  version: ext.version!,
-                  download: ext.download
-                };
-              }
-
-              continue;
+              this.extensions[uniqueId] = extensionData;
             }
-
-            this.extensions[uniqueId] = extensionData;
+          } catch (e) {
+            logger.error(`Error processing repository ${repo}`, e);
           }
-        } catch (e) {
-          logger.error(`Error processing repository ${repo}`, e);
         }
-      }
 
-      this.emitChange();
-    });
+        this.emitChange();
+      })
+      .then(natives!.checkForMoonlightUpdate)
+      .then((version) => {
+        this.newVersion = version;
+        this.emitChange();
+      })
+      .then(() => {
+        this.shouldShowNotice =
+          this.newVersion != null || Object.keys(this.updates).length > 0;
+        this.emitChange();
+      });
   }
 
   private alreadyExists(ext: MoonbaseExtension) {

@@ -30,6 +30,9 @@ async function load() {
       registerWebpackModule
     },
 
+    version: MOONLIGHT_VERSION,
+    branch: MOONLIGHT_BRANCH,
+
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
     getConfigOption: moonlightNode.getConfigOption.bind(moonlightNode),
     getNatives: moonlightNode.getNatives.bind(moonlightNode),
@@ -48,9 +51,13 @@ async function load() {
     logger.error("Error setting up web-preload", e);
   }
 
-  window.addEventListener("DOMContentLoaded", () => {
+  if (MOONLIGHT_ENV === "web-preload") {
+    window.addEventListener("DOMContentLoaded", () => {
+      installStyles();
+    });
+  } else {
     installStyles();
-  });
+  }
 }
 
 if (MOONLIGHT_ENV === "web-preload") {

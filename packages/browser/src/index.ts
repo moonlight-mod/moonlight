@@ -103,6 +103,9 @@ window._moonlightBrowserInit = async () => {
     processedExtensions,
     nativesCache: {},
 
+    version: MOONLIGHT_VERSION,
+    branch: MOONLIGHT_BRANCH,
+
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {
       const config = getConfig(ext);
@@ -116,6 +119,9 @@ window._moonlightBrowserInit = async () => {
       return new Logger(id);
     },
 
+    getMoonlightDir() {
+      return "/";
+    },
     getExtensionDir: (ext: string) => {
       return `/extensions/${ext}`;
     },
