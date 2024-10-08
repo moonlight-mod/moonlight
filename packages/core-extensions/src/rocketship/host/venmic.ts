@@ -1,6 +1,7 @@
 import type { BrowserWindow } from "electron";
 import { app, desktopCapturer } from "electron";
 import path from "node:path";
+import { type PatchBay } from "./types";
 
 const logger = moonlightHost.getLogger("rocketship");
 
@@ -8,7 +9,7 @@ function getPatchbay() {
   try {
     const venmic = require(
       path.join(path.dirname(moonlightHost.asarPath), "..", "venmic.node")
-    ) as typeof import("@vencord/venmic");
+    ) as { PatchBay: new () => PatchBay };
     const patchbay = new venmic.PatchBay();
     return patchbay;
   } catch (error) {

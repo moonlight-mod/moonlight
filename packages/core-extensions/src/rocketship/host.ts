@@ -1,2 +1,2 @@
-import "./host/permissions.js";
-import "./host/venmic.js";
+import "./host/permissions";
+import "./host/venmic";
