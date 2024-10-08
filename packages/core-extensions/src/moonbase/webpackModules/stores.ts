@@ -1,4 +1,8 @@
-import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
+import {
+  Config,
+  ExtensionLoadSource,
+  MoonlightBranch
+} from "@moonlight-mod/types";
 import {
   ExtensionState,
   MoonbaseExtension,
@@ -19,7 +23,7 @@ if (window._moonlightBrowserFS != null) {
   natives = {
     checkForMoonlightUpdate: async () => {
       try {
-        if (moonlight.branch === "stable") {
+        if (moonlight.branch === MoonlightBranch.STABLE) {
           const req = await fetch(
             `https://api.github.com/repos/${githubRepo}/releases/latest`,
             {
@@ -30,7 +34,7 @@ if (window._moonlightBrowserFS != null) {
           );
           const json: { name: string } = await req.json();
           return json.name !== moonlight.version ? json.name : null;
-        } else if (moonlight.branch === "nightly") {
+        } else if (moonlight.branch === MoonlightBranch.NIGHTLY) {
           const req = await fetch(nightlyRefUrl, {
             headers: {
               "User-Agent": userAgent

@@ -19,7 +19,7 @@ export type MoonlightHost = {
   processedExtensions: ProcessedExtensions;
 
   version: string;
-  branch: string;
+  branch: MoonlightBranch;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
@@ -33,7 +33,7 @@ export type MoonlightNode = {
   nativesCache: Record<string, any>;
 
   version: string;
-  branch: string;
+  branch: MoonlightBranch;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
@@ -78,7 +78,7 @@ export type MoonlightWeb = {
   };
 
   version: string;
-  branch: string;
+  branch: MoonlightBranch;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
@@ -92,4 +92,10 @@ export enum MoonlightEnv {
   Injector = "injector",
   NodePreload = "node-preload",
   WebPreload = "web-preload"
+}
+
+export enum MoonlightBranch {
+  STABLE = "stable",
+  NIGHTLY = "nightly",
+  DEV = "dev"
 }

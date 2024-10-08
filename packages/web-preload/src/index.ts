@@ -5,7 +5,7 @@ import {
   registerPatch,
   registerWebpackModule
 } from "@moonlight-mod/core/patch";
-import { constants } from "@moonlight-mod/types";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { installStyles } from "@moonlight-mod/core/styles";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import LunAST from "@moonlight-mod/lunast";
@@ -31,7 +31,7 @@ async function load() {
     },
 
     version: MOONLIGHT_VERSION,
-    branch: MOONLIGHT_BRANCH,
+    branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
     getConfigOption: moonlightNode.getConfigOption.bind(moonlightNode),

@@ -1,6 +1,7 @@
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Notices from "@moonlight-mod/wp/notices_notices";
+import { MoonlightBranch } from "types/src";
 
 // FIXME: not indexed as importable
 const Constants = spacepack.require("discord/Constants");
@@ -28,7 +29,7 @@ function listener() {
 
     if (version != null) {
       message =
-        moonlightNode.branch === "nightly"
+        moonlightNode.branch === MoonlightBranch.NIGHTLY
           ? `A new version of moonlight is available`
           : `moonlight ${version} is available`;
     }

@@ -4,12 +4,13 @@ import path from "path";
 import extractAsar from "@moonlight-mod/core/asar";
 import { repoUrlFile } from "@moonlight-mod/types/constants";
 import { githubRepo, userAgent, nightlyRefUrl } from "./consts";
+import { MoonlightBranch } from "types/src";
 
 const logger = moonlightNode.getLogger("moonbase");
 
 async function checkForMoonlightUpdate() {
   try {
-    if (moonlightNode.branch === "stable") {
+    if (moonlightNode.branch === MoonlightBranch.STABLE) {
       const req = await fetch(
         `https://api.github.com/repos/${githubRepo}/releases/latest`,
         {
@@ -20,7 +21,7 @@ async function checkForMoonlightUpdate() {
       );
       const json: { name: string } = await req.json();
       return json.name !== moonlightNode.version ? json.name : null;
-    } else if (moonlightNode.branch === "nightly") {
+    } else if (moonlightNode.branch === MoonlightBranch.NIGHTLY) {
       const req = await fetch(nightlyRefUrl, {
         headers: {
           "User-Agent": userAgent

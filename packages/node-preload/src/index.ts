@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
-import { constants } from "@moonlight-mod/types";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import {
   getExtensionsPath,
@@ -34,7 +34,7 @@ async function injectGlobals() {
     nativesCache: {},
 
     version: MOONLIGHT_VERSION,
-    branch: MOONLIGHT_BRANCH,
+    branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {

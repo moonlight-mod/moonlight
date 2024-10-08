@@ -5,7 +5,7 @@ import electron, {
   app
 } from "electron";
 import Module from "node:module";
-import { constants } from "@moonlight-mod/types";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { readConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
@@ -225,7 +225,7 @@ export async function inject(asarPath: string) {
       },
 
       version: MOONLIGHT_VERSION,
-      branch: MOONLIGHT_BRANCH,
+      branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
       getConfig,
       getConfigOption: <T>(ext: string, name: string) => {
