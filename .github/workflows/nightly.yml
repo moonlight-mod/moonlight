@@ -31,6 +31,8 @@ jobs:
       - name: Build moonlight
         env:
           NODE_ENV: production
+          MOONLIGHT_BRANCH: nightly
+          MOONLIGHT_VERSION: ${{ github.sha }}
         run: pnpm run build
 
       - name: Write ref/commit to file

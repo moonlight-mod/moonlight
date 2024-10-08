@@ -1,0 +1,10 @@
+{
+  "id": "rocketship",
+  "apiLevel": 2,
+  "meta": {
+    "name": "Rocketship",
+    "tagline": "Adds new features when using rocketship",
+    "description": "**This extension only works on Linux when using rocketship: https://github.com/moonlight-mod/rocketship**. Adds new features to the Discord Linux client with rocketship, like better screensharing.",
+    "authors": ["NotNite", "Cynosphere", "adryd"]
+  }
+}

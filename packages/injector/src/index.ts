@@ -5,7 +5,7 @@ import electron, {
   app
 } from "electron";
 import Module from "node:module";
-import { constants } from "@moonlight-mod/types";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { readConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
@@ -123,18 +123,19 @@ class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
     oldPreloadPath = opts.webPreferences!.preload;
 
-    // Only overwrite preload if its the actual main client window
-    if (opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1) {
+    const isMainWindow =
+      opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
+
+    if (isMainWindow)
       opts.webPreferences!.preload = require.resolve("./node-preload.js");
-    }
 
     // Event for modifying window options
-    moonlightHost.events.emit("window-options", opts);
+    moonlightHost.events.emit("window-options", opts, isMainWindow);
 
     super(opts);
 
     // Event for when a window is created
-    moonlightHost.events.emit("window-created", this);
+    moonlightHost.events.emit("window-created", this, isMainWindow);
 
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
@@ -222,6 +223,9 @@ export async function inject(asarPath: string) {
         extensions: [],
         dependencyGraph: new Map()
       },
+
+      version: MOONLIGHT_VERSION,
+      branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
       getConfig,
       getConfigOption: <T>(ext: string, name: string) => {

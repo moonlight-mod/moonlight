@@ -64,9 +64,13 @@ if (
   (moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapi") ?? true) &&
   !noAccel
 ) {
-  enabledFeatures.push("VaapiVideoEncoder", "VaapiVideoDecoder");
   if (process.platform === "linux")
-    enabledFeatures.push("VaapiVideoDecodeLinuxGL");
+    // These will eventually be renamed https://source.chromium.org/chromium/chromium/src/+/5482210941a94d70406b8da962426e4faca7fce4
+    enabledFeatures.push(
+      "VaapiVideoEncoder",
+      "VaapiVideoDecoder",
+      "VaapiVideoDecodeLinuxGL"
+    );
 }
 
 app.commandLine.appendSwitch(

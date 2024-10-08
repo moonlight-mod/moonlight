@@ -17,6 +17,12 @@ declare module "@moonlight-mod/wp/markdown_markdown" {
   export = Markdown;
 }
 
+declare module "@moonlight-mod/wp/notices_notices" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  const Notices: CoreExtensions.Notices.Notices;
+  export = Notices;
+}
+
 declare module "@moonlight-mod/wp/settings_settings" {
   import { CoreExtensions } from "@moonlight-mod/types";
   export const Settings: CoreExtensions.Settings.Settings;

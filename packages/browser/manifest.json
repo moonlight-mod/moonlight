@@ -11,6 +11,7 @@
   ],
   "host_permissions": [
     "https://moonlight-mod.github.io/*",
+    "https://api.github.com/*",
     "https://*.discord.com/*"
   ],
   "content_scripts": [

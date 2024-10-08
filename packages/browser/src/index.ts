@@ -3,7 +3,11 @@ import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { loadExtensions } from "@moonlight-mod/core/extension/loader";
-import { MoonlightBrowserFS, MoonlightNode } from "@moonlight-mod/types";
+import {
+  MoonlightBranch,
+  MoonlightBrowserFS,
+  MoonlightNode
+} from "@moonlight-mod/types";
 import { IndexedDB } from "@zenfs/dom";
 import { configure } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
@@ -103,6 +107,9 @@ window._moonlightBrowserInit = async () => {
     processedExtensions,
     nativesCache: {},
 
+    version: MOONLIGHT_VERSION,
+    branch: MOONLIGHT_BRANCH as MoonlightBranch,
+
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {
       const config = getConfig(ext);
@@ -116,6 +123,9 @@ window._moonlightBrowserInit = async () => {
       return new Logger(id);
     },
 
+    getMoonlightDir() {
+      return "/";
+    },
     getExtensionDir: (ext: string) => {
       return `/extensions/${ext}`;
     },

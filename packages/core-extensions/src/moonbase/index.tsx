@@ -1,6 +1,6 @@
-import { ExtensionWebExports } from "@moonlight-mod/types";
+import { ExtensionWebpackModule } from "@moonlight-mod/types";
 
-export const webpackModules: ExtensionWebExports["webpackModules"] = {
+export const webpackModules: Record<string, ExtensionWebpackModule> = {
   stores: {
     dependencies: [
       { id: "discord/packages/flux" },
@@ -29,10 +29,24 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       { ext: "moonbase", id: "ui" }
     ],
     entrypoint: true
+  },
+
+  updates: {
+    dependencies: [
+      { id: "react" },
+      { ext: "moonbase", id: "stores" },
+      { ext: "notices", id: "notices" },
+      {
+        ext: "spacepack",
+        id: "spacepack"
+      }
+    ],
+    entrypoint: true
   }
 };
 
 export const styles = [
   ".moonbase-settings > :first-child { margin-top: 0px; }",
-  "textarea.moonbase-resizeable  { resize: vertical }"
+  "textarea.moonbase-resizeable  { resize: vertical }",
+  ".moonbase-updates-notice { background-color: #222034; color: #FFFBA6; }"
 ];
