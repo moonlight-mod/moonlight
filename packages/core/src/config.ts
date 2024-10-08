@@ -1,6 +1,7 @@
 import { Config } from "@moonlight-mod/types";
 import requireImport from "./util/import";
 import { getConfigPath } from "./util/data";
+import * as constants from "@moonlight-mod/types/constants";
 
 const defaultConfig: Config = {
   extensions: {
@@ -9,7 +10,7 @@ const defaultConfig: Config = {
     noTrack: true,
     noHideToken: true
   },
-  repositories: ["https://moonlight-mod.github.io/extensions-dist/repo.json"]
+  repositories: [constants.mainRepo]
 };
 
 export function writeConfig(config: Config) {

@@ -1,4 +1,4 @@
-import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
+import { Config, constants, ExtensionLoadSource } from "@moonlight-mod/types";
 import {
   ExtensionState,
   MoonbaseExtension,
@@ -296,25 +296,45 @@ class MoonbaseSettingsStore extends Store<any> {
     this.emitChange();
   }
 
+  private getRank(ext: MoonbaseExtension) {
+    if (ext.source.type === ExtensionLoadSource.Developer) return 3;
+    if (ext.source.type === ExtensionLoadSource.Core) return 2;
+    if (ext.source.url === constants.mainRepo) return 1;
+    return 0;
+  }
+
   async getDependencies(uniqueId: number) {
     const ext = this.getExtension(uniqueId);
 
-    let allDepsSatisfied = true;
+    const missingDeps = [];
     for (const dep of ext.manifest.dependencies ?? []) {
-      const id = this.getExtensionUniqueId(dep);
-      const state =
-        id != null ? this.getExtension(id).state : ExtensionState.NotDownloaded;
-      if (id == null || state === ExtensionState.NotDownloaded) {
-        allDepsSatisfied = false;
-        break;
-      }
+      const anyInstalled = Object.values(this.extensions).some(
+        (e) => e.id === dep && e.state !== ExtensionState.NotDownloaded
+      );
+      if (!anyInstalled) missingDeps.push(dep);
     }
 
-    if (allDepsSatisfied) return null;
+    if (missingDeps.length === 0) return null;
 
     const deps: Record<string, MoonbaseExtension[]> = {};
-    for (const dep of ext.manifest.dependencies ?? []) {
-      deps[dep] = Object.values(this.extensions).filter((e) => e.id === dep);
+    for (const dep of missingDeps) {
+      const candidates = Object.values(this.extensions).filter(
+        (e) => e.id === dep
+      );
+
+      deps[dep] = candidates.sort((a, b) => {
+        const aRank = this.getRank(a);
+        const bRank = this.getRank(b);
+        if (aRank === bRank) {
+          const repoIndex = this.config.repositories.indexOf(a.source.url!);
+          const otherRepoIndex = this.config.repositories.indexOf(
+            b.source.url!
+          );
+          return repoIndex - otherRepoIndex;
+        } else {
+          return bRank - aRank;
+        }
+      });
     }
 
     return deps;
@@ -344,6 +364,11 @@ class MoonbaseSettingsStore extends Store<any> {
     this.config[key] = value;
     this.modified = this.isModified();
     this.emitChange();
+  }
+
+  tryGetExtensionName(id: string) {
+    const uniqueId = this.getExtensionUniqueId(id);
+    return (uniqueId != null ? this.getExtensionName(uniqueId) : null) ?? id;
   }
 
   writeConfig() {
