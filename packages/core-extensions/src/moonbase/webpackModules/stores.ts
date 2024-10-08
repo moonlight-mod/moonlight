@@ -9,6 +9,7 @@ import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import extractAsar from "@moonlight-mod/core/asar";
 import { repoUrlFile } from "@moonlight-mod/types/constants";
+import { githubRepo, userAgent, nightlyRefUrl } from "../consts";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -18,6 +19,27 @@ if (window._moonlightBrowserFS != null) {
   natives = {
     checkForMoonlightUpdate: async () => {
       // TODO
+      if (moonlight.branch === "stable") {
+        const req = await fetch(
+          `https://api.github.com/repos/${githubRepo}/releases/latest`,
+          {
+            headers: {
+              "User-Agent": userAgent
+            }
+          }
+        );
+        const json: { name: string } = await req.json();
+        return json.name !== moonlight.version ? json.name : null;
+      } else if (moonlight.branch === "nightly") {
+        const req = await fetch(nightlyRefUrl, {
+          headers: {
+            "User-Agent": userAgent
+          }
+        });
+        const ref = (await req.text()).split("\n")[0];
+        return ref !== moonlight.version ? ref : null;
+      }
+
       return null;
     },
 

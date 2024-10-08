@@ -3,12 +3,9 @@ import fs from "fs";
 import path from "path";
 import extractAsar from "@moonlight-mod/core/asar";
 import { repoUrlFile } from "@moonlight-mod/types/constants";
+import { githubRepo, userAgent, nightlyRefUrl } from "./consts";
 
 const logger = moonlightNode.getLogger("moonbase");
-
-const githubRepo = "moonlight-mod/moonlight";
-const nightlyRefUrl = "https://moonlight-mod.github.io/moonlight/ref";
-const userAgent = `moonlight/${moonlightNode.version} (https://github.com/moonlight-mod/moonlight)`;
 
 async function checkForMoonlightUpdate() {
   if (moonlightNode.branch === "stable") {
