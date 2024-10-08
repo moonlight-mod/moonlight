@@ -1,6 +1,9 @@
 import { Config } from "@moonlight-mod/types";
-import requireImport from "./util/import";
 import { getConfigPath } from "./util/data";
+import getFS from "./fs";
+import Logger from "./util/logger";
+
+const logger = new Logger("core/config");
 
 const defaultConfig: Config = {
   extensions: {
@@ -12,21 +15,14 @@ const defaultConfig: Config = {
   repositories: ["https://moonlight-mod.github.io/extensions-dist/repo.json"]
 };
 
-export function writeConfig(config: Config) {
-  browser: {
-    const enc = new TextEncoder().encode(JSON.stringify(config, null, 2));
-    window._moonlightBrowserFS!.writeFile("/config.json", enc);
-    return;
+export async function writeConfig(config: Config) {
+  try {
+    const fs = getFS();
+    const configPath = await getConfigPath();
+    await fs.writeFileString(configPath, JSON.stringify(config, null, 2));
+  } catch (e) {
+    logger.error("Failed to write config", e);
   }
-
-  nodeTarget: {
-    const fs = requireImport("fs");
-    const configPath = getConfigPath();
-    fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-    return;
-  }
-
-  throw new Error("Called writeConfig() in an impossible environment");
 }
 
 export async function readConfig(): Promise<Config> {
@@ -34,39 +30,26 @@ export async function readConfig(): Promise<Config> {
     return moonlightNode.config;
   }
 
-  browser: {
-    if (await window._moonlightBrowserFS!.exists("/config.json")) {
-      const file = await window._moonlightBrowserFS!.readFile("/config.json");
-      const configStr = new TextDecoder().decode(file);
-      let config: Config = JSON.parse(configStr);
+  const fs = getFS();
 
+  const configPath = await getConfigPath();
+  if (!(await fs.exists(configPath))) {
+    await writeConfig(defaultConfig);
+    return defaultConfig;
+  } else {
+    try {
+      let config: Config = JSON.parse(await fs.readFileString(configPath));
+      // Assign the default values if they don't exist (newly added)
       config = { ...defaultConfig, ...config };
-      writeConfig(config);
+      await writeConfig(config);
 
       return config;
-    } else {
-      writeConfig(defaultConfig);
+    } catch (e) {
+      logger.error("Failed to read config, falling back to defaults", e);
+      // We don't want to write the default config here - if a user is manually
+      // editing their config and messes it up, we'll delete it all instead of
+      // letting them fix it
       return defaultConfig;
     }
   }
-
-  nodeTarget: {
-    const fs = requireImport("fs");
-    const configPath = getConfigPath();
-
-    if (!fs.existsSync(configPath)) {
-      writeConfig(defaultConfig);
-      return defaultConfig;
-    }
-
-    let config: Config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-
-    // Assign the default values if they don't exist (newly added)
-    config = { ...defaultConfig, ...config };
-    writeConfig(config);
-
-    return config;
-  }
-
-  throw new Error("Called readConfig() in an impossible environment");
 }

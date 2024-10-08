@@ -1,6 +1,6 @@
 import { webFrame, ipcRenderer, contextBridge } from "electron";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { constants, MoonlightBranch } from "@moonlight-mod/types";
@@ -14,12 +14,15 @@ import {
   loadExtensions,
   loadProcessedExtensions
 } from "@moonlight-mod/core/extension/loader";
+import getFS from "@moonlight-mod/core/fs";
 
 async function injectGlobals() {
   const config = await readConfig();
   initLogger(config);
   const extensions = await getExtensions();
   const processedExtensions = await loadExtensions(extensions);
+  const moonlightDir = await getMoonlightDir();
+  const extensionsPath = await getExtensionsPath();
 
   function getConfig(ext: string) {
     const val = config.extensions[ext];
@@ -32,6 +35,7 @@ async function injectGlobals() {
     extensions,
     processedExtensions,
     nativesCache: {},
+    fs: getFS(),
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
@@ -50,11 +54,10 @@ async function injectGlobals() {
     },
 
     getMoonlightDir() {
-      return getMoonlightDir();
+      return moonlightDir;
     },
     getExtensionDir: (ext: string) => {
-      const extPath = getExtensionsPath();
-      return path.join(extPath, ext);
+      return path.join(extensionsPath, ext);
     },
     writeConfig
   };

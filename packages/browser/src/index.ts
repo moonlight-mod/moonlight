@@ -3,14 +3,15 @@ import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { loadExtensions } from "@moonlight-mod/core/extension/loader";
-import {
-  MoonlightBranch,
-  MoonlightBrowserFS,
-  MoonlightNode
-} from "@moonlight-mod/types";
+import { MoonlightBranch, MoonlightNode } from "@moonlight-mod/types";
 import { IndexedDB } from "@zenfs/dom";
 import { configure } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
+
+function getParts(path: string) {
+  if (path.startsWith("/")) path = path.substring(1);
+  return path.split("/");
+}
 
 window._moonlightBrowserInit = async () => {
   // Set up a virtual filesystem with IndexedDB
@@ -25,12 +26,20 @@ window._moonlightBrowserInit = async () => {
     }
   });
 
-  const browserFS: MoonlightBrowserFS = {
+  window._moonlightBrowserFS = {
     async readFile(path) {
       return new Uint8Array(await fs.readFile(path));
     },
+    async readFileString(path) {
+      const file = await this.readFile(path);
+      return new TextDecoder().decode(file);
+    },
     async writeFile(path, data) {
       await fs.writeFile(path, data);
+    },
+    async writeFileString(path, data) {
+      const file = new TextEncoder().encode(data);
+      await this.writeFile(path, file);
     },
     async unlink(path) {
       await fs.unlink(path);
@@ -40,7 +49,7 @@ window._moonlightBrowserInit = async () => {
       return await fs.readdir(path);
     },
     async mkdir(path) {
-      const parts = this.parts(path);
+      const parts = getParts(path);
       for (let i = 0; i < parts.length; i++) {
         const path = this.join(...parts.slice(0, i + 1));
         if (!(await this.exists(path))) await fs.mkdir(path);
@@ -76,17 +85,10 @@ window._moonlightBrowserInit = async () => {
       return str;
     },
     dirname(path) {
-      const parts = this.parts(path);
+      const parts = getParts(path);
       return "/" + parts.slice(0, parts.length - 1).join("/");
-    },
-    parts(path) {
-      if (path.startsWith("/")) path = path.substring(1);
-      return path.split("/");
     }
   };
-  Object.assign(window, {
-    _moonlightBrowserFS: browserFS
-  });
 
   // Actual loading begins here
   const config = await readConfig();
@@ -106,6 +108,7 @@ window._moonlightBrowserInit = async () => {
     extensions,
     processedExtensions,
     nativesCache: {},
+    fs: window._moonlightBrowserFS,
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
