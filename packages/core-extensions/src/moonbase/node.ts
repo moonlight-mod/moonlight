@@ -6,28 +6,11 @@ import { repoUrlFile } from "@moonlight-mod/types/constants";
 
 const logger = moonlightNode.getLogger("moonbase");
 
-const updateTimerFile = path.join(
-  moonlightNode.getMoonlightDir(),
-  ".moonbase-update-timer"
-);
-const updateTimerInterval = 12 * 60 * 60 * 1000;
-
 const githubRepo = "moonlight-mod/moonlight";
 const nightlyRefUrl = "https://moonlight-mod.github.io/moonlight/ref";
 const userAgent = `moonlight/${moonlightNode.version} (https://github.com/moonlight-mod/moonlight)`;
 
 async function checkForMoonlightUpdate() {
-  const updateTimerStr = fs.existsSync(updateTimerFile)
-    ? fs.readFileSync(updateTimerFile, "utf-8")
-    : "0";
-  let updateTimer = parseInt(updateTimerStr);
-  if (isNaN(updateTimer)) updateTimer = 0;
-
-  const shouldCheck = Date.now() - updateTimer > updateTimerInterval;
-  if (!shouldCheck) return null;
-
-  fs.writeFileSync(updateTimerFile, Date.now().toString());
-
   if (moonlightNode.branch === "stable") {
     const req = await fetch(
       `https://api.github.com/repos/${githubRepo}/releases/latest`,
