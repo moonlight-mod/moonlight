@@ -82,6 +82,9 @@ class MoonbaseSettingsStore extends Store<any> {
   submitting: boolean;
   installing: boolean;
 
+  newVersion: string | null;
+  private updateNotice: boolean;
+
   extensions: { [id: number]: MoonbaseExtension };
   updates: { [id: number]: { version: string; download: string } };
 
@@ -95,6 +98,9 @@ class MoonbaseSettingsStore extends Store<any> {
     this.modified = false;
     this.submitting = false;
     this.installing = false;
+
+    this.newVersion = null;
+    this.updateNotice = false;
 
     this.extensions = {};
     this.updates = {};
@@ -142,6 +148,12 @@ class MoonbaseSettingsStore extends Store<any> {
           logger.error(`Error processing repository ${repo}`, e);
         }
       }
+
+      this.emitChange();
+    });
+
+    natives!.checkForMoonlightUpdate().then((version) => {
+      this.newVersion = version;
 
       this.emitChange();
     });
@@ -347,6 +359,20 @@ class MoonbaseSettingsStore extends Store<any> {
     this.modified = false;
     this.config = this.clone(this.origConfig);
     this.emitChange();
+  }
+
+  showUpdateNotice() {
+    this.updateNotice = true;
+    //this.emitChange();
+  }
+
+  dismissUpdateNotice() {
+    this.updateNotice = false;
+    //this.emitChange();
+  }
+
+  shouldShowUpdateNotice() {
+    return this.updateNotice;
   }
 
   // Required because electron likes to make it immutable sometimes.
