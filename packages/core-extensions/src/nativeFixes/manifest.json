@@ -3,13 +3,8 @@
   "meta": {
     "name": "Native Fixes",
     "tagline": "Various configurable fixes for Discord and Electron",
-    "authors": [
-      "Cynosphere",
-      "adryd"
-    ],
-    "tags": [
-      "fixes"
-    ]
+    "authors": ["Cynosphere", "adryd"],
+    "tags": ["fixes"]
   },
   "settings": {
     "devtoolsThemeFix": {
@@ -32,13 +27,13 @@
     },
     "linuxSpeechDispatcher": {
       "displayName": "Enable speech-dispatcher for TTS on Linux",
-      "description": "Has no effect on other operating systems",
+      "description": "Fixes text-to-speech. Has no effect on other operating systems",
       "type": "boolean",
       "default": true
     },
     "vaapi": {
-      "displayName": "Enable VAAPI features",
-      "description": "Provides additional hardware acceleration",
+      "displayName": "Enable VAAPI features on Linux",
+      "description": "Provides hardware accelerated video encode and decode. Has no effect on other operating systems",
       "type": "boolean",
       "default": true
     }
