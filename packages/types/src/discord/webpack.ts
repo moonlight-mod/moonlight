@@ -1,10 +1,12 @@
 import WebpackRequire from "./require";
+import { WebpackRequire as MappingsWebpackRequire } from "@moonlight-mod/mappings";
 
-export type WebpackRequireType = typeof WebpackRequire & {
-  c: Record<string, WebpackModule>;
-  m: Record<string, WebpackModuleFunc>;
-  e: (module: number | string) => Promise<void>;
-};
+export type WebpackRequireType = typeof MappingsWebpackRequire &
+  typeof WebpackRequire & {
+    c: Record<string, WebpackModule>;
+    m: Record<string, WebpackModuleFunc>;
+    e: (module: number | string) => Promise<void>;
+  };
 
 export type WebpackModule = {
   id: string | number;
