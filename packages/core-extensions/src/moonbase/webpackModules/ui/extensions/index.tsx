@@ -49,7 +49,9 @@ export default function ExtensionsPage() {
 
   const filtered = sorted.filter(
     (ext) =>
-      (ext.manifest.meta?.name?.toLowerCase().includes(query) ||
+      (query === "" ||
+        ext.manifest.id?.toLowerCase().includes(query) ||
+        ext.manifest.meta?.name?.toLowerCase().includes(query) ||
         ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
         ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
       [...selectedTags.values()].every(
