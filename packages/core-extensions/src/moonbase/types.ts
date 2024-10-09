@@ -32,4 +32,5 @@ export type MoonbaseExtension = {
   source: DetectedExtension["source"];
   state: ExtensionState;
   compat: ExtensionCompat;
+  hasUpdate: boolean;
 };

@@ -53,7 +53,8 @@ class MoonbaseSettingsStore extends Store<any> {
         state: moonlight.enabledExtensions.has(ext.id)
           ? ExtensionState.Enabled
           : ExtensionState.Disabled,
-        compat: checkExtensionCompat(ext.manifest)
+        compat: checkExtensionCompat(ext.manifest),
+        hasUpdate: false
       };
     }
 
@@ -70,7 +71,8 @@ class MoonbaseSettingsStore extends Store<any> {
                 manifest: ext,
                 source: { type: ExtensionLoadSource.Normal, url: repo },
                 state: ExtensionState.NotDownloaded,
-                compat: ExtensionCompat.Compatible
+                compat: ExtensionCompat.Compatible,
+                hasUpdate: false
               };
 
               // Don't present incompatible updates
@@ -95,6 +97,7 @@ class MoonbaseSettingsStore extends Store<any> {
                     version: ext.version!,
                     download: ext.download
                   };
+                  existing.hasUpdate = true;
                 }
 
                 continue;

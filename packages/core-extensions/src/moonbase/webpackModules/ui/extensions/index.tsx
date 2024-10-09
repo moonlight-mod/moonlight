@@ -76,7 +76,8 @@ export default function ExtensionsPage() {
           ext.state === ExtensionState.NotDownloaded)
       ) &&
       (filter & Filter.Incompatible ||
-        ext.compat === ExtensionCompat.Compatible)
+        ext.compat === ExtensionCompat.Compatible ||
+        (ext.compat === ExtensionCompat.InvalidApiLevel && ext.hasUpdate))
   );
 
   return (
