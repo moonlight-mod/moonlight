@@ -1,4 +1,4 @@
-import { DetectedExtension, ExtensionManifest } from "types/src";
+import { DetectedExtension, ExtensionManifest } from "@moonlight-mod/types";
 
 export type MoonbaseNatives = {
   checkForMoonlightUpdate(): Promise<string | null>;

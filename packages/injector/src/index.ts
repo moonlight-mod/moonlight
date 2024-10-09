@@ -16,6 +16,7 @@ import {
 import EventEmitter from "node:events";
 import { join, resolve } from "node:path";
 import persist from "@moonlight-mod/core/persist";
+import createFS from "@moonlight-mod/core/fs";
 
 const logger = new Logger("injector");
 
@@ -201,6 +202,8 @@ Object.defineProperty(BrowserWindow, "name", {
 
 export async function inject(asarPath: string) {
   isMoonlightDesktop = asarPath === "moonlightDesktop";
+  global.moonlightFS = createFS();
+
   try {
     const config = await readConfig();
     initLogger(config);

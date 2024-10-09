@@ -26,7 +26,7 @@ window._moonlightBrowserInit = async () => {
     }
   });
 
-  window._moonlightBrowserFS = {
+  window.moonlightFS = {
     async readFile(path) {
       return new Uint8Array(await fs.readFile(path));
     },
@@ -108,7 +108,7 @@ window._moonlightBrowserInit = async () => {
     extensions,
     processedExtensions,
     nativesCache: {},
-    fs: window._moonlightBrowserFS,
+    isBrowser: true,
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
