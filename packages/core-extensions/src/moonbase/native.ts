@@ -108,9 +108,9 @@ export default function getNatives(): MoonbaseNatives {
 
       if (!tar || !ref) return;
 
-      const dist = fs.join(moonlightNode.getMoonlightDir(), distDir);
-      if (await fs.exists(dist)) await fs.rmdir(dist);
-      await fs.mkdir(dist);
+      const dist = moonlightFS.join(moonlightNode.getMoonlightDir(), distDir);
+      if (await moonlightFS.exists(dist)) await moonlightFS.rmdir(dist);
+      await moonlightFS.mkdir(dist);
 
       logger.debug("Extracting update");
       const files = await parseTarGzip(tar);
@@ -119,18 +119,19 @@ export default function getNatives(): MoonbaseNatives {
         // @ts-expect-error What do you mean their own types are wrong
         if (file.type !== "file") continue;
 
-        const fullFile = fs.join(dist, file.name);
-        const fullDir = fs.dirname(fullFile);
-        if (!(await fs.exists(fullDir))) await fs.mkdir(fullDir);
-        await fs.writeFile(fullFile, file.data);
+        const fullFile = moonlightFS.join(dist, file.name);
+        const fullDir = moonlightFS.dirname(fullFile);
+        if (!(await moonlightFS.exists(fullDir)))
+          await moonlightFS.mkdir(fullDir);
+        await moonlightFS.writeFile(fullFile, file.data);
       }
 
       logger.debug("Writing version file:", ref);
-      const versionFile = fs.join(
+      const versionFile = moonlightFS.join(
         moonlightNode.getMoonlightDir(),
         installedVersionFile
       );
-      await fs.writeFileString(versionFile, ref.trim());
+      await moonlightFS.writeFileString(versionFile, ref.trim());
 
       logger.debug("Update extracted");
     },
