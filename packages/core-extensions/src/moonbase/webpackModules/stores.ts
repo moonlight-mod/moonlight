@@ -3,6 +3,7 @@ import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import getNatives from "../native";
+import { mainRepo } from "@moonlight-mod/types/constants";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -267,6 +268,50 @@ class MoonbaseSettingsStore extends Store<any> {
     this.emitChange();
   }
 
+  private getRank(ext: MoonbaseExtension) {
+    if (ext.source.type === ExtensionLoadSource.Developer) return 3;
+    if (ext.source.type === ExtensionLoadSource.Core) return 2;
+    if (ext.source.url === mainRepo) return 1;
+    return 0;
+  }
+
+  async getDependencies(uniqueId: number) {
+    const ext = this.getExtension(uniqueId);
+
+    const missingDeps = [];
+    for (const dep of ext.manifest.dependencies ?? []) {
+      const anyInstalled = Object.values(this.extensions).some(
+        (e) => e.id === dep && e.state !== ExtensionState.NotDownloaded
+      );
+      if (!anyInstalled) missingDeps.push(dep);
+    }
+
+    if (missingDeps.length === 0) return null;
+
+    const deps: Record<string, MoonbaseExtension[]> = {};
+    for (const dep of missingDeps) {
+      const candidates = Object.values(this.extensions).filter(
+        (e) => e.id === dep
+      );
+
+      deps[dep] = candidates.sort((a, b) => {
+        const aRank = this.getRank(a);
+        const bRank = this.getRank(b);
+        if (aRank === bRank) {
+          const repoIndex = this.config.repositories.indexOf(a.source.url!);
+          const otherRepoIndex = this.config.repositories.indexOf(
+            b.source.url!
+          );
+          return repoIndex - otherRepoIndex;
+        } else {
+          return bRank - aRank;
+        }
+      });
+    }
+
+    return deps;
+  }
+
   async deleteExtension(uniqueId: number) {
     const ext = this.getExtension(uniqueId);
     if (ext == null) return;
@@ -291,6 +336,11 @@ class MoonbaseSettingsStore extends Store<any> {
     this.config[key] = value;
     this.modified = this.isModified();
     this.emitChange();
+  }
+
+  tryGetExtensionName(id: string) {
+    const uniqueId = this.getExtensionUniqueId(id);
+    return (uniqueId != null ? this.getExtensionName(uniqueId) : null) ?? id;
   }
 
   writeConfig() {

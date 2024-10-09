@@ -11,6 +11,7 @@ import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/In
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
+import installWithDependencyPopup from "./popup";
 
 export enum ExtensionPage {
   Info,
@@ -113,8 +114,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               color={Button.Colors.BRAND}
               submitting={busy}
               disabled={conflicting}
-              onClick={() => {
-                MoonbaseSettingsStore.installExtension(uniqueId);
+              onClick={async () => {
+                await installWithDependencyPopup(uniqueId);
               }}
             >
               Install
@@ -170,7 +171,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                     ? `This extension is a dependency of the following enabled extension${
                         enabledDependants.length > 1 ? "s" : ""
                       }: ${enabledDependants
-                        .map((a) => a.manifest.meta!.name)
+                        .map((a) => a.manifest.meta?.name ?? a.id)
                         .join(", ")}`
                     : undefined
                 }
