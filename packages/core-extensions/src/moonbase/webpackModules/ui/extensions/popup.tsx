@@ -5,6 +5,7 @@ import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "types/src";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
 const {
   openModalLazy,
@@ -50,6 +51,8 @@ function ExtensionSelect({
       onChange={(value: string) => {
         setOption(value);
       }}
+      // @ts-expect-error no thanks
+      placeholder="Missing extension"
     />
   );
 }
@@ -83,7 +86,12 @@ function OurPopup({
   return (
     <Popup
       body={
-        <>
+        <Flex
+          style={{
+            gap: "20px"
+          }}
+          direction={Flex.Direction.VERTICAL}
+        >
           <Text variant="text-md/normal">
             This extension depends on other extensions which are not downloaded.
             Choose which extensions to download.
@@ -97,27 +105,45 @@ function OurPopup({
             </Text>
           )}
 
-          {Object.entries(deps).map(([id, candidates], i) => (
-            <>
-              <span>{MoonbaseSettingsStore.tryGetExtensionName(id)}</span>
-              <ExtensionSelect
-                key={i}
-                id={id}
-                candidates={candidates}
-                option={options[id]}
-                setOption={(pick) =>
-                  setOptions((prev) => ({
-                    ...prev,
-                    [id]: pick
-                  }))
-                }
-              />
-            </>
-          ))}
-        </>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 2fr",
+              gap: "10px 0"
+            }}
+          >
+            {Object.entries(deps).map(([id, candidates], i) => (
+              <>
+                <Text
+                  variant="text-md/normal"
+                  style={{
+                    alignSelf: "center"
+                  }}
+                >
+                  {MoonbaseSettingsStore.tryGetExtensionName(id)}
+                </Text>
+
+                <ExtensionSelect
+                  id={id}
+                  candidates={candidates}
+                  option={options[id]}
+                  setOption={(pick) =>
+                    setOptions((prev) => ({
+                      ...prev,
+                      [id]: pick
+                    }))
+                  }
+                />
+              </>
+            ))}
+          </div>
+        </Flex>
       }
       cancelText="Cancel"
       confirmText="Install"
+      onCancel={() => {
+        closeModal(id);
+      }}
       onConfirm={() => {
         closeModal(id);
 
