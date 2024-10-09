@@ -38,6 +38,5 @@
       "default": true
     }
   },
-  "apiLevel": 2,
-  "environment": "desktosdfp"
+  "apiLevel": 2
 }
