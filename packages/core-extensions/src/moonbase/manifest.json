@@ -18,5 +18,9 @@
       "description": "Save extension filter in config",
       "type": "boolean"
     }
-  }
+  },
+  "cors": [
+    "https://github.com/moonlight-mod/moonlight/releases/download/",
+    "https://objects.githubusercontent.com/github-production-release-asset-"
+  ]
 }

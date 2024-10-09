@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
-    "@moonlight-mod/types": "workspace:*"
+    "@moonlight-mod/types": "workspace:*",
+    "nanotar": "^0.1.1"
   }
 }

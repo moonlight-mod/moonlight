@@ -2,10 +2,32 @@ import { MoonlightBranch } from "@moonlight-mod/types";
 import type { MoonbaseNatives, RepositoryManifest } from "./types";
 import extractAsar from "@moonlight-mod/core/asar";
 import { repoUrlFile } from "@moonlight-mod/types/constants";
+import { parseTarGzip } from "nanotar";
 
-export const githubRepo = "moonlight-mod/moonlight";
-export const nightlyRefUrl = "https://moonlight-mod.github.io/moonlight/ref";
+const githubRepo = "moonlight-mod/moonlight";
+const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`;
+const artifactName = "dist.tar.gz";
+
+const nightlyRefUrl = "https://moonlight-mod.github.io/moonlight/ref";
+const nightlyZipUrl = "https://moonlight-mod.github.io/moonlight/dist.tar.gz";
+
 export const userAgent = `moonlight/${moonlightNode.version} (https://github.com/moonlight-mod/moonlight)`;
+
+async function getStableRelease(): Promise<{
+  name: string;
+  assets: {
+    name: string;
+    browser_download_url: string;
+  }[];
+}> {
+  const req = await fetch(githubApiUrl, {
+    cache: "no-store",
+    headers: {
+      "User-Agent": userAgent
+    }
+  });
+  return await req.json();
+}
 
 export default function getNatives(): MoonbaseNatives {
   const fs = moonlightNode.fs;
@@ -15,18 +37,11 @@ export default function getNatives(): MoonbaseNatives {
     async checkForMoonlightUpdate() {
       try {
         if (moonlightNode.branch === MoonlightBranch.STABLE) {
-          const req = await fetch(
-            `https://api.github.com/repos/${githubRepo}/releases/latest?_=${Date.now()}`,
-            {
-              headers: {
-                "User-Agent": userAgent
-              }
-            }
-          );
-          const json: { name: string } = await req.json();
+          const json = await getStableRelease();
           return json.name !== moonlightNode.version ? json.name : null;
         } else if (moonlightNode.branch === MoonlightBranch.NIGHTLY) {
-          const req = await fetch(`${nightlyRefUrl}?_=${Date.now()}`, {
+          const req = await fetch(nightlyRefUrl, {
+            cache: "no-store",
             headers: {
               "User-Agent": userAgent
             }
@@ -42,12 +57,72 @@ export default function getNatives(): MoonbaseNatives {
       }
     },
 
+    async updateMoonlight() {
+      // Note: this won't do anything on browser, we should probably disable it
+      // entirely when running in browser.
+      async function downloadStable() {
+        const json = await getStableRelease();
+        const asset = json.assets.find((a) => a.name === artifactName);
+        if (!asset) throw new Error("Artifact not found");
+
+        logger.debug(`Downloading ${asset.browser_download_url}`);
+        const req = await fetch(asset.browser_download_url, {
+          cache: "no-store",
+          headers: {
+            "User-Agent": userAgent
+          }
+        });
+
+        return await req.arrayBuffer();
+      }
+
+      async function downloadNightly() {
+        logger.debug(`Downloading ${nightlyZipUrl}`);
+        const req = await fetch(nightlyZipUrl, {
+          cache: "no-store",
+          headers: {
+            "User-Agent": userAgent
+          }
+        });
+
+        return await req.arrayBuffer();
+      }
+
+      const tar =
+        moonlightNode.branch === MoonlightBranch.STABLE
+          ? await downloadStable()
+          : moonlightNode.branch === MoonlightBranch.NIGHTLY
+            ? await downloadNightly()
+            : null;
+
+      if (!tar) return;
+
+      const distDir = fs.join(moonlightNode.getMoonlightDir(), "dist");
+      if (await fs.exists(distDir)) await fs.rmdir(distDir);
+      await fs.mkdir(distDir);
+
+      logger.debug("Extracting update");
+      const files = await parseTarGzip(tar);
+      for (const file of files) {
+        if (!file.data) continue;
+        // @ts-expect-error What do you mean their own types are wrong
+        if (file.type !== "file") continue;
+
+        const fullFile = fs.join(distDir, file.name);
+        const fullDir = fs.dirname(fullFile);
+        if (!(await fs.exists(fullDir))) await fs.mkdir(fullDir);
+        await fs.writeFile(fullFile, file.data);
+      }
+      logger.debug("Update extracted");
+    },
+
     async fetchRepositories(repos) {
       const ret: Record<string, RepositoryManifest[]> = {};
 
       for (const repo of repos) {
         try {
           const req = await fetch(repo, {
+            cache: "no-store",
             headers: {
               "User-Agent": userAgent
             }

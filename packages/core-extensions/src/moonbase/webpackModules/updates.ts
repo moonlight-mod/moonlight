@@ -53,26 +53,24 @@ function listener() {
     Notices.addNotice({
       element: message,
       color: "moonbase-updates-notice",
-      buttons: hasExtensionUpdates
-        ? [
-            {
-              name: "Open Moonbase",
-              onClick: () => {
-                const { open } = spacepack.findByExports(
-                  "setSection",
-                  "clearSubsection"
-                )[0].exports.Z;
+      buttons: [
+        {
+          name: "Open Moonbase",
+          onClick: () => {
+            const { open } = spacepack.findByExports(
+              "setSection",
+              "clearSubsection"
+            )[0].exports.Z;
 
-                // settings is lazy loaded thus lazily patched
-                // FIXME: figure out a way to detect if settings has been opened
-                //        alreadyjust so the transition isnt as jarring
-                open(UserSettingsSections.ACCOUNT);
-                setTimeout(() => open("moonbase", 0), 0);
-                return true;
-              }
-            }
-          ]
-        : []
+            // settings is lazy loaded thus lazily patched
+            // FIXME: figure out a way to detect if settings has been opened
+            //        alreadyjust so the transition isnt as jarring
+            open(UserSettingsSections.ACCOUNT);
+            setTimeout(() => open("moonbase", 0), 0);
+            return true;
+          }
+        }
+      ]
     });
   }
 }

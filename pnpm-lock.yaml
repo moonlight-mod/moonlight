@@ -74,6 +74,9 @@ importers:
       '@moonlight-mod/types':
         specifier: workspace:*
         version: link:../types
+      nanotar:
+        specifier: ^0.1.1
+        version: 0.1.1
 
   packages/injector:
     dependencies:
@@ -1077,6 +1080,9 @@ packages:
 
   ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
+
+  nanotar@0.1.1:
+    resolution: {integrity: sha512-AiJsGsSF3O0havL1BydvI4+wR76sKT+okKRwWIaK96cZUnXqH0uNBOsHlbwZq3+m2BR1VKqHDVudl3gO4mYjpQ==}
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
@@ -2484,6 +2490,8 @@ snapshots:
       brace-expansion: 2.0.1
 
   ms@2.1.2: {}
+
+  nanotar@0.1.1: {}
 
   natural-compare@1.4.0: {}
 
