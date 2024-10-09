@@ -21,7 +21,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
     ]
   },
 
-  moonbase: {
+  settings: {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
       { ext: "settings", id: "settings" },
@@ -42,6 +42,10 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       }
     ],
     entrypoint: true
+  },
+
+  moonbase: {
+    dependencies: [{ ext: "moonbase", id: "stores" }]
   }
 };
 
