@@ -1,7 +1,11 @@
 import { MoonlightBranch } from "@moonlight-mod/types";
 import type { MoonbaseNatives, RepositoryManifest } from "./types";
 import extractAsar from "@moonlight-mod/core/asar";
-import { repoUrlFile } from "@moonlight-mod/types/constants";
+import {
+  distDir,
+  repoUrlFile,
+  installedVersionFile
+} from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
 
 const githubRepo = "moonlight-mod/moonlight";
@@ -60,7 +64,7 @@ export default function getNatives(): MoonbaseNatives {
     async updateMoonlight() {
       // Note: this won't do anything on browser, we should probably disable it
       // entirely when running in browser.
-      async function downloadStable() {
+      async function downloadStable(): Promise<[ArrayBuffer, string]> {
         const json = await getStableRelease();
         const asset = json.assets.find((a) => a.name === artifactName);
         if (!asset) throw new Error("Artifact not found");
@@ -73,33 +77,41 @@ export default function getNatives(): MoonbaseNatives {
           }
         });
 
-        return await req.arrayBuffer();
+        return [await req.arrayBuffer(), json.name];
       }
 
-      async function downloadNightly() {
+      async function downloadNightly(): Promise<[ArrayBuffer, string]> {
         logger.debug(`Downloading ${nightlyZipUrl}`);
-        const req = await fetch(nightlyZipUrl, {
+        const zipReq = await fetch(nightlyZipUrl, {
           cache: "no-store",
           headers: {
             "User-Agent": userAgent
           }
         });
 
-        return await req.arrayBuffer();
+        const refReq = await fetch(nightlyRefUrl, {
+          cache: "no-store",
+          headers: {
+            "User-Agent": userAgent
+          }
+        });
+        const ref = (await refReq.text()).split("\n")[0];
+
+        return [await zipReq.arrayBuffer(), ref];
       }
 
-      const tar =
+      const [tar, ref] =
         moonlightNode.branch === MoonlightBranch.STABLE
           ? await downloadStable()
           : moonlightNode.branch === MoonlightBranch.NIGHTLY
             ? await downloadNightly()
-            : null;
+            : [null, null];
 
-      if (!tar) return;
+      if (!tar || !ref) return;
 
-      const distDir = fs.join(moonlightNode.getMoonlightDir(), "dist");
-      if (await fs.exists(distDir)) await fs.rmdir(distDir);
-      await fs.mkdir(distDir);
+      const dist = fs.join(moonlightNode.getMoonlightDir(), distDir);
+      if (await fs.exists(dist)) await fs.rmdir(dist);
+      await fs.mkdir(dist);
 
       logger.debug("Extracting update");
       const files = await parseTarGzip(tar);
@@ -108,11 +120,19 @@ export default function getNatives(): MoonbaseNatives {
         // @ts-expect-error What do you mean their own types are wrong
         if (file.type !== "file") continue;
 
-        const fullFile = fs.join(distDir, file.name);
+        const fullFile = fs.join(dist, file.name);
         const fullDir = fs.dirname(fullFile);
         if (!(await fs.exists(fullDir))) await fs.mkdir(fullDir);
         await fs.writeFile(fullFile, file.data);
       }
+
+      logger.debug("Writing version file:", ref);
+      const versionFile = fs.join(
+        moonlightNode.getMoonlightDir(),
+        installedVersionFile
+      );
+      await fs.writeFileString(versionFile, ref.trim());
+
       logger.debug("Update extracted");
     },
 
