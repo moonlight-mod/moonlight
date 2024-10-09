@@ -14,9 +14,11 @@ import {
   loadExtensions,
   loadProcessedExtensions
 } from "@moonlight-mod/core/extension/loader";
-import getFS from "@moonlight-mod/core/fs";
+import createFS from "core/src/fs";
 
 async function injectGlobals() {
+  global.moonlightFS = createFS();
+
   const config = await readConfig();
   initLogger(config);
   const extensions = await getExtensions();
@@ -35,7 +37,7 @@ async function injectGlobals() {
     extensions,
     processedExtensions,
     nativesCache: {},
-    fs: getFS(),
+    isBrowser: false,
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
