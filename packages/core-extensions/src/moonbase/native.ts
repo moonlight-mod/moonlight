@@ -34,7 +34,6 @@ async function getStableRelease(): Promise<{
 }
 
 export default function getNatives(): MoonbaseNatives {
-  const fs = moonlightNode.fs;
   const logger = moonlightNode.getLogger("moonbase/natives");
 
   return {
@@ -166,25 +165,29 @@ export default function getNatives(): MoonbaseNatives {
 
       const dir = moonlightNode.getExtensionDir(manifest.id);
       // remake it in case of updates
-      if (await fs.exists(dir)) await fs.rmdir(dir);
-      await fs.mkdir(dir);
+      if (await moonlightFS.exists(dir)) await moonlightFS.rmdir(dir);
+      await moonlightFS.mkdir(dir);
 
       const buffer = await req.arrayBuffer();
       const files = extractAsar(buffer);
       for (const [file, buf] of Object.entries(files)) {
-        const fullFile = fs.join(dir, file);
-        const fullDir = fs.dirname(fullFile);
+        const fullFile = moonlightFS.join(dir, file);
+        const fullDir = moonlightFS.dirname(fullFile);
 
-        if (!(await fs.exists(fullDir))) await fs.mkdir(fullDir);
-        await fs.writeFile(fs.join(dir, file), buf);
+        if (!(await moonlightFS.exists(fullDir)))
+          await moonlightFS.mkdir(fullDir);
+        await moonlightFS.writeFile(moonlightFS.join(dir, file), buf);
       }
 
-      await fs.writeFileString(fs.join(dir, repoUrlFile), repo);
+      await moonlightFS.writeFileString(
+        moonlightFS.join(dir, repoUrlFile),
+        repo
+      );
     },
 
     async deleteExtension(id) {
       const dir = moonlightNode.getExtensionDir(id);
-      await fs.rmdir(dir);
+      await moonlightFS.rmdir(dir);
     },
 
     getExtensionConfig(id, key) {

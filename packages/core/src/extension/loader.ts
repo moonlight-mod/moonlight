@@ -3,7 +3,9 @@ import {
   DetectedExtension,
   ProcessedExtensions,
   WebpackModuleFunc,
-  constants
+  constants,
+  ExtensionManifest,
+  ExtensionEnvironment
 } from "@moonlight-mod/types";
 import { readConfig } from "../config";
 import Logger from "../util/logger";
@@ -105,6 +107,33 @@ async function loadExt(ext: DetectedExtension) {
   }
 }
 
+export enum ExtensionCompat {
+  Compatible,
+  InvalidApiLevel,
+  InvalidEnvironment
+}
+
+export function checkExtensionCompat(
+  manifest: ExtensionManifest
+): ExtensionCompat {
+  let environment;
+  webTarget: {
+    environment = ExtensionEnvironment.Web;
+  }
+  nodeTarget: {
+    environment = ExtensionEnvironment.Desktop;
+  }
+
+  if (manifest.apiLevel !== constants.apiLevel)
+    return ExtensionCompat.InvalidApiLevel;
+  if (
+    (manifest.environment ?? "both") !== "both" &&
+    manifest.environment !== environment
+  )
+    return ExtensionCompat.InvalidEnvironment;
+  return ExtensionCompat.Compatible;
+}
+
 /*
   This function resolves extensions and loads them, split into a few stages:
 
@@ -122,7 +151,9 @@ async function loadExt(ext: DetectedExtension) {
 export async function loadExtensions(
   exts: DetectedExtension[]
 ): Promise<ProcessedExtensions> {
-  exts = exts.filter((x) => x.manifest.apiLevel === constants.apiLevel);
+  exts = exts.filter(
+    (ext) => checkExtensionCompat(ext.manifest) === ExtensionCompat.Compatible
+  );
 
   const config = await readConfig();
   const items = exts

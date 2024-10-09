@@ -8,6 +8,7 @@ import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import { ExtensionCompat } from "core/src/extension/loader";
 
 const SearchBar: any = Object.values(
   spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0].exports
@@ -79,7 +80,10 @@ export default function ExtensionsPage() {
           ext.state !== ExtensionState.NotDownloaded) ||
         (!(filter & Filter.Repository) &&
           ext.state === ExtensionState.NotDownloaded)
-      )
+      ) &&
+      (filter & Filter.Incompatible ||
+        ext.compat === ExtensionCompat.Compatible ||
+        (ext.compat === ExtensionCompat.InvalidApiLevel && ext.hasUpdate))
   );
 
   return (

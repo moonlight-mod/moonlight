@@ -24,9 +24,10 @@ export enum Filter {
   Enabled = 1 << 3,
   Disabled = 1 << 4,
   Installed = 1 << 5,
-  Repository = 1 << 6
+  Repository = 1 << 6,
+  Incompatible = 1 << 7
 }
-export const defaultFilter = ~(~0 << 7);
+export const defaultFilter = 127 as Filter;
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
@@ -130,6 +131,12 @@ function FilterButtonPopout({
           />
         </MenuGroup>
         <MenuGroup>
+          <MenuCheckboxItem
+            id="l-incompatible"
+            label="Show incompatible"
+            checked={filter & Filter.Incompatible}
+            action={() => toggleFilter(Filter.Incompatible)}
+          />
           <MenuItem
             id="reset-all"
             className={SortMenuClasses.clearText}

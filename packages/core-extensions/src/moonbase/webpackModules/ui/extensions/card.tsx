@@ -1,5 +1,6 @@
 import { ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
@@ -36,6 +37,12 @@ const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0]
 const BuildOverrideClasses = spacepack.findByExports(
   "disabledButtonOverride"
 )[0].exports;
+
+const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
+  [ExtensionCompat.Compatible]: "huh?",
+  [ExtensionCompat.InvalidApiLevel]: "Incompatible API level",
+  [ExtensionCompat.InvalidEnvironment]: "Incompatible platform"
+};
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -110,16 +117,26 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           justify={Flex.Justify.END}
         >
           {ext.state === ExtensionState.NotDownloaded ? (
-            <Button
-              color={Button.Colors.BRAND}
-              submitting={busy}
-              disabled={conflicting}
-              onClick={async () => {
-                await installWithDependencyPopup(uniqueId);
-              }}
+            <Tooltip
+              text={COMPAT_TEXT_MAP[ext.compat]}
+              shouldShow={ext.compat !== ExtensionCompat.Compatible}
             >
-              Install
-            </Button>
+              {(props: any) => (
+                <Button
+                  {...props}
+                  color={Button.Colors.BRAND}
+                  submitting={busy}
+                  disabled={
+                    ext.compat !== ExtensionCompat.Compatible || conflicting
+                  }
+                  onClick={async () => {
+                    await installWithDependencyPopup(uniqueId);
+                  }}
+                >
+                  Install
+                </Button>
+              )}
+            </Tooltip>
           ) : (
             <div
               // too lazy to learn how <Flex /> works lmao
@@ -162,18 +179,25 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               )}
 
               <FormSwitch
-                value={enabled || implicitlyEnabled}
-                disabled={implicitlyEnabled}
+                value={
+                  ext.compat === ExtensionCompat.Compatible &&
+                  (enabled || implicitlyEnabled)
+                }
+                disabled={
+                  implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible
+                }
                 hideBorder={true}
                 style={{ marginBottom: "0px" }}
                 tooltipNote={
-                  implicitlyEnabled
-                    ? `This extension is a dependency of the following enabled extension${
-                        enabledDependants.length > 1 ? "s" : ""
-                      }: ${enabledDependants
-                        .map((a) => a.manifest.meta?.name ?? a.id)
-                        .join(", ")}`
-                    : undefined
+                  ext.compat !== ExtensionCompat.Compatible
+                    ? COMPAT_TEXT_MAP[ext.compat]
+                    : implicitlyEnabled
+                      ? `This extension is a dependency of the following enabled extension${
+                          enabledDependants.length > 1 ? "s" : ""
+                        }: ${enabledDependants
+                          .map((a) => a.manifest.meta?.name ?? a.id)
+                          .join(", ")}`
+                      : undefined
                 }
                 onChange={() => {
                   setRestartNeeded(true);

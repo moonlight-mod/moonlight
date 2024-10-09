@@ -14,7 +14,6 @@ import type {
   EventType,
   MoonlightEventEmitter
 } from "./core/event";
-import type { MoonlightFS } from "./fs";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -36,7 +35,7 @@ export type MoonlightNode = {
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
   nativesCache: Record<string, any>;
-  fs: MoonlightFS;
+  isBrowser: boolean;
 
   version: string;
   branch: MoonlightBranch;

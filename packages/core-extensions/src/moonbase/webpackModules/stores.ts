@@ -1,14 +1,23 @@
-import { Config, constants, ExtensionLoadSource } from "@moonlight-mod/types";
-import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
+import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
+import {
+  ExtensionState,
+  MoonbaseExtension,
+  MoonbaseNatives,
+  RepositoryManifest
+} from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import getNatives from "../native";
 import { mainRepo } from "@moonlight-mod/types/constants";
+import {
+  checkExtensionCompat,
+  ExtensionCompat
+} from "@moonlight-mod/core/extension/loader";
 
 const logger = moonlight.getLogger("moonbase");
 
 let natives: MoonbaseNatives = moonlight.getNatives("moonbase");
-if (!natives) natives = getNatives();
+if (moonlightNode.isBrowser) natives = getNatives();
 
 class MoonbaseSettingsStore extends Store<any> {
   private origConfig: Config;
@@ -23,7 +32,13 @@ class MoonbaseSettingsStore extends Store<any> {
   shouldShowNotice: boolean;
 
   extensions: { [id: number]: MoonbaseExtension };
-  updates: { [id: number]: { version: string; download: string } };
+  updates: {
+    [id: number]: {
+      version: string;
+      download: string;
+      updateManifest: RepositoryManifest;
+    };
+  };
 
   constructor() {
     super(Dispatcher);
@@ -48,7 +63,9 @@ class MoonbaseSettingsStore extends Store<any> {
         uniqueId,
         state: moonlight.enabledExtensions.has(ext.id)
           ? ExtensionState.Enabled
-          : ExtensionState.Disabled
+          : ExtensionState.Disabled,
+        compat: checkExtensionCompat(ext.manifest),
+        hasUpdate: false
       };
     }
 
@@ -64,11 +81,14 @@ class MoonbaseSettingsStore extends Store<any> {
                 uniqueId,
                 manifest: ext,
                 source: { type: ExtensionLoadSource.Normal, url: repo },
-                state: ExtensionState.NotDownloaded
+                state: ExtensionState.NotDownloaded,
+                compat: ExtensionCompat.Compatible,
+                hasUpdate: false
               };
 
-              const apiLevel = ext.apiLevel ?? 1;
-              if (apiLevel !== constants.apiLevel) continue;
+              // Don't present incompatible updates
+              if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible)
+                continue;
 
               const existing = this.getExisting(extensionData);
               if (existing != null) {
@@ -86,8 +106,10 @@ class MoonbaseSettingsStore extends Store<any> {
                 if (this.hasUpdate(extensionData)) {
                   this.updates[existing.uniqueId] = {
                     version: ext.version!,
-                    download: ext.download
+                    download: ext.download,
+                    updateManifest: ext
                   };
+                  existing.hasUpdate = true;
                 }
 
                 continue;
@@ -267,11 +289,17 @@ class MoonbaseSettingsStore extends Store<any> {
 
     this.installing = true;
     try {
-      const url = this.updates[uniqueId]?.download ?? ext.manifest.download;
+      const update = this.updates[uniqueId];
+      const url = update?.download ?? ext.manifest.download;
       await natives!.installExtension(ext.manifest, url, ext.source.url!);
       if (ext.state === ExtensionState.NotDownloaded) {
         this.extensions[uniqueId].state = ExtensionState.Disabled;
       }
+
+      if (update != null)
+        this.extensions[uniqueId].compat = checkExtensionCompat(
+          update.updateManifest
+        );
 
       delete this.updates[uniqueId];
     } catch (e) {
