@@ -1,9 +1,13 @@
-import { Config, constants, ExtensionLoadSource } from "@moonlight-mod/types";
+import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
 import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import getNatives from "../native";
 import { mainRepo } from "@moonlight-mod/types/constants";
+import {
+  checkExtensionCompat,
+  ExtensionCompat
+} from "@moonlight-mod/core/extension/loader";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -48,7 +52,8 @@ class MoonbaseSettingsStore extends Store<any> {
         uniqueId,
         state: moonlight.enabledExtensions.has(ext.id)
           ? ExtensionState.Enabled
-          : ExtensionState.Disabled
+          : ExtensionState.Disabled,
+        compat: checkExtensionCompat(ext.manifest)
       };
     }
 
@@ -64,11 +69,13 @@ class MoonbaseSettingsStore extends Store<any> {
                 uniqueId,
                 manifest: ext,
                 source: { type: ExtensionLoadSource.Normal, url: repo },
-                state: ExtensionState.NotDownloaded
+                state: ExtensionState.NotDownloaded,
+                compat: ExtensionCompat.Compatible
               };
 
-              const apiLevel = ext.apiLevel ?? 1;
-              if (apiLevel !== constants.apiLevel) continue;
+              // Don't present incompatible updates
+              if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible)
+                continue;
 
               const existing = this.getExisting(extensionData);
               if (existing != null) {
