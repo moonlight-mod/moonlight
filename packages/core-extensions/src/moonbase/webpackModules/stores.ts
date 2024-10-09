@@ -1,5 +1,10 @@
 import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
-import { ExtensionState, MoonbaseExtension, MoonbaseNatives } from "../types";
+import {
+  ExtensionState,
+  MoonbaseExtension,
+  MoonbaseNatives,
+  RepositoryManifest
+} from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import getNatives from "../native";
@@ -27,7 +32,13 @@ class MoonbaseSettingsStore extends Store<any> {
   shouldShowNotice: boolean;
 
   extensions: { [id: number]: MoonbaseExtension };
-  updates: { [id: number]: { version: string; download: string } };
+  updates: {
+    [id: number]: {
+      version: string;
+      download: string;
+      updateManifest: RepositoryManifest;
+    };
+  };
 
   constructor() {
     super(Dispatcher);
@@ -95,7 +106,8 @@ class MoonbaseSettingsStore extends Store<any> {
                 if (this.hasUpdate(extensionData)) {
                   this.updates[existing.uniqueId] = {
                     version: ext.version!,
-                    download: ext.download
+                    download: ext.download,
+                    updateManifest: ext
                   };
                   existing.hasUpdate = true;
                 }
@@ -263,11 +275,17 @@ class MoonbaseSettingsStore extends Store<any> {
 
     this.installing = true;
     try {
-      const url = this.updates[uniqueId]?.download ?? ext.manifest.download;
+      const update = this.updates[uniqueId];
+      const url = update?.download ?? ext.manifest.download;
       await natives!.installExtension(ext.manifest, url, ext.source.url!);
       if (ext.state === ExtensionState.NotDownloaded) {
         this.extensions[uniqueId].state = ExtensionState.Disabled;
       }
+
+      if (update != null)
+        this.extensions[uniqueId].compat = checkExtensionCompat(
+          update.updateManifest
+        );
 
       delete this.updates[uniqueId];
     } catch (e) {
