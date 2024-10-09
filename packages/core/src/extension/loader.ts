@@ -2,7 +2,8 @@ import {
   ExtensionWebExports,
   DetectedExtension,
   ProcessedExtensions,
-  WebpackModuleFunc
+  WebpackModuleFunc,
+  constants
 } from "@moonlight-mod/types";
 import { readConfig } from "../config";
 import Logger from "../util/logger";
@@ -121,6 +122,8 @@ async function loadExt(ext: DetectedExtension) {
 export async function loadExtensions(
   exts: DetectedExtension[]
 ): Promise<ProcessedExtensions> {
+  exts = exts.filter((x) => x.manifest.apiLevel === constants.apiLevel);
+
   const config = await readConfig();
   const items = exts
     .map((ext) => {

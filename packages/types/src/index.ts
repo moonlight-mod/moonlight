@@ -4,8 +4,8 @@
 /// <reference types="./mappings" />
 /* eslint-disable no-var */
 
+import { MoonlightFS } from "./fs";
 import {
-  MoonlightBrowserFS,
   MoonlightEnv,
   MoonlightHost,
   MoonlightNode,
@@ -19,6 +19,7 @@ export * as CoreExtensions from "./coreExtensions";
 export * from "./globals";
 export * from "./logger";
 export * as constants from "./constants";
+export * from "./fs";
 
 export type { AST } from "@moonlight-mod/lunast";
 export { ModuleExport, ModuleExportType } from "@moonlight-mod/moonmap";
@@ -39,5 +40,5 @@ declare global {
 
   var _moonlightBrowserInit: () => Promise<void>;
   var _moonlightBrowserLoad: () => Promise<void>;
-  var _moonlightBrowserFS: MoonlightBrowserFS | undefined;
+  var _moonlightBrowserFS: MoonlightFS;
 }
