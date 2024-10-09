@@ -1,4 +1,4 @@
-import { MoonlightFS } from "types/src";
+import { MoonlightFS } from "@moonlight-mod/types";
 import requireImport from "./util/import";
 
 export default function getFS(): MoonlightFS {
