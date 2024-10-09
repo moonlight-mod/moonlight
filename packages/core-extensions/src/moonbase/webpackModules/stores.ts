@@ -102,7 +102,11 @@ class MoonbaseSettingsStore extends Store<any> {
 
         this.emitChange();
       })
-      .then(natives!.checkForMoonlightUpdate)
+      .then(() =>
+        this.getExtensionConfigRaw("moonbase", "updateChecking", true)
+          ? natives!.checkForMoonlightUpdate()
+          : new Promise<null>((resolve) => resolve(null))
+      )
       .then((version) => {
         this.newVersion = version;
         this.emitChange();
@@ -194,6 +198,17 @@ class MoonbaseSettingsStore extends Store<any> {
     return cfg.config?.[key] ?? clonedDefaultValue;
   }
 
+  getExtensionConfigRaw<T>(
+    id: string,
+    key: string,
+    defaultValue: T | undefined
+  ): T | undefined {
+    const cfg = this.config.extensions[id];
+
+    if (cfg == null || typeof cfg === "boolean") return defaultValue;
+    return cfg.config?.[key] ?? defaultValue;
+  }
+
   getExtensionConfigName(uniqueId: number, key: string) {
     const ext = this.getExtension(uniqueId);
     return ext.manifest.settings?.[key]?.displayName ?? key;
@@ -204,9 +219,8 @@ class MoonbaseSettingsStore extends Store<any> {
     return ext.manifest.settings?.[key]?.description;
   }
 
-  setExtensionConfig(uniqueId: number, key: string, value: any) {
-    const ext = this.getExtension(uniqueId);
-    const oldConfig = this.config.extensions[ext.id];
+  setExtensionConfig(id: string, key: string, value: any) {
+    const oldConfig = this.config.extensions[id];
     const newConfig =
       typeof oldConfig === "boolean"
         ? {
@@ -218,7 +232,7 @@ class MoonbaseSettingsStore extends Store<any> {
             config: { ...(oldConfig?.config ?? {}), [key]: value }
           };
 
-    this.config.extensions[ext.id] = newConfig;
+    this.config.extensions[id] = newConfig;
     this.modified = this.isModified();
     this.emitChange();
   }

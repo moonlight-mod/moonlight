@@ -15,7 +15,14 @@ function plural(str: string, num: number) {
 }
 
 function listener() {
-  if (MoonbaseSettingsStore.shouldShowNotice) {
+  if (
+    MoonbaseSettingsStore.shouldShowNotice &&
+    MoonbaseSettingsStore.getExtensionConfigRaw(
+      "moonbase",
+      "updateBanner",
+      true
+    )
+  ) {
     // @ts-expect-error epic type fail
     MoonbaseSettingsStore.removeChangeListener(listener);
 

@@ -14,15 +14,15 @@ const SearchBar: any = Object.values(
 )[0];
 
 export default function ExtensionsPage() {
-  const moonbaseId = MoonbaseSettingsStore.getExtensionUniqueId("moonbase")!;
   const { extensions, savedFilter } = useStateFromStoresObject(
     [MoonbaseSettingsStore],
     () => {
       return {
         extensions: MoonbaseSettingsStore.extensions,
-        savedFilter: MoonbaseSettingsStore.getExtensionConfig(
-          moonbaseId,
-          "filter"
+        savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>(
+          "moonbase",
+          "filter",
+          defaultFilter
         )
       };
     }
@@ -31,10 +31,16 @@ export default function ExtensionsPage() {
   const [query, setQuery] = React.useState("");
 
   let filter: Filter, setFilter: (filter: Filter) => void;
-  if (moonlight.getConfigOption<boolean>("moonbase", "saveFilter")) {
+  if (
+    MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
+      "moonbase",
+      "saveFilter",
+      false
+    )
+  ) {
     filter = savedFilter ?? defaultFilter;
     setFilter = (filter) =>
-      MoonbaseSettingsStore.setExtensionConfig(moonbaseId, "filter", filter);
+      MoonbaseSettingsStore.setExtensionConfig("moonbase", "filter", filter);
   } else {
     const state = React.useState(defaultFilter);
     filter = state[0];

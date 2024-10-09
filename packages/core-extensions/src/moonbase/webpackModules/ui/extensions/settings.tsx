@@ -60,7 +60,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
       hideBorder={true}
       disabled={disabled}
       onChange={(value: boolean) => {
-        MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
+        MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
       }}
       note={description}
       className={`${Margins.marginReset} ${Margins.marginTop20}`}
@@ -91,7 +91,7 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
         maxValue={castedSetting.max ?? 100}
         onValueChange={(value: number) => {
           const rounded = Math.max(min, Math.min(max, Math.round(value)));
-          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, rounded);
+          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
         }}
       />
     </FormItem>
@@ -114,7 +114,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
         value={value ?? ""}
         onChange={(value: string) => {
           if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
+          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
       />
     </FormItem>
@@ -139,7 +139,7 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
         className={"moonbase-resizeable"}
         onChange={(value: string) => {
           if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
+          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
       />
     </FormItem>
@@ -170,7 +170,7 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
         )}
         onChange={(value: string) => {
           if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value);
+          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
       />
     </FormItem>
@@ -206,7 +206,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
           onChange: (value: string) => {
             if (disabled) return;
             MoonbaseSettingsStore.setExtensionConfig(
-              ext.uniqueId,
+              ext.id,
               name,
               Array.from(value)
             );
@@ -257,7 +257,7 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
 
   const entries = value ?? [];
   const updateConfig = () =>
-    MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, entries);
+    MoonbaseSettingsStore.setExtensionConfig(ext.id, name, entries);
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
@@ -323,7 +323,7 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   const entries = Object.entries(value ?? {});
   const updateConfig = () =>
     MoonbaseSettingsStore.setExtensionConfig(
-      ext.uniqueId,
+      ext.id,
       name,
       Object.fromEntries(entries)
     );
