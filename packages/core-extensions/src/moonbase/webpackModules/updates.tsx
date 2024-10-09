@@ -2,6 +2,8 @@ import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Notices from "@moonlight-mod/wp/notices_notices";
 import { MoonlightBranch } from "types/src";
+import React from "@moonlight-mod/wp/react";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 // FIXME: not indexed as importable
 const Constants = spacepack.require("discord/Constants");
@@ -9,6 +11,8 @@ const UserSettingsSections = spacepack.findObjectFromKey(
   Constants,
   "APPEARANCE_THEME_PICKER"
 );
+
+const { ThemeDarkIcon } = Components;
 
 function plural(str: string, num: number) {
   return `${str}${num > 1 ? "s" : ""}`;
@@ -58,7 +62,12 @@ function listener() {
     if (message != null) message += ".";
 
     Notices.addNotice({
-      element: message,
+      element: (
+        <div className="moonbase-updates-notice_text-wrapper">
+          <ThemeDarkIcon size="sm" color="currentColor" />
+          {message}
+        </div>
+      ),
       color: "moonbase-updates-notice",
       buttons: [
         {

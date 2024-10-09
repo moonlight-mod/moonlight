@@ -48,5 +48,6 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
 export const styles = [
   ".moonbase-settings > :first-child { margin-top: 0px; }",
   "textarea.moonbase-resizeable  { resize: vertical }",
-  ".moonbase-updates-notice { background-color: #222034; color: #FFFBA6; }"
+  ".moonbase-updates-notice { background-color: #222034; color: #FFFBA6; line-height: unset; height: 36px; }",
+  ".moonbase-updates-notice_text-wrapper { display: inline-flex; align-items: center; line-height: 36px; gap: 2px; }"
 ];
