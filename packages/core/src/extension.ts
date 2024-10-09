@@ -2,28 +2,26 @@ import {
   ExtensionManifest,
   DetectedExtension,
   ExtensionLoadSource,
-  constants,
-  MoonlightFS
+  constants
 } from "@moonlight-mod/types";
 import { readConfig } from "./config";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 import Logger from "./util/logger";
-import getFS from "./fs";
 
 const logger = new Logger("core/extension");
 
-async function findManifests(fs: MoonlightFS, dir: string): Promise<string[]> {
+async function findManifests(dir: string): Promise<string[]> {
   const ret = [];
 
-  if (await fs.exists(dir)) {
-    for (const file of await fs.readdir(dir)) {
-      const path = fs.join(dir, file);
+  if (await moonlightFS.exists(dir)) {
+    for (const file of await moonlightFS.readdir(dir)) {
+      const path = moonlightFS.join(dir, file);
       if (file === "manifest.json") {
         ret.push(path);
       }
 
-      if (!(await fs.isFile(path))) {
-        ret.push(...(await findManifests(fs, path)));
+      if (!(await moonlightFS.isFile(path))) {
+        ret.push(...(await findManifests(path)));
       }
     }
   }
@@ -32,50 +30,58 @@ async function findManifests(fs: MoonlightFS, dir: string): Promise<string[]> {
 }
 
 async function loadDetectedExtensions(
-  fs: MoonlightFS,
   dir: string,
   type: ExtensionLoadSource
 ): Promise<DetectedExtension[]> {
   const ret: DetectedExtension[] = [];
 
-  const manifests = await findManifests(fs, dir);
+  const manifests = await findManifests(dir);
   for (const manifestPath of manifests) {
     try {
-      if (!(await fs.exists(manifestPath))) continue;
-      const dir = fs.dirname(manifestPath);
+      if (!(await moonlightFS.exists(manifestPath))) continue;
+      const dir = moonlightFS.dirname(manifestPath);
 
       const manifest: ExtensionManifest = JSON.parse(
-        await fs.readFileString(manifestPath)
+        await moonlightFS.readFileString(manifestPath)
       );
 
-      const webPath = fs.join(dir, "index.js");
-      const nodePath = fs.join(dir, "node.js");
-      const hostPath = fs.join(dir, "host.js");
+      const webPath = moonlightFS.join(dir, "index.js");
+      const nodePath = moonlightFS.join(dir, "node.js");
+      const hostPath = moonlightFS.join(dir, "host.js");
 
       // if none exist (empty manifest) don't give a shit
-      if (!fs.exists(webPath) && !fs.exists(nodePath) && !fs.exists(hostPath)) {
+      if (
+        !moonlightFS.exists(webPath) &&
+        !moonlightFS.exists(nodePath) &&
+        !moonlightFS.exists(hostPath)
+      ) {
         continue;
       }
 
-      const web = (await fs.exists(webPath))
-        ? await fs.readFileString(webPath)
+      const web = (await moonlightFS.exists(webPath))
+        ? await moonlightFS.readFileString(webPath)
         : undefined;
 
       let url: string | undefined = undefined;
-      const urlPath = fs.join(dir, constants.repoUrlFile);
-      if (type === ExtensionLoadSource.Normal && (await fs.exists(urlPath))) {
-        url = await fs.readFileString(urlPath);
+      const urlPath = moonlightFS.join(dir, constants.repoUrlFile);
+      if (
+        type === ExtensionLoadSource.Normal &&
+        (await moonlightFS.exists(urlPath))
+      ) {
+        url = await moonlightFS.readFileString(urlPath);
       }
 
       const wpModules: Record<string, string> = {};
-      const wpModulesPath = fs.join(dir, "webpackModules");
-      if (await fs.exists(wpModulesPath)) {
-        const wpModulesFile = await fs.readdir(wpModulesPath);
+      const wpModulesPath = moonlightFS.join(dir, "webpackModules");
+      if (await moonlightFS.exists(wpModulesPath)) {
+        const wpModulesFile = await moonlightFS.readdir(wpModulesPath);
 
         for (const wpModuleFile of wpModulesFile) {
           if (wpModuleFile.endsWith(".js")) {
             wpModules[wpModuleFile.replace(".js", "")] =
-              await fs.readFileString(fs.join(wpModulesPath, wpModuleFile));
+              await moonlightFS.readFileString(
+                moonlightFS.join(wpModulesPath, wpModuleFile)
+              );
           }
         }
       }
@@ -91,8 +97,8 @@ async function loadDetectedExtensions(
           web,
           webPath: web != null ? webPath : undefined,
           webpackModules: wpModules,
-          nodePath: (await fs.exists(nodePath)) ? nodePath : undefined,
-          hostPath: (await fs.exists(hostPath)) ? hostPath : undefined
+          nodePath: (await moonlightFS.exists(nodePath)) ? nodePath : undefined,
+          hostPath: (await moonlightFS.exists(hostPath)) ? hostPath : undefined
         }
       });
     } catch (e) {
@@ -106,11 +112,9 @@ async function loadDetectedExtensions(
 async function getExtensionsNative(): Promise<DetectedExtension[]> {
   const config = await readConfig();
   const res = [];
-  const fs = getFS();
 
   res.push(
     ...(await loadDetectedExtensions(
-      fs,
       getCoreExtensionsPath(),
       ExtensionLoadSource.Core
     ))
@@ -118,7 +122,6 @@ async function getExtensionsNative(): Promise<DetectedExtension[]> {
 
   res.push(
     ...(await loadDetectedExtensions(
-      fs,
       await getExtensionsPath(),
       ExtensionLoadSource.Normal
     ))
@@ -127,7 +130,6 @@ async function getExtensionsNative(): Promise<DetectedExtension[]> {
   for (const devSearchPath of config.devSearchPaths ?? []) {
     res.push(
       ...(await loadDetectedExtensions(
-        fs,
         devSearchPath,
         ExtensionLoadSource.Developer
       ))
@@ -176,11 +178,9 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
     });
   }
 
-  const fs = getFS();
-  if (await fs.exists("/extensions")) {
+  if (await moonlightFS.exists("/extensions")) {
     ret.push(
       ...(await loadDetectedExtensions(
-        fs,
         "/extensions",
         ExtensionLoadSource.Normal
       ))

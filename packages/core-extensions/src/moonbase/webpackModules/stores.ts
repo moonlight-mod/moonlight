@@ -12,7 +12,7 @@ import {
 const logger = moonlight.getLogger("moonbase");
 
 let natives: MoonbaseNatives = moonlight.getNatives("moonbase");
-if (!natives) natives = getNatives();
+if (moonlightNode.isBrowser) natives = getNatives();
 
 class MoonbaseSettingsStore extends Store<any> {
   private origConfig: Config;
