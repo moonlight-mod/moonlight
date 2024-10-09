@@ -109,7 +109,7 @@ function OurPopup({
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 2fr",
-              gap: "10px 0"
+              gap: "10px"
             }}
           >
             {Object.entries(deps).map(([id, candidates], i) => (
@@ -117,7 +117,8 @@ function OurPopup({
                 <Text
                   variant="text-md/normal"
                   style={{
-                    alignSelf: "center"
+                    alignSelf: "center",
+                    wordBreak: "break-word"
                   }}
                 >
                   {MoonbaseSettingsStore.tryGetExtensionName(id)}
