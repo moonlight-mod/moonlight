@@ -82,7 +82,19 @@ function listener() {
             // FIXME: figure out a way to detect if settings has been opened
             //        alreadyjust so the transition isnt as jarring
             open(UserSettingsSections.ACCOUNT);
-            setTimeout(() => open("moonbase", 0), 0);
+            setTimeout(() => {
+              if (
+                MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
+                  "moonbase",
+                  "sections",
+                  false
+                )
+              ) {
+                open("moonbase-updates");
+              } else {
+                open("moonbase", 0);
+              }
+            }, 0);
             return true;
           }
         }
