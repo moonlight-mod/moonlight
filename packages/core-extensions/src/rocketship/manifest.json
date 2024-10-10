@@ -4,7 +4,7 @@
   "meta": {
     "name": "Rocketship",
     "tagline": "Adds new features when using rocketship",
-    "description": "**This extension only works on Linux when using rocketship: https://github.com/moonlight-mod/rocketship**. Adds new features to the Discord Linux client with rocketship, like better screensharing.",
+    "description": "**This extension only works on Linux when using rocketship:**\nhttps://github.com/moonlight-mod/rocketship\n\nAdds new features to the Discord Linux client with rocketship, such as a better screensharing experience.",
     "authors": ["NotNite", "Cynosphere", "adryd"]
   }
 }
