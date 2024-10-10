@@ -370,6 +370,10 @@ class MoonbaseSettingsStore extends Store<any> {
     this.emitChange();
   }
 
+  async updateMoonlight() {
+    await natives.updateMoonlight();
+  }
+
   getConfigOption<K extends keyof Config>(key: K): Config[K] {
     return this.config[key];
   }

@@ -45,9 +45,48 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
   }
 };
 
+const bg = "#222034";
+const fg = "#FFFBA6";
+
 export const styles = [
-  ".moonbase-settings > :first-child { margin-top: 0px; }",
-  "textarea.moonbase-resizeable  { resize: vertical }",
-  ".moonbase-updates-notice { background-color: #222034; color: #FFFBA6; line-height: unset; height: 36px; }",
-  ".moonbase-updates-notice_text-wrapper { display: inline-flex; align-items: center; line-height: 36px; gap: 2px; }"
+  `
+.moonbase-settings > :first-child {
+  margin-top: 0px;
+}
+
+textarea.moonbase-resizeable {
+  resize: vertical
+}
+
+.moonbase-updates-notice {
+  background-color: ${bg};
+  color: ${fg};
+  line-height: unset;
+  height: 36px;
+}
+
+.moonbase-updates-notice_text-wrapper {
+  display: inline-flex;
+  align-items: center;
+  line-height: 36px;
+  gap: 2px;
+}
+
+.moonbase-update-section {
+  background-color: ${bg};
+  --info-help-foreground: ${fg};
+  border: none !important;
+  color: ${fg};
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.moonbase-update-section > button {
+  color: ${fg};
+  background-color: transparent;
+  border-color: ${fg};
+}
+`.trim()
 ];
