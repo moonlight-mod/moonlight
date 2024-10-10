@@ -13,6 +13,7 @@ import {
   checkExtensionCompat,
   ExtensionCompat
 } from "@moonlight-mod/core/extension/loader";
+import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -23,6 +24,8 @@ class MoonbaseSettingsStore extends Store<any> {
   private origConfig: Config;
   private config: Config;
   private extensionIndex: number;
+  private configComponents: Record<string, Record<string, CustomComponent>> =
+    {};
 
   modified: boolean;
   submitting: boolean;
@@ -387,6 +390,19 @@ class MoonbaseSettingsStore extends Store<any> {
   tryGetExtensionName(id: string) {
     const uniqueId = this.getExtensionUniqueId(id);
     return (uniqueId != null ? this.getExtensionName(uniqueId) : null) ?? id;
+  }
+
+  registerConfigComponent(
+    ext: string,
+    name: string,
+    component: CustomComponent
+  ) {
+    if (!(ext in this.configComponents)) this.configComponents[ext] = {};
+    this.configComponents[ext][name] = component;
+  }
+
+  getExtensionConfigComponent(ext: string, name: string) {
+    return this.configComponents[ext]?.[name];
   }
 
   writeConfig() {

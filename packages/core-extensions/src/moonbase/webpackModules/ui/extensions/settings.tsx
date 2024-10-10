@@ -392,6 +392,39 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
+function Custom({ ext, name, setting, disabled }: SettingsProps) {
+  const { value, displayName } = useConfigEntry<any>(ext.uniqueId, name);
+
+  const { component: Component } = useStateFromStores(
+    [MoonbaseSettingsStore],
+    () => {
+      return {
+        component: MoonbaseSettingsStore.getExtensionConfigComponent(
+          ext.id,
+          name
+        )
+      };
+    },
+    [ext.uniqueId, name]
+  );
+
+  if (Component == null) {
+    const { Text } = Components;
+    return (
+      <Text variant="text/md/normal">{`Custom setting "${displayName}" is missing a component. Perhaps the extension is not installed?`}</Text>
+    );
+  }
+
+  return (
+    <Component
+      value={value}
+      setValue={(value) =>
+        MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)
+      }
+    />
+  );
+}
+
 function Setting({ ext, name, setting, disabled }: SettingsProps) {
   const elements: Partial<Record<ExtensionSettingType, SettingsComponent>> = {
     [ExtensionSettingType.Boolean]: Boolean,
@@ -401,7 +434,8 @@ function Setting({ ext, name, setting, disabled }: SettingsProps) {
     [ExtensionSettingType.Select]: Select,
     [ExtensionSettingType.MultiSelect]: MultiSelect,
     [ExtensionSettingType.List]: List,
-    [ExtensionSettingType.Dictionary]: Dictionary
+    [ExtensionSettingType.Dictionary]: Dictionary,
+    [ExtensionSettingType.Custom]: Custom
   };
   const element = elements[setting.type];
   if (element == null) return <></>;
