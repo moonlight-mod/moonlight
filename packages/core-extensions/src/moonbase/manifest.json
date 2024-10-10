@@ -4,7 +4,7 @@
   "meta": {
     "name": "Moonbase",
     "tagline": "The official settings UI for moonlight",
-    "authors": ["Cynosphere", "NotNite"]
+    "authors": ["Cynosphere", "NotNite", "redstonekasi"]
   },
   "dependencies": ["spacepack", "settings", "common", "notices"],
   "settings": {
@@ -17,6 +17,22 @@
       "displayName": "Persist filter",
       "description": "Save extension filter in config",
       "type": "boolean"
+    },
+    "updateChecking": {
+      "displayName": "Automatic update checking",
+      "description": "Checks for updates to moonlight",
+      "type": "boolean",
+      "default": "true"
+    },
+    "updateBanner": {
+      "displayName": "Show update banner",
+      "description": "Shows a banner for moonlight and extension updates",
+      "type": "boolean",
+      "default": "true"
     }
-  }
+  },
+  "cors": [
+    "https://github.com/moonlight-mod/moonlight/releases/download/",
+    "https://objects.githubusercontent.com/github-production-release-asset-"
+  ]
 }

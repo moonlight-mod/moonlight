@@ -121,6 +121,24 @@ function ArrayFormItem({
 export default function ConfigPage() {
   return (
     <>
+      <FormSwitch
+        className={Margins.marginTop20}
+        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
+          "moonbase",
+          "updateChecking",
+          true
+        )}
+        onChange={(value: boolean) => {
+          MoonbaseSettingsStore.setExtensionConfig(
+            "moonbase",
+            "updateChecking",
+            value
+          );
+        }}
+        note="Checks for updates to moonlight"
+      >
+        Automatic update checking
+      </FormSwitch>
       <FormItem title="Repositories">
         <FormText className={Margins.marginBottom4}>
           A list of remote repositories to display extensions from
