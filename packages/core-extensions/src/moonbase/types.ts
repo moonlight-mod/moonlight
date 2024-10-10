@@ -3,6 +3,8 @@ import { DetectedExtension, ExtensionManifest } from "@moonlight-mod/types";
 
 export type MoonbaseNatives = {
   checkForMoonlightUpdate(): Promise<string | null>;
+  updateMoonlight(): Promise<void>;
+
   fetchRepositories(
     repos: string[]
   ): Promise<Record<string, RepositoryManifest[]>>;
