@@ -35,7 +35,6 @@ function buildDependencyGraph<T, D>(
     const fullDeps: Set<T> = new Set();
     let failed = false;
 
-    // eslint-disable-next-line no-inner-declarations
     function resolveDeps(id: T, root: boolean) {
       if (id === item.id && !root) {
         logger.warn(`Circular dependency detected: "${item.id}"`);
@@ -113,7 +112,6 @@ export default function calculateDependencies<T, D>(
     logger.trace("Enabled stage", itemsOrig);
     const implicitlyEnabled: T[] = [];
 
-    // eslint-disable-next-line no-inner-declarations
     function validateDeps(dep: Dependency<T, D>) {
       if (getEnabled!(dep)) {
         const deps = dependencyGraphOrig.get(dep.id)!;

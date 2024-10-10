@@ -21,7 +21,7 @@ export type Spacepack = {
   findFunctionByStrings: (
     exports: Record<string, any>,
     ...strings: (string | RegExp)[]
-    // eslint-disable-next-line @typescript-eslint/ban-types
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   ) => Function | null;
   lazyLoad: (
     find: string | RegExp | (string | RegExp)[],

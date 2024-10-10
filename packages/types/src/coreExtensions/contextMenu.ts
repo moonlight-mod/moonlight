@@ -19,7 +19,6 @@ export type MenuElement =
   | MenuRadioItem
   | MenuControlItem;
 
-/* eslint-disable prettier/prettier */
 export type MenuSeparator = React.FunctionComponent;
 export type MenuGroup = React.FunctionComponent<{
   label?: string;
@@ -107,7 +106,6 @@ export type MenuControlItem = React.FunctionComponent<
       }
   )
 >;
-/* eslint-disable prettier/prettier */
 
 export type ContextMenu = {
   addItem: (

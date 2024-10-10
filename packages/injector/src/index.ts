@@ -210,7 +210,6 @@ export async function inject(asarPath: string) {
     const extensions = await getExtensions();
 
     // Duplicated in node-preload... oops
-    // eslint-disable-next-line no-inner-declarations
     function getConfig(ext: string) {
       const val = config.extensions[ext];
       if (val == null || typeof val === "boolean") return undefined;

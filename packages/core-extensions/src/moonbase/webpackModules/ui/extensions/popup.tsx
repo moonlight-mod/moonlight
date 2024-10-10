@@ -7,10 +7,9 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
-const {
-  openModalLazy,
-  closeModal
-} = require("@moonlight-mod/wp/discord/components/common/index");
+const { openModalLazy, closeModal } = spacepack.require(
+  "@moonlight-mod/wp/discord/components/common/index"
+);
 const Popup = spacepack.findByCode(".minorContainer", "secondaryAction")[0]
   .exports.default;
 
@@ -162,7 +161,6 @@ function OurPopup({
 
 export async function doPopup(deps: Record<string, MoonbaseExtension[]>) {
   const id: string = await openModalLazy(async () => {
-    // eslint-disable-next-line react/display-name
     return ({ transitionState }: { transitionState: number | null }) => {
       return <OurPopup transitionState={transitionState} deps={deps} id={id} />;
     };
