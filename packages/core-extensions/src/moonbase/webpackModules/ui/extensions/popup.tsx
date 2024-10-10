@@ -4,7 +4,7 @@ import React from "@moonlight-mod/wp/react";
 import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import { ExtensionLoadSource } from "types/src";
+import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
 const {

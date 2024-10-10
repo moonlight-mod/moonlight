@@ -14,7 +14,7 @@ import {
   loadExtensions,
   loadProcessedExtensions
 } from "@moonlight-mod/core/extension/loader";
-import createFS from "core/src/fs";
+import createFS from "@moonlight-mod/core/fs";
 
 async function injectGlobals() {
   global.moonlightFS = createFS();

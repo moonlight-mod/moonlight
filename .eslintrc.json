@@ -48,7 +48,24 @@
     "@typescript-eslint/no-var-requires": "off",
 
     // https://canary.discord.com/channels/1154257010532032512/1154275441788583996/1181760413231230976
-    "no-unused-labels": "off"
+    "no-unused-labels": "off",
+
+    // baseUrl being set to ./packages/ makes language server suggest "types/src" instead of "@moonlight-mod/types"
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["types/*"],
+            "message": "Use @moonlight-mod/types instead"
+          },
+          {
+            "group": ["core/*"],
+            "message": "Use @moonlight-mod/core instead"
+          }
+        ]
+      }
+    ]
   },
   "settings": {
     "react": {
