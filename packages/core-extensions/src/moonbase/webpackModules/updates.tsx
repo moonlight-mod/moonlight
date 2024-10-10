@@ -90,7 +90,7 @@ function listener() {
                   false
                 )
               ) {
-                open("moonbase-updates");
+                open("moonbase-extensions");
               } else {
                 open("moonbase", 0);
               }
