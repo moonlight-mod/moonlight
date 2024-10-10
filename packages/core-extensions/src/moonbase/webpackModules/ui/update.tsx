@@ -20,10 +20,11 @@ const HelpMessageClasses = spacepack.findByExports("positive", "iconDiv")[0]
 const logger = moonlight.getLogger("moonbase/ui/update");
 
 const strings: Record<UpdateState, string> = {
-  [UpdateState.Ready]: "A new version of moonlight is available",
+  [UpdateState.Ready]: "A new version of moonlight is available.",
   [UpdateState.Working]: "Updating moonlight...",
-  [UpdateState.Installed]: "Updated, restart Discord to apply changes",
-  [UpdateState.Failed]: "Failed to update moonlight, use the installer instead"
+  [UpdateState.Installed]: "Updated. Restart Discord to apply changes.",
+  [UpdateState.Failed]:
+    "Failed to update moonlight. Please use the installer instead."
 };
 
 export default function Update() {
