@@ -9,7 +9,11 @@ import type {
 import type EventEmitter from "events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
-import { EventPayloads, EventType, MoonlightEventEmitter } from "./core/event";
+import type {
+  EventPayloads,
+  EventType,
+  MoonlightEventEmitter
+} from "./core/event";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -17,6 +21,9 @@ export type MoonlightHost = {
   events: EventEmitter;
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
+
+  version: string;
+  branch: MoonlightBranch;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
@@ -28,14 +35,19 @@ export type MoonlightNode = {
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
   nativesCache: Record<string, any>;
+  isBrowser: boolean;
+
+  version: string;
+  branch: MoonlightBranch;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
 
+  getMoonlightDir: () => string;
   getExtensionDir: (ext: string) => string;
-  writeConfig: (config: Config) => void;
+  writeConfig: (config: Config) => Promise<void>;
 };
 
 export type MoonlightWeb = {
@@ -53,6 +65,9 @@ export type MoonlightWeb = {
     registerWebpackModule: (module: IdentifiedWebpackModule) => void;
   };
 
+  version: string;
+  branch: MoonlightBranch;
+
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   getNatives: (ext: string) => any | undefined;
@@ -65,4 +80,10 @@ export enum MoonlightEnv {
   Injector = "injector",
   NodePreload = "node-preload",
   WebPreload = "web-preload"
+}
+
+export enum MoonlightBranch {
+  STABLE = "stable",
+  NIGHTLY = "nightly",
+  DEV = "dev"
 }

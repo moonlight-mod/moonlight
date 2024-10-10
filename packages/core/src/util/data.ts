@@ -1,10 +1,11 @@
 import { constants } from "@moonlight-mod/types";
-import requireImport from "./import";
 
-export function getMoonlightDir(): string {
+export async function getMoonlightDir() {
+  browser: {
+    return "/";
+  }
+
   const electron = require("electron");
-  const fs = requireImport("fs");
-  const path = requireImport("path");
 
   let appData = "";
   injector: {
@@ -15,8 +16,8 @@ export function getMoonlightDir(): string {
     appData = electron.ipcRenderer.sendSync(constants.ipcGetAppData);
   }
 
-  const dir = path.join(appData, "moonlight-mod");
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir);
+  const dir = moonlightFS.join(appData, "moonlight-mod");
+  if (!(await moonlightFS.exists(dir))) await moonlightFS.mkdir(dir);
 
   return dir;
 }
@@ -26,43 +27,44 @@ type BuildInfo = {
   version: string;
 };
 
-export function getConfigPath(): string {
-  const dir = getMoonlightDir();
-  const fs = requireImport("fs");
-  const path = requireImport("path");
+export async function getConfigPath() {
+  browser: {
+    return "/config.json";
+  }
+
+  const dir = await getMoonlightDir();
 
   let configPath = "";
 
-  const buildInfoPath = path.join(process.resourcesPath, "build_info.json");
-  if (!fs.existsSync(buildInfoPath)) {
-    configPath = path.join(dir, "desktop.json");
+  const buildInfoPath = moonlightFS.join(
+    process.resourcesPath,
+    "build_info.json"
+  );
+  if (!(await moonlightFS.exists(buildInfoPath))) {
+    configPath = moonlightFS.join(dir, "desktop.json");
   } else {
     const buildInfo: BuildInfo = JSON.parse(
-      fs.readFileSync(buildInfoPath, "utf8")
+      await moonlightFS.readFileString(buildInfoPath)
     );
-    configPath = path.join(dir, buildInfo.releaseChannel + ".json");
+    configPath = moonlightFS.join(dir, buildInfo.releaseChannel + ".json");
   }
 
   return configPath;
 }
 
-function getPathFromMoonlight(...names: string[]): string {
-  const dir = getMoonlightDir();
-  const fs = requireImport("fs");
-  const path = requireImport("path");
+async function getPathFromMoonlight(...names: string[]) {
+  const dir = await getMoonlightDir();
 
-  const target = path.join(dir, ...names);
-  if (!fs.existsSync(target)) fs.mkdirSync(target);
+  const target = moonlightFS.join(dir, ...names);
+  if (!(await moonlightFS.exists(target))) await moonlightFS.mkdir(target);
 
   return target;
 }
 
-export function getExtensionsPath(): string {
-  return getPathFromMoonlight(constants.extensionsDir);
+export async function getExtensionsPath() {
+  return await getPathFromMoonlight(constants.extensionsDir);
 }
 
 export function getCoreExtensionsPath(): string {
-  const path = requireImport("path");
-  const a = path.join(__dirname, constants.coreExtensionsDir);
-  return a;
+  return moonlightFS.join(__dirname, constants.coreExtensionsDir);
 }

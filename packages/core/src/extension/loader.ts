@@ -2,7 +2,10 @@ import {
   ExtensionWebExports,
   DetectedExtension,
   ProcessedExtensions,
-  WebpackModuleFunc
+  WebpackModuleFunc,
+  constants,
+  ExtensionManifest,
+  ExtensionEnvironment
 } from "@moonlight-mod/types";
 import { readConfig } from "../config";
 import Logger from "../util/logger";
@@ -14,68 +17,72 @@ import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
 
 const logger = new Logger("core/extension/loader");
 
-async function loadExt(ext: DetectedExtension) {
-  webPreload: {
-    if (ext.scripts.web != null) {
-      const source = ext.scripts.web;
-      const fn = new Function("require", "module", "exports", source);
+function loadExtWeb(ext: DetectedExtension) {
+  if (ext.scripts.web != null) {
+    const source = ext.scripts.web;
+    const fn = new Function("require", "module", "exports", source);
 
-      const module = { id: ext.id, exports: {} };
-      fn.apply(window, [
-        () => {
-          logger.warn("Attempted to require() from web");
-        },
-        module,
-        module.exports
-      ]);
+    const module = { id: ext.id, exports: {} };
+    fn.apply(window, [
+      () => {
+        logger.warn("Attempted to require() from web");
+      },
+      module,
+      module.exports
+    ]);
 
-      const exports: ExtensionWebExports = module.exports;
-      if (exports.patches != null) {
-        let idx = 0;
-        for (const patch of exports.patches) {
-          if (Array.isArray(patch.replace)) {
-            for (const replacement of patch.replace) {
-              const newPatch = Object.assign({}, patch, {
-                replace: replacement
-              });
+    const exports: ExtensionWebExports = module.exports;
+    if (exports.patches != null) {
+      let idx = 0;
+      for (const patch of exports.patches) {
+        if (Array.isArray(patch.replace)) {
+          for (const replacement of patch.replace) {
+            const newPatch = Object.assign({}, patch, {
+              replace: replacement
+            });
 
-              registerPatch({ ...newPatch, ext: ext.id, id: idx });
-              idx++;
-            }
-          } else {
-            registerPatch({ ...patch, ext: ext.id, id: idx });
+            registerPatch({ ...newPatch, ext: ext.id, id: idx });
             idx++;
           }
+        } else {
+          registerPatch({ ...patch, ext: ext.id, id: idx });
+          idx++;
         }
-      }
-
-      if (exports.webpackModules != null) {
-        for (const [name, wp] of Object.entries(exports.webpackModules)) {
-          if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
-            const func = new Function(
-              "module",
-              "exports",
-              "require",
-              ext.scripts.webpackModules[name]!
-            ) as WebpackModuleFunc;
-            registerWebpackModule({
-              ...wp,
-              ext: ext.id,
-              id: name,
-              run: func
-            });
-          } else {
-            registerWebpackModule({ ...wp, ext: ext.id, id: name });
-          }
-        }
-      }
-
-      if (exports.styles != null) {
-        registerStyles(
-          exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`)
-        );
       }
     }
+
+    if (exports.webpackModules != null) {
+      for (const [name, wp] of Object.entries(exports.webpackModules)) {
+        if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
+          const func = new Function(
+            "module",
+            "exports",
+            "require",
+            ext.scripts.webpackModules[name]!
+          ) as WebpackModuleFunc;
+          registerWebpackModule({
+            ...wp,
+            ext: ext.id,
+            id: name,
+            run: func
+          });
+        } else {
+          registerWebpackModule({ ...wp, ext: ext.id, id: name });
+        }
+      }
+    }
+
+    if (exports.styles != null) {
+      registerStyles(
+        exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`)
+      );
+    }
+  }
+}
+
+async function loadExt(ext: DetectedExtension) {
+  webTarget: {
+    loadExtWeb(ext);
   }
 
   nodePreload: {
@@ -100,6 +107,33 @@ async function loadExt(ext: DetectedExtension) {
   }
 }
 
+export enum ExtensionCompat {
+  Compatible,
+  InvalidApiLevel,
+  InvalidEnvironment
+}
+
+export function checkExtensionCompat(
+  manifest: ExtensionManifest
+): ExtensionCompat {
+  let environment;
+  webTarget: {
+    environment = ExtensionEnvironment.Web;
+  }
+  nodeTarget: {
+    environment = ExtensionEnvironment.Desktop;
+  }
+
+  if (manifest.apiLevel !== constants.apiLevel)
+    return ExtensionCompat.InvalidApiLevel;
+  if (
+    (manifest.environment ?? "both") !== "both" &&
+    manifest.environment !== environment
+  )
+    return ExtensionCompat.InvalidEnvironment;
+  return ExtensionCompat.Compatible;
+}
+
 /*
   This function resolves extensions and loads them, split into a few stages:
 
@@ -117,7 +151,11 @@ async function loadExt(ext: DetectedExtension) {
 export async function loadExtensions(
   exts: DetectedExtension[]
 ): Promise<ProcessedExtensions> {
-  const config = readConfig();
+  exts = exts.filter(
+    (ext) => checkExtensionCompat(ext.manifest) === ExtensionCompat.Compatible
+  );
+
+  const config = await readConfig();
   const items = exts
     .map((ext) => {
       return {
@@ -205,7 +243,7 @@ export async function loadProcessedExtensions({
     logger.debug(`Loaded "${ext.id}"`);
   }
 
-  webPreload: {
+  webTarget: {
     for (const ext of extensions) {
       moonlight.enabledExtensions.add(ext.id);
     }

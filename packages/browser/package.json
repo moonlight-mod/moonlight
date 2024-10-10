@@ -1,0 +1,11 @@
+{
+  "name": "@moonlight-mod/browser",
+  "private": true,
+  "dependencies": {
+    "@moonlight-mod/core": "workspace:*",
+    "@moonlight-mod/types": "workspace:*",
+    "@moonlight-mod/web-preload": "workspace:*",
+    "@zenfs/core": "^1.0.2",
+    "@zenfs/dom": "^0.2.16"
+  }
+}

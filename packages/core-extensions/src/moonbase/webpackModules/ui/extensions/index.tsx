@@ -8,21 +8,22 @@ import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
 const SearchBar: any = Object.values(
   spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0].exports
 )[0];
 
 export default function ExtensionsPage() {
-  const moonbaseId = MoonbaseSettingsStore.getExtensionUniqueId("moonbase")!;
   const { extensions, savedFilter } = useStateFromStoresObject(
     [MoonbaseSettingsStore],
     () => {
       return {
         extensions: MoonbaseSettingsStore.extensions,
-        savedFilter: MoonbaseSettingsStore.getExtensionConfig(
-          moonbaseId,
-          "filter"
+        savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>(
+          "moonbase",
+          "filter",
+          defaultFilter
         )
       };
     }
@@ -31,10 +32,16 @@ export default function ExtensionsPage() {
   const [query, setQuery] = React.useState("");
 
   let filter: Filter, setFilter: (filter: Filter) => void;
-  if (moonlight.getConfigOption<boolean>("moonbase", "saveFilter")) {
+  if (
+    MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
+      "moonbase",
+      "saveFilter",
+      false
+    )
+  ) {
     filter = savedFilter ?? defaultFilter;
     setFilter = (filter) =>
-      MoonbaseSettingsStore.setExtensionConfig(moonbaseId, "filter", filter);
+      MoonbaseSettingsStore.setExtensionConfig("moonbase", "filter", filter);
   } else {
     const state = React.useState(defaultFilter);
     filter = state[0];
@@ -49,7 +56,9 @@ export default function ExtensionsPage() {
 
   const filtered = sorted.filter(
     (ext) =>
-      (ext.manifest.meta?.name?.toLowerCase().includes(query) ||
+      (query === "" ||
+        ext.manifest.id?.toLowerCase().includes(query) ||
+        ext.manifest.meta?.name?.toLowerCase().includes(query) ||
         ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
         ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
       [...selectedTags.values()].every(
@@ -71,7 +80,10 @@ export default function ExtensionsPage() {
           ext.state !== ExtensionState.NotDownloaded) ||
         (!(filter & Filter.Repository) &&
           ext.state === ExtensionState.NotDownloaded)
-      )
+      ) &&
+      (filter & Filter.Incompatible ||
+        ext.compat === ExtensionCompat.Compatible ||
+        (ext.compat === ExtensionCompat.InvalidApiLevel && ext.hasUpdate))
   );
 
   return (
@@ -96,7 +108,7 @@ export default function ExtensionsPage() {
         setSelectedTags={setSelectedTags}
       />
       {filtered.map((ext) => (
-        <ExtensionCard uniqueId={ext.uniqueId} key={ext.id} />
+        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
       ))}
     </>
   );

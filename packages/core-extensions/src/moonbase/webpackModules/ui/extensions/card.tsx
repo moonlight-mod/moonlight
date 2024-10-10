@@ -1,5 +1,6 @@
 import { ExtensionState } from "../../../types";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
@@ -11,6 +12,7 @@ import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/In
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
+import installWithDependencyPopup from "./popup";
 
 export enum ExtensionPage {
   Info,
@@ -20,7 +22,8 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { DownloadIcon, TrashIcon, CircleWarningIcon } = Components;
+const { BeakerIcon, DownloadIcon, TrashIcon, CircleWarningIcon, Tooltip } =
+  Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports(
@@ -28,6 +31,18 @@ const TabBarClasses = spacepack.findByExports(
   "tabBarItem",
   "headerContentWrapper"
 )[0].exports;
+const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0]
+  .exports;
+
+const BuildOverrideClasses = spacepack.findByExports(
+  "disabledButtonOverride"
+)[0].exports;
+
+const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
+  [ExtensionCompat.Compatible]: "huh?",
+  [ExtensionCompat.InvalidApiLevel]: "Incompatible API level",
+  [ExtensionCompat.InvalidEnvironment]: "Incompatible platform"
+};
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -49,20 +64,46 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   // Why it work like that :sob:
   if (ext == null) return <></>;
 
-  const { Card, Text, Switch, TabBar, Button } = Components;
+  const { Card, Text, FormSwitch, TabBar, Button } = Components;
 
   const tagline = ext.manifest?.meta?.tagline;
   const settings = ext.manifest?.settings;
   const description = ext.manifest?.meta?.description;
+  const enabledDependants = useStateFromStores([MoonbaseSettingsStore], () =>
+    Object.keys(MoonbaseSettingsStore.extensions)
+      .filter((uniqueId) => {
+        const potentialDependant = MoonbaseSettingsStore.getExtension(
+          parseInt(uniqueId)
+        );
+
+        return (
+          potentialDependant.manifest.dependencies?.includes(ext.id) &&
+          MoonbaseSettingsStore.getExtensionEnabled(parseInt(uniqueId))
+        );
+      })
+      .map((a) => MoonbaseSettingsStore.getExtension(parseInt(a)))
+  );
+  const implicitlyEnabled = enabledDependants.length > 0;
 
   return (
     <Card editable={true} className={IntegrationCard.card}>
       <div className={IntegrationCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
-          <Flex direction={Flex.Direction.HORIZONTAL}>
+          <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
             <Text variant="text-md/semibold">
               {ext.manifest?.meta?.name ?? ext.id}
             </Text>
+            {ext.source.type === ExtensionLoadSource.Developer && (
+              <Tooltip text="This is a local extension" position="top">
+                {(props: any) => (
+                  <BeakerIcon
+                    {...props}
+                    class={BuildOverrideClasses.infoIcon}
+                    size="xs"
+                  />
+                )}
+              </Tooltip>
+            )}
           </Flex>
 
           {tagline != null && (
@@ -76,16 +117,26 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           justify={Flex.Justify.END}
         >
           {ext.state === ExtensionState.NotDownloaded ? (
-            <Button
-              color={Button.Colors.BRAND}
-              submitting={busy}
-              disabled={conflicting}
-              onClick={() => {
-                MoonbaseSettingsStore.installExtension(uniqueId);
-              }}
+            <Tooltip
+              text={COMPAT_TEXT_MAP[ext.compat]}
+              shouldShow={ext.compat !== ExtensionCompat.Compatible}
             >
-              Install
-            </Button>
+              {(props: any) => (
+                <Button
+                  {...props}
+                  color={Button.Colors.BRAND}
+                  submitting={busy}
+                  disabled={
+                    ext.compat !== ExtensionCompat.Compatible || conflicting
+                  }
+                  onClick={async () => {
+                    await installWithDependencyPopup(uniqueId);
+                  }}
+                >
+                  Install
+                </Button>
+              )}
+            </Tooltip>
           ) : (
             <div
               // too lazy to learn how <Flex /> works lmao
@@ -127,8 +178,27 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 />
               )}
 
-              <Switch
-                checked={enabled}
+              <FormSwitch
+                value={
+                  ext.compat === ExtensionCompat.Compatible &&
+                  (enabled || implicitlyEnabled)
+                }
+                disabled={
+                  implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible
+                }
+                hideBorder={true}
+                style={{ marginBottom: "0px" }}
+                tooltipNote={
+                  ext.compat !== ExtensionCompat.Compatible
+                    ? COMPAT_TEXT_MAP[ext.compat]
+                    : implicitlyEnabled
+                      ? `This extension is a dependency of the following enabled extension${
+                          enabledDependants.length > 1 ? "s" : ""
+                        }: ${enabledDependants
+                          .map((a) => a.manifest.meta?.name ?? a.id)
+                          .join(", ")}`
+                      : undefined
+                }
                 onChange={() => {
                   setRestartNeeded(true);
                   MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
@@ -186,8 +256,16 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         >
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
           {tab === ExtensionPage.Description && (
-            <Text variant="text-md/normal">
-              {MarkupUtils.parse(description ?? "*No description*")}
+            <Text
+              variant="text-md/normal"
+              class={MarkupClasses.markup}
+              style={{ width: "100%" }}
+            >
+              {MarkupUtils.parse(description ?? "*No description*", true, {
+                allowHeading: true,
+                allowLinks: true,
+                allowList: true
+              })}
             </Text>
           )}
           {tab === ExtensionPage.Settings && <Settings ext={ext} />}

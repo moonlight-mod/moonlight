@@ -1,6 +1,10 @@
-import { DetectedExtension, ExtensionManifest } from "types/src";
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import { DetectedExtension, ExtensionManifest } from "@moonlight-mod/types";
 
 export type MoonbaseNatives = {
+  checkForMoonlightUpdate(): Promise<string | null>;
+  updateMoonlight(): Promise<void>;
+
   fetchRepositories(
     repos: string[]
   ): Promise<Record<string, RepositoryManifest[]>>;
@@ -29,4 +33,6 @@ export type MoonbaseExtension = {
   manifest: ExtensionManifest | RepositoryManifest;
   source: DetectedExtension["source"];
   state: ExtensionState;
+  compat: ExtensionCompat;
+  hasUpdate: boolean;
 };

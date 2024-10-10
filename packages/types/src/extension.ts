@@ -31,6 +31,7 @@ export type ExtensionManifest = {
   id: string;
   version?: string;
   apiLevel?: number;
+  environment?: ExtensionEnvironment;
 
   meta?: {
     name?: string;
@@ -47,8 +48,16 @@ export type ExtensionManifest = {
   incompatible?: string[];
 
   settings?: Record<string, ExtensionSettingsManifest>;
+
   cors?: string[];
+  blocked?: string[];
 };
+
+export enum ExtensionEnvironment {
+  Both = "both",
+  Desktop = "desktop",
+  Web = "web"
+}
 
 export enum ExtensionLoadSource {
   Developer,

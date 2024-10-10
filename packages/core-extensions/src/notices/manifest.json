@@ -1,0 +1,10 @@
+{
+  "id": "notices",
+  "apiLevel": 2,
+  "meta": {
+    "name": "Notices",
+    "tagline": "An API for adding notices at the top of the page",
+    "authors": ["Cynosphere", "NotNite"],
+    "tags": ["library"]
+  }
+}

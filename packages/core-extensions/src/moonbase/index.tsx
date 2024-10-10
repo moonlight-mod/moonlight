@@ -1,6 +1,6 @@
-import { ExtensionWebExports } from "@moonlight-mod/types";
+import { ExtensionWebpackModule } from "@moonlight-mod/types";
 
-export const webpackModules: ExtensionWebExports["webpackModules"] = {
+export const webpackModules: Record<string, ExtensionWebpackModule> = {
   stores: {
     dependencies: [
       { id: "discord/packages/flux" },
@@ -21,7 +21,7 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     ]
   },
 
-  moonbase: {
+  settings: {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
       { ext: "settings", id: "settings" },
@@ -29,10 +29,73 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
       { ext: "moonbase", id: "ui" }
     ],
     entrypoint: true
+  },
+
+  updates: {
+    dependencies: [
+      { id: "react" },
+      { ext: "moonbase", id: "stores" },
+      { ext: "notices", id: "notices" },
+      {
+        ext: "spacepack",
+        id: "spacepack"
+      }
+    ],
+    entrypoint: true
+  },
+
+  moonbase: {
+    dependencies: [{ ext: "moonbase", id: "stores" }]
   }
 };
 
+const bg = "#222034";
+const fg = "#FFFBA6";
+
 export const styles = [
-  ".moonbase-settings > :first-child { margin-top: 0px; }",
-  "textarea.moonbase-resizeable  { resize: vertical }"
+  `
+.moonbase-settings > :first-child {
+  margin-top: 0px;
+}
+
+textarea.moonbase-resizeable {
+  resize: vertical
+}
+
+.moonbase-updates-notice {
+  background-color: ${bg};
+  color: ${fg};
+  line-height: unset;
+  height: 36px;
+}
+
+.moonbase-updates-notice button {
+  color: ${fg};
+  border-color: ${fg};
+}
+
+.moonbase-updates-notice_text-wrapper {
+  display: inline-flex;
+  align-items: center;
+  line-height: 36px;
+  gap: 2px;
+}
+
+.moonbase-update-section {
+  background-color: ${bg};
+  --info-help-foreground: ${fg};
+  border: none !important;
+  color: ${fg};
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.moonbase-update-section > button {
+  color: ${fg};
+  background-color: transparent;
+  border-color: ${fg};
+}
+`.trim()
 ];

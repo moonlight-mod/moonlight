@@ -1,6 +1,9 @@
 import { Config } from "@moonlight-mod/types";
-import requireImport from "./util/import";
 import { getConfigPath } from "./util/data";
+import * as constants from "@moonlight-mod/types/constants";
+import Logger from "./util/logger";
+
+const logger = new Logger("core/config");
 
 const defaultConfig: Config = {
   extensions: {
@@ -9,45 +12,46 @@ const defaultConfig: Config = {
     noTrack: true,
     noHideToken: true
   },
-  repositories: ["https://moonlight-mod.github.io/extensions-dist/repo.json"]
+  repositories: [constants.mainRepo]
 };
 
-export function writeConfig(config: Config) {
-  const fs = requireImport("fs");
-  const configPath = getConfigPath();
-  fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-}
-
-function readConfigNode(): Config {
-  const fs = requireImport("fs");
-  const configPath = getConfigPath();
-
-  if (!fs.existsSync(configPath)) {
-    writeConfig(defaultConfig);
-    return defaultConfig;
+export async function writeConfig(config: Config) {
+  try {
+    const configPath = await getConfigPath();
+    await moonlightFS.writeFileString(
+      configPath,
+      JSON.stringify(config, null, 2)
+    );
+  } catch (e) {
+    logger.error("Failed to write config", e);
   }
-
-  let config: Config = JSON.parse(fs.readFileSync(configPath, "utf8"));
-
-  // Assign the default values if they don't exist (newly added)
-  config = { ...defaultConfig, ...config };
-  writeConfig(config);
-
-  return config;
 }
 
-export function readConfig(): Config {
+export async function readConfig(): Promise<Config> {
   webPreload: {
     return moonlightNode.config;
   }
 
-  nodePreload: {
-    return readConfigNode();
-  }
+  const configPath = await getConfigPath();
+  if (!(await moonlightFS.exists(configPath))) {
+    await writeConfig(defaultConfig);
+    return defaultConfig;
+  } else {
+    try {
+      let config: Config = JSON.parse(
+        await moonlightFS.readFileString(configPath)
+      );
+      // Assign the default values if they don't exist (newly added)
+      config = { ...defaultConfig, ...config };
+      await writeConfig(config);
 
-  injector: {
-    return readConfigNode();
+      return config;
+    } catch (e) {
+      logger.error("Failed to read config, falling back to defaults", e);
+      // We don't want to write the default config here - if a user is manually
+      // editing their config and messes it up, we'll delete it all instead of
+      // letting them fix it
+      return defaultConfig;
+    }
   }
-
-  throw new Error("Called readConfig() in an impossible environment");
 }

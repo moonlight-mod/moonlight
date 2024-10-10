@@ -1,10 +1,11 @@
 {
   "name": "@moonlight-mod/web-preload",
   "private": true,
+  "main": "src/index.ts",
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/lunast": "^1.0.0",
-    "@moonlight-mod/mappings": "^1.0.0",
+    "@moonlight-mod/mappings": "^1.0.2",
     "@moonlight-mod/moonmap": "^1.0.2",
     "@moonlight-mod/types": "workspace:*"
   }

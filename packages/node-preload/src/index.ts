@@ -1,21 +1,30 @@
 import { webFrame, ipcRenderer, contextBridge } from "electron";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
 
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
-import { constants } from "@moonlight-mod/types";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { getExtensions } from "@moonlight-mod/core/extension";
-import { getExtensionsPath } from "@moonlight-mod/core/util/data";
-import Logger from "@moonlight-mod/core/util/logger";
+import {
+  getExtensionsPath,
+  getMoonlightDir
+} from "@moonlight-mod/core/util/data";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import {
   loadExtensions,
   loadProcessedExtensions
 } from "@moonlight-mod/core/extension/loader";
+import createFS from "@moonlight-mod/core/fs";
 
 async function injectGlobals() {
-  const config = readConfig();
-  const extensions = getExtensions();
-  const processed = await loadExtensions(extensions);
+  global.moonlightFS = createFS();
+
+  const config = await readConfig();
+  initLogger(config);
+  const extensions = await getExtensions();
+  const processedExtensions = await loadExtensions(extensions);
+  const moonlightDir = await getMoonlightDir();
+  const extensionsPath = await getExtensionsPath();
 
   function getConfig(ext: string) {
     const val = config.extensions[ext];
@@ -25,9 +34,14 @@ async function injectGlobals() {
 
   global.moonlightNode = {
     config,
-    extensions: getExtensions(),
-    processedExtensions: processed,
+    extensions,
+    processedExtensions,
     nativesCache: {},
+    isBrowser: false,
+
+    version: MOONLIGHT_VERSION,
+    branch: MOONLIGHT_BRANCH as MoonlightBranch,
+
     getConfig,
     getConfigOption: <T>(ext: string, name: string) => {
       const config = getConfig(ext);
@@ -41,19 +55,21 @@ async function injectGlobals() {
       return new Logger(id);
     },
 
+    getMoonlightDir() {
+      return moonlightDir;
+    },
     getExtensionDir: (ext: string) => {
-      const extPath = getExtensionsPath();
-      return path.join(extPath, ext);
+      return path.join(extensionsPath, ext);
     },
     writeConfig
   };
 
-  await loadProcessedExtensions(processed);
+  await loadProcessedExtensions(processedExtensions);
   contextBridge.exposeInMainWorld("moonlightNode", moonlightNode);
 
-  const extCors = moonlightNode.processedExtensions.extensions
-    .map((x) => x.manifest.cors ?? [])
-    .flat();
+  const extCors = moonlightNode.processedExtensions.extensions.flatMap(
+    (x) => x.manifest.cors ?? []
+  );
 
   for (const repo of moonlightNode.config.repositories) {
     const url = new URL(repo);
@@ -62,6 +78,11 @@ async function injectGlobals() {
   }
 
   ipcRenderer.invoke(constants.ipcSetCorsList, extCors);
+
+  const extBlocked = moonlightNode.processedExtensions.extensions.flatMap(
+    (e) => e.manifest.blocked ?? []
+  );
+  ipcRenderer.invoke(constants.ipcSetBlockedList, extBlocked);
 }
 
 async function loadPreload() {
