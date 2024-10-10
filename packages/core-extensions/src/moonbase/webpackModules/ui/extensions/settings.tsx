@@ -419,7 +419,7 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
     <Component
       value={value}
       setValue={(value) =>
-        MoonbaseSettingsStore.setExtensionConfig(ext.uniqueId, name, value)
+        MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)
       }
     />
   );
