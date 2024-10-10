@@ -65,6 +65,11 @@ textarea.moonbase-resizeable {
   height: 36px;
 }
 
+.moonbase-updates-notice button {
+  color: ${fg};
+  border-color: ${fg};
+}
+
 .moonbase-updates-notice_text-wrapper {
   display: inline-flex;
   align-items: center;
