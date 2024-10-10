@@ -6,6 +6,8 @@ import { Moonbase, pages } from "@moonlight-mod/wp/moonbase_ui";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
+import Update from "./ui/update";
+
 const { MenuItem, Text, Breadcrumbs } = Components;
 
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
@@ -86,6 +88,9 @@ if (
           >
             {page.name}
           </Breadcrumbs>
+
+          <Update />
+
           <page.element />
         </>
       );

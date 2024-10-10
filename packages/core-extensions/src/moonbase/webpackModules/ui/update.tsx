@@ -29,9 +29,10 @@ const strings: Record<UpdateState, string> = {
 
 export default function Update() {
   const [state, setState] = React.useState(UpdateState.Ready);
-  const { newVersion } = useStateFromStores([MoonbaseSettingsStore], () => ({
-    newVersion: MoonbaseSettingsStore.newVersion
-  }));
+  const newVersion = useStateFromStores(
+    [MoonbaseSettingsStore],
+    () => MoonbaseSettingsStore.newVersion
+  );
 
   if (newVersion == null) return null;
 
@@ -69,6 +70,8 @@ export default function Update() {
         size={Button.Sizes.TINY}
         disabled={state !== UpdateState.Ready}
         onClick={() => {
+          setState(UpdateState.Working);
+
           MoonbaseSettingsStore.updateMoonlight()
             .then(() => setState(UpdateState.Installed))
             .catch((e) => {
