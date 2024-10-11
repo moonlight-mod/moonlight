@@ -159,6 +159,7 @@ export default function getNatives(): MoonbaseNatives {
 
     async installExtension(manifest, url, repo) {
       const req = await fetch(url, {
+        cache: "no-store",
         headers: {
           "User-Agent": userAgent
         }
