@@ -17,7 +17,7 @@ type Patch = {
   before: boolean;
 };
 
-export function addItem<T>(
+function addItem<T>(
   navId: string,
   item: (
     props: T
@@ -30,8 +30,8 @@ export function addItem<T>(
   patches.push({ navId, item, anchorId, before });
 }
 
-export const patches: Patch[] = [];
-export function _patchMenu(props: MenuProps, items: InternalItem[]) {
+const patches: Patch[] = [];
+function _patchMenu(props: MenuProps, items: InternalItem[]) {
   const matches = patches.filter((p) => p.navId === props.navId);
   if (!matches.length) return;
 
@@ -43,7 +43,7 @@ export function _patchMenu(props: MenuProps, items: InternalItem[]) {
 }
 
 let menuProps: any;
-export function _saveProps(self: any, el: any) {
+function _saveProps(self: any, el: any) {
   menuProps = el.props;
 
   const original = self.props.closeContextMenu;
@@ -54,6 +54,13 @@ export function _saveProps(self: any, el: any) {
 
   return el;
 }
+
+module.exports = {
+  patches,
+  addItem,
+  _patchMenu,
+  _saveProps
+};
 
 // Unmangle Menu elements
 const code =
