@@ -76,7 +76,11 @@ function loadExtWeb(ext: DetectedExtension) {
 
 async function loadExt(ext: DetectedExtension) {
   webTarget: {
-    loadExtWeb(ext);
+    try {
+      loadExtWeb(ext);
+    } catch (e) {
+      logger.error(`Failed to load extension "${ext.id}"`, e);
+    }
   }
 
   nodePreload: {
