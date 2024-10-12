@@ -7,11 +7,8 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
-const { openModalLazy, closeModal } = spacepack.require(
-  "@moonlight-mod/wp/discord/components/common/index"
-);
-const Popup = spacepack.findByCode(".minorContainer", "secondaryAction")[0]
-  .exports.default;
+const { openModalLazy, closeModal } = spacepack.require("@moonlight-mod/wp/discord/components/common/index");
+const Popup = spacepack.findByCode(".minorContainer", "secondaryAction")[0].exports.default;
 
 const presentableLoadSources: Record<ExtensionLoadSource, string> = {
   [ExtensionLoadSource.Developer]: "Local extension", // should never show up
@@ -41,10 +38,7 @@ function ExtensionSelect({
         return {
           value: candidate.uniqueId.toString(),
           label:
-            candidate.source.url ??
-            presentableLoadSources[candidate.source.type] ??
-            candidate.manifest.version ??
-            ""
+            candidate.source.url ?? presentableLoadSources[candidate.source.type] ?? candidate.manifest.version ?? ""
         };
       })}
       onChange={(value: string) => {
@@ -67,13 +61,9 @@ function OurPopup({
 }) {
   const { Text } = Components;
 
-  const amountNotAvailable = Object.values(deps).filter(
-    (candidates) => candidates.length === 0
-  ).length;
+  const amountNotAvailable = Object.values(deps).filter((candidates) => candidates.length === 0).length;
 
-  const [options, setOptions] = React.useState<
-    Record<string, string | undefined>
-  >(
+  const [options, setOptions] = React.useState<Record<string, string | undefined>>(
     Object.fromEntries(
       Object.entries(deps).map(([id, candidates]) => [
         id,
@@ -92,15 +82,13 @@ function OurPopup({
           direction={Flex.Direction.VERTICAL}
         >
           <Text variant="text-md/normal">
-            This extension depends on other extensions which are not downloaded.
-            Choose which extensions to download.
+            This extension depends on other extensions which are not downloaded. Choose which extensions to download.
           </Text>
 
           {amountNotAvailable > 0 && (
             <Text variant="text-md/normal">
               {amountNotAvailable} extension
-              {amountNotAvailable > 1 ? "s" : ""} could not be found, and must
-              be installed manually.
+              {amountNotAvailable > 1 ? "s" : ""} could not be found, and must be installed manually.
             </Text>
           )}
 

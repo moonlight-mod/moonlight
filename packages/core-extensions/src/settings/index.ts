@@ -6,8 +6,7 @@ export const patches: Patch[] = [
     find: '"useGenerateUserSettingsSections"',
     replace: {
       match: /(?<=\.push\(.+?\)}\)\)}\),)(.+?)}/,
-      replacement: (_, sections: string) =>
-        `require("settings_settings").Settings._mutateSections(${sections})}`
+      replacement: (_, sections: string) => `require("settings_settings").Settings._mutateSections(${sections})}`
     }
   },
   {
@@ -17,8 +16,7 @@ export const patches: Patch[] = [
       replacement: (orig, sections, section) =>
         `${orig.replace(
           /Object\.values\(.\..+?\)/,
-          (orig) =>
-            `[...require("settings_settings").Settings.sectionNames,...${orig}]`
+          (orig) => `[...require("settings_settings").Settings.sectionNames,...${orig}]`
         )}??${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`
     }
   }

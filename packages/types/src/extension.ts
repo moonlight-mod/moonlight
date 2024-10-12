@@ -133,5 +133,4 @@ export type IdentifiedPatch = Patch & {
   id: number;
 };
 
-export type IdentifiedWebpackModule = ExtensionWebpackModule &
-  ExplicitExtensionDependency;
+export type IdentifiedWebpackModule = ExtensionWebpackModule & ExplicitExtensionDependency;

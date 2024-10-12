@@ -120,9 +120,7 @@ export default function calculateDependencies<T, D>(
           validateDeps({ id, data });
         }
       } else {
-        const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(
-          ([, v]) => v?.has(dep.id)
-        );
+        const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(([, v]) => v?.has(dep.id));
 
         if (dependsOnMe.length > 0) {
           logger.debug("Implicitly enabling dependency", dep.id);
@@ -132,9 +130,7 @@ export default function calculateDependencies<T, D>(
     }
 
     for (const dep of itemsOrig) validateDeps(dep);
-    itemsOrig = itemsOrig.filter(
-      (x) => getEnabled(x) || implicitlyEnabled.includes(x.id)
-    );
+    itemsOrig = itemsOrig.filter((x) => getEnabled(x) || implicitlyEnabled.includes(x.id));
   }
 
   if (getIncompatible != null) {
@@ -174,12 +170,8 @@ export default function calculateDependencies<T, D>(
     dependencyGraph.set(item.id, new Set(dependencyGraph.get(item.id)));
   }
 
-  while (
-    Array.from(dependencyGraph.values()).filter((x) => x != null).length > 0
-  ) {
-    const noDependents = items.filter(
-      (e) => dependencyGraph.get(e.id)?.size === 0
-    );
+  while (Array.from(dependencyGraph.values()).filter((x) => x != null).length > 0) {
+    const noDependents = items.filter((e) => dependencyGraph.get(e.id)?.size === 0);
 
     if (noDependents.length === 0) {
       logger.warn("Stuck dependency graph detected", dependencyGraph);

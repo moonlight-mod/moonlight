@@ -1,17 +1,7 @@
-import {
-  MarkdownRule,
-  Ruleset,
-  SlateRule
-} from "@moonlight-mod/types/coreExtensions/markdown";
+import { MarkdownRule, Ruleset, SlateRule } from "@moonlight-mod/types/coreExtensions/markdown";
 
-export const rules: Record<
-  string,
-  (rules: Record<string, MarkdownRule>) => MarkdownRule
-> = {};
-export const slateRules: Record<
-  string,
-  (rules: Record<string, SlateRule>) => SlateRule
-> = {};
+export const rules: Record<string, (rules: Record<string, MarkdownRule>) => MarkdownRule> = {};
+export const slateRules: Record<string, (rules: Record<string, SlateRule>) => SlateRule> = {};
 export const slateDecorators: Record<string, string> = {};
 export const ruleBlacklists: Record<Ruleset, Record<string, boolean>> = {
   RULES: {},
@@ -66,9 +56,7 @@ export function _addSlateDecorators(originalRules: Record<string, string>) {
   return originalRules;
 }
 
-export function _applyRulesetBlacklist(
-  rulesets: Record<Ruleset, Record<string, MarkdownRule>>
-) {
+export function _applyRulesetBlacklist(rulesets: Record<Ruleset, Record<string, MarkdownRule>>) {
   for (const ruleset of Object.keys(rulesets) as Ruleset[]) {
     if (ruleset === "RULES") continue;
 

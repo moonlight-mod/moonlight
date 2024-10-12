@@ -1,11 +1,5 @@
 import { join, dirname } from "node:path";
-import {
-  mkdirSync,
-  renameSync,
-  existsSync,
-  copyFileSync,
-  readdirSync
-} from "node:fs";
+import { mkdirSync, renameSync, existsSync, copyFileSync, readdirSync } from "node:fs";
 import Logger from "./util/logger";
 
 const logger = new Logger("core/persist");
@@ -31,11 +25,7 @@ function persistWin32(asarPath: string) {
     if (event === "host-updated") {
       const versions = this.queryCurrentVersionsSync();
 
-      const newRootDir = join(
-        this.rootPath,
-        "app-" +
-          versions.current_host.map((v: number) => v.toString()).join(".")
-      );
+      const newRootDir = join(this.rootPath, "app-" + versions.current_host.map((v: number) => v.toString()).join("."));
       logger.info(`Persisting moonlight - new root dir: ${newRootDir}`);
 
       const newResources = join(newRootDir, "resources");

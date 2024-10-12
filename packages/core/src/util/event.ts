@@ -9,19 +9,11 @@ export function createEventEmitter<
     const listeners = new Map<(data: EventData) => void, (e: Event) => void>();
 
     return {
-      dispatchEvent: <Id extends keyof EventData>(
-        id: Id,
-        data: EventData[Id]
-      ) => {
-        eventEmitter.dispatchEvent(
-          new CustomEvent(id as string, { detail: data })
-        );
+      dispatchEvent: <Id extends keyof EventData>(id: Id, data: EventData[Id]) => {
+        eventEmitter.dispatchEvent(new CustomEvent(id as string, { detail: data }));
       },
 
-      addEventListener: <Id extends keyof EventData>(
-        id: Id,
-        cb: (data: EventData[Id]) => void
-      ) => {
+      addEventListener: <Id extends keyof EventData>(id: Id, cb: (data: EventData[Id]) => void) => {
         const untyped = cb as (data: EventData) => void;
         if (listeners.has(untyped)) return;
 
@@ -34,10 +26,7 @@ export function createEventEmitter<
         eventEmitter.addEventListener(id as string, listener);
       },
 
-      removeEventListener: <Id extends keyof EventData>(
-        id: Id,
-        cb: (data: EventData[Id]) => void
-      ) => {
+      removeEventListener: <Id extends keyof EventData>(id: Id, cb: (data: EventData[Id]) => void) => {
         const untyped = cb as (data: EventData) => void;
         const listener = listeners.get(untyped);
         if (listener == null) return;
@@ -53,17 +42,11 @@ export function createEventEmitter<
     const listeners = new Map<(data: EventData) => void, (e: Event) => void>();
 
     return {
-      dispatchEvent: <Id extends keyof EventData>(
-        id: Id,
-        data: EventData[Id]
-      ) => {
+      dispatchEvent: <Id extends keyof EventData>(id: Id, data: EventData[Id]) => {
         eventEmitter.emit(id as string, data);
       },
 
-      addEventListener: <Id extends keyof EventData>(
-        id: Id,
-        cb: (data: EventData[Id]) => void
-      ) => {
+      addEventListener: <Id extends keyof EventData>(id: Id, cb: (data: EventData[Id]) => void) => {
         const untyped = cb as (data: EventData) => void;
         if (listeners.has(untyped)) return;
 
@@ -76,10 +59,7 @@ export function createEventEmitter<
         eventEmitter.on(id as string, listener);
       },
 
-      removeEventListener: <Id extends keyof EventData>(
-        id: Id,
-        cb: (data: EventData[Id]) => void
-      ) => {
+      removeEventListener: <Id extends keyof EventData>(id: Id, cb: (data: EventData[Id]) => void) => {
         const untyped = cb as (data: EventData) => void;
         const listener = listeners.get(untyped);
         if (listener == null) return;

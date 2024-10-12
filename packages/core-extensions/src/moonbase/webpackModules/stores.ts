@@ -1,18 +1,10 @@
 import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
-import {
-  ExtensionState,
-  MoonbaseExtension,
-  MoonbaseNatives,
-  RepositoryManifest
-} from "../types";
+import { ExtensionState, MoonbaseExtension, MoonbaseNatives, RepositoryManifest } from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import getNatives from "../native";
 import { mainRepo } from "@moonlight-mod/types/constants";
-import {
-  checkExtensionCompat,
-  ExtensionCompat
-} from "@moonlight-mod/core/extension/loader";
+import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
 
 const logger = moonlight.getLogger("moonbase");
@@ -24,8 +16,7 @@ class MoonbaseSettingsStore extends Store<any> {
   private origConfig: Config;
   private config: Config;
   private extensionIndex: number;
-  private configComponents: Record<string, Record<string, CustomComponent>> =
-    {};
+  private configComponents: Record<string, Record<string, CustomComponent>> = {};
 
   modified: boolean;
   submitting: boolean;
@@ -64,9 +55,7 @@ class MoonbaseSettingsStore extends Store<any> {
       this.extensions[uniqueId] = {
         ...ext,
         uniqueId,
-        state: moonlight.enabledExtensions.has(ext.id)
-          ? ExtensionState.Enabled
-          : ExtensionState.Disabled,
+        state: moonlight.enabledExtensions.has(ext.id) ? ExtensionState.Enabled : ExtensionState.Disabled,
         compat: checkExtensionCompat(ext.manifest),
         hasUpdate: false
       };
@@ -90,8 +79,7 @@ class MoonbaseSettingsStore extends Store<any> {
               };
 
               // Don't present incompatible updates
-              if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible)
-                continue;
+              if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible) continue;
 
               const existing = this.getExisting(extensionData);
               if (existing != null) {
@@ -137,28 +125,20 @@ class MoonbaseSettingsStore extends Store<any> {
         this.emitChange();
       })
       .then(() => {
-        this.shouldShowNotice =
-          this.newVersion != null || Object.keys(this.updates).length > 0;
+        this.shouldShowNotice = this.newVersion != null || Object.keys(this.updates).length > 0;
         this.emitChange();
       });
   }
 
   private getExisting(ext: MoonbaseExtension) {
-    return Object.values(this.extensions).find(
-      (e) => e.id === ext.id && e.source.url === ext.source.url
-    );
+    return Object.values(this.extensions).find((e) => e.id === ext.id && e.source.url === ext.source.url);
   }
 
   private hasUpdate(ext: MoonbaseExtension) {
-    const existing = Object.values(this.extensions).find(
-      (e) => e.id === ext.id && e.source.url === ext.source.url
-    );
+    const existing = Object.values(this.extensions).find((e) => e.id === ext.id && e.source.url === ext.source.url);
     if (existing == null) return false;
 
-    return (
-      existing.manifest.version !== ext.manifest.version &&
-      existing.state !== ExtensionState.NotDownloaded
-    );
+    return existing.manifest.version !== ext.manifest.version && existing.state !== ExtensionState.NotDownloaded;
   }
 
   // Jank
@@ -181,18 +161,14 @@ class MoonbaseSettingsStore extends Store<any> {
   }
 
   getExtensionUniqueId(id: string) {
-    return Object.values(this.extensions).find((ext) => ext.id === id)
-      ?.uniqueId;
+    return Object.values(this.extensions).find((ext) => ext.id === id)?.uniqueId;
   }
 
   getExtensionConflicting(uniqueId: number) {
     const ext = this.getExtension(uniqueId);
     if (ext.state !== ExtensionState.NotDownloaded) return false;
     return Object.values(this.extensions).some(
-      (e) =>
-        e.id === ext.id &&
-        e.uniqueId !== uniqueId &&
-        e.state !== ExtensionState.NotDownloaded
+      (e) => e.id === ext.id && e.uniqueId !== uniqueId && e.state !== ExtensionState.NotDownloaded
     );
   }
 
@@ -223,11 +199,7 @@ class MoonbaseSettingsStore extends Store<any> {
     return cfg.config?.[key] ?? clonedDefaultValue;
   }
 
-  getExtensionConfigRaw<T>(
-    id: string,
-    key: string,
-    defaultValue: T | undefined
-  ): T | undefined {
+  getExtensionConfigRaw<T>(id: string, key: string, defaultValue: T | undefined): T | undefined {
     const cfg = this.config.extensions[id];
 
     if (cfg == null || typeof cfg === "boolean") return defaultValue;
@@ -299,10 +271,7 @@ class MoonbaseSettingsStore extends Store<any> {
         this.extensions[uniqueId].state = ExtensionState.Disabled;
       }
 
-      if (update != null)
-        this.extensions[uniqueId].compat = checkExtensionCompat(
-          update.updateManifest
-        );
+      if (update != null) this.extensions[uniqueId].compat = checkExtensionCompat(update.updateManifest);
 
       delete this.updates[uniqueId];
     } catch (e) {
@@ -335,18 +304,14 @@ class MoonbaseSettingsStore extends Store<any> {
 
     const deps: Record<string, MoonbaseExtension[]> = {};
     for (const dep of missingDeps) {
-      const candidates = Object.values(this.extensions).filter(
-        (e) => e.id === dep
-      );
+      const candidates = Object.values(this.extensions).filter((e) => e.id === dep);
 
       deps[dep] = candidates.sort((a, b) => {
         const aRank = this.getRank(a);
         const bRank = this.getRank(b);
         if (aRank === bRank) {
           const repoIndex = this.config.repositories.indexOf(a.source.url!);
-          const otherRepoIndex = this.config.repositories.indexOf(
-            b.source.url!
-          );
+          const otherRepoIndex = this.config.repositories.indexOf(b.source.url!);
           return repoIndex - otherRepoIndex;
         } else {
           return bRank - aRank;
@@ -392,11 +357,7 @@ class MoonbaseSettingsStore extends Store<any> {
     return (uniqueId != null ? this.getExtensionName(uniqueId) : null) ?? id;
   }
 
-  registerConfigComponent(
-    ext: string,
-    name: string,
-    component: CustomComponent
-  ) {
+  registerConfigComponent(ext: string, name: string, component: CustomComponent) {
     if (!(ext in this.configComponents)) this.configComponents[ext] = {};
     this.configComponents[ext][name] = component;
   }

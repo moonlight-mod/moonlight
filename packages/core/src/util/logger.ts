@@ -50,12 +50,7 @@ export default class Logger {
     if (maxLevel > level) return;
 
     if (MOONLIGHT_WEB_PRELOAD || MOONLIGHT_BROWSER) {
-      args = [
-        `%c[${logLevel}]`,
-        `background-color: ${colors[level]}; color: #FFFFFF;`,
-        `[${this.name}]`,
-        ...obj
-      ];
+      args = [`%c[${logLevel}]`, `background-color: ${colors[level]}; color: #FFFFFF;`, `[${this.name}]`, ...obj];
     } else {
       args = [`[${logLevel}]`, `[${this.name}]`, ...obj];
     }
@@ -87,8 +82,7 @@ export default class Logger {
 
 export function initLogger(config: Config) {
   if (config.loggerLevel != null) {
-    const enumValue =
-      LogLevel[config.loggerLevel.toUpperCase() as keyof typeof LogLevel];
+    const enumValue = LogLevel[config.loggerLevel.toUpperCase() as keyof typeof LogLevel];
     if (enumValue != null) {
       maxLevel = enumValue;
     }

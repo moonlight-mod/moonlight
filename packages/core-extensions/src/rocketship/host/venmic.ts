@@ -7,9 +7,9 @@ const logger = moonlightHost.getLogger("rocketship");
 
 function getPatchbay() {
   try {
-    const venmic = require(
-      path.join(path.dirname(moonlightHost.asarPath), "..", "venmic.node")
-    ) as { PatchBay: new () => PatchBay };
+    const venmic = require(path.join(path.dirname(moonlightHost.asarPath), "..", "venmic.node")) as {
+      PatchBay: new () => PatchBay;
+    };
     const patchbay = new venmic.PatchBay();
     return patchbay;
   } catch (error) {
@@ -35,10 +35,7 @@ function linkVenmic() {
 
     patchbay.unlink();
     return patchbay.link({
-      exclude: [
-        { "application.process.id": pid },
-        { "media.class": "Stream/Input/Audio" }
-      ],
+      exclude: [{ "application.process.id": pid }, { "media.class": "Stream/Input/Audio" }],
       ignore_devices: true,
       only_speakers: true,
       only_default_speakers: true
@@ -49,29 +46,24 @@ function linkVenmic() {
   }
 }
 
-moonlightHost.events.on(
-  "window-created",
-  (window: BrowserWindow, isMainWindow: boolean) => {
-    if (!isMainWindow) return;
-    const windowSession = window.webContents.session;
+moonlightHost.events.on("window-created", (window: BrowserWindow, isMainWindow: boolean) => {
+  if (!isMainWindow) return;
+  const windowSession = window.webContents.session;
 
-    // @ts-expect-error these types ancient
-    windowSession.setDisplayMediaRequestHandler(
-      (request: any, callback: any) => {
-        const linked = linkVenmic();
-        desktopCapturer
-          .getSources({ types: ["screen", "window"] })
-          .then((sources) => {
-            //logger.debug("desktopCapturer.getSources", sources);
-            logger.debug("Linked to venmic:", linked);
+  // @ts-expect-error these types ancient
+  windowSession.setDisplayMediaRequestHandler(
+    (request: any, callback: any) => {
+      const linked = linkVenmic();
+      desktopCapturer.getSources({ types: ["screen", "window"] }).then((sources) => {
+        //logger.debug("desktopCapturer.getSources", sources);
+        logger.debug("Linked to venmic:", linked);
 
-            callback({
-              video: sources[0],
-              audio: "loopback"
-            });
-          });
-      },
-      { useSystemPicker: true }
-    );
-  }
-);
+        callback({
+          video: sources[0],
+          audio: "loopback"
+        });
+      });
+    },
+    { useSystemPicker: true }
+  );
+});

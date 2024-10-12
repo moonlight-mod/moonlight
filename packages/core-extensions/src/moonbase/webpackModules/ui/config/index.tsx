@@ -1,8 +1,6 @@
 import { LogLevel } from "@moonlight-mod/types";
 
-const logLevels = Object.values(LogLevel).filter(
-  (v) => typeof v === "string"
-) as string[];
+const logLevels = Object.values(LogLevel).filter((v) => typeof v === "string") as string[];
 
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
@@ -32,11 +30,7 @@ spacepack
     /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
     /webpackId:(\d+),name:"GuildSettings"/
   )
-  .then(
-    () =>
-      (RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
-        .exports)
-  );
+  .then(() => (RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports));
 
 // FIXME: type component keys
 const { CircleXIcon } = Components;
@@ -46,11 +40,7 @@ function RemoveEntryButton({ onClick }: { onClick: () => void }) {
     <div className={RemoveButtonClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
         {(props: any) => (
-          <Clickable
-            {...props}
-            className={RemoveButtonClasses.removeButton}
-            onClick={onClick}
-          >
+          <Clickable {...props} className={RemoveButtonClasses.removeButton} onClick={onClick}>
             <CircleXIcon width={24} height={24} />
           </Clickable>
         )}
@@ -59,11 +49,7 @@ function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   );
 }
 
-function ArrayFormItem({
-  config
-}: {
-  config: "repositories" | "devSearchPaths";
-}) {
+function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }) {
   const items = MoonbaseSettingsStore.getConfigOption(config) ?? [];
   return (
     <Flex
@@ -123,26 +109,16 @@ export default function ConfigPage() {
     <>
       <FormSwitch
         className={Margins.marginTop20}
-        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
-          "moonbase",
-          "updateChecking",
-          true
-        )}
+        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true)}
         onChange={(value: boolean) => {
-          MoonbaseSettingsStore.setExtensionConfig(
-            "moonbase",
-            "updateChecking",
-            value
-          );
+          MoonbaseSettingsStore.setExtensionConfig("moonbase", "updateChecking", value);
         }}
         note="Checks for updates to moonlight"
       >
         Automatic update checking
       </FormSwitch>
       <FormItem title="Repositories">
-        <FormText className={Margins.marginBottom4}>
-          A list of remote repositories to display extensions from
-        </FormText>
+        <FormText className={Margins.marginBottom4}>A list of remote repositories to display extensions from</FormText>
         <ArrayFormItem config="repositories" />
       </FormItem>
       <FormDivider className={FormClasses.dividerDefault} />
@@ -172,9 +148,7 @@ export default function ConfigPage() {
             value: o.toLowerCase(),
             label: o[0] + o.slice(1).toLowerCase()
           }))}
-          onChange={(v) =>
-            MoonbaseSettingsStore.setConfigOption("loggerLevel", v)
-          }
+          onChange={(v) => MoonbaseSettingsStore.setConfigOption("loggerLevel", v)}
         />
       </FormItem>
     </>

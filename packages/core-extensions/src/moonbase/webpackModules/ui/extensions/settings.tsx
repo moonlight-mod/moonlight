@@ -33,14 +33,8 @@ function useConfigEntry<T>(uniqueId: number, name: string) {
     () => {
       return {
         value: MoonbaseSettingsStore.getExtensionConfig<T>(uniqueId, name),
-        displayName: MoonbaseSettingsStore.getExtensionConfigName(
-          uniqueId,
-          name
-        ),
-        description: MoonbaseSettingsStore.getExtensionConfigDescription(
-          uniqueId,
-          name
-        )
+        displayName: MoonbaseSettingsStore.getExtensionConfigName(uniqueId, name),
+        description: MoonbaseSettingsStore.getExtensionConfigDescription(uniqueId, name)
       };
     },
     [uniqueId, name]
@@ -49,10 +43,7 @@ function useConfigEntry<T>(uniqueId: number, name: string) {
 
 function Boolean({ ext, name, setting, disabled }: SettingsProps) {
   const { FormSwitch } = Components;
-  const { value, displayName, description } = useConfigEntry<boolean>(
-    ext.uniqueId,
-    name
-  );
+  const { value, displayName, description } = useConfigEntry<boolean>(ext.uniqueId, name);
 
   return (
     <FormSwitch
@@ -72,10 +63,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
 
 function Number({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, Slider } = Components;
-  const { value, displayName, description } = useConfigEntry<number>(
-    ext.uniqueId,
-    name
-  );
+  const { value, displayName, description } = useConfigEntry<number>(ext.uniqueId, name);
 
   const castedSetting = setting as NumberSettingType;
   const min = castedSetting.min ?? 0;
@@ -100,16 +88,11 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
 
 function String({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextInput } = Components;
-  const { value, displayName, description } = useConfigEntry<string>(
-    ext.uniqueId,
-    name
-  );
+  const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && (
-        <FormText className={Margins.marginBottom8}>{description}</FormText>
-      )}
+      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
       <TextInput
         value={value ?? ""}
         onChange={(value: string) => {
@@ -123,16 +106,11 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
 
 function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextArea } = Components;
-  const { value, displayName, description } = useConfigEntry<string>(
-    ext.uniqueId,
-    name
-  );
+  const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && (
-        <FormText className={Margins.marginBottom8}>{description}</FormText>
-      )}
+      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
       <TextArea
         rows={5}
         value={value ?? ""}
@@ -148,26 +126,19 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
 
 function Select({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, SingleSelect } = Components;
-  const { value, displayName, description } = useConfigEntry<string>(
-    ext.uniqueId,
-    name
-  );
+  const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   const castedSetting = setting as SelectSettingType;
   const options = castedSetting.options;
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && (
-        <FormText className={Margins.marginBottom8}>{description}</FormText>
-      )}
+      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
       <SingleSelect
         autofocus={false}
         clearable={false}
         value={value ?? ""}
-        options={options.map((o: SelectOption) =>
-          typeof o === "string" ? { value: o, label: o } : o
-        )}
+        options={options.map((o: SelectOption) => (typeof o === "string" ? { value: o, label: o } : o))}
         onChange={(value: string) => {
           if (disabled) return;
           MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
@@ -178,38 +149,26 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, Select, useVariableSelect, multiSelect } =
-    Components;
-  const { value, displayName, description } = useConfigEntry<string | string[]>(
-    ext.uniqueId,
-    name
-  );
+  const { FormItem, FormText, Select, useVariableSelect, multiSelect } = Components;
+  const { value, displayName, description } = useConfigEntry<string | string[]>(ext.uniqueId, name);
 
   const castedSetting = setting as MultiSelectSettingType;
   const options = castedSetting.options;
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && (
-        <FormText className={Margins.marginBottom8}>{description}</FormText>
-      )}
+      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
       <Select
         autofocus={false}
         clearable={false}
         closeOnSelect={false}
-        options={options.map((o: SelectOption) =>
-          typeof o === "string" ? { value: o, label: o } : o
-        )}
+        options={options.map((o: SelectOption) => (typeof o === "string" ? { value: o, label: o } : o))}
         {...useVariableSelect({
           onSelectInteraction: multiSelect,
           value: new Set(Array.isArray(value) ? value : [value]),
           onChange: (value: string) => {
             if (disabled) return;
-            MoonbaseSettingsStore.setExtensionConfig(
-              ext.id,
-              name,
-              Array.from(value)
-            );
+            MoonbaseSettingsStore.setExtensionConfig(ext.id, name, Array.from(value));
           }
         })}
       />
@@ -217,29 +176,18 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0]
-  .exports;
+const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports;
 
 // FIXME: type component keys
 const { CircleXIcon } = Components;
 
-function RemoveEntryButton({
-  onClick,
-  disabled
-}: {
-  onClick: () => void;
-  disabled: boolean;
-}) {
+function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disabled: boolean }) {
   const { Tooltip, Clickable } = Components;
   return (
     <div className={RemoveButtonClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
         {(props: any) => (
-          <Clickable
-            {...props}
-            className={RemoveButtonClasses.removeButton}
-            onClick={onClick}
-          >
+          <Clickable {...props} className={RemoveButtonClasses.removeButton} onClick={onClick}>
             <CircleXIcon width={16} height={16} />
           </Clickable>
         )}
@@ -250,20 +198,14 @@ function RemoveEntryButton({
 
 function List({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextInput, Button } = Components;
-  const { value, displayName, description } = useConfigEntry<string[]>(
-    ext.uniqueId,
-    name
-  );
+  const { value, displayName, description } = useConfigEntry<string[]>(ext.uniqueId, name);
 
   const entries = value ?? [];
-  const updateConfig = () =>
-    MoonbaseSettingsStore.setExtensionConfig(ext.id, name, entries);
+  const updateConfig = () => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, entries);
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && (
-        <FormText className={Margins.marginBottom4}>{description}</FormText>
-      )}
+      {description && <FormText className={Margins.marginBottom4}>{description}</FormText>}
       <Flex direction={Flex.Direction.VERTICAL}>
         {entries.map((val, i) => (
           // FIXME: stylesheets
@@ -316,23 +258,14 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
 
 function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   const { FormItem, FormText, TextInput, Button } = Components;
-  const { value, displayName, description } = useConfigEntry<
-    Record<string, string>
-  >(ext.uniqueId, name);
+  const { value, displayName, description } = useConfigEntry<Record<string, string>>(ext.uniqueId, name);
 
   const entries = Object.entries(value ?? {});
-  const updateConfig = () =>
-    MoonbaseSettingsStore.setExtensionConfig(
-      ext.id,
-      name,
-      Object.fromEntries(entries)
-    );
+  const updateConfig = () => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, Object.fromEntries(entries));
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && (
-        <FormText className={Margins.marginBottom4}>{description}</FormText>
-      )}
+      {description && <FormText className={Margins.marginBottom4}>{description}</FormText>}
       <Flex direction={Flex.Direction.VERTICAL}>
         {entries.map(([key, val], i) => (
           // FIXME: stylesheets
@@ -399,10 +332,7 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
     [MoonbaseSettingsStore],
     () => {
       return {
-        component: MoonbaseSettingsStore.getExtensionConfigComponent(
-          ext.id,
-          name
-        )
+        component: MoonbaseSettingsStore.getExtensionConfigComponent(ext.id, name)
       };
     },
     [ext.uniqueId, name]
@@ -416,12 +346,7 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
   }
 
   return (
-    <Component
-      value={value}
-      setValue={(value) =>
-        MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)
-      }
-    />
+    <Component value={value} setValue={(value) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)} />
   );
 }
 

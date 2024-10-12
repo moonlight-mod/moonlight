@@ -1,19 +1,10 @@
 import type { Logger } from "./logger";
 import type { Config, ConfigExtension } from "./config";
-import type {
-  DetectedExtension,
-  IdentifiedPatch,
-  IdentifiedWebpackModule,
-  ProcessedExtensions
-} from "./extension";
+import type { DetectedExtension, IdentifiedPatch, IdentifiedWebpackModule, ProcessedExtensions } from "./extension";
 import type EventEmitter from "events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
-import type {
-  EventPayloads,
-  EventType,
-  MoonlightEventEmitter
-} from "./core/event";
+import type { EventPayloads, EventType, MoonlightEventEmitter } from "./core/event";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -57,10 +48,7 @@ export type MoonlightWeb = {
   apiLevel: number;
   events: MoonlightEventEmitter<EventType, EventPayloads>;
   patchingInternals: {
-    onModuleLoad: (
-      moduleId: string | string[],
-      callback: (moduleId: string) => void
-    ) => void;
+    onModuleLoad: (moduleId: string | string[], callback: (moduleId: string) => void) => void;
     registerPatch: (patch: IdentifiedPatch) => void;
     registerWebpackModule: (module: IdentifiedWebpackModule) => void;
   };

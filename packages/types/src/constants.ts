@@ -13,5 +13,4 @@ export const ipcSetBlockedList = "_moonlight_setBlockedList";
 
 export const apiLevel = 2;
 
-export const mainRepo =
-  "https://moonlight-mod.github.io/extensions-dist/repo.json";
+export const mainRepo = "https://moonlight-mod.github.io/extensions-dist/repo.json";

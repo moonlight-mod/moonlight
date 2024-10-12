@@ -22,21 +22,13 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { BeakerIcon, DownloadIcon, TrashIcon, CircleWarningIcon, Tooltip } =
-  Components;
+const { BeakerIcon, DownloadIcon, TrashIcon, CircleWarningIcon, Tooltip } = Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
-const TabBarClasses = spacepack.findByExports(
-  "tabBar",
-  "tabBarItem",
-  "headerContentWrapper"
-)[0].exports;
-const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0]
-  .exports;
+const TabBarClasses = spacepack.findByExports("tabBar", "tabBarItem", "headerContentWrapper")[0].exports;
+const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0].exports;
 
-const BuildOverrideClasses = spacepack.findByExports(
-  "disabledButtonOverride"
-)[0].exports;
+const BuildOverrideClasses = spacepack.findByExports("disabledButtonOverride")[0].exports;
 
 const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
   [ExtensionCompat.Compatible]: "huh?",
@@ -48,18 +40,15 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
   const [restartNeeded, setRestartNeeded] = React.useState(false);
 
-  const { ext, enabled, busy, update, conflicting } = useStateFromStores(
-    [MoonbaseSettingsStore],
-    () => {
-      return {
-        ext: MoonbaseSettingsStore.getExtension(uniqueId),
-        enabled: MoonbaseSettingsStore.getExtensionEnabled(uniqueId),
-        busy: MoonbaseSettingsStore.busy,
-        update: MoonbaseSettingsStore.getExtensionUpdate(uniqueId),
-        conflicting: MoonbaseSettingsStore.getExtensionConflicting(uniqueId)
-      };
-    }
-  );
+  const { ext, enabled, busy, update, conflicting } = useStateFromStores([MoonbaseSettingsStore], () => {
+    return {
+      ext: MoonbaseSettingsStore.getExtension(uniqueId),
+      enabled: MoonbaseSettingsStore.getExtensionEnabled(uniqueId),
+      busy: MoonbaseSettingsStore.busy,
+      update: MoonbaseSettingsStore.getExtensionUpdate(uniqueId),
+      conflicting: MoonbaseSettingsStore.getExtensionConflicting(uniqueId)
+    };
+  });
 
   // Why it work like that :sob:
   if (ext == null) return <></>;
@@ -72,9 +61,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const enabledDependants = useStateFromStores([MoonbaseSettingsStore], () =>
     Object.keys(MoonbaseSettingsStore.extensions)
       .filter((uniqueId) => {
-        const potentialDependant = MoonbaseSettingsStore.getExtension(
-          parseInt(uniqueId)
-        );
+        const potentialDependant = MoonbaseSettingsStore.getExtension(parseInt(uniqueId));
 
         return (
           potentialDependant.manifest.dependencies?.includes(ext.id) &&
@@ -90,45 +77,26 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
       <div className={IntegrationCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
           <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
-            <Text variant="text-md/semibold">
-              {ext.manifest?.meta?.name ?? ext.id}
-            </Text>
+            <Text variant="text-md/semibold">{ext.manifest?.meta?.name ?? ext.id}</Text>
             {ext.source.type === ExtensionLoadSource.Developer && (
               <Tooltip text="This is a local extension" position="top">
-                {(props: any) => (
-                  <BeakerIcon
-                    {...props}
-                    class={BuildOverrideClasses.infoIcon}
-                    size="xs"
-                  />
-                )}
+                {(props: any) => <BeakerIcon {...props} class={BuildOverrideClasses.infoIcon} size="xs" />}
               </Tooltip>
             )}
           </Flex>
 
-          {tagline != null && (
-            <Text variant="text-sm/normal">{MarkupUtils.parse(tagline)}</Text>
-          )}
+          {tagline != null && <Text variant="text-sm/normal">{MarkupUtils.parse(tagline)}</Text>}
         </Flex>
 
-        <Flex
-          direction={Flex.Direction.HORIZONTAL}
-          align={Flex.Align.END}
-          justify={Flex.Justify.END}
-        >
+        <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.END} justify={Flex.Justify.END}>
           {ext.state === ExtensionState.NotDownloaded ? (
-            <Tooltip
-              text={COMPAT_TEXT_MAP[ext.compat]}
-              shouldShow={ext.compat !== ExtensionCompat.Compatible}
-            >
+            <Tooltip text={COMPAT_TEXT_MAP[ext.compat]} shouldShow={ext.compat !== ExtensionCompat.Compatible}>
               {(props: any) => (
                 <Button
                   {...props}
                   color={Button.Colors.BRAND}
                   submitting={busy}
-                  disabled={
-                    ext.compat !== ExtensionCompat.Compatible || conflicting
-                  }
+                  disabled={ext.compat !== ExtensionCompat.Compatible || conflicting}
                   onClick={async () => {
                     await installWithDependencyPopup(uniqueId);
                   }}
@@ -168,24 +136,15 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
 
               {restartNeeded && (
                 <PanelButton
-                  icon={() => (
-                    <CircleWarningIcon
-                      color={Components.tokens.colors.STATUS_DANGER}
-                    />
-                  )}
+                  icon={() => <CircleWarningIcon color={Components.tokens.colors.STATUS_DANGER} />}
                   onClick={() => window.location.reload()}
                   tooltipText="You will need to reload/restart your client for this extension to work properly."
                 />
               )}
 
               <FormSwitch
-                value={
-                  ext.compat === ExtensionCompat.Compatible &&
-                  (enabled || implicitlyEnabled)
-                }
-                disabled={
-                  implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible
-                }
+                value={ext.compat === ExtensionCompat.Compatible && (enabled || implicitlyEnabled)}
+                disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
                 hideBorder={true}
                 style={{ marginBottom: "0px" }}
                 tooltipNote={
@@ -194,9 +153,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                     : implicitlyEnabled
                       ? `This extension is a dependency of the following enabled extension${
                           enabledDependants.length > 1 ? "s" : ""
-                        }: ${enabledDependants
-                          .map((a) => a.manifest.meta?.name ?? a.id)
-                          .join(", ")}`
+                        }: ${enabledDependants.map((a) => a.manifest.meta?.name ?? a.id).join(", ")}`
                       : undefined
                 }
                 onChange={() => {
@@ -220,27 +177,18 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               padding: "0 20px"
             }}
           >
-            <TabBar.Item
-              className={TabBarClasses.tabBarItem}
-              id={ExtensionPage.Info}
-            >
+            <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Info}>
               Info
             </TabBar.Item>
 
             {description != null && (
-              <TabBar.Item
-                className={TabBarClasses.tabBarItem}
-                id={ExtensionPage.Description}
-              >
+              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
                 Description
               </TabBar.Item>
             )}
 
             {settings != null && (
-              <TabBar.Item
-                className={TabBarClasses.tabBarItem}
-                id={ExtensionPage.Settings}
-              >
+              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Settings}>
                 Settings
               </TabBar.Item>
             )}
@@ -256,11 +204,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         >
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
           {tab === ExtensionPage.Description && (
-            <Text
-              variant="text-md/normal"
-              class={MarkupClasses.markup}
-              style={{ width: "100%" }}
-            >
+            <Text variant="text-md/normal" class={MarkupClasses.markup} style={{ width: "100%" }}>
               {MarkupUtils.parse(description ?? "*No description*", true, {
                 allowHeading: true,
                 allowLinks: true,

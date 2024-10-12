@@ -1,8 +1,4 @@
-import {
-  WebpackModule,
-  WebpackModuleFunc,
-  WebpackRequireType
-} from "@moonlight-mod/types";
+import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "@moonlight-mod/types";
 import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
 
 const webpackRequire = require as unknown as WebpackRequireType;
@@ -40,8 +36,7 @@ export const spacepack: Spacepack = {
       "module",
       "exports",
       "require",
-      `(${funcStr}).apply(this, arguments)\n` +
-        `//# sourceURL=Webpack-Module-${module}`
+      `(${funcStr}).apply(this, arguments)\n` + `//# sourceURL=Webpack-Module-${module}`
     ) as WebpackModuleFunc;
   },
 
@@ -50,10 +45,7 @@ export const spacepack: Spacepack = {
       .filter(
         ([id, mod]) =>
           !args.some(
-            (item) =>
-              !(item instanceof RegExp
-                ? item.test(mod.toString())
-                : mod.toString().indexOf(item) !== -1)
+            (item) => !(item instanceof RegExp ? item.test(mod.toString()) : mod.toString().indexOf(item) !== -1)
           )
       )
       .map(([id]) => {
@@ -84,10 +76,7 @@ export const spacepack: Spacepack = {
               !(
                 exports !== undefined &&
                 exports !== window &&
-                (exports?.[item] ||
-                  exports?.default?.[item] ||
-                  exports?.Z?.[item] ||
-                  exports?.ZP?.[item])
+                (exports?.[item] || exports?.default?.[item] || exports?.Z?.[item] || exports?.ZP?.[item])
               )
           )
       )
@@ -133,11 +122,7 @@ export const spacepack: Spacepack = {
     return null;
   },
 
-  findObjectFromKeyValuePair: (
-    exports: Record<string, any>,
-    key: string,
-    value: any
-  ) => {
+  findObjectFromKeyValuePair: (exports: Record<string, any>, key: string, value: any) => {
     for (const exportKey in exports) {
       const obj = exports[exportKey];
       // eslint-disable-next-line eqeqeq
@@ -148,32 +133,20 @@ export const spacepack: Spacepack = {
     return null;
   },
 
-  findFunctionByStrings: (
-    exports: Record<string, any>,
-    ...strings: (string | RegExp)[]
-  ) => {
+  findFunctionByStrings: (exports: Record<string, any>, ...strings: (string | RegExp)[]) => {
     return (
       Object.entries(exports).filter(
         ([index, func]) =>
           typeof func === "function" &&
           !strings.some(
-            (query) =>
-              !(query instanceof RegExp
-                ? func.toString().match(query)
-                : func.toString().includes(query))
+            (query) => !(query instanceof RegExp ? func.toString().match(query) : func.toString().includes(query))
           )
       )?.[0]?.[1] ?? null
     );
   },
 
-  lazyLoad: (
-    find: string | RegExp | (string | RegExp)[],
-    chunk: RegExp,
-    module: RegExp
-  ) => {
-    const mod = Array.isArray(find)
-      ? spacepack.findByCode(...find)
-      : spacepack.findByCode(find);
+  lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => {
+    const mod = Array.isArray(find) ? spacepack.findByCode(...find) : spacepack.findByCode(find);
     if (mod.length < 1) return Promise.reject("Module find failed");
 
     const findId = mod[0].id;
@@ -184,19 +157,15 @@ export const spacepack: Spacepack = {
       chunkIds = [...findCode.matchAll(chunk)].map(([, id]) => id);
     } else {
       const match = findCode.match(chunk);
-      if (match)
-        chunkIds = [...match[0].matchAll(/"(\d+)"/g)].map(([, id]) => id);
+      if (match) chunkIds = [...match[0].matchAll(/"(\d+)"/g)].map(([, id]) => id);
     }
 
-    if (!chunkIds || chunkIds.length === 0)
-      return Promise.reject("Chunk ID match failed");
+    if (!chunkIds || chunkIds.length === 0) return Promise.reject("Chunk ID match failed");
 
     const moduleId = findCode.match(module)?.[1];
     if (!moduleId) return Promise.reject("Module ID match failed");
 
-    return Promise.all(chunkIds.map((c) => webpackRequire.e(c))).then(() =>
-      webpackRequire(moduleId)
-    );
+    return Promise.all(chunkIds.map((c) => webpackRequire.e(c))).then(() => webpackRequire(moduleId));
   },
 
   filterReal: (modules: WebpackModule[]) => {
@@ -204,9 +173,7 @@ export const spacepack: Spacepack = {
   }
 };
 
-if (
-  moonlight.getConfigOption<boolean>("spacepack", "addToGlobalScope") === true
-) {
+if (moonlight.getConfigOption<boolean>("spacepack", "addToGlobalScope") === true) {
   window.spacepack = spacepack;
 }
 

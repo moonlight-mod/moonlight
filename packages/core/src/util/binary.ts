@@ -55,10 +55,7 @@ export class BinaryReader implements BinaryInterface {
     return data;
   }
 
-  private _read<T>(
-    func: (position: number, littleEndian?: boolean) => T,
-    length: number
-  ): T {
+  private _read<T>(func: (position: number, littleEndian?: boolean) => T, length: number): T {
     const result = func.call(this.view, this.position, true);
     this.position += length;
     return result;

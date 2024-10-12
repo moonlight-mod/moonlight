@@ -10,40 +10,24 @@ import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flu
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
-const SearchBar: any = Object.values(
-  spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0].exports
-)[0];
+const SearchBar: any = Object.values(spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0].exports)[0];
 
 export default function ExtensionsPage() {
-  const { extensions, savedFilter } = useStateFromStoresObject(
-    [MoonbaseSettingsStore],
-    () => {
-      return {
-        extensions: MoonbaseSettingsStore.extensions,
-        savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>(
-          "moonbase",
-          "filter",
-          defaultFilter
-        )
-      };
-    }
-  );
+  const { extensions, savedFilter } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
+    return {
+      extensions: MoonbaseSettingsStore.extensions,
+      savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>("moonbase", "filter", defaultFilter)
+    };
+  });
 
   const [query, setQuery] = React.useState("");
 
   const filterState = React.useState(defaultFilter);
 
   let filter: Filter, setFilter: (filter: Filter) => void;
-  if (
-    MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
-      "moonbase",
-      "saveFilter",
-      false
-    )
-  ) {
+  if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "saveFilter", false)) {
     filter = savedFilter ?? defaultFilter;
-    setFilter = (filter) =>
-      MoonbaseSettingsStore.setExtensionConfig("moonbase", "filter", filter);
+    setFilter = (filter) => MoonbaseSettingsStore.setExtensionConfig("moonbase", "filter", filter);
   } else {
     filter = filterState[0];
     setFilter = filterState[1];
@@ -62,25 +46,16 @@ export default function ExtensionsPage() {
         ext.manifest.meta?.name?.toLowerCase().includes(query) ||
         ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
         ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
-      [...selectedTags.values()].every(
-        (tag) => ext.manifest.meta?.tags?.includes(tag as ExtensionTag)
-      ) &&
+      [...selectedTags.values()].every((tag) => ext.manifest.meta?.tags?.includes(tag as ExtensionTag)) &&
       // This seems very bad, sorry
       !(
-        (!(filter & Filter.Core) &&
-          ext.source.type === ExtensionLoadSource.Core) ||
-        (!(filter & Filter.Normal) &&
-          ext.source.type === ExtensionLoadSource.Normal) ||
-        (!(filter & Filter.Developer) &&
-          ext.source.type === ExtensionLoadSource.Developer) ||
-        (!(filter & Filter.Enabled) &&
-          MoonbaseSettingsStore.getExtensionEnabled(ext.uniqueId)) ||
-        (!(filter & Filter.Disabled) &&
-          !MoonbaseSettingsStore.getExtensionEnabled(ext.uniqueId)) ||
-        (!(filter & Filter.Installed) &&
-          ext.state !== ExtensionState.NotDownloaded) ||
-        (!(filter & Filter.Repository) &&
-          ext.state === ExtensionState.NotDownloaded)
+        (!(filter & Filter.Core) && ext.source.type === ExtensionLoadSource.Core) ||
+        (!(filter & Filter.Normal) && ext.source.type === ExtensionLoadSource.Normal) ||
+        (!(filter & Filter.Developer) && ext.source.type === ExtensionLoadSource.Developer) ||
+        (!(filter & Filter.Enabled) && MoonbaseSettingsStore.getExtensionEnabled(ext.uniqueId)) ||
+        (!(filter & Filter.Disabled) && !MoonbaseSettingsStore.getExtensionEnabled(ext.uniqueId)) ||
+        (!(filter & Filter.Installed) && ext.state !== ExtensionState.NotDownloaded) ||
+        (!(filter & Filter.Repository) && ext.state === ExtensionState.NotDownloaded)
       ) &&
       (filter & Filter.Incompatible ||
         ext.compat === ExtensionCompat.Compatible ||
@@ -102,12 +77,7 @@ export default function ExtensionsPage() {
           spellCheck: "false"
         }}
       />
-      <FilterBar
-        filter={filter}
-        setFilter={setFilter}
-        selectedTags={selectedTags}
-        setSelectedTags={setSelectedTags}
-      />
+      <FilterBar filter={filter} setFilter={setFilter} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
       {filtered.map((ext) => (
         <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
       ))}

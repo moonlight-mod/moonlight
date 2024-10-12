@@ -36,16 +36,11 @@ export async function getConfigPath() {
 
   let configPath = "";
 
-  const buildInfoPath = moonlightFS.join(
-    process.resourcesPath,
-    "build_info.json"
-  );
+  const buildInfoPath = moonlightFS.join(process.resourcesPath, "build_info.json");
   if (!(await moonlightFS.exists(buildInfoPath))) {
     configPath = moonlightFS.join(dir, "desktop.json");
   } else {
-    const buildInfo: BuildInfo = JSON.parse(
-      await moonlightFS.readFileString(buildInfoPath)
-    );
+    const buildInfo: BuildInfo = JSON.parse(await moonlightFS.readFileString(buildInfoPath));
     configPath = moonlightFS.join(dir, buildInfo.releaseChannel + ".json");
   }
 

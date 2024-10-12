@@ -17,8 +17,6 @@ type ImportTypes = {
   fs: typeof import("fs");
 };
 
-export default function requireImport<T extends CanRequire>(
-  type: T
-): Awaited<ImportTypes[T]> {
+export default function requireImport<T extends CanRequire>(type: T): Awaited<ImportTypes[T]> {
   return require(type);
 }

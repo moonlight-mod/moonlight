@@ -34,24 +34,14 @@ export const tagNames: Record<ExtensionTag, string> = {
   [ExtensionTag.Library]: "Library"
 };
 
-const UserInfoClasses = spacepack.findByCode(
-  "infoScroller",
-  "userInfoSection",
-  "userInfoSectionHeader"
-)[0].exports;
+const UserInfoClasses = spacepack.findByCode("infoScroller", "userInfoSection", "userInfoSectionHeader")[0].exports;
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 // FIXME: type component keys
 const { Text } = Components;
 
-function InfoSection({
-  title,
-  children
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
+function InfoSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div
       style={{
@@ -67,13 +57,7 @@ function InfoSection({
   );
 }
 
-function Badge({
-  color,
-  children
-}: {
-  color: string;
-  children: React.ReactNode;
-}) {
+function Badge({ color, children }: { color: string; children: React.ReactNode }) {
   return (
     <span
       style={{
@@ -154,14 +138,7 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
             const name = tagNames[tag];
 
             return (
-              <Badge
-                key={i}
-                color={
-                  tag === ExtensionTag.DangerZone
-                    ? "var(--red-400)"
-                    : "var(--brand-500)"
-                }
-              >
+              <Badge key={i} color={tag === ExtensionTag.DangerZone ? "var(--red-400)" : "var(--brand-500)"}>
                 {name}
               </Badge>
             );

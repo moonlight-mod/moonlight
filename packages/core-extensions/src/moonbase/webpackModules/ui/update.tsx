@@ -14,8 +14,7 @@ enum UpdateState {
 
 const { ThemeDarkIcon, Text, Button } = Components;
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
-const HelpMessageClasses = spacepack.findByExports("positive", "iconDiv")[0]
-  .exports;
+const HelpMessageClasses = spacepack.findByExports("positive", "iconDiv")[0].exports;
 
 const logger = moonlight.getLogger("moonbase/ui/update");
 
@@ -23,16 +22,12 @@ const strings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",
   [UpdateState.Working]: "Updating moonlight...",
   [UpdateState.Installed]: "Updated. Restart Discord to apply changes.",
-  [UpdateState.Failed]:
-    "Failed to update moonlight. Please use the installer instead."
+  [UpdateState.Failed]: "Failed to update moonlight. Please use the installer instead."
 };
 
 export default function Update() {
   const [state, setState] = React.useState(UpdateState.Ready);
-  const newVersion = useStateFromStores(
-    [MoonbaseSettingsStore],
-    () => MoonbaseSettingsStore.newVersion
-  );
+  const newVersion = useStateFromStores([MoonbaseSettingsStore], () => MoonbaseSettingsStore.newVersion);
 
   if (newVersion == null) return null;
 
@@ -48,18 +43,10 @@ export default function Update() {
             alignItems: "center"
           }}
         >
-          <ThemeDarkIcon
-            size="sm"
-            color="currentColor"
-            className={HelpMessageClasses.icon}
-          />
+          <ThemeDarkIcon size="sm" color="currentColor" className={HelpMessageClasses.icon} />
         </div>
 
-        <Text
-          variant="text-sm/medium"
-          color="currentColor"
-          className={HelpMessageClasses.text}
-        >
+        <Text variant="text-sm/medium" color="currentColor" className={HelpMessageClasses.text}>
           {strings[state]}
         </Text>
       </Flex>

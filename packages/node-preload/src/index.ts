@@ -5,15 +5,9 @@ import path from "node:path";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { getExtensions } from "@moonlight-mod/core/extension";
-import {
-  getExtensionsPath,
-  getMoonlightDir
-} from "@moonlight-mod/core/util/data";
+import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
-import {
-  loadExtensions,
-  loadProcessedExtensions
-} from "@moonlight-mod/core/extension/loader";
+import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import createFS from "@moonlight-mod/core/fs";
 
 async function injectGlobals() {
@@ -67,9 +61,7 @@ async function injectGlobals() {
   await loadProcessedExtensions(processedExtensions);
   contextBridge.exposeInMainWorld("moonlightNode", moonlightNode);
 
-  const extCors = moonlightNode.processedExtensions.extensions.flatMap(
-    (x) => x.manifest.cors ?? []
-  );
+  const extCors = moonlightNode.processedExtensions.extensions.flatMap((x) => x.manifest.cors ?? []);
 
   for (const repo of moonlightNode.config.repositories) {
     const url = new URL(repo);
@@ -79,9 +71,7 @@ async function injectGlobals() {
 
   ipcRenderer.invoke(constants.ipcSetCorsList, extCors);
 
-  const extBlocked = moonlightNode.processedExtensions.extensions.flatMap(
-    (e) => e.manifest.blocked ?? []
-  );
+  const extBlocked = moonlightNode.processedExtensions.extensions.flatMap((e) => e.manifest.blocked ?? []);
   ipcRenderer.invoke(constants.ipcSetBlockedList, extBlocked);
 }
 
@@ -107,7 +97,5 @@ async function init(oldPreloadPath: string) {
   if (oldPreloadPath) require(oldPreloadPath);
 }
 
-const oldPreloadPath: string = ipcRenderer.sendSync(
-  constants.ipcGetOldPreloadPath
-);
+const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
 init(oldPreloadPath);

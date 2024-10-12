@@ -79,8 +79,7 @@ chrome.webRequest.onBeforeRequest.addListener(
           args: [urls],
           func: async (urls) => {
             const scripts = [...document.querySelectorAll("script")].filter(
-              (script) =>
-                script.src && urls.some((url) => url.includes(script.src))
+              (script) => script.src && urls.some((url) => url.includes(script.src))
             );
 
             // backwards
