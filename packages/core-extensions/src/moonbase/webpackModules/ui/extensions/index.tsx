@@ -31,6 +31,8 @@ export default function ExtensionsPage() {
 
   const [query, setQuery] = React.useState("");
 
+  const filterState = React.useState(defaultFilter);
+
   let filter: Filter, setFilter: (filter: Filter) => void;
   if (
     MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
@@ -43,9 +45,8 @@ export default function ExtensionsPage() {
     setFilter = (filter) =>
       MoonbaseSettingsStore.setExtensionConfig("moonbase", "filter", filter);
   } else {
-    const state = React.useState(defaultFilter);
-    filter = state[0];
-    setFilter = state[1];
+    filter = filterState[0];
+    setFilter = filterState[1];
   }
   const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
   const sorted = Object.values(extensions).sort((a, b) => {
