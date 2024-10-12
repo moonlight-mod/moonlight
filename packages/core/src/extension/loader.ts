@@ -19,7 +19,7 @@ const logger = new Logger("core/extension/loader");
 
 function loadExtWeb(ext: DetectedExtension) {
   if (ext.scripts.web != null) {
-    const source = ext.scripts.web;
+    const source = ext.scripts.web + `\n//# sourceURL=${ext.id}/web.js`;
     const fn = new Function("require", "module", "exports", source);
 
     const module = { id: ext.id, exports: {} };
@@ -54,12 +54,8 @@ function loadExtWeb(ext: DetectedExtension) {
     if (exports.webpackModules != null) {
       for (const [name, wp] of Object.entries(exports.webpackModules)) {
         if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
-          const func = new Function(
-            "module",
-            "exports",
-            "require",
-            ext.scripts.webpackModules[name]!
-          ) as WebpackModuleFunc;
+          const source = ext.scripts.webpackModules[name]! + `\n//# sourceURL=${ext.id}/webpackModules/${name}.js`;
+          const func = new Function("module", "exports", "require", source) as WebpackModuleFunc;
           registerWebpackModule({
             ...wp,
             ext: ext.id,

@@ -7,7 +7,7 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
-const { openModalLazy, closeModal } = spacepack.require("@moonlight-mod/wp/discord/components/common/index");
+const { openModalLazy, closeModal } = Components;
 const Popup = spacepack.findByCode(".minorContainer", "secondaryAction")[0].exports.default;
 
 const presentableLoadSources: Record<ExtensionLoadSource, string> = {
