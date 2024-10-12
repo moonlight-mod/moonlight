@@ -9,10 +9,7 @@ import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { readConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
-import {
-  loadExtensions,
-  loadProcessedExtensions
-} from "@moonlight-mod/core/extension/loader";
+import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import EventEmitter from "node:events";
 import { join, resolve } from "node:path";
 import persist from "@moonlight-mod/core/persist";
@@ -44,8 +41,7 @@ ipcMain.handle(constants.ipcSetCorsList, (_, list) => {
 });
 
 const reEscapeRegExp = /[\\^$.*+?()[\]{}|]/g;
-const reMatchPattern =
-  /^(?<scheme>\*|[a-z][a-z0-9+.-]*):\/\/(?<host>.+?)\/(?<path>.+)?$/;
+const reMatchPattern = /^(?<scheme>\*|[a-z][a-z0-9+.-]*):\/\/(?<host>.+?)\/(?<path>.+)?$/;
 
 const escapeRegExp = (s: string) => s.replace(reEscapeRegExp, "\\$&");
 ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
@@ -77,15 +73,7 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
 });
 
 function patchCsp(headers: Record<string, string[]>) {
-  const directives = [
-    "style-src",
-    "connect-src",
-    "img-src",
-    "font-src",
-    "media-src",
-    "worker-src",
-    "prefetch-src"
-  ];
+  const directives = ["style-src", "connect-src", "img-src", "font-src", "media-src", "worker-src", "prefetch-src"];
   const values = ["*", "blob:", "data:", "'unsafe-inline'", "disclip:"];
 
   const csp = "content-security-policy";
@@ -124,11 +112,9 @@ class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
     oldPreloadPath = opts.webPreferences!.preload;
 
-    const isMainWindow =
-      opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
+    const isMainWindow = opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
 
-    if (isMainWindow)
-      opts.webPreferences!.preload = require.resolve("./node-preload.js");
+    if (isMainWindow) opts.webPreferences!.preload = require.resolve("./node-preload.js");
 
     // Event for modifying window options
     moonlightHost.events.emit("window-options", opts, isMainWindow);
@@ -210,7 +196,6 @@ export async function inject(asarPath: string) {
     const extensions = await getExtensions();
 
     // Duplicated in node-preload... oops
-    // eslint-disable-next-line no-inner-declarations
     function getConfig(ext: string) {
       const val = config.extensions[ext];
       if (val == null || typeof val === "boolean") return undefined;
@@ -259,13 +244,8 @@ export async function inject(asarPath: string) {
       // Someone can always make a command line modifier plugin, thats the point
       // of having host modules.
       try {
-        const cmdSwitchesPath = require.resolve(
-          join(asarPath, "cmdSwitches.js")
-        );
-        require.cache[cmdSwitchesPath] = new Module(
-          cmdSwitchesPath,
-          require.cache[require.resolve(asarPath)]
-        );
+        const cmdSwitchesPath = require.resolve(join(asarPath, "cmdSwitches.js"));
+        require.cache[cmdSwitchesPath] = new Module(cmdSwitchesPath, require.cache[require.resolve(asarPath)]);
         require.cache[cmdSwitchesPath]!.exports = () => {};
       } catch (error) {
         logger.error("Failed to disable OpenAsar's command line flags:", error);
@@ -302,11 +282,7 @@ function patchElectron() {
         configurable: false
       });
     } else {
-      Object.defineProperty(
-        electronClone,
-        property,
-        Object.getOwnPropertyDescriptor(electron, property)!
-      );
+      Object.defineProperty(electronClone, property, Object.getOwnPropertyDescriptor(electron, property)!);
     }
   }
 

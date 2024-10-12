@@ -11,16 +11,9 @@ export type UntypedASTNode = {
 
 export type ASTNode = SingleASTNode | Array<SingleASTNode>;
 
-export type Parser = (
-  source: string,
-  state?: State | null | undefined
-) => Array<SingleASTNode>;
+export type Parser = (source: string, state?: State | null | undefined) => Array<SingleASTNode>;
 
-export type ParseFunction = (
-  capture: Capture,
-  nestedParse: Parser,
-  state: State
-) => UntypedASTNode | ASTNode;
+export type ParseFunction = (capture: Capture, nestedParse: Parser, state: State) => UntypedASTNode | ASTNode;
 
 export type Capture =
   | (Array<string> & {
@@ -38,22 +31,11 @@ export type State = {
 
 export type MatchFunction = {
   regex?: RegExp;
-} & ((
-  source: string,
-  state: State,
-  prevCapture: string
-) => Capture | null | undefined);
+} & ((source: string, state: State, prevCapture: string) => Capture | null | undefined);
 
-export type Output<Result> = (
-  node: ASTNode,
-  state?: State | null | undefined
-) => Result;
+export type Output<Result> = (node: ASTNode, state?: State | null | undefined) => Result;
 
-export type SingleNodeOutput<Result> = (
-  node: SingleASTNode,
-  nestedOutput: Output<Result>,
-  state: State
-) => Result;
+export type SingleNodeOutput<Result> = (node: SingleASTNode, nestedOutput: Output<Result>, state: State) => Result;
 
 // }}}
 

@@ -9,8 +9,7 @@ async function getVenmicStream() {
     logger.debug("Devices:", devices);
 
     // This isn't vencord :(
-    const id = devices.find((device) => device.label === "vencord-screen-share")
-      ?.deviceId;
+    const id = devices.find((device) => device.label === "vencord-screen-share")?.deviceId;
     if (!id) return null;
     logger.debug("Got venmic device ID:", id);
 
@@ -32,9 +31,7 @@ async function getVenmicStream() {
   }
 }
 
-navigator.mediaDevices.getDisplayMedia = async function getDisplayMediaRedirect(
-  options
-) {
+navigator.mediaDevices.getDisplayMedia = async function getDisplayMediaRedirect(options) {
   const orig = await getDisplayMediaOrig.call(this, options);
 
   const venmic = await getVenmicStream();
@@ -114,16 +111,13 @@ export const patches: Patch[] = [
     replace: [
       // Prevent loading of krisp native module by stubbing out desktop checks
       {
-        match:
-          /\(\(0,.\.isWindows\)\(\)\|\|\(0,.\.isLinux\)\(\)\|\|.+?&&!__OVERLAY__/,
+        match: /\(\(0,.\.isWindows\)\(\)\|\|\(0,.\.isLinux\)\(\)\|\|.+?&&!__OVERLAY__/,
         replacement: (orig, macosPlatformCheck) => `false&&!__OVERLAY__`
       },
       // Enable loading of web krisp equivelant by replacing isWeb with true
       {
-        match:
-          /\(0,.\.isWeb\)\(\)&&(.{1,2}\.supports\(.{1,2}\..{1,2}.NOISE_CANCELLATION)/,
-        replacement: (orig, supportsNoiseCancellation) =>
-          `true&&${supportsNoiseCancellation}`
+        match: /\(0,.\.isWeb\)\(\)&&(.{1,2}\.supports\(.{1,2}\..{1,2}.NOISE_CANCELLATION)/,
+        replacement: (orig, supportsNoiseCancellation) => `true&&${supportsNoiseCancellation}`
       }
     ]
   }

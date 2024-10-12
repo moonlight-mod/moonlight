@@ -14,19 +14,11 @@ export type WebpackModule = {
   exports: any;
 };
 
-export type WebpackModuleFunc = ((
-  module: any,
-  exports: any,
-  require: WebpackRequireType
-) => void) & {
+export type WebpackModuleFunc = ((module: any, exports: any, require: WebpackRequireType) => void) & {
   __moonlight?: boolean;
 };
 
-export type WebpackJsonpEntry = [
-  number[],
-  { [id: string]: WebpackModuleFunc },
-  (require: WebpackRequireType) => any
-];
+export type WebpackJsonpEntry = [number[], { [id: string]: WebpackModuleFunc }, (require: WebpackRequireType) => any];
 
 export type WebpackJsonp = WebpackJsonpEntry[] & {
   push: {

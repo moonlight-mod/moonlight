@@ -1,11 +1,7 @@
 import { MoonlightBranch } from "@moonlight-mod/types";
 import type { MoonbaseNatives, RepositoryManifest } from "./types";
 import extractAsar from "@moonlight-mod/core/asar";
-import {
-  distDir,
-  repoUrlFile,
-  installedVersionFile
-} from "@moonlight-mod/types/constants";
+import { distDir, repoUrlFile, installedVersionFile } from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
 
 const githubRepo = "moonlight-mod/moonlight";
@@ -121,16 +117,12 @@ export default function getNatives(): MoonbaseNatives {
 
         const fullFile = moonlightFS.join(dist, file.name);
         const fullDir = moonlightFS.dirname(fullFile);
-        if (!(await moonlightFS.exists(fullDir)))
-          await moonlightFS.mkdir(fullDir);
+        if (!(await moonlightFS.exists(fullDir))) await moonlightFS.mkdir(fullDir);
         await moonlightFS.writeFile(fullFile, file.data);
       }
 
       logger.debug("Writing version file:", ref);
-      const versionFile = moonlightFS.join(
-        moonlightNode.getMoonlightDir(),
-        installedVersionFile
-      );
+      const versionFile = moonlightFS.join(moonlightNode.getMoonlightDir(), installedVersionFile);
       await moonlightFS.writeFileString(versionFile, ref.trim());
 
       logger.debug("Update extracted");
@@ -176,15 +168,11 @@ export default function getNatives(): MoonbaseNatives {
         const fullFile = moonlightFS.join(dir, file);
         const fullDir = moonlightFS.dirname(fullFile);
 
-        if (!(await moonlightFS.exists(fullDir)))
-          await moonlightFS.mkdir(fullDir);
+        if (!(await moonlightFS.exists(fullDir))) await moonlightFS.mkdir(fullDir);
         await moonlightFS.writeFile(moonlightFS.join(dir, file), buf);
       }
 
-      await moonlightFS.writeFileString(
-        moonlightFS.join(dir, repoUrlFile),
-        repo
-      );
+      await moonlightFS.writeFileString(moonlightFS.join(dir, repoUrlFile), repo);
     },
 
     async deleteExtension(id) {

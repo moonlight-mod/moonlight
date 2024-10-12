@@ -5,12 +5,7 @@
 /* eslint-disable no-var */
 
 import { MoonlightFS } from "./fs";
-import {
-  MoonlightEnv,
-  MoonlightHost,
-  MoonlightNode,
-  MoonlightWeb
-} from "./globals";
+import { MoonlightEnv, MoonlightHost, MoonlightNode, MoonlightWeb } from "./globals";
 
 export * from "./discord";
 export * from "./config";

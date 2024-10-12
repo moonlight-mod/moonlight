@@ -11,15 +11,8 @@ export type Menu = React.FunctionComponent<{
 }>;
 export type MenuProps = React.ComponentProps<Menu>;
 
-export type MenuElement =
-  | MenuSeparator
-  | MenuGroup
-  | MenuItem
-  | MenuCheckboxItem
-  | MenuRadioItem
-  | MenuControlItem;
+export type MenuElement = MenuSeparator | MenuGroup | MenuItem | MenuCheckboxItem | MenuRadioItem | MenuControlItem;
 
-/* eslint-disable prettier/prettier */
 export type MenuSeparator = React.FunctionComponent;
 export type MenuGroup = React.FunctionComponent<{
   label?: string;
@@ -107,7 +100,6 @@ export type MenuControlItem = React.FunctionComponent<
       }
   )
 >;
-/* eslint-disable prettier/prettier */
 
 export type ContextMenu = {
   addItem: (
@@ -158,7 +150,5 @@ export type InternalItem_ = {
 };
 
 export type EvilItemParser = (
-  el:
-    | React.ReactComponentElement<MenuElement>
-    | React.ReactComponentElement<MenuElement>[]
+  el: React.ReactComponentElement<MenuElement> | React.ReactComponentElement<MenuElement>[]
 ) => InternalItem[];

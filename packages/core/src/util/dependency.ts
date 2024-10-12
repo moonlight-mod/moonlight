@@ -35,7 +35,6 @@ function buildDependencyGraph<T, D>(
     const fullDeps: Set<T> = new Set();
     let failed = false;
 
-    // eslint-disable-next-line no-inner-declarations
     function resolveDeps(id: T, root: boolean) {
       if (id === item.id && !root) {
         logger.warn(`Circular dependency detected: "${item.id}"`);
@@ -113,7 +112,6 @@ export default function calculateDependencies<T, D>(
     logger.trace("Enabled stage", itemsOrig);
     const implicitlyEnabled: T[] = [];
 
-    // eslint-disable-next-line no-inner-declarations
     function validateDeps(dep: Dependency<T, D>) {
       if (getEnabled!(dep)) {
         const deps = dependencyGraphOrig.get(dep.id)!;
@@ -122,9 +120,7 @@ export default function calculateDependencies<T, D>(
           validateDeps({ id, data });
         }
       } else {
-        const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(
-          ([, v]) => v?.has(dep.id)
-        );
+        const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(([, v]) => v?.has(dep.id));
 
         if (dependsOnMe.length > 0) {
           logger.debug("Implicitly enabling dependency", dep.id);
@@ -134,9 +130,7 @@ export default function calculateDependencies<T, D>(
     }
 
     for (const dep of itemsOrig) validateDeps(dep);
-    itemsOrig = itemsOrig.filter(
-      (x) => getEnabled(x) || implicitlyEnabled.includes(x.id)
-    );
+    itemsOrig = itemsOrig.filter((x) => getEnabled(x) || implicitlyEnabled.includes(x.id));
   }
 
   if (getIncompatible != null) {
@@ -176,12 +170,8 @@ export default function calculateDependencies<T, D>(
     dependencyGraph.set(item.id, new Set(dependencyGraph.get(item.id)));
   }
 
-  while (
-    Array.from(dependencyGraph.values()).filter((x) => x != null).length > 0
-  ) {
-    const noDependents = items.filter(
-      (e) => dependencyGraph.get(e.id)?.size === 0
-    );
+  while (Array.from(dependencyGraph.values()).filter((x) => x != null).length > 0) {
+    const noDependents = items.filter((e) => dependencyGraph.get(e.id)?.size === 0);
 
     if (noDependents.length === 0) {
       logger.warn("Stuck dependency graph detected", dependencyGraph);

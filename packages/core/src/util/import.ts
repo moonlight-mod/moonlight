@@ -9,16 +9,14 @@
   cemented if import is passed a string literal.
 */
 
-const canRequire = ["path", "fs"] as const;
-type CanRequire = (typeof canRequire)[number];
+const _canRequire = ["path", "fs"] as const;
+type CanRequire = (typeof _canRequire)[number];
 
 type ImportTypes = {
   path: typeof import("path");
   fs: typeof import("fs");
 };
 
-export default function requireImport<T extends CanRequire>(
-  type: T
-): Awaited<ImportTypes[T]> {
+export default function requireImport<T extends CanRequire>(type: T): Awaited<ImportTypes[T]> {
   return require(type);
 }

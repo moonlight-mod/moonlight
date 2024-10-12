@@ -30,37 +30,23 @@ export enum Filter {
 export const defaultFilter = 127 as Filter;
 
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
-const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0]
-  .exports;
+const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0].exports;
 
 let FilterDialogClasses: any;
 let FilterBarClasses: any;
 spacepack
-  .lazyLoad(
-    '"Missing channel in Channel.openChannelContextMenu"',
-    /e\("(\d+)"\)/g,
-    /webpackId:(\d+?),/
-  )
+  .lazyLoad('"Missing channel in Channel.openChannelContextMenu"', /e\("(\d+)"\)/g, /webpackId:(\d+?),/)
   .then(() => {
     FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0].exports;
-    FilterDialogClasses = spacepack.findByCode(
-      "countContainer:",
-      "tagContainer:"
-    )[0].exports;
+    FilterDialogClasses = spacepack.findByCode("countContainer:", "tagContainer:")[0].exports;
   });
 
-const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports
-  .Z;
+const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports.Z;
 
 // FIXME: type component keys
-const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } =
-  Components;
+const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } = Components;
 
-function toggleTag(
-  selectedTags: Set<string>,
-  setSelectedTags: (tags: Set<string>) => void,
-  tag: string
-) {
+function toggleTag(selectedTags: Set<string>, setSelectedTags: (tags: Set<string>) => void, tag: string) {
   const newState = new Set(selectedTags);
   if (newState.has(tag)) newState.delete(tag);
   else newState.add(tag);
@@ -76,8 +62,7 @@ function FilterButtonPopout({
   setFilter: (filter: Filter) => void;
   closePopout: () => void;
 }) {
-  const toggleFilter = (set: Filter) =>
-    setFilter(filter & set ? filter & ~set : filter | set);
+  const toggleFilter = (set: Filter) => setFilter(filter & set ? filter & ~set : filter | set);
 
   return (
     <div className={SortMenuClasses.container}>
@@ -156,29 +141,16 @@ function FilterButtonPopout({
   );
 }
 
-function TagButtonPopout({
-  selectedTags,
-  setSelectedTags,
-  setPopoutRef,
-  closePopout
-}: any) {
+function TagButtonPopout({ selectedTags, setSelectedTags, setPopoutRef, closePopout }: any) {
   return (
     <Dialog ref={setPopoutRef} className={FilterDialogClasses.container}>
       <div className={FilterDialogClasses.header}>
         <div className={FilterDialogClasses.headerLeft}>
-          <Heading
-            color="interactive-normal"
-            variant="text-xs/bold"
-            className={FilterDialogClasses.headerText}
-          >
+          <Heading color="interactive-normal" variant="text-xs/bold" className={FilterDialogClasses.headerText}>
             Select tags
           </Heading>
           <div className={FilterDialogClasses.countContainer}>
-            <Text
-              className={FilterDialogClasses.countText}
-              color="none"
-              variant="text-xs/medium"
-            >
+            <Text className={FilterDialogClasses.countText} color="none" variant="text-xs/medium">
               {selectedTags.size}
             </Text>
           </div>
@@ -225,24 +197,17 @@ export default function FilterBar({
   selectedTags: Set<string>;
   setSelectedTags: (tags: Set<string>) => void;
 }) {
-  const windowSize = useStateFromStores([WindowStore], () =>
-    WindowStore.windowSize()
-  );
+  const windowSize = useStateFromStores([WindowStore], () => WindowStore.windowSize());
 
   const tagsContainer = React.useRef<HTMLDivElement>(null);
   const tagListInner = React.useRef<HTMLDivElement>(null);
   const [tagsButtonOffset, setTagsButtonOffset] = React.useState(0);
   React.useLayoutEffect(() => {
     if (tagsContainer.current === null || tagListInner.current === null) return;
-    const { left: containerX, top: containerY } =
-      tagsContainer.current.getBoundingClientRect();
+    const { left: containerX, top: containerY } = tagsContainer.current.getBoundingClientRect();
     let offset = 0;
     for (const child of tagListInner.current.children) {
-      const {
-        right: childX,
-        top: childY,
-        height
-      } = child.getBoundingClientRect();
+      const { right: childX, top: childY, height } = child.getBoundingClientRect();
       if (childY - containerY > height) break;
       const newOffset = childX - containerX;
       if (newOffset > offset) {
@@ -262,11 +227,7 @@ export default function FilterBar({
     >
       <Popout
         renderPopout={({ closePopout }: any) => (
-          <FilterButtonPopout
-            filter={filter}
-            setFilter={setFilter}
-            closePopout={closePopout}
-          />
+          <FilterButtonPopout filter={filter} setFilter={setFilter} closePopout={closePopout} />
         )}
         position="bottom"
         align="left"
@@ -280,11 +241,7 @@ export default function FilterBar({
             innerClassName={FilterBarClasses.sortDropdownInner}
           >
             <ArrowsUpDownIcon size="xs" />
-            <Text
-              className={FilterBarClasses.sortDropdownText}
-              variant="text-sm/medium"
-              color="interactive-normal"
-            >
+            <Text className={FilterBarClasses.sortDropdownText} variant="text-sm/medium" color="interactive-normal">
               Sort & filter
             </Text>
             {isShown ? (
@@ -336,15 +293,8 @@ export default function FilterBar({
             innerClassName={FilterBarClasses.tagsButtonInner}
           >
             {selectedTags.size > 0 ? (
-              <div
-                style={{ boxSizing: "content-box" }}
-                className={FilterBarClasses.countContainer}
-              >
-                <Text
-                  className={FilterBarClasses.countText}
-                  color="none"
-                  variant="text-xs/medium"
-                >
+              <div style={{ boxSizing: "content-box" }} className={FilterBarClasses.countContainer}>
+                <Text className={FilterBarClasses.countText} color="none" variant="text-xs/medium">
                   {selectedTags.size}
                 </Text>
               </div>

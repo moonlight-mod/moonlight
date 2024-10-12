@@ -73,9 +73,7 @@ function loadExtWeb(ext: DetectedExtension) {
     }
 
     if (exports.styles != null) {
-      registerStyles(
-        exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`)
-      );
+      registerStyles(exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`));
     }
   }
 }
@@ -113,9 +111,7 @@ export enum ExtensionCompat {
   InvalidEnvironment
 }
 
-export function checkExtensionCompat(
-  manifest: ExtensionManifest
-): ExtensionCompat {
+export function checkExtensionCompat(manifest: ExtensionManifest): ExtensionCompat {
   let environment;
   webTarget: {
     environment = ExtensionEnvironment.Web;
@@ -124,12 +120,8 @@ export function checkExtensionCompat(
     environment = ExtensionEnvironment.Desktop;
   }
 
-  if (manifest.apiLevel !== constants.apiLevel)
-    return ExtensionCompat.InvalidApiLevel;
-  if (
-    (manifest.environment ?? "both") !== "both" &&
-    manifest.environment !== environment
-  )
+  if (manifest.apiLevel !== constants.apiLevel) return ExtensionCompat.InvalidApiLevel;
+  if ((manifest.environment ?? "both") !== "both" && manifest.environment !== environment)
     return ExtensionCompat.InvalidEnvironment;
   return ExtensionCompat.Compatible;
 }
@@ -148,12 +140,8 @@ export function checkExtensionCompat(
   extensions fires an event on completion, which allows us to await the loading
   of another extension, resolving dependencies & load order effectively.
 */
-export async function loadExtensions(
-  exts: DetectedExtension[]
-): Promise<ProcessedExtensions> {
-  exts = exts.filter(
-    (ext) => checkExtensionCompat(ext.manifest) === ExtensionCompat.Compatible
-  );
+export async function loadExtensions(exts: DetectedExtension[]): Promise<ProcessedExtensions> {
+  exts = exts.filter((ext) => checkExtensionCompat(ext.manifest) === ExtensionCompat.Compatible);
 
   const config = await readConfig();
   const items = exts
@@ -193,10 +181,7 @@ export async function loadExtensions(
   };
 }
 
-export async function loadProcessedExtensions({
-  extensions,
-  dependencyGraph
-}: ProcessedExtensions) {
+export async function loadProcessedExtensions({ extensions, dependencyGraph }: ProcessedExtensions) {
   const eventEmitter = createEventEmitter<EventType, EventPayloads>();
   const finished: Set<string> = new Set();
 
@@ -229,9 +214,7 @@ export async function loadProcessedExtensions({
     );
 
     if (waitPromises.length > 0) {
-      logger.debug(
-        `Waiting on ${waitPromises.length} dependencies for "${ext.id}"`
-      );
+      logger.debug(`Waiting on ${waitPromises.length} dependencies for "${ext.id}"`);
       await Promise.all(waitPromises);
     }
 

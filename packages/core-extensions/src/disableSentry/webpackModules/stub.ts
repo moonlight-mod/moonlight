@@ -23,8 +23,7 @@ export const proxy = () =>
             throw Error("crash");
           };
         } else if (keys.includes(prop.toString())) {
-          return (...args: any[]) =>
-            logger.debug(`Sentry calling "${prop.toString()}":`, ...args);
+          return (...args: any[]) => logger.debug(`Sentry calling "${prop.toString()}":`, ...args);
         } else {
           return undefined;
         }

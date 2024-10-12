@@ -4,9 +4,5 @@ export type CustomComponent = React.FC<{
 }>;
 
 export type Moonbase = {
-  registerConfigComponent: (
-    ext: string,
-    option: string,
-    component: CustomComponent
-  ) => void;
+  registerConfigComponent: (ext: string, option: string, component: CustomComponent) => void;
 };

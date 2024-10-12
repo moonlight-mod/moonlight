@@ -32,10 +32,7 @@ export default function UpdateNotice() {
       {notice.element}
 
       {(notice.showClose ?? true) && (
-        <NoticeCloseButton
-          onClick={() => popAndDismiss(notice)}
-          noticeType="__moonlight_notice"
-        />
+        <NoticeCloseButton onClick={() => popAndDismiss(notice)} noticeType="__moonlight_notice" />
       )}
 
       {(notice.buttons ?? []).map((button) => (

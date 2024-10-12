@@ -14,83 +14,62 @@ type PermissionCheckHandler = (
   details: Electron.PermissionCheckHandlerHandlerDetails
 ) => boolean;
 
-moonlightHost.events.on(
-  "window-created",
-  (window: BrowserWindow, isMainWindow: boolean) => {
-    if (!isMainWindow) return;
-    const windowSession = window.webContents.session;
+moonlightHost.events.on("window-created", (window: BrowserWindow, isMainWindow: boolean) => {
+  if (!isMainWindow) return;
+  const windowSession = window.webContents.session;
 
-    // setPermissionRequestHandler
-    windowSession.setPermissionRequestHandler(
-      (webcontents, permission, callback, details) => {
-        let cbResult = false;
-        function fakeCallback(result: boolean) {
-          cbResult = result;
-        }
+  // setPermissionRequestHandler
+  windowSession.setPermissionRequestHandler((webcontents, permission, callback, details) => {
+    let cbResult = false;
+    function fakeCallback(result: boolean) {
+      cbResult = result;
+    }
 
-        if (caughtPermissionRequestHandler) {
-          caughtPermissionRequestHandler(
-            webcontents,
-            permission,
-            fakeCallback,
-            details
-          );
-        }
+    if (caughtPermissionRequestHandler) {
+      caughtPermissionRequestHandler(webcontents, permission, fakeCallback, details);
+    }
 
-        if (permission === "media" || permission === "display-capture") {
-          cbResult = true;
-        }
+    if (permission === "media" || permission === "display-capture") {
+      cbResult = true;
+    }
 
-        callback(cbResult);
-      }
-    );
+    callback(cbResult);
+  });
 
-    let caughtPermissionRequestHandler: PermissionRequestHandler | undefined;
+  let caughtPermissionRequestHandler: PermissionRequestHandler | undefined;
 
-    windowSession.setPermissionRequestHandler =
-      function catchSetPermissionRequestHandler(
-        handler: (
-          webcontents: Electron.WebContents,
-          permission: string,
-          callback: (permissionGranted: boolean) => void
-        ) => void
-      ) {
-        caughtPermissionRequestHandler = handler;
-      };
+  windowSession.setPermissionRequestHandler = function catchSetPermissionRequestHandler(
+    handler: (
+      webcontents: Electron.WebContents,
+      permission: string,
+      callback: (permissionGranted: boolean) => void
+    ) => void
+  ) {
+    caughtPermissionRequestHandler = handler;
+  };
 
-    // setPermissionCheckHandler
-    windowSession.setPermissionCheckHandler(
-      (webcontents, permission, requestingOrigin, details) => {
-        return false;
-      }
-    );
+  // setPermissionCheckHandler
+  windowSession.setPermissionCheckHandler((webcontents, permission, requestingOrigin, details) => {
+    return false;
+  });
 
-    let caughtPermissionCheckHandler: PermissionCheckHandler | undefined;
+  let caughtPermissionCheckHandler: PermissionCheckHandler | undefined;
 
-    windowSession.setPermissionCheckHandler(
-      (webcontents, permission, requestingOrigin, details) => {
-        let result = false;
+  windowSession.setPermissionCheckHandler((webcontents, permission, requestingOrigin, details) => {
+    let result = false;
 
-        if (caughtPermissionCheckHandler) {
-          result = caughtPermissionCheckHandler(
-            webcontents,
-            permission,
-            requestingOrigin,
-            details
-          );
-        }
+    if (caughtPermissionCheckHandler) {
+      result = caughtPermissionCheckHandler(webcontents, permission, requestingOrigin, details);
+    }
 
-        if (permission === "media" || permission === "display-capture") {
-          result = true;
-        }
+    if (permission === "media" || permission === "display-capture") {
+      result = true;
+    }
 
-        return result;
-      }
-    );
+    return result;
+  });
 
-    windowSession.setPermissionCheckHandler =
-      function catchSetPermissionCheckHandler(handler: PermissionCheckHandler) {
-        caughtPermissionCheckHandler = handler;
-      };
-  }
-);
+  windowSession.setPermissionCheckHandler = function catchSetPermissionCheckHandler(handler: PermissionCheckHandler) {
+    caughtPermissionCheckHandler = handler;
+  };
+});

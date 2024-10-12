@@ -5,13 +5,8 @@ const logger = moonlightHost.getLogger("disableSentry");
 
 if (moonlightHost.asarPath !== "moonlightDesktop") {
   try {
-    const hostSentryPath = require.resolve(
-      join(moonlightHost.asarPath, "node_modules", "@sentry", "electron")
-    );
-    require.cache[hostSentryPath] = new Module(
-      hostSentryPath,
-      require.cache[require.resolve(moonlightHost.asarPath)]
-    );
+    const hostSentryPath = require.resolve(join(moonlightHost.asarPath, "node_modules", "@sentry", "electron"));
+    require.cache[hostSentryPath] = new Module(hostSentryPath, require.cache[require.resolve(moonlightHost.asarPath)]);
     require.cache[hostSentryPath]!.exports = {
       init: () => {},
       captureException: () => {},

@@ -1,10 +1,5 @@
 import { loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
-import {
-  installWebpackPatcher,
-  onModuleLoad,
-  registerPatch,
-  registerWebpackModule
-} from "@moonlight-mod/core/patch";
+import { installWebpackPatcher, onModuleLoad, registerPatch, registerWebpackModule } from "@moonlight-mod/core/patch";
 import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { installStyles } from "@moonlight-mod/core/styles";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";

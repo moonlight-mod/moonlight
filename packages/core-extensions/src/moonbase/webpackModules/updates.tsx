@@ -7,10 +7,7 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 // FIXME: not indexed as importable
 const Constants = spacepack.require("discord/Constants");
-const UserSettingsSections = spacepack.findObjectFromKey(
-  Constants,
-  "APPEARANCE_THEME_PICKER"
-);
+const UserSettingsSections = spacepack.findObjectFromKey(Constants, "APPEARANCE_THEME_PICKER");
 
 const { ThemeDarkIcon } = Components;
 
@@ -21,19 +18,13 @@ function plural(str: string, num: number) {
 function listener() {
   if (
     MoonbaseSettingsStore.shouldShowNotice &&
-    MoonbaseSettingsStore.getExtensionConfigRaw(
-      "moonbase",
-      "updateBanner",
-      true
-    )
+    MoonbaseSettingsStore.getExtensionConfigRaw("moonbase", "updateBanner", true)
   ) {
     // @ts-expect-error epic type fail
     MoonbaseSettingsStore.removeChangeListener(listener);
 
     const version = MoonbaseSettingsStore.newVersion;
-    const extensionUpdateCount = Object.keys(
-      MoonbaseSettingsStore.updates
-    ).length;
+    const extensionUpdateCount = Object.keys(MoonbaseSettingsStore.updates).length;
     const hasExtensionUpdates = extensionUpdateCount > 0;
 
     let message;
@@ -73,23 +64,14 @@ function listener() {
         {
           name: "Open Moonbase",
           onClick: () => {
-            const { open } = spacepack.findByExports(
-              "setSection",
-              "clearSubsection"
-            )[0].exports.Z;
+            const { open } = spacepack.findByExports("setSection", "clearSubsection")[0].exports.Z;
 
             // settings is lazy loaded thus lazily patched
             // FIXME: figure out a way to detect if settings has been opened
             //        alreadyjust so the transition isnt as jarring
             open(UserSettingsSections.ACCOUNT);
             setTimeout(() => {
-              if (
-                MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
-                  "moonbase",
-                  "sections",
-                  false
-                )
-              ) {
+              if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
                 open("moonbase-extensions");
               } else {
                 open("moonbase", 0);

@@ -12,17 +12,13 @@ const { MenuItem, Text, Breadcrumbs } = Components;
 
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
-const { open } = spacepack.findByExports("setSection", "clearSubsection")[0]
-  .exports.Z;
+const { open } = spacepack.findByExports("setSection", "clearSubsection")[0].exports.Z;
 
 const notice = {
   stores: [MoonbaseSettingsStore],
   element: () => {
     // Require it here because lazy loading SUX
-    const SettingsNotice = spacepack.findByCode(
-      "onSaveButtonColor",
-      "FocusRingScope"
-    )[0].exports.Z;
+    const SettingsNotice = spacepack.findByCode("onSaveButtonColor", "FocusRingScope")[0].exports.Z;
     return (
       <SettingsNotice
         submitting={MoonbaseSettingsStore.submitting}
@@ -37,11 +33,7 @@ const notice = {
   }
 };
 
-function addSection(
-  id: string,
-  name: string,
-  element: React.FunctionComponent
-) {
+function addSection(id: string, name: string, element: React.FunctionComponent) {
   settings.addSection(`moonbase-${id}`, name, element, null, -2, notice);
 }
 
@@ -53,23 +45,13 @@ type Breadcrumb = {
 
 function renderBreadcrumb(crumb: Breadcrumb, last: boolean) {
   return (
-    <Text
-      variant="heading-lg/semibold"
-      tag="h2"
-      color={last ? "header-primary" : "header-secondary"}
-    >
+    <Text variant="heading-lg/semibold" tag="h2" color={last ? "header-primary" : "header-secondary"}>
       {crumb.label}
     </Text>
   );
 }
 
-if (
-  MoonbaseSettingsStore.getExtensionConfigRaw<boolean>(
-    "moonbase",
-    "sections",
-    false
-  )
-) {
+if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
   settings.addHeader("Moonbase", -2);
 
   for (const page of pages) {
@@ -102,12 +84,7 @@ if (
   settings.addSectionMenuItems(
     "moonbase",
     ...pages.map((page, i) => (
-      <MenuItem
-        key={page.id}
-        id={`moonbase-${page.id}`}
-        label={page.name}
-        action={() => open("moonbase", i)}
-      />
+      <MenuItem key={page.id} id={`moonbase-${page.id}`} label={page.name} action={() => open("moonbase", i)} />
     ))
   );
 }

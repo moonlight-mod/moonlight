@@ -6,13 +6,11 @@ export const patches: Patch[] = [
     replace: [
       {
         match: /={newline:(.+?)},(.{1,2})=\(0,/,
-        replacement: (_, rules, RULES) =>
-          `=require("markdown_markdown")._addRules({newline:${rules}}),${RULES}=(0,`
+        replacement: (_, rules, RULES) => `=require("markdown_markdown")._addRules({newline:${rules}}),${RULES}=(0,`
       },
       {
         match: /(?<=;(.{1,2}\.Z)={RULES:.+?})/,
-        replacement: (_, rulesets) =>
-          `;require("markdown_markdown")._applyRulesetBlacklist(${rulesets});`
+        replacement: (_, rulesets) => `;require("markdown_markdown")._applyRulesetBlacklist(${rulesets});`
       }
     ]
   },
@@ -25,17 +23,8 @@ export const patches: Patch[] = [
           `__slateRules,${rulesDef}=__slateRules=require("markdown_markdown")._addSlateRules({link:{${rules}}),${syntaxBefore}=new Set`
       },
       {
-        match:
-          /(originalMatch:.}=(.);)(.+?)case"emoticon":(return .+?;)(.+?)case"subtext":{(.+?)}default:/,
-        replacement: (
-          _,
-          start,
-          rule,
-          body,
-          plaintextReturn,
-          otherRules,
-          inlineStyleBody
-        ) =>
+        match: /(originalMatch:.}=(.);)(.+?)case"emoticon":(return .+?;)(.+?)case"subtext":{(.+?)}default:/,
+        replacement: (_, start, rule, body, plaintextReturn, otherRules, inlineStyleBody) =>
           `${start}if(${rule}.type.startsWith("__moonlight_")){if(__slateRules[${rule}.type].type=="inlineStyle"){${inlineStyleBody}}else{${plaintextReturn}}}${body}case"emoticon":${plaintextReturn}${otherRules}case"link":{${inlineStyleBody}}default:`
       }
     ]
@@ -44,8 +33,7 @@ export const patches: Patch[] = [
     find: '"Slate: Unknown decoration attribute: "',
     replace: {
       match: /=({strong:.+?});/,
-      replacement: (_, rules) =>
-        `=require("markdown_markdown")._addSlateDecorators(${rules});`
+      replacement: (_, rules) => `=require("markdown_markdown")._addSlateDecorators(${rules});`
     }
   }
 ];

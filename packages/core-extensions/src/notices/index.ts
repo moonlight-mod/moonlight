@@ -4,8 +4,7 @@ export const patches: Patch[] = [
   {
     find: ".GUILD_RAID_NOTIFICATION:",
     replace: {
-      match:
-        /(?<=return(\(0,.\.jsx\))\(.+?\);)case .{1,2}\..{1,3}\.GUILD_RAID_NOTIFICATION:/,
+      match: /(?<=return(\(0,.\.jsx\))\(.+?\);)case .{1,2}\..{1,3}\.GUILD_RAID_NOTIFICATION:/,
       replacement: (orig, createElement) =>
         `case "__moonlight_notice":return${createElement}(require("notices_component").default,{});${orig}`
     }
@@ -28,10 +27,7 @@ export const patches: Patch[] = [
 
 export const webpackModules: Record<string, ExtensionWebpackModule> = {
   notices: {
-    dependencies: [
-      { id: "discord/packages/flux" },
-      { id: "discord/Dispatcher" }
-    ]
+    dependencies: [{ id: "discord/packages/flux" }, { id: "discord/Dispatcher" }]
   },
 
   component: {

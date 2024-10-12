@@ -1,29 +1,17 @@
-import {
-  InternalItem,
-  MenuElement,
-  MenuProps
-} from "@moonlight-mod/types/coreExtensions/contextMenu";
+import { InternalItem, MenuElement, MenuProps } from "@moonlight-mod/types/coreExtensions/contextMenu";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import parser from "@moonlight-mod/wp/contextMenu_evilMenu";
 
 type Patch = {
   navId: string;
-  item: (
-    props: any
-  ) =>
-    | React.ReactComponentElement<MenuElement>
-    | React.ReactComponentElement<MenuElement>[];
+  item: (props: any) => React.ReactComponentElement<MenuElement> | React.ReactComponentElement<MenuElement>[];
   anchorId: string;
   before: boolean;
 };
 
 function addItem<T>(
   navId: string,
-  item: (
-    props: T
-  ) =>
-    | React.ReactComponentElement<MenuElement>
-    | React.ReactComponentElement<MenuElement>[],
+  item: (props: T) => React.ReactComponentElement<MenuElement> | React.ReactComponentElement<MenuElement>[],
   anchorId: string,
   before = false
 ) {
@@ -65,9 +53,7 @@ module.exports = {
 // Unmangle Menu elements
 const code =
   spacepack.require.m[
-    spacepack.findByCode(
-      "Menu API only allows Items and groups of Items as children."
-    )[0].id
+    spacepack.findByCode("Menu API only allows Items and groups of Items as children.")[0].id
   ].toString();
 
 let MangledMenu;

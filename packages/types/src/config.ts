@@ -6,9 +6,7 @@ export type Config = {
   patchAll?: boolean;
 };
 
-export type ConfigExtensions =
-  | { [key: string]: boolean }
-  | { [key: string]: ConfigExtension };
+export type ConfigExtensions = { [key: string]: boolean } | { [key: string]: ConfigExtension };
 
 export type ConfigExtension = {
   enabled: boolean;

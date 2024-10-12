@@ -1,8 +1,7 @@
 import { Patch } from "@moonlight-mod/types";
 
 const notXssDefensesOnly = () =>
-  (moonlight.getConfigOption<boolean>("quietLoggers", "xssDefensesOnly") ??
-    false) === false;
+  (moonlight.getConfigOption<boolean>("quietLoggers", "xssDefensesOnly") ?? false) === false;
 
 // These patches MUST run before the simple patches, these are to remove loggers
 // that end up causing syntax errors by the normal patch
@@ -29,43 +28,22 @@ loggerFixes.forEach((patch) => {
 // Patches to simply remove a logger call
 const stubPatches = [
   // "sh" is not a valid locale.
-  [
-    "is not a valid locale",
-    /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g
-  ],
+  ["is not a valid locale", /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g],
   ['="RunningGameStore"', /.\.info\("games",{.+?}\),/],
-  [
-    '"[BUILD INFO] Release Channel: "',
-    /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/
-  ],
-  [
-    '.APP_NATIVE_CRASH,"Storage"',
-    /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/
-  ],
-  [
-    '.APP_NATIVE_CRASH,"Storage"',
-    'console.log("AppCrashedFatalReport: getLastCrash not supported.");'
-  ],
+  ['"[BUILD INFO] Release Channel: "', /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/],
+  ['.APP_NATIVE_CRASH,"Storage"', /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/],
+  ['.APP_NATIVE_CRASH,"Storage"', 'console.log("AppCrashedFatalReport: getLastCrash not supported.");'],
   ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
   ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
-  [
-    'throw Error("Messages are still loading.");',
-    /console\.warn\("Unsupported Locale",.\),/
-  ],
+  ['throw Error("Messages are still loading.");', /console\.warn\("Unsupported Locale",.\),/],
   ["}_dispatchWithDevtools(", /.\.totalTime>100&&.\.verbose\(.+?\);/],
-  [
-    '"NativeDispatchUtils"',
-    /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/
-  ],
+  ['"NativeDispatchUtils"', /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/],
   ['("DatabaseManager")', /.\.log\("removing database \(user: ".+?\)\),/],
   [
     '"Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch. Action: "',
     /.\.has\(.\.type\)&&.\.log\(.+?\.type\)\),/
   ],
-  [
-    'console.warn("Window state not initialized"',
-    /console\.warn\("Window state not initialized",.\),/
-  ]
+  ['console.warn("Window state not initialized"', /console\.warn\("Window state not initialized",.\),/]
 ];
 
 const simplePatches = [
@@ -73,10 +51,7 @@ const simplePatches = [
   ["suppressDeprecationWarnings=!1", "suppressDeprecationWarnings=!0"],
 
   // Zustand related
-  [
-    /console\.warn\("\[DEPRECATED\] Please use `subscribeWithSelector` middleware"\)/g,
-    "/*$&*/"
-  ],
+  [/console\.warn\("\[DEPRECATED\] Please use `subscribeWithSelector` middleware"\)/g, "/*$&*/"],
   ["this.getDebugLogging()", "false"]
 ] as { [0]: string | RegExp; [1]: string }[];
 

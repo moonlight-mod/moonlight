@@ -21,8 +21,7 @@ const patches: IdentifiedPatch[] = [];
 let webpackModules: Set<IdentifiedWebpackModule> = new Set();
 let webpackRequire: WebpackRequireType | null = null;
 
-const moduleLoadSubscriptions: Map<string, ((moduleId: string) => void)[]> =
-  new Map();
+const moduleLoadSubscriptions: Map<string, ((moduleId: string) => void)[]> = new Map();
 
 export function registerPatch(patch: IdentifiedPatch) {
   patches.push(patch);
@@ -36,10 +35,7 @@ export function registerWebpackModule(wp: IdentifiedWebpackModule) {
   }
 }
 
-export function onModuleLoad(
-  module: string | string[],
-  callback: (moduleId: string) => void
-): void {
+export function onModuleLoad(module: string | string[], callback: (moduleId: string) => void): void {
   let moduleIds = module;
 
   if (typeof module === "string") {
@@ -83,12 +79,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       `//# sourceURL=Webpack-Module-${id}`;
 
     try {
-      const func = new Function(
-        "module",
-        "exports",
-        "require",
-        wrapped
-      ) as WebpackModuleFunc;
+      const func = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
       entry[id] = func;
       entry[id].__moonlight = true;
       return true;
@@ -124,13 +115,10 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 
       // indexOf is faster than includes by 0.25% lmao
       const match =
-        typeof patch.find === "string"
-          ? moduleString.indexOf(patch.find) !== -1
-          : patch.find.test(moduleString);
+        typeof patch.find === "string" ? moduleString.indexOf(patch.find) !== -1 : patch.find.test(moduleString);
 
       // Global regexes apply to all modules
-      const shouldRemove =
-        typeof patch.find === "string" ? true : !patch.find.global;
+      const shouldRemove = typeof patch.find === "string" ? true : !patch.find.global;
 
       if (match) {
         moonlight.unpatched.delete(patch);
@@ -138,16 +126,10 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         // We ensured all arrays get turned into normal PatchReplace objects on register
         const replace = patch.replace as PatchReplace;
 
-        if (
-          replace.type === undefined ||
-          replace.type === PatchReplaceType.Normal
-        ) {
+        if (replace.type === undefined || replace.type === PatchReplaceType.Normal) {
           // Add support for \i to match rspack's minified names
           if (typeof replace.match !== "string") {
-            replace.match = new RegExp(
-              replace.match.source.replace(/\\i/g, "[A-Za-z_$][\\w$]*"),
-              replace.match.flags
-            );
+            replace.match = new RegExp(replace.match.source.replace(/\\i/g, "[A-Za-z_$][\\w$]*"), replace.match.flags);
           }
           // tsc fails to detect the overloads for this, so I'll just do this
           // Verbose, but it works
@@ -171,9 +153,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           const newModule = replace.replacement(moduleString);
           entry[id] = newModule;
           entry[id].__moonlight = true;
-          moduleString =
-            newModule.toString().replace(/\n/g, "") +
-            `//# sourceURL=Webpack-Module-${id}`;
+          moduleString = newModule.toString().replace(/\n/g, "") + `//# sourceURL=Webpack-Module-${id}`;
         }
 
         if (shouldRemove) {
@@ -198,19 +178,9 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     }
 
     if (moonlightNode.config.patchAll === true) {
-      if (
-        (typeof id !== "string" || !id.includes("_")) &&
-        !entry[id].__moonlight
-      ) {
-        const wrapped =
-          `(${moduleCache[id]}).apply(this, arguments)\n` +
-          `//# sourceURL=Webpack-Module-${id}`;
-        entry[id] = new Function(
-          "module",
-          "exports",
-          "require",
-          wrapped
-        ) as WebpackModuleFunc;
+      if ((typeof id !== "string" || !id.includes("_")) && !entry[id].__moonlight) {
+        const wrapped = `(${moduleCache[id]}).apply(this, arguments)\n` + `//# sourceURL=Webpack-Module-${id}`;
+        entry[id] = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
         entry[id].__moonlight = true;
       }
     }
@@ -246,13 +216,12 @@ function depToString(x: ExplicitExtensionDependency) {
 function handleModuleDependencies() {
   const modules = Array.from(webpackModules.values());
 
-  const dependencies: Dependency<string, IdentifiedWebpackModule>[] =
-    modules.map((wp) => {
-      return {
-        id: depToString(wp),
-        data: wp
-      };
-    });
+  const dependencies: Dependency<string, IdentifiedWebpackModule>[] = modules.map((wp) => {
+    return {
+      id: depToString(wp),
+      data: wp
+    };
+  });
 
   const [sorted, _] = calculateDependencies(dependencies, {
     fetchDep: (id) => {
@@ -263,9 +232,7 @@ function handleModuleDependencies() {
       const deps = item.data?.dependencies ?? [];
       return (
         deps.filter(
-          (dep) =>
-            !(dep instanceof RegExp || typeof dep === "string") &&
-            dep.ext != null
+          (dep) => !(dep instanceof RegExp || typeof dep === "string") && dep.ext != null
         ) as ExplicitExtensionDependency[]
       ).map(depToString);
     }
@@ -297,9 +264,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
               if (dep.test(modStr)) deps.delete(dep);
             } else if (
               dep.ext != null
-                ? injectedWpModules.find(
-                    (x) => x.ext === dep.ext && x.id === dep.id
-                  )
+                ? injectedWpModules.find((x) => x.ext === dep.ext && x.id === dep.id)
                 : injectedWpModules.find((x) => x.id === dep.id)
             ) {
               deps.delete(dep);
@@ -330,9 +295,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
     if (!webpackModules.size) break;
   }
 
-  for (const [name, func] of Object.entries(
-    moonlight.moonmap.getWebpackModules("window.moonlight.moonmap")
-  )) {
+  for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
     injectedWpModules.push({ id: name, run: func });
     modules[name] = func;
     inject = true;
@@ -452,8 +415,7 @@ export async function installWebpackPatcher() {
         });
         patchModules(modules);
 
-        if (!window.webpackChunkdiscord_app)
-          window.webpackChunkdiscord_app = [];
+        if (!window.webpackChunkdiscord_app) window.webpackChunkdiscord_app = [];
         injectModules(modules);
       }
 

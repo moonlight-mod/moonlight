@@ -1,7 +1,4 @@
-import {
-  SettingsSection,
-  Settings as SettingsType
-} from "@moonlight-mod/types/coreExtensions/settings";
+import { SettingsSection, Settings as SettingsType } from "@moonlight-mod/types/coreExtensions/settings";
 
 export const Settings: SettingsType = {
   ourSections: [],
@@ -24,8 +21,7 @@ export const Settings: SettingsType = {
   },
   addSectionMenuItems(section, ...newItems) {
     const data = Settings.ourSections.find((x) => x.section === section);
-    if (!data || !("element" in data))
-      throw new Error(`Could not find section "${section}"`);
+    if (!data || !("element" in data)) throw new Error(`Could not find section "${section}"`);
     (Settings.sectionMenuItems[section] ??= []).push(...newItems);
     data._moonlight_submenu ??= () => Settings.sectionMenuItems[section];
   },
@@ -47,11 +43,7 @@ export const Settings: SettingsType = {
 
   _mutateSections: (sections) => {
     for (const section of Settings.ourSections) {
-      sections.splice(
-        section.pos < 0 ? sections.length + section.pos : section.pos,
-        0,
-        section
-      );
+      sections.splice(section.pos < 0 ? sections.length + section.pos : section.pos, 0, section);
     }
 
     return sections;

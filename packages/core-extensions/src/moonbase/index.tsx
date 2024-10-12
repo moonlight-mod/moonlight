@@ -2,10 +2,7 @@ import { ExtensionWebpackModule } from "@moonlight-mod/types";
 
 export const webpackModules: Record<string, ExtensionWebpackModule> = {
   stores: {
-    dependencies: [
-      { id: "discord/packages/flux" },
-      { id: "discord/Dispatcher" }
-    ]
+    dependencies: [{ id: "discord/packages/flux" }, { id: "discord/Dispatcher" }]
   },
 
   ui: {
