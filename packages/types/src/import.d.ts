@@ -1,3 +1,9 @@
+declare module "@moonlight-mod/wp/appPanels_appPanels" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  const AppPanels: CoreExtensions.AppPanels.AppPanels;
+  export = AppPanels;
+}
+
 declare module "@moonlight-mod/wp/common_stores";
 
 declare module "@moonlight-mod/wp/contextMenu_evilMenu" {

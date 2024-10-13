@@ -1,0 +1,10 @@
+{
+  "id": "appPanels",
+  "apiLevel": 2,
+  "meta": {
+    "name": "App Panels",
+    "tagline": "An API for adding panels around the user/voice controls",
+    "authors": ["NotNite"],
+    "tags": ["library"]
+  }
+}
