@@ -69,9 +69,7 @@ const taggedBuildLog = (tag) => ({
   name: "build-log",
   setup(build) {
     build.onEnd((result) => {
-      console.log(
-        `[${timeFormatter.format(new Date())}] [${tag}] build finished`
-      );
+      console.log(`[${timeFormatter.format(new Date())}] [${tag}] build finished`);
     });
   }
 });
@@ -104,12 +102,7 @@ async function build(name, entry) {
     MOONLIGHT_VERSION: `"${buildVersion}"`
   };
 
-  for (const iterName of [
-    "injector",
-    "node-preload",
-    "web-preload",
-    "browser"
-  ]) {
+  for (const iterName of ["injector", "node-preload", "web-preload", "browser"]) {
     const snake = iterName.replace(/-/g, "_").toUpperCase();
     define[`MOONLIGHT_${snake}`] = (name === iterName).toString();
   }
@@ -121,9 +114,7 @@ async function build(name, entry) {
   if (name === "browser") {
     plugins.push(
       copyStaticFiles({
-        src: mv2
-          ? "./packages/browser/manifestv2.json"
-          : "./packages/browser/manifest.json",
+        src: mv2 ? "./packages/browser/manifestv2.json" : "./packages/browser/manifest.json",
         dest: `./dist/${browserDir}/manifest.json`
       })
     );
@@ -145,9 +136,7 @@ async function build(name, entry) {
 
     plugins.push(
       copyStaticFiles({
-        src: mv2
-          ? "./packages/browser/src/background-mv2.js"
-          : "./packages/browser/src/background.js",
+        src: mv2 ? "./packages/browser/src/background-mv2.js" : "./packages/browser/src/background.js",
         dest: `./dist/${browserDir}/background.js`
       })
     );
@@ -180,7 +169,6 @@ async function build(name, entry) {
   if (name === "browser") {
     const coreExtensionsJson = {};
 
-    // eslint-disable-next-line no-inner-declarations
     function readDir(dir) {
       const files = fs.readdirSync(dir);
       for (const file of files) {
@@ -189,10 +177,7 @@ async function build(name, entry) {
         if (fs.statSync(filePath).isDirectory()) {
           readDir(filePath);
         } else {
-          coreExtensionsJson[normalizedPath] = fs.readFileSync(
-            filePath,
-            "utf8"
-          );
+          coreExtensionsJson[normalizedPath] = fs.readFileSync(filePath, "utf8");
         }
       }
     }
@@ -200,9 +185,7 @@ async function build(name, entry) {
     readDir("./dist/core-extensions");
 
     esbuildConfig.banner = {
-      js: `window._moonlight_coreExtensionsStr = ${JSON.stringify(
-        JSON.stringify(coreExtensionsJson)
-      )};`
+      js: `window._moonlight_coreExtensionsStr = ${JSON.stringify(JSON.stringify(coreExtensionsJson))};`
     };
   }
 
@@ -220,18 +203,14 @@ async function buildExt(ext, side, copyManifest, fileExt) {
     fs.mkdirSync(outdir, { recursive: true });
   }
 
-  const entryPoints = [
-    `packages/core-extensions/src/${ext}/${side}.${fileExt}`
-  ];
+  const entryPoints = [`packages/core-extensions/src/${ext}/${side}.${fileExt}`];
 
   const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
   if (fs.existsSync(wpModulesDir) && side === "index") {
     const wpModules = fs.opendirSync(wpModulesDir);
     for await (const wpModule of wpModules) {
       if (wpModule.isFile()) {
-        entryPoints.push(
-          `packages/core-extensions/src/${ext}/webpackModules/${wpModule.name}`
-        );
+        entryPoints.push(`packages/core-extensions/src/${ext}/webpackModules/${wpModule.name}`);
       } else {
         for (const fileExt of ["ts", "tsx"]) {
           const path = `packages/core-extensions/src/${ext}/webpackModules/${wpModule.name}/index.${fileExt}`;
@@ -315,11 +294,7 @@ if (browser) {
 
     for (const fileExt of ["ts", "tsx"]) {
       for (const type of ["index", "node", "host"]) {
-        if (
-          fs.existsSync(
-            `./packages/core-extensions/src/${ext}/${type}.${fileExt}`
-          )
-        ) {
+        if (fs.existsSync(`./packages/core-extensions/src/${ext}/${type}.${fileExt}`)) {
           promises.push(buildExt(ext, type, !copiedManifest, fileExt));
           copiedManifest = true;
         }
