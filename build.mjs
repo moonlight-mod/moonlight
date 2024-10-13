@@ -163,7 +163,15 @@ async function build(name, entry) {
     dropLabels,
 
     logLevel: "silent",
-    plugins
+    plugins,
+
+    // https://github.com/evanw/esbuild/issues/3944
+    footer:
+      name === "web-preload"
+        ? {
+            js: `\n//# sourceURL=${name}.js`
+          }
+        : undefined
   };
 
   if (name === "browser") {
