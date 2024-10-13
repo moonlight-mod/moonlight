@@ -24,9 +24,9 @@ function getDeps(packageJSON) {
 }
 
 function link(dir) {
-  const packageJSON = JSON.parse(
-    fs.readFileSync(path.join(dir, "package.json"), "utf8")
-  );
+  const packageJSONPath = path.join(dir, "package.json");
+  if (!fs.existsSync(packageJSONPath)) return;
+  const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
   const deps = getDeps(packageJSON);
 
   for (const [dep, path] of Object.entries(onDisk)) {
@@ -58,7 +58,7 @@ for (const path of Object.values(onDisk)) {
 }
 
 if (shouldUndo) {
-  const dir = __dirname;
+  const dir = process.cwd();
   console.log(dir);
   undo(dir);
 } else {
