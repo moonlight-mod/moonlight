@@ -24,7 +24,11 @@ async function findManifests(dir: string): Promise<string[]> {
   return ret;
 }
 
-async function loadDetectedExtensions(dir: string, type: ExtensionLoadSource): Promise<DetectedExtension[]> {
+async function loadDetectedExtensions(
+  dir: string,
+  type: ExtensionLoadSource,
+  seen: Set<string>
+): Promise<DetectedExtension[]> {
   const ret: DetectedExtension[] = [];
 
   const manifests = await findManifests(dir);
@@ -34,6 +38,11 @@ async function loadDetectedExtensions(dir: string, type: ExtensionLoadSource): P
       const dir = moonlightFS.dirname(manifestPath);
 
       const manifest: ExtensionManifest = JSON.parse(await moonlightFS.readFileString(manifestPath));
+      if (seen.has(manifest.id)) {
+        logger.warn(`Duplicate extension found, skipping: ${manifest.id}`);
+        continue;
+      }
+      seen.add(manifest.id);
 
       const webPath = moonlightFS.join(dir, "index.js");
       const nodePath = moonlightFS.join(dir, "node.js");
@@ -92,13 +101,14 @@ async function loadDetectedExtensions(dir: string, type: ExtensionLoadSource): P
 async function getExtensionsNative(): Promise<DetectedExtension[]> {
   const config = await readConfig();
   const res = [];
+  const seen = new Set<string>();
 
-  res.push(...(await loadDetectedExtensions(getCoreExtensionsPath(), ExtensionLoadSource.Core)));
+  res.push(...(await loadDetectedExtensions(getCoreExtensionsPath(), ExtensionLoadSource.Core, seen)));
 
-  res.push(...(await loadDetectedExtensions(await getExtensionsPath(), ExtensionLoadSource.Normal)));
+  res.push(...(await loadDetectedExtensions(await getExtensionsPath(), ExtensionLoadSource.Normal, seen)));
 
   for (const devSearchPath of config.devSearchPaths ?? []) {
-    res.push(...(await loadDetectedExtensions(devSearchPath, ExtensionLoadSource.Developer)));
+    res.push(...(await loadDetectedExtensions(devSearchPath, ExtensionLoadSource.Developer, seen)));
   }
 
   return res;
@@ -106,6 +116,7 @@ async function getExtensionsNative(): Promise<DetectedExtension[]> {
 
 async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
   const ret: DetectedExtension[] = [];
+  const seen = new Set<string>();
 
   const coreExtensionsFs: Record<string, string> = JSON.parse(
     // @ts-expect-error shut up
@@ -137,10 +148,11 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
         webpackModules: wpModules
       }
     });
+    seen.add(manifest.id);
   }
 
   if (await moonlightFS.exists("/extensions")) {
-    ret.push(...(await loadDetectedExtensions("/extensions", ExtensionLoadSource.Normal)));
+    ret.push(...(await loadDetectedExtensions("/extensions", ExtensionLoadSource.Normal, seen)));
   }
 
   return ret;
