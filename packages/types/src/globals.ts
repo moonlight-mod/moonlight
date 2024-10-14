@@ -5,6 +5,7 @@ import type EventEmitter from "events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
 import type { EventPayloads, EventType, MoonlightEventEmitter } from "./core/event";
+import { MoonlightFS } from "./fs";
 
 export type MoonlightHost = {
   asarPath: string;
@@ -39,6 +40,12 @@ export type MoonlightNode = {
   getMoonlightDir: () => string;
   getExtensionDir: (ext: string) => string;
   writeConfig: (config: Config) => Promise<void>;
+};
+
+export type MoonlightNodeSandboxed = {
+  fs: MoonlightFS;
+  addCors: (url: string) => void;
+  addBlocked: (url: string) => void;
 };
 
 export type MoonlightWeb = {

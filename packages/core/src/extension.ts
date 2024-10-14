@@ -8,14 +8,14 @@ const logger = new Logger("core/extension");
 async function findManifests(dir: string): Promise<string[]> {
   const ret = [];
 
-  if (await moonlightFS.exists(dir)) {
-    for (const file of await moonlightFS.readdir(dir)) {
-      const path = moonlightFS.join(dir, file);
+  if (await moonlightNodeSandboxed.fs.exists(dir)) {
+    for (const file of await moonlightNodeSandboxed.fs.readdir(dir)) {
+      const path = moonlightNodeSandboxed.fs.join(dir, file);
       if (file === "manifest.json") {
         ret.push(path);
       }
 
-      if (!(await moonlightFS.isFile(path))) {
+      if (!(await moonlightNodeSandboxed.fs.isFile(path))) {
         ret.push(...(await findManifests(path)));
       }
     }
@@ -34,48 +34,54 @@ async function loadDetectedExtensions(
   const manifests = await findManifests(dir);
   for (const manifestPath of manifests) {
     try {
-      if (!(await moonlightFS.exists(manifestPath))) continue;
-      const dir = moonlightFS.dirname(manifestPath);
+      if (!(await moonlightNodeSandboxed.fs.exists(manifestPath))) continue;
+      const dir = moonlightNodeSandboxed.fs.dirname(manifestPath);
 
-      const manifest: ExtensionManifest = JSON.parse(await moonlightFS.readFileString(manifestPath));
+      const manifest: ExtensionManifest = JSON.parse(await moonlightNodeSandboxed.fs.readFileString(manifestPath));
       if (seen.has(manifest.id)) {
         logger.warn(`Duplicate extension found, skipping: ${manifest.id}`);
         continue;
       }
       seen.add(manifest.id);
 
-      const webPath = moonlightFS.join(dir, "index.js");
-      const nodePath = moonlightFS.join(dir, "node.js");
-      const hostPath = moonlightFS.join(dir, "host.js");
+      const webPath = moonlightNodeSandboxed.fs.join(dir, "index.js");
+      const nodePath = moonlightNodeSandboxed.fs.join(dir, "node.js");
+      const hostPath = moonlightNodeSandboxed.fs.join(dir, "host.js");
 
       // if none exist (empty manifest) don't give a shit
-      if (!moonlightFS.exists(webPath) && !moonlightFS.exists(nodePath) && !moonlightFS.exists(hostPath)) {
+      if (
+        !moonlightNodeSandboxed.fs.exists(webPath) &&
+        !moonlightNodeSandboxed.fs.exists(nodePath) &&
+        !moonlightNodeSandboxed.fs.exists(hostPath)
+      ) {
         continue;
       }
 
-      const web = (await moonlightFS.exists(webPath)) ? await moonlightFS.readFileString(webPath) : undefined;
+      const web = (await moonlightNodeSandboxed.fs.exists(webPath))
+        ? await moonlightNodeSandboxed.fs.readFileString(webPath)
+        : undefined;
 
       let url: string | undefined = undefined;
-      const urlPath = moonlightFS.join(dir, constants.repoUrlFile);
-      if (type === ExtensionLoadSource.Normal && (await moonlightFS.exists(urlPath))) {
-        url = await moonlightFS.readFileString(urlPath);
+      const urlPath = moonlightNodeSandboxed.fs.join(dir, constants.repoUrlFile);
+      if (type === ExtensionLoadSource.Normal && (await moonlightNodeSandboxed.fs.exists(urlPath))) {
+        url = await moonlightNodeSandboxed.fs.readFileString(urlPath);
       }
 
       const wpModules: Record<string, string> = {};
-      const wpModulesPath = moonlightFS.join(dir, "webpackModules");
-      if (await moonlightFS.exists(wpModulesPath)) {
-        const wpModulesFile = await moonlightFS.readdir(wpModulesPath);
+      const wpModulesPath = moonlightNodeSandboxed.fs.join(dir, "webpackModules");
+      if (await moonlightNodeSandboxed.fs.exists(wpModulesPath)) {
+        const wpModulesFile = await moonlightNodeSandboxed.fs.readdir(wpModulesPath);
 
         for (const wpModuleFile of wpModulesFile) {
           if (wpModuleFile.endsWith(".js")) {
-            wpModules[wpModuleFile.replace(".js", "")] = await moonlightFS.readFileString(
-              moonlightFS.join(wpModulesPath, wpModuleFile)
+            wpModules[wpModuleFile.replace(".js", "")] = await moonlightNodeSandboxed.fs.readFileString(
+              moonlightNodeSandboxed.fs.join(wpModulesPath, wpModuleFile)
             );
           }
         }
       }
 
-      const stylePath = moonlightFS.join(dir, "style.css");
+      const stylePath = moonlightNodeSandboxed.fs.join(dir, "style.css");
 
       ret.push({
         id: manifest.id,
@@ -88,9 +94,11 @@ async function loadDetectedExtensions(
           web,
           webPath: web != null ? webPath : undefined,
           webpackModules: wpModules,
-          nodePath: (await moonlightFS.exists(nodePath)) ? nodePath : undefined,
-          hostPath: (await moonlightFS.exists(hostPath)) ? hostPath : undefined,
-          style: (await moonlightFS.exists(stylePath)) ? await moonlightFS.readFileString(stylePath) : undefined
+          nodePath: (await moonlightNodeSandboxed.fs.exists(nodePath)) ? nodePath : undefined,
+          hostPath: (await moonlightNodeSandboxed.fs.exists(hostPath)) ? hostPath : undefined,
+          style: (await moonlightNodeSandboxed.fs.exists(stylePath))
+            ? await moonlightNodeSandboxed.fs.readFileString(stylePath)
+            : undefined
         }
       });
     } catch (e) {
@@ -155,7 +163,7 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
     seen.add(manifest.id);
   }
 
-  if (await moonlightFS.exists("/extensions")) {
+  if (await moonlightNodeSandboxed.fs.exists("/extensions")) {
     ret.push(...(await loadDetectedExtensions("/extensions", ExtensionLoadSource.Normal, seen)));
   }
 

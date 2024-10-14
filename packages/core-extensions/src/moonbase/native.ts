@@ -104,9 +104,9 @@ export default function getNatives(): MoonbaseNatives {
 
       if (!tar || !ref) return;
 
-      const dist = moonlightFS.join(moonlightNode.getMoonlightDir(), distDir);
-      if (await moonlightFS.exists(dist)) await moonlightFS.rmdir(dist);
-      await moonlightFS.mkdir(dist);
+      const dist = moonlightNodeSandboxed.fs.join(moonlightNode.getMoonlightDir(), distDir);
+      if (await moonlightNodeSandboxed.fs.exists(dist)) await moonlightNodeSandboxed.fs.rmdir(dist);
+      await moonlightNodeSandboxed.fs.mkdir(dist);
 
       logger.debug("Extracting update");
       const files = await parseTarGzip(tar);
@@ -115,15 +115,15 @@ export default function getNatives(): MoonbaseNatives {
         // @ts-expect-error What do you mean their own types are wrong
         if (file.type !== "file") continue;
 
-        const fullFile = moonlightFS.join(dist, file.name);
-        const fullDir = moonlightFS.dirname(fullFile);
-        if (!(await moonlightFS.exists(fullDir))) await moonlightFS.mkdir(fullDir);
-        await moonlightFS.writeFile(fullFile, file.data);
+        const fullFile = moonlightNodeSandboxed.fs.join(dist, file.name);
+        const fullDir = moonlightNodeSandboxed.fs.dirname(fullFile);
+        if (!(await moonlightNodeSandboxed.fs.exists(fullDir))) await moonlightNodeSandboxed.fs.mkdir(fullDir);
+        await moonlightNodeSandboxed.fs.writeFile(fullFile, file.data);
       }
 
       logger.debug("Writing version file:", ref);
-      const versionFile = moonlightFS.join(moonlightNode.getMoonlightDir(), installedVersionFile);
-      await moonlightFS.writeFileString(versionFile, ref.trim());
+      const versionFile = moonlightNodeSandboxed.fs.join(moonlightNode.getMoonlightDir(), installedVersionFile);
+      await moonlightNodeSandboxed.fs.writeFileString(versionFile, ref.trim());
 
       logger.debug("Update extracted");
     },
@@ -159,25 +159,25 @@ export default function getNatives(): MoonbaseNatives {
 
       const dir = moonlightNode.getExtensionDir(manifest.id);
       // remake it in case of updates
-      if (await moonlightFS.exists(dir)) await moonlightFS.rmdir(dir);
-      await moonlightFS.mkdir(dir);
+      if (await moonlightNodeSandboxed.fs.exists(dir)) await moonlightNodeSandboxed.fs.rmdir(dir);
+      await moonlightNodeSandboxed.fs.mkdir(dir);
 
       const buffer = await req.arrayBuffer();
       const files = extractAsar(buffer);
       for (const [file, buf] of Object.entries(files)) {
-        const fullFile = moonlightFS.join(dir, file);
-        const fullDir = moonlightFS.dirname(fullFile);
+        const fullFile = moonlightNodeSandboxed.fs.join(dir, file);
+        const fullDir = moonlightNodeSandboxed.fs.dirname(fullFile);
 
-        if (!(await moonlightFS.exists(fullDir))) await moonlightFS.mkdir(fullDir);
-        await moonlightFS.writeFile(moonlightFS.join(dir, file), buf);
+        if (!(await moonlightNodeSandboxed.fs.exists(fullDir))) await moonlightNodeSandboxed.fs.mkdir(fullDir);
+        await moonlightNodeSandboxed.fs.writeFile(moonlightNodeSandboxed.fs.join(dir, file), buf);
       }
 
-      await moonlightFS.writeFileString(moonlightFS.join(dir, repoUrlFile), repo);
+      await moonlightNodeSandboxed.fs.writeFileString(moonlightNodeSandboxed.fs.join(dir, repoUrlFile), repo);
     },
 
     async deleteExtension(id) {
       const dir = moonlightNode.getExtensionDir(id);
-      await moonlightFS.rmdir(dir);
+      await moonlightNodeSandboxed.fs.rmdir(dir);
     },
 
     getExtensionConfig(id, key) {

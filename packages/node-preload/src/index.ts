@@ -9,9 +9,28 @@ import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/dat
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import createFS from "@moonlight-mod/core/fs";
+import { registerCors, registerBlocked, getDynamicCors } from "@moonlight-mod/core/cors";
+
+let initialized = false;
+
+function setCors() {
+  const data = getDynamicCors();
+  ipcRenderer.invoke(constants.ipcSetCorsList, data.cors);
+  ipcRenderer.invoke(constants.ipcSetBlockedList, data.blocked);
+}
 
 async function injectGlobals() {
-  global.moonlightFS = createFS();
+  global.moonlightNodeSandboxed = {
+    fs: createFS(),
+    addCors(url) {
+      registerCors(url);
+      if (initialized) setCors();
+    },
+    addBlocked(url) {
+      registerBlocked(url);
+      if (initialized) setCors();
+    }
+  };
 
   const config = await readConfig();
   initLogger(config);
@@ -62,17 +81,24 @@ async function injectGlobals() {
   contextBridge.exposeInMainWorld("moonlightNode", moonlightNode);
 
   const extCors = moonlightNode.processedExtensions.extensions.flatMap((x) => x.manifest.cors ?? []);
+  for (const cors of extCors) {
+    registerCors(cors);
+  }
 
   for (const repo of moonlightNode.config.repositories) {
     const url = new URL(repo);
     url.pathname = "/";
-    extCors.push(url.toString());
+    registerCors(url.toString());
   }
 
-  ipcRenderer.invoke(constants.ipcSetCorsList, extCors);
-
   const extBlocked = moonlightNode.processedExtensions.extensions.flatMap((e) => e.manifest.blocked ?? []);
-  ipcRenderer.invoke(constants.ipcSetBlockedList, extBlocked);
+  for (const blocked of extBlocked) {
+    registerBlocked(blocked);
+  }
+
+  setCors();
+
+  initialized = true;
 }
 
 async function loadPreload() {

@@ -188,7 +188,12 @@ Object.defineProperty(BrowserWindow, "name", {
 
 export async function inject(asarPath: string) {
   isMoonlightDesktop = asarPath === "moonlightDesktop";
-  global.moonlightFS = createFS();
+  global.moonlightNodeSandboxed = {
+    fs: createFS(),
+    // These aren't supposed to be used from host
+    addCors(url) {},
+    addBlocked(url) {}
+  };
 
   try {
     const config = await readConfig();

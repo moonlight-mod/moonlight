@@ -4,8 +4,7 @@
 /// <reference types="./mappings" />
 /* eslint-disable no-var */
 
-import { MoonlightFS } from "./fs";
-import { MoonlightEnv, MoonlightHost, MoonlightNode, MoonlightWeb } from "./globals";
+import { MoonlightEnv, MoonlightHost, MoonlightNode, MoonlightNodeSandboxed, MoonlightWeb } from "./globals";
 
 export * from "./discord";
 export * from "./config";
@@ -31,8 +30,8 @@ declare global {
 
   var moonlightHost: MoonlightHost;
   var moonlightNode: MoonlightNode;
+  var moonlightNodeSandboxed: MoonlightNodeSandboxed;
   var moonlight: MoonlightWeb;
-  var moonlightFS: MoonlightFS;
 
   var _moonlightBrowserInit: () => Promise<void>;
   var _moonlightBrowserLoad: () => Promise<void>;

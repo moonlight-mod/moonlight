@@ -26,68 +26,73 @@ window._moonlightBrowserInit = async () => {
     }
   });
 
-  window.moonlightFS = {
-    async readFile(path) {
-      return new Uint8Array(await fs.readFile(path));
-    },
-    async readFileString(path) {
-      const file = await this.readFile(path);
-      return new TextDecoder().decode(file);
-    },
-    async writeFile(path, data) {
-      await fs.writeFile(path, data);
-    },
-    async writeFileString(path, data) {
-      const file = new TextEncoder().encode(data);
-      await this.writeFile(path, file);
-    },
-    async unlink(path) {
-      await fs.unlink(path);
-    },
+  window.moonlightNodeSandboxed = {
+    fs: {
+      async readFile(path) {
+        return new Uint8Array(await fs.readFile(path));
+      },
+      async readFileString(path) {
+        const file = await this.readFile(path);
+        return new TextDecoder().decode(file);
+      },
+      async writeFile(path, data) {
+        await fs.writeFile(path, data);
+      },
+      async writeFileString(path, data) {
+        const file = new TextEncoder().encode(data);
+        await this.writeFile(path, file);
+      },
+      async unlink(path) {
+        await fs.unlink(path);
+      },
 
-    async readdir(path) {
-      return await fs.readdir(path);
-    },
-    async mkdir(path) {
-      const parts = getParts(path);
-      for (let i = 0; i < parts.length; i++) {
-        const path = this.join(...parts.slice(0, i + 1));
-        if (!(await this.exists(path))) await fs.mkdir(path);
-      }
-    },
-
-    async rmdir(path) {
-      const entries = await this.readdir(path);
-
-      for (const entry of entries) {
-        const fullPath = this.join(path, entry);
-        const isFile = await this.isFile(fullPath);
-        if (isFile) {
-          await this.unlink(fullPath);
-        } else {
-          await this.rmdir(fullPath);
+      async readdir(path) {
+        return await fs.readdir(path);
+      },
+      async mkdir(path) {
+        const parts = getParts(path);
+        for (let i = 0; i < parts.length; i++) {
+          const path = this.join(...parts.slice(0, i + 1));
+          if (!(await this.exists(path))) await fs.mkdir(path);
         }
+      },
+
+      async rmdir(path) {
+        const entries = await this.readdir(path);
+
+        for (const entry of entries) {
+          const fullPath = this.join(path, entry);
+          const isFile = await this.isFile(fullPath);
+          if (isFile) {
+            await this.unlink(fullPath);
+          } else {
+            await this.rmdir(fullPath);
+          }
+        }
+
+        await fs.rmdir(path);
+      },
+
+      async exists(path) {
+        return await fs.exists(path);
+      },
+      async isFile(path) {
+        return (await fs.stat(path)).isFile();
+      },
+
+      join(...parts) {
+        let str = parts.join("/");
+        if (!str.startsWith("/")) str = "/" + str;
+        return str;
+      },
+      dirname(path) {
+        const parts = getParts(path);
+        return "/" + parts.slice(0, parts.length - 1).join("/");
       }
-
-      await fs.rmdir(path);
     },
-
-    async exists(path) {
-      return await fs.exists(path);
-    },
-    async isFile(path) {
-      return (await fs.stat(path)).isFile();
-    },
-
-    join(...parts) {
-      let str = parts.join("/");
-      if (!str.startsWith("/")) str = "/" + str;
-      return str;
-    },
-    dirname(path) {
-      const parts = getParts(path);
-      return "/" + parts.slice(0, parts.length - 1).join("/");
-    }
+    // TODO
+    addCors(url) {},
+    addBlocked(url) {}
   };
 
   // Actual loading begins here

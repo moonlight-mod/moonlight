@@ -18,7 +18,7 @@ const defaultConfig: Config = {
 export async function writeConfig(config: Config) {
   try {
     const configPath = await getConfigPath();
-    await moonlightFS.writeFileString(configPath, JSON.stringify(config, null, 2));
+    await moonlightNodeSandboxed.fs.writeFileString(configPath, JSON.stringify(config, null, 2));
   } catch (e) {
     logger.error("Failed to write config", e);
   }
@@ -30,12 +30,12 @@ export async function readConfig(): Promise<Config> {
   }
 
   const configPath = await getConfigPath();
-  if (!(await moonlightFS.exists(configPath))) {
+  if (!(await moonlightNodeSandboxed.fs.exists(configPath))) {
     await writeConfig(defaultConfig);
     return defaultConfig;
   } else {
     try {
-      let config: Config = JSON.parse(await moonlightFS.readFileString(configPath));
+      let config: Config = JSON.parse(await moonlightNodeSandboxed.fs.readFileString(configPath));
       // Assign the default values if they don't exist (newly added)
       config = { ...defaultConfig, ...config };
       await writeConfig(config);
