@@ -62,6 +62,13 @@ export default function ExtensionsPage() {
         (ext.compat === ExtensionCompat.InvalidApiLevel && ext.hasUpdate))
   );
 
+  // Prioritize extensions with updates
+  filtered.sort((a, b) => {
+    if (a.hasUpdate && !b.hasUpdate) return -1;
+    if (!a.hasUpdate && b.hasUpdate) return 1;
+    return 0;
+  });
+
   return (
     <>
       <SearchBar
