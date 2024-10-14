@@ -15,6 +15,7 @@ const prod = process.env.NODE_ENV === "production";
 const watch = process.argv.includes("--watch");
 const browser = process.argv.includes("--browser");
 const mv2 = process.argv.includes("--mv2");
+const clean = process.argv.includes("--clean");
 
 const buildBranch = process.env.MOONLIGHT_BRANCH ?? "dev";
 const buildVersion = process.env.MOONLIGHT_VERSION ?? "dev";
@@ -296,7 +297,9 @@ async function buildExt(ext, side, fileExt) {
 
 const promises = [];
 
-if (browser) {
+if (clean) {
+  fs.rmSync("./dist", { recursive: true, force: true });
+} else if (browser) {
   build("browser", "packages/browser/src/index.ts");
 } else {
   for (const [name, entry] of Object.entries(config)) {
