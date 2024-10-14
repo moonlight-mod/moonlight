@@ -10,7 +10,7 @@ export type WebpackRequireType = typeof MappingsWebpackRequire &
 
 export type WebpackModule = {
   id: string | number;
-  loaded: boolean;
+  loaded?: boolean;
   exports: any;
 };
 
