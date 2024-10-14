@@ -75,6 +75,7 @@ export type DetectedExtension = {
     webpackModules?: Record<string, string>;
     nodePath?: string;
     hostPath?: string;
+    style?: string;
   };
 };
 

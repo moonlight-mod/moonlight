@@ -75,6 +75,8 @@ async function loadDetectedExtensions(
         }
       }
 
+      const stylePath = moonlightFS.join(dir, "style.css");
+
       ret.push({
         id: manifest.id,
         manifest,
@@ -87,7 +89,8 @@ async function loadDetectedExtensions(
           webPath: web != null ? webPath : undefined,
           webpackModules: wpModules,
           nodePath: (await moonlightFS.exists(nodePath)) ? nodePath : undefined,
-          hostPath: (await moonlightFS.exists(hostPath)) ? hostPath : undefined
+          hostPath: (await moonlightFS.exists(hostPath)) ? hostPath : undefined,
+          style: (await moonlightFS.exists(stylePath)) ? await moonlightFS.readFileString(stylePath) : undefined
         }
       });
     } catch (e) {
@@ -145,7 +148,8 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
       },
       scripts: {
         web,
-        webpackModules: wpModules
+        webpackModules: wpModules,
+        style: coreExtensionsFs[`${ext}/style.css`]
       }
     });
     seen.add(manifest.id);

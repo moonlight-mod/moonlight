@@ -205,7 +205,7 @@ async function build(name, entry) {
   }
 }
 
-async function buildExt(ext, side, copyManifest, fileExt) {
+async function buildExt(ext, side, fileExt) {
   const outdir = path.join("./dist", "core-extensions", ext);
   if (!fs.existsSync(outdir)) {
     fs.mkdirSync(outdir, { recursive: true });
@@ -246,6 +246,9 @@ async function buildExt(ext, side, copyManifest, fileExt) {
     }
   };
 
+  const styleInput = `packages/core-extensions/src/${ext}/style.css`;
+  const styleOutput = `dist/core-extensions/${ext}/style.css`;
+
   const esbuildConfig = {
     entryPoints,
     outdir,
@@ -265,11 +268,15 @@ async function buildExt(ext, side, copyManifest, fileExt) {
     },
     logLevel: "silent",
     plugins: [
-      ...(copyManifest
+      copyStaticFiles({
+        src: `./packages/core-extensions/src/${ext}/manifest.json`,
+        dest: `./dist/core-extensions/${ext}/manifest.json`
+      }),
+      ...(fs.existsSync(styleInput)
         ? [
             copyStaticFiles({
-              src: `./packages/core-extensions/src/${ext}/manifest.json`,
-              dest: `./dist/core-extensions/${ext}/manifest.json`
+              src: styleInput,
+              dest: styleOutput
             })
           ]
         : []),
@@ -298,13 +305,10 @@ if (browser) {
 
   const coreExtensions = fs.readdirSync("./packages/core-extensions/src");
   for (const ext of coreExtensions) {
-    let copiedManifest = false;
-
     for (const fileExt of ["ts", "tsx"]) {
       for (const type of ["index", "node", "host"]) {
         if (fs.existsSync(`./packages/core-extensions/src/${ext}/${type}.${fileExt}`)) {
-          promises.push(buildExt(ext, type, !copiedManifest, fileExt));
-          copiedManifest = true;
+          promises.push(buildExt(ext, type, fileExt));
         }
       }
     }

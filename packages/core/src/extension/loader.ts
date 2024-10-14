@@ -71,6 +71,9 @@ function loadExtWeb(ext: DetectedExtension) {
     if (exports.styles != null) {
       registerStyles(exports.styles.map((style, i) => `/* ${ext.id}#${i} */ ${style}`));
     }
+    if (ext.scripts.style != null) {
+      registerStyles([`/* ${ext.id}#style.css */ ${ext.scripts.style}`]);
+    }
   }
 }
 

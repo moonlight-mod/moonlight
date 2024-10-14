@@ -1,0 +1,55 @@
+:root {
+  --moonbase-bg: #222034;
+  --moonbase-fg: #fffba6;
+}
+
+.moonbase-settings > :first-child {
+  margin-top: 0px;
+}
+
+textarea.moonbase-resizeable {
+  resize: vertical;
+}
+
+.moonbase-updates-notice {
+  background-color: var(--moonbase-bg);
+  color: var(--moonbase-fg);
+  line-height: unset;
+  height: 36px;
+}
+
+.moonbase-updates-notice button {
+  color: var(--moonbase-fg);
+  border-color: var(--moonbase-fg);
+}
+
+.moonbase-updates-notice_text-wrapper {
+  display: inline-flex;
+  align-items: center;
+  line-height: 36px;
+  gap: 2px;
+}
+
+.moonbase-update-section {
+  background-color: var(--moonbase-bg);
+  --info-help-foreground: var(--moonbase-fg);
+  border: none !important;
+  color: var(--moonbase-fg);
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.moonbase-update-section button {
+  --info-help-foreground: var(--moonbase-fg);
+  color: var(--moonbase-fg);
+  background-color: transparent;
+  border-color: var(--moonbase-fg);
+}
+
+.moonbase-update-section-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
