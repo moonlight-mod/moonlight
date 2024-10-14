@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const child_process = require("child_process");
 
+const cwd = process.cwd();
 const onDisk = {
   "@moonlight-mod/lunast": "../lunast",
   "@moonlight-mod/moonmap": "../moonmap",
@@ -29,9 +30,10 @@ function link(dir) {
   const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
   const deps = getDeps(packageJSON);
 
-  for (const [dep, path] of Object.entries(onDisk)) {
+  for (const [dep, relativePath] of Object.entries(onDisk)) {
+    const fullPath = path.join(cwd, relativePath);
     if (deps[dep]) {
-      exec(`pnpm link ${path}`, dir);
+      exec(`pnpm link ${fullPath}`, dir);
     }
   }
 }
@@ -39,7 +41,9 @@ function link(dir) {
 function undo(dir) {
   exec("pnpm unlink", dir);
   try {
-    exec("git restore pnpm-lock.yaml", dir);
+    if (fs.existsSync(path.join(dir, "pnpm-lock.yaml"))) {
+      exec("git restore pnpm-lock.yaml", dir);
+    }
   } catch {
     // ignored
   }
@@ -58,12 +62,16 @@ for (const path of Object.values(onDisk)) {
 }
 
 if (shouldUndo) {
-  const dir = process.cwd();
-  console.log(dir);
-  undo(dir);
+  console.log(cwd);
+  undo(cwd);
+  for (const pkg of packages) {
+    const dir = path.join(cwd, "packages", pkg);
+    console.log(dir);
+    undo(dir);
+  }
 } else {
   for (const pkg of packages) {
-    const dir = path.join(__dirname, "packages", pkg);
+    const dir = path.join(cwd, "packages", pkg);
     console.log(dir);
     link(dir);
   }

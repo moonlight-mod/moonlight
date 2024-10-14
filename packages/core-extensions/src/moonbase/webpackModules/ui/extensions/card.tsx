@@ -204,7 +204,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         >
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
           {tab === ExtensionPage.Description && (
-            <Text variant="text-md/normal" class={MarkupClasses.markup} style={{ width: "100%" }}>
+            <Text variant="text-md/normal" className={MarkupClasses.markup} style={{ width: "100%" }}>
               {MarkupUtils.parse(description ?? "*No description*", true, {
                 allowHeading: true,
                 allowLinks: true,

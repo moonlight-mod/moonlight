@@ -165,7 +165,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
         options={options.map((o: SelectOption) => (typeof o === "string" ? { value: o, label: o } : o))}
         {...useVariableSelect({
           onSelectInteraction: multiSelect,
-          value: new Set(Array.isArray(value) ? value : [value]),
+          value: value == null ? new Set() : new Set(Array.isArray(value) ? value : [value]),
           onChange: (value: string) => {
             if (disabled) return;
             MoonbaseSettingsStore.setExtensionConfig(ext.id, name, Array.from(value));
@@ -341,7 +341,7 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
   if (Component == null) {
     const { Text } = Components;
     return (
-      <Text variant="text/md/normal">{`Custom setting "${displayName}" is missing a component. Perhaps the extension is not installed?`}</Text>
+      <Text variant="text-md/normal">{`Custom setting "${displayName}" is missing a component. Perhaps the extension is not installed?`}</Text>
     );
   }
 

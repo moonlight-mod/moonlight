@@ -109,7 +109,7 @@ export default function ConfigPage() {
     <>
       <FormSwitch
         className={Margins.marginTop20}
-        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true)}
+        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true) ?? true}
         onChange={(value: boolean) => {
           MoonbaseSettingsStore.setExtensionConfig("moonbase", "updateChecking", value);
         }}
@@ -131,7 +131,7 @@ export default function ConfigPage() {
       <FormDivider className={FormClasses.dividerDefault} />
       <FormSwitch
         className={Margins.marginTop20}
-        value={MoonbaseSettingsStore.getConfigOption("patchAll")}
+        value={MoonbaseSettingsStore.getConfigOption("patchAll") ?? false}
         onChange={(value: boolean) => {
           MoonbaseSettingsStore.setConfigOption("patchAll", value);
         }}

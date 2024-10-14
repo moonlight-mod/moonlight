@@ -20,7 +20,6 @@ function listener() {
     MoonbaseSettingsStore.shouldShowNotice &&
     MoonbaseSettingsStore.getExtensionConfigRaw("moonbase", "updateBanner", true)
   ) {
-    // @ts-expect-error epic type fail
     MoonbaseSettingsStore.removeChangeListener(listener);
 
     const version = MoonbaseSettingsStore.newVersion;
@@ -85,5 +84,4 @@ function listener() {
   }
 }
 
-// @ts-expect-error epic type fail
 MoonbaseSettingsStore.addChangeListener(listener);

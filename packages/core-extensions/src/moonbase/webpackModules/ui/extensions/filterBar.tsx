@@ -66,24 +66,24 @@ function FilterButtonPopout({
 
   return (
     <div className={SortMenuClasses.container}>
-      <Menu navId="sort-filter" hideScrollbar={true} onClose={closePopout}>
+      <Menu navId="sort-filter" hideScroller={true} onClose={closePopout}>
         <MenuGroup label="Type">
           <MenuCheckboxItem
             id="t-core"
             label="Core"
-            checked={filter & Filter.Core}
+            checked={(filter & Filter.Core) === Filter.Core}
             action={() => toggleFilter(Filter.Core)}
           />
           <MenuCheckboxItem
             id="t-normal"
             label="Normal"
-            checked={filter & Filter.Normal}
+            checked={(filter & Filter.Normal) === Filter.Normal}
             action={() => toggleFilter(Filter.Normal)}
           />
           <MenuCheckboxItem
             id="t-developer"
             label="Developer"
-            checked={filter & Filter.Developer}
+            checked={(filter & Filter.Developer) === Filter.Developer}
             action={() => toggleFilter(Filter.Developer)}
           />
         </MenuGroup>
@@ -91,13 +91,13 @@ function FilterButtonPopout({
           <MenuCheckboxItem
             id="s-enabled"
             label="Enabled"
-            checked={filter & Filter.Enabled}
+            checked={(filter & Filter.Enabled) === Filter.Enabled}
             action={() => toggleFilter(Filter.Enabled)}
           />
           <MenuCheckboxItem
             id="s-disabled"
             label="Disabled"
-            checked={filter & Filter.Disabled}
+            checked={(filter & Filter.Disabled) === Filter.Disabled}
             action={() => toggleFilter(Filter.Disabled)}
           />
         </MenuGroup>
@@ -105,13 +105,13 @@ function FilterButtonPopout({
           <MenuCheckboxItem
             id="l-installed"
             label="Installed"
-            checked={filter & Filter.Installed}
+            checked={(filter & Filter.Installed) === Filter.Installed}
             action={() => toggleFilter(Filter.Installed)}
           />
           <MenuCheckboxItem
             id="l-repository"
             label="Repository"
-            checked={filter & Filter.Repository}
+            checked={(filter & Filter.Repository) === Filter.Repository}
             action={() => toggleFilter(Filter.Repository)}
           />
         </MenuGroup>
@@ -119,17 +119,13 @@ function FilterButtonPopout({
           <MenuCheckboxItem
             id="l-incompatible"
             label="Show incompatible"
-            checked={filter & Filter.Incompatible}
+            checked={(filter & Filter.Incompatible) === Filter.Incompatible}
             action={() => toggleFilter(Filter.Incompatible)}
           />
           <MenuItem
             id="reset-all"
             className={SortMenuClasses.clearText}
-            label={
-              <Text variant="text-sm/medium" color="none">
-                Reset to default
-              </Text>
-            }
+            label="Reset to default"
             action={() => {
               setFilter(defaultFilter);
               closePopout();
