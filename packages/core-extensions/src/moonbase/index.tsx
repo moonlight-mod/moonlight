@@ -89,10 +89,17 @@ textarea.moonbase-resizeable {
   justify-content: space-between;
 }
 
-.moonbase-update-section > button {
+.moonbase-update-section button {
+  --info-help-foreground: ${fg};
   color: ${fg};
   background-color: transparent;
   border-color: ${fg};
+}
+
+.moonbase-update-section-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
 }
 `.trim()
 ];

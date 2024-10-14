@@ -51,24 +51,37 @@ export default function Update() {
         </Text>
       </Flex>
 
-      <Button
-        look={Button.Looks.OUTLINED}
-        color={Button.Colors.CUSTOM}
-        size={Button.Sizes.TINY}
-        disabled={state !== UpdateState.Ready}
-        onClick={() => {
-          setState(UpdateState.Working);
+      <div className="moonbase-update-section-buttons">
+        {state === UpdateState.Installed && (
+          <Button
+            look={Button.Looks.OUTLINED}
+            color={Button.Colors.CUSTOM}
+            size={Button.Sizes.TINY}
+            onClick={() => window.location.reload()}
+          >
+            Restart Discord
+          </Button>
+        )}
 
-          MoonbaseSettingsStore.updateMoonlight()
-            .then(() => setState(UpdateState.Installed))
-            .catch((e) => {
-              logger.error(e);
-              setState(UpdateState.Failed);
-            });
-        }}
-      >
-        Update
-      </Button>
+        <Button
+          look={Button.Looks.OUTLINED}
+          color={Button.Colors.CUSTOM}
+          size={Button.Sizes.TINY}
+          disabled={state !== UpdateState.Ready}
+          onClick={() => {
+            setState(UpdateState.Working);
+
+            MoonbaseSettingsStore.updateMoonlight()
+              .then(() => setState(UpdateState.Installed))
+              .catch((e) => {
+                logger.error(e);
+                setState(UpdateState.Failed);
+              });
+          }}
+        >
+          Update
+        </Button>
+      </div>
     </div>
   );
 }
