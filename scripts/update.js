@@ -19,9 +19,7 @@ function exec(cmd, dir) {
 }
 
 for (const package of fs.readdirSync("./packages")) {
-  const packageJSON = JSON.parse(
-    fs.readFileSync(path.join("./packages", package, "package.json"), "utf8")
-  );
+  const packageJSON = JSON.parse(fs.readFileSync(path.join("./packages", package, "package.json"), "utf8"));
 
   const deps = getDeps(packageJSON);
   if (Object.keys(deps).includes(packageToUpdate)) {
