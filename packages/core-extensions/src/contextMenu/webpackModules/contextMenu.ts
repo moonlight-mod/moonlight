@@ -1,25 +1,21 @@
-import { InternalItem, MenuElement, MenuProps } from "@moonlight-mod/types/coreExtensions/contextMenu";
+import { InternalItem } from "@moonlight-mod/types/coreExtensions/contextMenu";
+import { Menu, MenuElement } from "@moonlight-mod/mappings/discord/components/common/index";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import parser from "@moonlight-mod/wp/contextMenu_evilMenu";
 
 type Patch = {
   navId: string;
-  item: (props: any) => React.ReactComponentElement<MenuElement> | React.ReactComponentElement<MenuElement>[];
+  item: (props: any) => MenuElement | MenuElement[];
   anchorId: string;
   before: boolean;
 };
 
-function addItem<T>(
-  navId: string,
-  item: (props: T) => React.ReactComponentElement<MenuElement> | React.ReactComponentElement<MenuElement>[],
-  anchorId: string,
-  before = false
-) {
+function addItem<T>(navId: string, item: (props: T) => MenuElement | MenuElement[], anchorId: string, before = false) {
   patches.push({ navId, item, anchorId, before });
 }
 
 const patches: Patch[] = [];
-function _patchMenu(props: MenuProps, items: InternalItem[]) {
+function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
   const matches = patches.filter((p) => p.navId === props.navId);
   if (!matches.length) return;
 
