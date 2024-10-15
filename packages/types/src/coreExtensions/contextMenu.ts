@@ -1,4 +1,5 @@
 import {
+  Menu,
   MenuCheckboxItem,
   MenuControlItem,
   MenuGroup,
@@ -52,3 +53,5 @@ export type InternalItem_ = {
 };
 
 export type EvilItemParser = (el: MenuElement | MenuElement[]) => InternalItem[];
+
+export type { Menu, MenuElement };

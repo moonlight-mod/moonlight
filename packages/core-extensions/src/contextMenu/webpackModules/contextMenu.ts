@@ -1,5 +1,4 @@
-import { InternalItem } from "@moonlight-mod/types/coreExtensions/contextMenu";
-import { Menu, MenuElement } from "@moonlight-mod/mappings/discord/components/common/index";
+import { InternalItem, Menu, MenuElement } from "@moonlight-mod/types/coreExtensions/contextMenu";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import parser from "@moonlight-mod/wp/contextMenu_evilMenu";
 
