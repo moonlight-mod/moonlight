@@ -4,13 +4,7 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-
-enum UpdateState {
-  Ready,
-  Working,
-  Installed,
-  Failed
-}
+import { UpdateState } from "../../types";
 
 const { ThemeDarkIcon, Text, Button } = Components;
 const Margins = spacepack.require("discord/styles/shared/Margins.css");

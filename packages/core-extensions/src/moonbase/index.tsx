@@ -13,8 +13,9 @@ export const patches: Patch[] = [
 
       // wrap actions field to display error details
       {
-        match: /action:(.),className:/,
-        replacement: (_, action) => `action:require("moonbase_crashScreen").wrapAction(${action},this.state),className:`
+        match: /(?<=return(\(0,.\.jsx\))\(.+?,)action:(.),className:/,
+        replacement: (_, createElement, action) =>
+          `action:${createElement}(require("moonbase_crashScreen").wrapAction,{action:${action},state:this.state}),className:`
       },
 
       // add update button

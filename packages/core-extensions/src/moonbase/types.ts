@@ -30,3 +30,10 @@ export type MoonbaseExtension = {
   compat: ExtensionCompat;
   hasUpdate: boolean;
 };
+
+export enum UpdateState {
+  Ready,
+  Working,
+  Installed,
+  Failed
+}

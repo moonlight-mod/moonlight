@@ -1,9 +1,13 @@
 import React from "@moonlight-mod/wp/react";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import { UpdateState } from "../types";
 
-const { Button, ButtonSizes } = Components;
+const { Button, ButtonSizes, TabBar } = Components;
+const TabBarClasses = spacepack.findByCode(/\.exports={tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"}/)[0]
+  .exports;
 
 const logger = moonlight.getLogger("moonbase/crashScreen");
 
@@ -15,12 +19,10 @@ type ErrorState = {
   __moonlight_update?: UpdateState;
 };
 
-enum UpdateState {
-  Ready,
-  Working,
-  Installed,
-  Failed
-}
+type WrapperProps = {
+  action: React.ReactNode;
+  state: ErrorState;
+};
 
 const updateStrings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",
@@ -35,19 +37,45 @@ const buttonStrings: Record<UpdateState, string> = {
   [UpdateState.Failed]: "Update failed"
 };
 
-export function wrapAction(action: React.ReactNode, { error, info }: ErrorState) {
+export function wrapAction({ action, state }: WrapperProps) {
+  const [tab, setTab] = React.useState("crash");
+
+  const { updates, updateCount } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
+    const { updates } = MoonbaseSettingsStore;
+    return {
+      updates,
+      updateCount: Object.keys(updates).length
+    };
+  });
+
   return (
     <div className="moonbase-crash-wrapper">
       {action}
-      <div className="moonbase-crash-details-wrapper">
-        <pre className="moonbase-crash-details">
-          <code>
-            {error.stack}
-            {"\n\nComponent stack:"}
-            {info.componentStack}
-          </code>
-        </pre>
-      </div>
+      <TabBar
+        className={`${TabBarClasses.tabBar} moonbase-crash-tabs`}
+        type="top"
+        selectedItem={tab}
+        onItemSelect={(v) => setTab(v)}
+      >
+        <TabBar.Item className={TabBarClasses.tabBarItem} id="crash">
+          Crash Details
+        </TabBar.Item>
+        <TabBar.Item className={TabBarClasses.tabBarItem} id="extensions" disabled={updateCount === 0}>
+          {`Extension Updates (${updateCount})`}
+        </TabBar.Item>
+      </TabBar>
+      {tab === "crash" ? (
+        <div className="moonbase-crash-details-wrapper">
+          <pre className="moonbase-crash-details">
+            <code>
+              {state.error.stack}
+              {"\n\nComponent stack:"}
+              {state.info.componentStack}
+            </code>
+          </pre>
+        </div>
+      ) : null}
+      {tab === "extensions" ? <div className="moonbase-crash-extensions">balls</div> : null}
     </div>
   );
 }

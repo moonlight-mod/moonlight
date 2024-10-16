@@ -65,6 +65,12 @@ textarea.moonbase-resizeable {
   align-items: center;
   gap: 1rem;
   max-height: 50%;
+  max-width: 50vw;
+  width: 50vw;
+}
+
+.moonbase-crash-tabs {
+  width: 100%;
 }
 
 .moonbase-crash-details-wrapper {
@@ -102,7 +108,6 @@ textarea.moonbase-resizeable {
   font-size: .75rem;
   line-height: 1rem;
   margin: 6px;
-  max-width: 50vw;
   white-space: pre-wrap;
   background-clip: border-box;
 
