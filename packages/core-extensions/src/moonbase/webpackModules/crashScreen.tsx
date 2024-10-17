@@ -3,9 +3,9 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import { UpdateState } from "../types";
+import { RepositoryManifest, UpdateState } from "../types";
 
-const { Button, ButtonSizes, TabBar } = Components;
+const { Button, TabBar } = Components;
 const TabBarClasses = spacepack.findByCode(/\.exports={tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"}/)[0]
   .exports;
 
@@ -24,6 +24,15 @@ type WrapperProps = {
   state: ErrorState;
 };
 
+type UpdateCardProps = {
+  id: number;
+  ext: {
+    version: string;
+    download: string;
+    updateManifest: RepositoryManifest;
+  };
+};
+
 const updateStrings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",
   [UpdateState.Working]: "Updating moonlight...",
@@ -36,6 +45,44 @@ const buttonStrings: Record<UpdateState, string> = {
   [UpdateState.Installed]: "",
   [UpdateState.Failed]: "Update failed"
 };
+const extensionButtonStrings: Record<UpdateState, string> = {
+  [UpdateState.Ready]: "Update",
+  [UpdateState.Working]: "Updating...",
+  [UpdateState.Installed]: "Updated",
+  [UpdateState.Failed]: "Update failed"
+};
+
+function ExtensionUpdateCard({ id, ext }: UpdateCardProps) {
+  const [state, setState] = React.useState(UpdateState.Ready);
+  const installed = useStateFromStores([MoonbaseSettingsStore], () => MoonbaseSettingsStore.getExtension(id), [id]);
+
+  return (
+    <div className="moonbase-crash-extensionCard">
+      <div className="moonbase-crash-extensionCard-meta">
+        <div className="moonbase-crash-extensionCard-title">
+          {ext.updateManifest.meta?.name ?? ext.updateManifest.id}
+        </div>
+        <div className="moonbase-crash-extensionCard-version">{`v${installed?.manifest?.version ?? "???"} -> v${
+          ext.version
+        }`}</div>
+      </div>
+      <div className="moonbase-crash-extensionCard-button">
+        <Button
+          color={Button.Colors.GREEN}
+          disabled={state !== UpdateState.Ready}
+          onClick={() => {
+            setState(UpdateState.Working);
+            MoonbaseSettingsStore.installExtension(id)
+              .then(() => setState(UpdateState.Installed))
+              .catch(() => setState(UpdateState.Failed));
+          }}
+        >
+          {extensionButtonStrings[state]}
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 export function wrapAction({ action, state }: WrapperProps) {
   const [tab, setTab] = React.useState("crash");
@@ -43,7 +90,7 @@ export function wrapAction({ action, state }: WrapperProps) {
   const { updates, updateCount } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
     const { updates } = MoonbaseSettingsStore;
     return {
-      updates,
+      updates: Object.entries(updates),
       updateCount: Object.keys(updates).length
     };
   });
@@ -75,7 +122,13 @@ export function wrapAction({ action, state }: WrapperProps) {
           </pre>
         </div>
       ) : null}
-      {tab === "extensions" ? <div className="moonbase-crash-extensions">balls</div> : null}
+      {tab === "extensions" ? (
+        <div className="moonbase-crash-extensions">
+          {updates.map(([id, ext]) => (
+            <ExtensionUpdateCard id={Number(id)} ext={ext} />
+          ))}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -100,7 +153,7 @@ export function UpdateButton({ state, setState }: { state: ErrorState; setState:
     state.__moonlight_update === UpdateState.Installed ||
     state.__moonlight_update === undefined ? null : (
     <Button
-      size={ButtonSizes.LARGE}
+      size={Button.Sizes.LARGE}
       disabled={state.__moonlight_update !== UpdateState.Ready}
       onClick={() => {
         setState({
