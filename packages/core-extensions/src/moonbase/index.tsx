@@ -1,4 +1,32 @@
-import { ExtensionWebpackModule } from "@moonlight-mod/types";
+import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
+
+export const patches: Patch[] = [
+  {
+    find: "window.DiscordErrors=",
+    replace: [
+      // replace reporting line with update status
+      {
+        match: /,(\(0,.\.jsx\))\("p",{children:.\.[a-zA-Z]+\.Messages.ERRORS_ACTION_TO_TAKE}\)/,
+        replacement: (_, createElement) =>
+          `,${createElement}(require("moonbase_crashScreen").UpdateText,{state:this.state,setState:this.setState.bind(this)})`
+      },
+
+      // wrap actions field to display error details
+      {
+        match: /(?<=return(\(0,.\.jsx\))\(.+?,)action:(.),className:/,
+        replacement: (_, createElement, action) =>
+          `action:${createElement}(require("moonbase_crashScreen").wrapAction,{action:${action},state:this.state}),className:`
+      },
+
+      // add update button
+      {
+        match: /(?<=\.ERRORS_RELOAD}\),(\(0,.\.jsx\))\(.,{}\))/,
+        replacement: (_, createElement) =>
+          `,${createElement}(require("moonbase_crashScreen").UpdateButton,{state:this.state,setState:this.setState.bind(this)})`
+      }
+    ]
+  }
+];
 
 export const webpackModules: Record<string, ExtensionWebpackModule> = {
   stores: {
@@ -43,5 +71,9 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
 
   moonbase: {
     dependencies: [{ ext: "moonbase", id: "stores" }]
+  },
+
+  crashScreen: {
+    dependencies: [{ id: "react" }]
   }
 };

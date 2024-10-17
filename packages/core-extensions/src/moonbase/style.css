@@ -3,7 +3,7 @@
   --moonbase-fg: #fffba6;
 }
 
-.moonbase-settings > :first-child {
+.moonbase-settings> :first-child {
   margin-top: 0px;
 }
 
@@ -52,4 +52,130 @@ textarea.moonbase-resizeable {
   display: flex;
   flex-direction: row;
   gap: 8px;
+}
+
+/* crash screen */
+.moonbase-crash-wrapper>[class^="buttons_"] {
+  gap: 1rem;
+}
+
+.moonbase-crash-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  height: 50%;
+  width: 50vw;
+  max-height: 50%;
+  max-width: 50vw;
+}
+
+.moonbase-crash-tabs {
+  width: 100%;
+}
+
+.moonbase-crash-details-wrapper {
+  overflow-y: scroll;
+  color: var(--text-normal);
+  background: var(--background-secondary);
+  border: 1px solid var(--background-tertiary);
+  border-radius: 4px;
+  padding: 0.5em;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background-color: var(--scrollbar-thin-thumb);
+    min-height: 40px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border: 2px solid var(--scrollbar-thin-track);
+    background-color: var(--scrollbar-thin-track);
+    border-color: var(--scrollbar-thin-track);
+  }
+}
+
+.moonbase-crash-details {
+  box-sizing: border-box;
+  padding: 0;
+  font-family: var(--font-code);
+  font-size: .75rem;
+  line-height: 1rem;
+  margin: 6px;
+  white-space: pre-wrap;
+  background-clip: border-box;
+
+  &>code {
+    font-size: .875rem;
+    line-height: 1.125rem;
+    text-indent: 0;
+    white-space: pre-wrap;
+    text-size-adjust: none;
+    display: block;
+    user-select: text;
+  }
+}
+
+.moonbase-crash-extensions {
+  overflow-y: scroll;
+  display: grid;
+  grid-auto-columns: 25vw;
+  gap: 8px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    background-color: var(--scrollbar-thin-thumb);
+    min-height: 40px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border: 2px solid var(--scrollbar-thin-track);
+    background-color: var(--scrollbar-thin-track);
+    border-color: var(--scrollbar-thin-track);
+  }
+}
+
+.moonbase-crash-extensionCard {
+  color: var(--text-normal);
+  background: var(--background-secondary);
+  border: 1px solid var(--background-tertiary);
+  border-radius: 4px;
+  padding: 0.5em;
+  display: flex;
+}
+
+.moonbase-crash-extensionCard-meta {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.moonbase-crash-extensionCard-title {
+  color: var(--text-normal);
+  font-family: var(--font-primary);
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 600;
+}
+
+.moonbase-crash-extensionCard-version {
+  color: var(--text-muted);
+  font-family: var(--font-primary);
+  font-size: 14px;
+  line-height: 1.286;
+  font-weight: 400;
 }
