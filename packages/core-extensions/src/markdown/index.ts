@@ -25,7 +25,7 @@ export const patches: Patch[] = [
       {
         match: /(originalMatch:.}=(.);)(.+?)case"emoticon":(return .+?;)(.+?)case"subtext":{(.+?)}default:/,
         replacement: (_, start, rule, body, plaintextReturn, otherRules, inlineStyleBody) =>
-          `${start}if(${rule}.type.startsWith("__moonlight_")){if(__slateRules[${rule}.type].type=="inlineStyle"){${inlineStyleBody}}else{${plaintextReturn}}}${body}case"emoticon":${plaintextReturn}${otherRules}case"link":{${inlineStyleBody}}default:`
+          `${start}if(${rule}.type.startsWith("__moonlight_")){if(__slateRules[${rule}.type].type=="inlineStyle"){${inlineStyleBody}}else{${plaintextReturn}}}${body}case"emoticon":${plaintextReturn}${otherRules}case"subtext":{${inlineStyleBody}}default:`
       }
     ]
   },
