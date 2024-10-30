@@ -11,7 +11,8 @@ if (moonlightHost.asarPath !== "moonlightDesktop") {
       init: () => {},
       captureException: () => {},
       setTag: () => {},
-      setUser: () => {}
+      setUser: () => {},
+      captureMessage: () => {}
     };
     logger.debug("Stubbed Sentry host side!");
   } catch (err) {

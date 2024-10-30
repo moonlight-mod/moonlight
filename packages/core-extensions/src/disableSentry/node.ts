@@ -13,7 +13,8 @@ if (!ipcRenderer.sendSync(constants.ipcGetIsMoonlightDesktop)) {
     require.cache[sentryPath]!.exports = {
       init: () => {},
       setTag: () => {},
-      setUser: () => {}
+      setUser: () => {},
+      captureMessage: () => {}
     };
     logger.debug("Stubbed Sentry node side!");
   } catch (err) {
