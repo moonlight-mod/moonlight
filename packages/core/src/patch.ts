@@ -121,8 +121,6 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       const shouldRemove = typeof patch.find === "string" ? true : !patch.find.global;
 
       if (match) {
-        moonlight.unpatched.delete(patch);
-
         // We ensured all arrays get turned into normal PatchReplace objects on register
         const replace = patch.replace as PatchReplace;
 
@@ -155,6 +153,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           entry[id].__moonlight = true;
           moduleString = newModule.toString().replace(/\n/g, "") + `//# sourceURL=Webpack-Module-${id}`;
         }
+
+        moonlight.unpatched.delete(patch);
 
         if (shouldRemove) {
           patches.splice(i--, 1);
