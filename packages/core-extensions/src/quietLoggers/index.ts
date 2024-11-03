@@ -56,6 +56,13 @@ const simplePatches = [
 ] as { [0]: string | RegExp; [1]: string }[];
 
 export const patches: Patch[] = [
+  {
+    find: ".Messages.SELF_XSS_HEADER",
+    replace: {
+      match: /\(null!=.{1,2}&&"0\.0\.0"===.{1,2}\.remoteApp\.getVersion\(\)\)/,
+      replacement: "(true)"
+    }
+  },
   ...loggerFixes,
   ...stubPatches.map((patch) => ({
     find: patch[0],
