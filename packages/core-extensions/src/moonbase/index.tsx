@@ -6,7 +6,9 @@ export const patches: Patch[] = [
     replace: [
       // replace reporting line with update status
       {
-        match: /,(\(0,.\.jsx\))\("p",{children:.\.[a-zA-Z]+\.Messages.ERRORS_ACTION_TO_TAKE}\)/,
+        // CvQlAA mapped to ERRORS_ACTION_TO_TAKE
+        // FIXME: Better patch find?
+        match: /,(\(0,.\.jsx\))\("p",{children:.\.[a-zA-Z]+\.intl\.string\(.\..\.CvQlAA\)}\)/,
         replacement: (_, createElement) =>
           `,${createElement}(require("moonbase_crashScreen").UpdateText,{state:this.state,setState:this.setState.bind(this)})`
       },
