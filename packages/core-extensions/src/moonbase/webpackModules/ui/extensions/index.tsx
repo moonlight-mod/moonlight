@@ -10,7 +10,7 @@ import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flu
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
-const SearchBar: any = Object.values(spacepack.findByCode("Messages.SEARCH", "hideSearchIcon")[0].exports)[0];
+const SearchBar: any = Object.values(spacepack.findByCode("hideSearchIcon")[0].exports)[0];
 
 export default function ExtensionsPage() {
   const { extensions, savedFilter } = useStateFromStoresObject([MoonbaseSettingsStore], () => {

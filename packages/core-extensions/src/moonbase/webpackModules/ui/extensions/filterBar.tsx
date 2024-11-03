@@ -41,7 +41,7 @@ spacepack
     FilterDialogClasses = spacepack.findByCode("countContainer:", "tagContainer:")[0].exports;
   });
 
-const TagItem = spacepack.findByCode(".FORUM_TAG_A11Y_FILTER_BY_TAG")[0].exports.Z;
+const TagItem = spacepack.findByCode('"forum-tag-"')[0].exports.Z;
 
 // FIXME: type component keys
 const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } = Components;
