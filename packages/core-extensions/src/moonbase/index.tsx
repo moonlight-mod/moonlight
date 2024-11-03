@@ -8,7 +8,7 @@ export const patches: Patch[] = [
       {
         // CvQlAA mapped to ERRORS_ACTION_TO_TAKE
         // FIXME: Better patch find?
-        match: /,(\(0,.\.jsx\))\("p",{children:.\.[a-zA-Z]+\.intl\.string\(.\..\.CvQlAA\)}\)/,
+        match: /,(\(0,.\.jsx\))\("p",{children:.\.intl\.string\(.\..\.CvQlAA\)}\)/,
         replacement: (_, createElement) =>
           `,${createElement}(require("moonbase_crashScreen").UpdateText,{state:this.state,setState:this.setState.bind(this)})`
       },
@@ -21,8 +21,9 @@ export const patches: Patch[] = [
       },
 
       // add update button
+      // +hivLS -> ERRORS_RELOAD
       {
-        match: /(?<=\.ERRORS_RELOAD}\),(\(0,.\.jsx\))\(.,{}\))/,
+        match: /(?<=\["\+hivLS"\]\)}\),(\(0,.\.jsx\))\(.,{}\))/,
         replacement: (_, createElement) =>
           `,${createElement}(require("moonbase_crashScreen").UpdateButton,{state:this.state,setState:this.setState.bind(this)})`
       }
