@@ -8,9 +8,15 @@
     "tags": ["dangerZone"]
   },
   "settings": {
-    "sections": {
+    "devtools": {
+      "displayName": "Enable staff help menu (DevTools)",
+      "type": "boolean",
+      "default": false
+    },
+    "staffSettings": {
       "displayName": "Allow access to other staff settings elsewhere",
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     }
   }
 }
