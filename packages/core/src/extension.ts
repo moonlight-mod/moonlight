@@ -101,8 +101,8 @@ async function loadDetectedExtensions(
             : undefined
         }
       });
-    } catch (e) {
-      logger.error(e, "Failed to load extension");
+    } catch (err) {
+      logger.error(`Failed to load extension from "${manifestPath}":`, err);
     }
   }
 
