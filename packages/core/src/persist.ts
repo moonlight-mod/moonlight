@@ -38,7 +38,7 @@ async function postPersistSign(bundlePath: string) {
     deep: true,
     force: true,
     // TODO: let this be configurable
-    identity: "Moonlight",
+    identity: "moonlight",
     verbosityLevel: 3
   });
 
