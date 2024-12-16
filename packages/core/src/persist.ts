@@ -8,18 +8,12 @@ const logger = new Logger("core/persist");
 export default async function persist(asarPath: string) {
   try {
     hookUpdaterForPersistence(asarPath);
-
-    if (process.platform === "darwin") {
-      // the asar is at Discord.app/Contents/Resources/app.asar
-      const inferredBundlePath = resolve(join(dirname(asarPath), "..", ".."));
-      await postPersistSign(inferredBundlePath);
-    }
   } catch (e) {
     logger.error(`Failed to persist moonlight: ${e}`);
   }
 }
 
-async function postPersistSign(bundlePath: string) {
+function postPersistSign(bundlePath: string) {
   if (process.platform !== "darwin") {
     logger.error("Ignoring call to postPersistSign because we're not on Darwin");
     return;
@@ -27,14 +21,14 @@ async function postPersistSign(bundlePath: string) {
 
   logger.debug("Inferred bundle path:", bundlePath);
 
-  if (await darwin.verify(bundlePath, { verbosityLevel: 3 })) {
+  if (darwin.verifySync(bundlePath, { verbosityLevel: 3 })) {
     logger.warn("Bundle is currently passing code signing, no need to sign");
     return;
   } else {
     logger.debug("Bundle no longer passes code signing (this is expected)");
   }
 
-  await darwin.sign(bundlePath, {
+  darwin.signSync(bundlePath, {
     deep: true,
     force: true,
     // TODO: let this be configurable
@@ -42,7 +36,7 @@ async function postPersistSign(bundlePath: string) {
     verbosityLevel: 3
   });
 
-  if (await darwin.verify(bundlePath, { verbosityLevel: 3 })) {
+  if (darwin.verifySync(bundlePath, { verbosityLevel: 3 })) {
     logger.info("Bundle signed succesfully!");
   } else {
     logger.error("Bundle didn't pass code signing even after signing, the app might be broken now :(");
@@ -76,6 +70,14 @@ function hookUpdaterForPersistence(asarPath: string) {
 
       for (const file of readdirSync(currentAppDir)) {
         copyFileSync(join(currentAppDir, file), join(newAppDir, file));
+      }
+
+      // on darwin, making changes disrupted the code signature on the app
+      // bundle, so we need to re-sign
+      if (process.platform === "darwin") {
+        // the asar is at Discord.app/Contents/Resources/app.asar
+        const inferredBundlePath = resolve(join(dirname(asarPath), "..", ".."));
+        postPersistSign(inferredBundlePath);
       }
     }
 

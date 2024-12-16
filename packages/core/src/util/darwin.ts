@@ -1,7 +1,8 @@
-// Helper functions that wrap shelling out to codesign(1). This is only relevant
-// for Darwin (macOS).
+// Helper functions that wrap shelling out to codesign(1). This is only
+// relevant for Darwin (macOS). These are synchronous because they need to
+// block the updater.
 
-import { spawn } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import Logger from "./logger";
 
 /** Flags that may be passed to `codesign(1)` regardless of action. */
@@ -33,38 +34,26 @@ export interface SigningOptions extends SharedCodesignOptions {
 
 const logger = new Logger("core/darwin");
 
-async function invokeCodesign(commandLineOptions: string[]) {
+function codesignSync(commandLineOptions: string[]) {
   logger.debug("Invoking codesign with args:", commandLineOptions);
-  const codesignChild = spawn("/usr/bin/codesign", commandLineOptions, { stdio: "pipe" });
+  const result = spawnSync("/usr/bin/codesign", commandLineOptions, { stdio: "pipe" });
 
-  codesignChild.on("spawn", () => {
-    logger.debug(`Spawned codesign (pid: ${codesignChild.pid})`);
-  });
-  codesignChild.stdout.on("data", (data) => {
-    logger.debug("codesign stdout:", data.toString());
-  });
-  codesignChild.stderr.on("data", (data) => {
-    logger.debug("codesign stderr:", data.toString());
-  });
+  if (result.stdout) logger.debug("codesign stdout:", result.stdout);
+  if (result.stderr) logger.debug("codesign stderr:", result.stderr);
 
-  await new Promise<void>((resolve, reject) => {
-    codesignChild.on("exit", (code, signal) => {
-      if (signal == null && code === 0) {
-        logger.debug("codesign peacefully exited");
-        resolve();
-      } else {
-        const reason = code != null ? `code ${code}` : `signal ${signal}`;
-        reject(`codesign exited with ${reason}`);
-      }
-    });
-  });
+  if (result.signal == null && result.status === 0) {
+    logger.debug("codesign peacefully exited");
+  } else {
+    const reason = result.status != null ? `code ${result.status}` : `signal ${result.signal}`;
+    throw new Error(`codesign exited with ${reason}`);
+  }
 }
 
 function* generateSharedCommandLineOptions(options: SharedCodesignOptions): IterableIterator<string> {
   if (options.verbosityLevel) yield "-" + "v".repeat(options.verbosityLevel);
 }
 
-export function sign(bundlePath: string, options: SigningOptions): Promise<void> {
+export function signSync(bundlePath: string, options: SigningOptions): void {
   // codesign -s <IDENTITY> [-v] [--deep] [--force] <PATH>
   function* cliOptions(): IterableIterator<string> {
     yield "-s";
@@ -77,10 +66,10 @@ export function sign(bundlePath: string, options: SigningOptions): Promise<void>
     yield bundlePath;
   }
 
-  return invokeCodesign(Array.from(cliOptions()));
+  codesignSync(Array.from(cliOptions()));
 }
 
-export function verify(bundlePath: string, options: SharedCodesignOptions = {}): Promise<boolean> {
+export function verifySync(bundlePath: string, options: SharedCodesignOptions = {}): boolean {
   // codesign --verify [-v] <PATH>
   function* cliOptions(): IterableIterator<string> {
     yield "--verify";
@@ -88,12 +77,10 @@ export function verify(bundlePath: string, options: SharedCodesignOptions = {}):
     yield bundlePath;
   }
 
-  return invokeCodesign(Array.from(cliOptions())).then(
-    () => true,
-
-    // we're conflating codesign(1) itself erroring and codesign(1)
-    // successfully returning that the bundle is invalid, because it'd exit in
-    // an error in either case, but that's probably OK
-    () => false
-  );
+  try {
+    codesignSync(Array.from(cliOptions()));
+    return true;
+  } catch {
+    return false;
+  }
 }
