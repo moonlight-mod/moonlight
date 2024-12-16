@@ -1,3 +1,6 @@
+// Helper functions that wrap shelling out to codesign(1). This is only relevant
+// for Darwin (macOS).
+
 import { spawn } from "node:child_process";
 import Logger from "./util/logger";
 
