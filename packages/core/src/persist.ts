@@ -1,7 +1,7 @@
 import { resolve, join, dirname } from "node:path";
 import { mkdirSync, renameSync, existsSync, copyFileSync, readdirSync } from "node:fs";
 import Logger from "./util/logger";
-import * as darwin from "./darwin";
+import * as darwin from "./util/darwin";
 
 const logger = new Logger("core/persist");
 

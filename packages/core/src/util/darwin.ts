@@ -2,7 +2,7 @@
 // for Darwin (macOS).
 
 import { spawn } from "node:child_process";
-import Logger from "./util/logger";
+import Logger from "./logger";
 
 /** Flags that may be passed to `codesign(1)` regardless of action. */
 export interface SharedCodesignOptions {
