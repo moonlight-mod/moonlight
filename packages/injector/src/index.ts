@@ -268,7 +268,7 @@ export async function inject(asarPath: string) {
   if (isMoonlightDesktop) return;
 
   if (!hasOpenAsar && !isMoonlightDesktop) {
-    persist(asarPath);
+    await persist(asarPath);
   }
 
   // Need to do this instead of require() or it breaks require.main
