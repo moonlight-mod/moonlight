@@ -5,7 +5,7 @@ import * as darwin from "./util/darwin";
 
 const logger = new Logger("core/persist");
 
-export default async function persist(asarPath: string) {
+export default function persist(asarPath: string) {
   try {
     hookUpdaterForPersistence(asarPath);
   } catch (e) {
