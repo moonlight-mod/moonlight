@@ -7,7 +7,7 @@ const logger = new Logger("core/persist");
 
 export default async function persist(asarPath: string) {
   try {
-    persistAsar(asarPath);
+    hookUpdaterForPersistence(asarPath);
 
     if (process.platform === "darwin") {
       // the asar is at Discord.app/Contents/Resources/app.asar
@@ -49,7 +49,7 @@ async function postPersistSign(bundlePath: string) {
   }
 }
 
-function persistAsar(asarPath: string) {
+function hookUpdaterForPersistence(asarPath: string) {
   const updaterModule = require(join(asarPath, "common", "updater"));
   const updater = updaterModule.Updater;
 
