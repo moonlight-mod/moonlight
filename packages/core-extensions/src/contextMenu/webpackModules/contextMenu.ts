@@ -23,6 +23,8 @@ function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
     if (idx === -1) continue;
     items.splice(idx + 1 - +patch.before, 0, ...parser(patch.item(menuProps)));
   }
+
+  return items;
 }
 
 let menuProps: any;
