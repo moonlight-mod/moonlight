@@ -16,7 +16,7 @@ function addItem<T>(navId: string, item: (props: T) => MenuElement | MenuElement
 const patches: Patch[] = [];
 function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
   const matches = patches.filter((p) => p.navId === props.navId);
-  if (!matches.length) return;
+  if (!matches.length) return items;
 
   for (const patch of matches) {
     const idx = items.findIndex((i) => i.key === patch.anchorId);
