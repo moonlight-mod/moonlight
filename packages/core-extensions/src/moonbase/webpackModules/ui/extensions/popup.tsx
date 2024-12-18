@@ -7,7 +7,7 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
-const { openModalLazy, closeModal } = Components;
+const { openModalLazy, useModalsStore, closeModal } = Components;
 const Popup = spacepack.findByCode(".minorContainer", "secondaryAction")[0].exports.default;
 
 const presentableLoadSources: Record<ExtensionLoadSource, string> = {
@@ -50,14 +50,17 @@ function ExtensionSelect({
   );
 }
 
+function close() {
+  const ModalStore = useModalsStore.getState();
+  closeModal(ModalStore.default[0].key);
+}
+
 function OurPopup({
   deps,
-  transitionState,
-  id
+  transitionState
 }: {
   deps: Record<string, MoonbaseExtension[]>;
   transitionState: number | null;
-  id: string;
 }) {
   const { Text } = Components;
 
@@ -129,11 +132,9 @@ function OurPopup({
       }
       cancelText="Cancel"
       confirmText="Install"
-      onCancel={() => {
-        closeModal(id);
-      }}
+      onCancel={close}
       onConfirm={() => {
-        closeModal(id);
+        close();
 
         for (const pick of Object.values(options)) {
           if (pick != null) {
@@ -148,9 +149,9 @@ function OurPopup({
 }
 
 export async function doPopup(deps: Record<string, MoonbaseExtension[]>) {
-  const id: string = await openModalLazy(async () => {
+  await openModalLazy(async () => {
     return ({ transitionState }: { transitionState: number | null }) => {
-      return <OurPopup transitionState={transitionState} deps={deps} id={id} />;
+      return <OurPopup transitionState={transitionState} deps={deps} />;
     };
   });
 }
