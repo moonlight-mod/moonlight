@@ -33,9 +33,9 @@ export const patches: Patch[] = [
   {
     find: "shouldShowLurkerModeUpsellPopout:",
     replace: {
-      match: /isStaff:(.),/,
+      match: /\.useReducedMotion,isStaff:(.),/,
       replacement: (_, isStaff) =>
-        `isStaff:(moonlight.getConfigOption("experiments","staffSettings")??false)?true:${isStaff},`
+        `.useReducedMotion,isStaff:(moonlight.getConfigOption("experiments","staffSettings")??false)?true:${isStaff},`
     }
   }
 ];
