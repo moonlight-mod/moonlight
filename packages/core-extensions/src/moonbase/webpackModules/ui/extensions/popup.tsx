@@ -10,6 +10,11 @@ import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 const { openModalLazy, useModalsStore, closeModal } = Components;
 const Popup = spacepack.findByCode(".minorContainer", "secondaryAction")[0].exports.default;
 
+function close() {
+  const ModalStore = useModalsStore.getState();
+  closeModal(ModalStore.default[0].key);
+}
+
 const presentableLoadSources: Record<ExtensionLoadSource, string> = {
   [ExtensionLoadSource.Developer]: "Local extension", // should never show up
   [ExtensionLoadSource.Core]: "Core extension",
@@ -50,12 +55,7 @@ function ExtensionSelect({
   );
 }
 
-function close() {
-  const ModalStore = useModalsStore.getState();
-  closeModal(ModalStore.default[0].key);
-}
-
-function OurPopup({
+function MissingExtensionPopup({
   deps,
   transitionState
 }: {
@@ -148,18 +148,52 @@ function OurPopup({
   );
 }
 
-export async function doPopup(deps: Record<string, MoonbaseExtension[]>) {
+export async function doMissingExtensionPopup(deps: Record<string, MoonbaseExtension[]>) {
   await openModalLazy(async () => {
     return ({ transitionState }: { transitionState: number | null }) => {
-      return <OurPopup transitionState={transitionState} deps={deps} />;
+      return <MissingExtensionPopup transitionState={transitionState} deps={deps} />;
     };
   });
 }
 
-export default async function installWithDependencyPopup(uniqueId: number) {
-  await MoonbaseSettingsStore.installExtension(uniqueId);
-  const deps = await MoonbaseSettingsStore.getDependencies(uniqueId);
-  if (deps != null) {
-    await doPopup(deps);
-  }
+function BuiltinExtensionPopup({
+  transitionState,
+  uniqueId,
+  cb
+}: {
+  transitionState: number | null;
+  uniqueId: number;
+  cb: () => void;
+}) {
+  const { Text } = Components;
+
+  return (
+    <Popup
+      body={
+        <Flex>
+          <Text variant="text-md/normal">
+            This extension is enabled by default. Disabling it might have consequences. Are you sure you want to disable
+            it?
+          </Text>
+        </Flex>
+      }
+      cancelText="No"
+      confirmText="Yes"
+      onCancel={close}
+      onConfirm={() => {
+        close();
+        cb();
+      }}
+      title="Built in extension"
+      transitionState={transitionState}
+    />
+  );
+}
+
+export async function doBuiltinExtensionPopup(uniqueId: number, cb: () => void) {
+  await openModalLazy(async () => {
+    return ({ transitionState }: { transitionState: number | null }) => {
+      return <BuiltinExtensionPopup transitionState={transitionState} uniqueId={uniqueId} cb={cb} />;
+    };
+  });
 }

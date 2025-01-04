@@ -6,6 +6,7 @@ import Logger from "./util/logger";
 const logger = new Logger("core/config");
 
 const defaultConfig: Config = {
+  // If you're updating this, update `builtinExtensions` in constants as well
   extensions: {
     moonbase: true,
     disableSentry: true,

@@ -1,5 +1,5 @@
 import { ExtensionState } from "../../../types";
-import { ExtensionLoadSource } from "@moonlight-mod/types";
+import { constants, ExtensionLoadSource } from "@moonlight-mod/types";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
@@ -12,7 +12,7 @@ import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/In
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
-import installWithDependencyPopup from "./popup";
+import { doBuiltinExtensionPopup, doMissingExtensionPopup } from "./popup";
 
 export enum ExtensionPage {
   Info,
@@ -98,7 +98,11 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                   submitting={busy}
                   disabled={ext.compat !== ExtensionCompat.Compatible || conflicting}
                   onClick={async () => {
-                    await installWithDependencyPopup(uniqueId);
+                    await MoonbaseSettingsStore.installExtension(uniqueId);
+                    const deps = await MoonbaseSettingsStore.getDependencies(uniqueId);
+                    if (deps != null) {
+                      await doMissingExtensionPopup(deps);
+                    }
                   }}
                 >
                   Install
@@ -157,8 +161,16 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                       : undefined
                 }
                 onChange={() => {
-                  setRestartNeeded(true);
-                  MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
+                  const toggle = () => {
+                    setRestartNeeded(true);
+                    MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
+                  };
+
+                  if (enabled && constants.builtinExtensions.includes(ext.id)) {
+                    doBuiltinExtensionPopup(uniqueId, toggle);
+                  } else {
+                    toggle();
+                  }
                 }}
               />
             </div>
