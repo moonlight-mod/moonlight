@@ -29,14 +29,13 @@ loggerFixes.forEach((patch) => {
 const stubPatches = [
   // "sh" is not a valid locale.
   ["is not a valid locale", /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g],
-  ['="RunningGameStore"', /.\.info\("games",{.+?}\),/],
-  ['"[BUILD INFO] Release Channel: "', /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?"\)\),/],
+  ['"[BUILD INFO] Release Channel: "', /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?\)\),/],
   ['.APP_NATIVE_CRASH,"Storage"', /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/],
   ['.APP_NATIVE_CRASH,"Storage"', 'console.log("AppCrashedFatalReport: getLastCrash not supported.");'],
   ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
   ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
   ['throw Error("Messages are still loading.");', /console\.warn\("Unsupported Locale",.\),/],
-  ["}_dispatchWithDevtools(", /.\.totalTime>100&&.\.verbose\(.+?\);/],
+  ["}_dispatchWithDevtools(", /.\.totalTime>.{1,2}&&.\.verbose\(.+?\);/],
   ['"NativeDispatchUtils"', /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/],
   ['("DatabaseManager")', /.\.log\("removing database \(user: ".+?\)\),/],
   [
@@ -48,11 +47,7 @@ const stubPatches = [
 
 const simplePatches = [
   // Moment.js deprecation warnings
-  ["suppressDeprecationWarnings=!1", "suppressDeprecationWarnings=!0"],
-
-  // Zustand related
-  [/console\.warn\("\[DEPRECATED\] Please use `subscribeWithSelector` middleware"\)/g, "/*$&*/"],
-  ["this.getDebugLogging()", "false"]
+  ["suppressDeprecationWarnings=!1", "suppressDeprecationWarnings=!0"]
 ] as { [0]: string | RegExp; [1]: string }[];
 
 export const patches: Patch[] = [

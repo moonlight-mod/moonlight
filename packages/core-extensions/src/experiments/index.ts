@@ -31,7 +31,7 @@ export const patches: Patch[] = [
   // Enable further staff-locked options
   // FIXME: #122, this doesn't work live
   {
-    find: '"useGenerateUserSettingsSections"',
+    find: "shouldShowLurkerModeUpsellPopout:",
     replace: {
       match: /isStaff:(.),/,
       replacement: (_, isStaff) =>
