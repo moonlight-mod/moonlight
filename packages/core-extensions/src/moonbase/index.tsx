@@ -8,24 +8,24 @@ export const patches: Patch[] = [
       {
         // CvQlAA mapped to ERRORS_ACTION_TO_TAKE
         // FIXME: Better patch find?
-        match: /,(\(0,.\.jsx\))\("p",{children:.\.intl\.string\(.\..\.CvQlAA\)}\)/,
-        replacement: (_, createElement) =>
-          `,${createElement}(require("moonbase_crashScreen").UpdateText,{state:this.state,setState:this.setState.bind(this)})`
+        match: /,(\(0,(.)\.jsx\))\("p",{children:.\.intl\.string\(.\..\.CvQlAA\)}\)/,
+        replacement: (_, createElement, ReactJSX) =>
+          `,${createElement}(require("moonbase_crashScreen")?.UpdateText??${ReactJSX}.Fragment,{state:this.state,setState:this.setState.bind(this)})`
       },
 
       // wrap actions field to display error details
       {
-        match: /(?<=return(\(0,.\.jsx\))\(.+?,)action:(.),className:/,
-        replacement: (_, createElement, action) =>
-          `action:${createElement}(require("moonbase_crashScreen").wrapAction,{action:${action},state:this.state}),className:`
+        match: /(?<=return(\(0,(.)\.jsx\))\(.+?,)action:(.),className:/,
+        replacement: (_, createElement, ReactJSX, action) =>
+          `action:require("moonbase_crashScreen")?.wrapAction?${createElement}(require("moonbase_crashScreen").wrapAction,{action:${action},state:this.state}):${action},className:`
       },
 
       // add update button
       // +hivLS -> ERRORS_RELOAD
       {
-        match: /(?<=\["\+hivLS"\]\)}\),(\(0,.\.jsx\))\(.,{}\))/,
-        replacement: (_, createElement) =>
-          `,${createElement}(require("moonbase_crashScreen").UpdateButton,{state:this.state,setState:this.setState.bind(this)})`
+        match: /(?<=\["\+hivLS"\]\)}\),(\(0,(.)\.jsx\))\(.,{}\))/,
+        replacement: (_, createElement, ReactJSX) =>
+          `,${createElement}(require("moonbase_crashScreen")?.UpdateButton??${ReactJSX}.Fragment,{state:this.state,setState:this.setState.bind(this)})`
       }
     ]
   }
@@ -77,6 +77,13 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
   },
 
   crashScreen: {
-    dependencies: [{ id: "react" }]
+    dependencies: [
+      { ext: "spacepack", id: "spacepack" },
+      { id: "react" },
+      { ext: "moonbase", id: "stores" },
+      { id: "discord/packages/flux" },
+      { id: "discord/components/common/index" },
+      /tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"/
+    ]
   }
 };

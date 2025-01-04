@@ -6,8 +6,7 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { RepositoryManifest, UpdateState } from "../types";
 
 const { Button, TabBar } = Components;
-const TabBarClasses = spacepack.findByCode(/\.exports={tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"}/)[0]
-  .exports;
+const TabBarClasses = spacepack.findByCode(/tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"/)[0].exports;
 
 const logger = moonlight.getLogger("moonbase/crashScreen");
 
