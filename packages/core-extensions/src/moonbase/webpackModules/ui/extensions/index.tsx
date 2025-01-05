@@ -45,6 +45,10 @@ export default function ExtensionsPage() {
         ext.manifest.id?.toLowerCase().includes(query) ||
         ext.manifest.meta?.name?.toLowerCase().includes(query) ||
         ext.manifest.meta?.tagline?.toLowerCase().includes(query) ||
+        (ext.manifest?.settings != null &&
+          Object.entries(ext.manifest.settings).some(([key, setting]) =>
+            (setting.displayName ?? key).toLowerCase().includes(query)
+          )) ||
         ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
       [...selectedTags.values()].every((tag) => ext.manifest.meta?.tags?.includes(tag as ExtensionTag)) &&
       // This seems very bad, sorry
