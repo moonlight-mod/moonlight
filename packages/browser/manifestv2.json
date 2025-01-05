@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "moonlight",
   "description": "Yet another Discord mod",
-  "version": "1.1.0",
+  "version": "1.2.4",
   "permissions": [
     "webRequest",
     "webRequestBlocking",

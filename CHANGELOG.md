@@ -1,1 +1,5 @@
 - Fixes for latest Discord
+- Added a warning when disabling built in extensions in Moonbase
+- Added a prompt to restart when updating an extension in Moonbase
+- Added a button to view extension source in Moonbase
+- Searching for settings of extensions now works properly in Moonbase
