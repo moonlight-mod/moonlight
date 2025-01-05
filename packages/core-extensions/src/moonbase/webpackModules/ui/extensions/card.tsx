@@ -22,7 +22,7 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { BeakerIcon, DownloadIcon, TrashIcon, CircleWarningIcon, Tooltip } = Components;
+const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, CircleWarningIcon, Tooltip } = Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports("tabBar", "tabBarItem", "headerContentWrapper")[0].exports;
@@ -89,93 +89,105 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
         </Flex>
 
         <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.END} justify={Flex.Justify.END}>
-          {ext.state === ExtensionState.NotDownloaded ? (
-            <Tooltip text={COMPAT_TEXT_MAP[ext.compat]} shouldShow={ext.compat !== ExtensionCompat.Compatible}>
-              {(props: any) => (
-                <Button
-                  {...props}
-                  color={Button.Colors.BRAND}
-                  submitting={busy}
-                  disabled={ext.compat !== ExtensionCompat.Compatible || conflicting}
-                  onClick={async () => {
-                    await MoonbaseSettingsStore.installExtension(uniqueId);
-                    const deps = await MoonbaseSettingsStore.getDependencies(uniqueId);
-                    if (deps != null) {
-                      await doMissingExtensionPopup(deps);
-                    }
-                  }}
-                >
-                  Install
-                </Button>
-              )}
-            </Tooltip>
-          ) : (
-            <div
-              // too lazy to learn how <Flex /> works lmao
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "1rem"
-              }}
-            >
-              {ext.source.type === ExtensionLoadSource.Normal && (
-                <PanelButton
-                  icon={TrashIcon}
-                  tooltipText="Delete"
-                  onClick={() => {
-                    MoonbaseSettingsStore.deleteExtension(uniqueId);
-                  }}
-                />
-              )}
-
-              {update != null && (
-                <PanelButton
-                  icon={DownloadIcon}
-                  tooltipText="Update"
-                  onClick={() => {
-                    MoonbaseSettingsStore.installExtension(uniqueId);
-                    setRestartNeeded(true);
-                  }}
-                />
-              )}
-
-              {restartNeeded && (
-                <PanelButton
-                  icon={() => <CircleWarningIcon color={Components.tokens.colors.STATUS_DANGER} />}
-                  onClick={() => window.location.reload()}
-                  tooltipText="You will need to reload/restart your client for this extension to work properly."
-                />
-              )}
-
-              <FormSwitch
-                value={ext.compat === ExtensionCompat.Compatible && (enabled || implicitlyEnabled)}
-                disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
-                hideBorder={true}
-                style={{ marginBottom: "0px" }}
-                tooltipNote={
-                  ext.compat !== ExtensionCompat.Compatible
-                    ? COMPAT_TEXT_MAP[ext.compat]
-                    : implicitlyEnabled
-                      ? `This extension is a dependency of the following enabled extension${
-                          enabledDependants.length > 1 ? "s" : ""
-                        }: ${enabledDependants.map((a) => a.manifest.meta?.name ?? a.id).join(", ")}`
-                      : undefined
-                }
-                onChange={() => {
-                  const toggle = () => {
-                    MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
-                    setRestartNeeded(true);
-                  };
-
-                  if (enabled && constants.builtinExtensions.includes(ext.id)) {
-                    doBuiltinExtensionPopup(uniqueId, toggle);
-                  } else {
-                    toggle();
-                  }
+          <div
+            // too lazy to learn how <Flex /> works lmao
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "1rem"
+            }}
+          >
+            {ext.manifest.meta?.source != null && (
+              <PanelButton
+                icon={AngleBracketsIcon}
+                tooltipText="View source"
+                onClick={() => {
+                  window.open(ext.manifest.meta!.source);
                 }}
               />
-            </div>
-          )}
+            )}
+
+            {ext.state === ExtensionState.NotDownloaded ? (
+              <Tooltip text={COMPAT_TEXT_MAP[ext.compat]} shouldShow={ext.compat !== ExtensionCompat.Compatible}>
+                {(props: any) => (
+                  <Button
+                    {...props}
+                    color={Button.Colors.BRAND}
+                    submitting={busy}
+                    disabled={ext.compat !== ExtensionCompat.Compatible || conflicting}
+                    onClick={async () => {
+                      await MoonbaseSettingsStore.installExtension(uniqueId);
+                      const deps = await MoonbaseSettingsStore.getDependencies(uniqueId);
+                      if (deps != null) {
+                        await doMissingExtensionPopup(deps);
+                      }
+                    }}
+                  >
+                    Install
+                  </Button>
+                )}
+              </Tooltip>
+            ) : (
+              <>
+                {ext.source.type === ExtensionLoadSource.Normal && (
+                  <PanelButton
+                    icon={TrashIcon}
+                    tooltipText="Delete"
+                    onClick={() => {
+                      MoonbaseSettingsStore.deleteExtension(uniqueId);
+                    }}
+                  />
+                )}
+
+                {update != null && (
+                  <PanelButton
+                    icon={DownloadIcon}
+                    tooltipText="Update"
+                    onClick={() => {
+                      MoonbaseSettingsStore.installExtension(uniqueId);
+                      setRestartNeeded(true);
+                    }}
+                  />
+                )}
+
+                {restartNeeded && (
+                  <PanelButton
+                    icon={() => <CircleWarningIcon color={Components.tokens.colors.STATUS_DANGER} />}
+                    onClick={() => window.location.reload()}
+                    tooltipText="You will need to reload/restart your client for this extension to work properly."
+                  />
+                )}
+
+                <FormSwitch
+                  value={ext.compat === ExtensionCompat.Compatible && (enabled || implicitlyEnabled)}
+                  disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
+                  hideBorder={true}
+                  style={{ marginBottom: "0px" }}
+                  tooltipNote={
+                    ext.compat !== ExtensionCompat.Compatible
+                      ? COMPAT_TEXT_MAP[ext.compat]
+                      : implicitlyEnabled
+                        ? `This extension is a dependency of the following enabled extension${
+                            enabledDependants.length > 1 ? "s" : ""
+                          }: ${enabledDependants.map((a) => a.manifest.meta?.name ?? a.id).join(", ")}`
+                        : undefined
+                  }
+                  onChange={() => {
+                    const toggle = () => {
+                      MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
+                      setRestartNeeded(true);
+                    };
+
+                    if (enabled && constants.builtinExtensions.includes(ext.id)) {
+                      doBuiltinExtensionPopup(uniqueId, toggle);
+                    } else {
+                      toggle();
+                    }
+                  }}
+                />
+              </>
+            )}
+          </div>
         </Flex>
       </div>
 
