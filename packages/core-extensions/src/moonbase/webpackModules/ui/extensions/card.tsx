@@ -134,6 +134,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                   tooltipText="Update"
                   onClick={() => {
                     MoonbaseSettingsStore.installExtension(uniqueId);
+                    setRestartNeeded(true);
                   }}
                 />
               )}
@@ -162,8 +163,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 }
                 onChange={() => {
                   const toggle = () => {
-                    setRestartNeeded(true);
                     MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
+                    setRestartNeeded(true);
                   };
 
                   if (enabled && constants.builtinExtensions.includes(ext.id)) {
