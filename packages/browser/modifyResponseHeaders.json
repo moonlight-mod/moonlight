@@ -13,7 +13,7 @@
     },
     "condition": {
       "resourceTypes": ["main_frame"],
-      "initiatorDomains": ["discord.com"]
+      "requestDomains": ["discord.com"]
     }
   }
 ]
