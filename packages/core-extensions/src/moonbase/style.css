@@ -3,7 +3,7 @@
   --moonbase-fg: #fffba6;
 }
 
-.moonbase-settings> :first-child {
+.moonbase-settings > :first-child {
   margin-top: 0px;
 }
 
@@ -14,6 +14,7 @@ textarea.moonbase-resizeable {
 .moonbase-updates-notice {
   background-color: var(--moonbase-bg);
   color: var(--moonbase-fg);
+  --custom-notice-text: var(--moonbase-fg);
   line-height: unset;
   height: 36px;
 }
@@ -55,7 +56,7 @@ textarea.moonbase-resizeable {
 }
 
 /* crash screen */
-.moonbase-crash-wrapper>[class^="buttons_"] {
+.moonbase-crash-wrapper > [class^="buttons_"] {
   gap: 1rem;
 }
 
@@ -106,14 +107,14 @@ textarea.moonbase-resizeable {
   box-sizing: border-box;
   padding: 0;
   font-family: var(--font-code);
-  font-size: .75rem;
+  font-size: 0.75rem;
   line-height: 1rem;
   margin: 6px;
   white-space: pre-wrap;
   background-clip: border-box;
 
-  &>code {
-    font-size: .875rem;
+  & > code {
+    font-size: 0.875rem;
     line-height: 1.125rem;
     text-indent: 0;
     white-space: pre-wrap;
