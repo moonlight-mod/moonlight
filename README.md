@@ -10,6 +10,12 @@
 \- <a href="https://moonlight-mod.github.io/">Docs</a>
 
   <hr />
+
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://moonlight-mod.github.io/moonbase.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://moonlight-mod.github.io/moonbase-light.png">
+    <img src="https://moonlight-mod.github.io/moonbase.png" alt="A screenshot of Moonbase, the moonlight UI" />
+  </picture>
 </h3>
 
 **moonlight** is yet another Discord client mod, focused on providing a decent user and developer experience.
