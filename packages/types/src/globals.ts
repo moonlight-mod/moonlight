@@ -61,6 +61,7 @@ export type MoonlightWeb = {
     registerPatch: (patch: IdentifiedPatch) => void;
     registerWebpackModule: (module: IdentifiedWebpackModule) => void;
   };
+  localStorage: Storage;
 
   version: string;
   branch: MoonlightBranch;

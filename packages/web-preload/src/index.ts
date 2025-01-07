@@ -24,6 +24,7 @@ async function load() {
       registerPatch,
       registerWebpackModule
     },
+    localStorage: window.localStorage,
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
