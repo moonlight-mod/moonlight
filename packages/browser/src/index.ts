@@ -4,6 +4,7 @@ import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { loadExtensions } from "@moonlight-mod/core/extension/loader";
 import { MoonlightBranch, MoonlightNode } from "@moonlight-mod/types";
+import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 import { IndexedDB } from "@zenfs/dom";
 import { configure } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
@@ -99,20 +100,16 @@ window._moonlightBrowserInit = async () => {
   };
 
   // Actual loading begins here
-  const config = await readConfig();
+  let config = await readConfig();
   initLogger(config);
 
   const extensions = await getExtensions();
   const processedExtensions = await loadExtensions(extensions);
 
-  function getConfig(ext: string) {
-    const val = config.extensions[ext];
-    if (val == null || typeof val === "boolean") return undefined;
-    return val.config;
-  }
-
   const moonlightNode: MoonlightNode = {
-    config,
+    get config() {
+      return config;
+    },
     extensions,
     processedExtensions,
     nativesCache: {},
@@ -121,14 +118,18 @@ window._moonlightBrowserInit = async () => {
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
-    getConfig,
-    getConfigOption: <T>(ext: string, name: string) => {
-      const config = getConfig(ext);
-      if (config == null) return undefined;
-      const option = config[name];
-      if (option == null) return undefined;
-      return option as T;
+    getConfig(ext) {
+      return getConfig(ext, config);
     },
+    getConfigOption(ext, name) {
+      const manifest = getManifest(extensions, ext);
+      return getConfigOption(ext, name, config, manifest);
+    },
+    setConfigOption(ext, name, value) {
+      setConfigOption(config, ext, name, value);
+      this.writeConfig(config);
+    },
+
     getNatives: () => {},
     getLogger: (id: string) => {
       return new Logger(id);
@@ -141,7 +142,10 @@ window._moonlightBrowserInit = async () => {
       return `/extensions/${ext}`;
     },
 
-    writeConfig
+    async writeConfig(newConfig) {
+      await writeConfig(newConfig);
+      config = newConfig;
+    }
   };
 
   Object.assign(window, {

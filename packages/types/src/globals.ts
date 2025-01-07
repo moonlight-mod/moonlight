@@ -34,6 +34,8 @@ export type MoonlightNode = {
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
+  setConfigOption: <T>(ext: string, name: string, value: T) => void;
+
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
 
@@ -63,8 +65,11 @@ export type MoonlightWeb = {
   version: string;
   branch: MoonlightBranch;
 
-  getConfig: (ext: string) => ConfigExtension["config"];
-  getConfigOption: <T>(ext: string, name: string) => T | undefined;
+  // Re-exports for ease of use
+  getConfig: MoonlightNode["getConfig"];
+  getConfigOption: MoonlightNode["getConfigOption"];
+  setConfigOption: MoonlightNode["setConfigOption"];
+
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
   lunast: LunAST;
