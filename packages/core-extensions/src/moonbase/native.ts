@@ -178,15 +178,6 @@ export default function getNatives(): MoonbaseNatives {
     async deleteExtension(id) {
       const dir = moonlightNode.getExtensionDir(id);
       await moonlightNodeSandboxed.fs.rmdir(dir);
-    },
-
-    getExtensionConfig(id, key) {
-      const config = moonlightNode.config.extensions[id];
-      if (typeof config === "object") {
-        return config.config?.[key];
-      }
-
-      return undefined;
     }
   };
 }

@@ -30,6 +30,8 @@ async function load() {
 
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
     getConfigOption: moonlightNode.getConfigOption.bind(moonlightNode),
+    setConfigOption: moonlightNode.setConfigOption.bind(moonlightNode),
+
     getNatives: moonlightNode.getNatives.bind(moonlightNode),
     getLogger(id) {
       return new Logger(id);
