@@ -116,11 +116,11 @@ async function getExtensionsNative(): Promise<DetectedExtension[]> {
 
   res.push(...(await loadDetectedExtensions(getCoreExtensionsPath(), ExtensionLoadSource.Core, seen)));
 
-  res.push(...(await loadDetectedExtensions(await getExtensionsPath(), ExtensionLoadSource.Normal, seen)));
-
   for (const devSearchPath of config.devSearchPaths ?? []) {
     res.push(...(await loadDetectedExtensions(devSearchPath, ExtensionLoadSource.Developer, seen)));
   }
+
+  res.push(...(await loadDetectedExtensions(await getExtensionsPath(), ExtensionLoadSource.Normal, seen)));
 
   return res;
 }
