@@ -17,21 +17,45 @@ import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
 
 const logger = new Logger("core/extension/loader");
 
-function loadExtWeb(ext: DetectedExtension) {
+function evalIIFE(id: string, source: string): ExtensionWebExports {
+  const fn = new Function("require", "module", "exports", source);
+
+  const module = { id, exports: {} };
+  fn.apply(window, [
+    () => {
+      logger.warn("Attempted to require() from web");
+    },
+    module,
+    module.exports
+  ]);
+
+  return module.exports;
+}
+
+async function evalEsm(source: string): Promise<ExtensionWebExports> {
+  // Data URLs (`data:`) don't seem to work under the CSP, but object URLs do
+  const url = URL.createObjectURL(new Blob([source], { type: "text/javascript" }));
+
+  const module = await import(url);
+
+  URL.revokeObjectURL(url);
+
+  return module;
+}
+
+async function loadExtWeb(ext: DetectedExtension) {
   if (ext.scripts.web != null) {
     const source = ext.scripts.web + `\n//# sourceURL=${ext.id}/web.js`;
-    const fn = new Function("require", "module", "exports", source);
 
-    const module = { id: ext.id, exports: {} };
-    fn.apply(window, [
-      () => {
-        logger.warn("Attempted to require() from web");
-      },
-      module,
-      module.exports
-    ]);
+    let exports: ExtensionWebExports;
 
-    const exports: ExtensionWebExports = module.exports;
+    try {
+      exports = evalIIFE(ext.id, source);
+    } catch {
+      logger.trace(`Failed to load IIFE for extension ${ext.id}, trying ESM loading`);
+      exports = await evalEsm(source);
+    }
+
     if (exports.patches != null) {
       let idx = 0;
       for (const patch of exports.patches) {
@@ -80,7 +104,7 @@ function loadExtWeb(ext: DetectedExtension) {
 async function loadExt(ext: DetectedExtension) {
   webTarget: {
     try {
-      loadExtWeb(ext);
+      await loadExtWeb(ext);
     } catch (e) {
       logger.error(`Failed to load extension "${ext.id}"`, e);
     }
