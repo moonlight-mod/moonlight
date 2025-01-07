@@ -10,6 +10,7 @@ import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import createFS from "@moonlight-mod/core/fs";
 import { registerCors, registerBlocked, getDynamicCors } from "@moonlight-mod/core/cors";
+import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 
 let initialized = false;
 
@@ -32,21 +33,17 @@ async function injectGlobals() {
     }
   };
 
-  const config = await readConfig();
+  let config = await readConfig();
   initLogger(config);
   const extensions = await getExtensions();
   const processedExtensions = await loadExtensions(extensions);
   const moonlightDir = await getMoonlightDir();
   const extensionsPath = await getExtensionsPath();
 
-  function getConfig(ext: string) {
-    const val = config.extensions[ext];
-    if (val == null || typeof val === "boolean") return undefined;
-    return val.config;
-  }
-
   global.moonlightNode = {
-    config,
+    get config() {
+      return config;
+    },
     extensions,
     processedExtensions,
     nativesCache: {},
@@ -55,14 +52,18 @@ async function injectGlobals() {
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
-    getConfig,
-    getConfigOption: <T>(ext: string, name: string) => {
-      const config = getConfig(ext);
-      if (config == null) return undefined;
-      const option = config[name];
-      if (option == null) return undefined;
-      return option as T;
+    getConfig(ext) {
+      return getConfig(ext, config);
     },
+    getConfigOption(ext, name) {
+      const manifest = getManifest(extensions, ext);
+      return getConfigOption(ext, name, config, manifest);
+    },
+    setConfigOption(ext, name, value) {
+      setConfigOption(config, ext, name, value);
+      this.writeConfig(config);
+    },
+
     getNatives: (ext: string) => global.moonlightNode.nativesCache[ext],
     getLogger: (id: string) => {
       return new Logger(id);
@@ -74,7 +75,10 @@ async function injectGlobals() {
     getExtensionDir: (ext: string) => {
       return path.join(extensionsPath, ext);
     },
-    writeConfig
+    async writeConfig(newConfig) {
+      await writeConfig(newConfig);
+      config = newConfig;
+    }
   };
 
   await loadProcessedExtensions(processedExtensions);

@@ -6,6 +6,7 @@ import getNatives from "../native";
 import { mainRepo } from "@moonlight-mod/types/constants";
 import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
+import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -191,17 +192,11 @@ class MoonbaseSettingsStore extends Store<any> {
 
   getExtensionConfig<T>(uniqueId: number, key: string): T | undefined {
     const ext = this.getExtension(uniqueId);
-    const defaultValue = ext.manifest.settings?.[key]?.default;
-    const clonedDefaultValue = this.clone(defaultValue);
-    const cfg = this.config.extensions[ext.id];
-
-    if (cfg == null || typeof cfg === "boolean") return clonedDefaultValue;
-    return cfg.config?.[key] ?? clonedDefaultValue;
+    return getConfigOption(ext.id, key, this.config, ext.manifest);
   }
 
   getExtensionConfigRaw<T>(id: string, key: string, defaultValue: T | undefined): T | undefined {
     const cfg = this.config.extensions[id];
-
     if (cfg == null || typeof cfg === "boolean") return defaultValue;
     return cfg.config?.[key] ?? defaultValue;
   }
@@ -217,19 +212,7 @@ class MoonbaseSettingsStore extends Store<any> {
   }
 
   setExtensionConfig(id: string, key: string, value: any) {
-    const oldConfig = this.config.extensions[id];
-    const newConfig =
-      typeof oldConfig === "boolean"
-        ? {
-            enabled: oldConfig,
-            config: { [key]: value }
-          }
-        : {
-            ...oldConfig,
-            config: { ...(oldConfig?.config ?? {}), [key]: value }
-          };
-
-    this.config.extensions[id] = newConfig;
+    setConfigOption(this.config, id, key, value);
     this.modified = this.isModified();
     this.emitChange();
   }
