@@ -49,7 +49,6 @@ function ExtensionSelect({
       onChange={(value: string) => {
         setOption(value);
       }}
-      // @ts-expect-error no thanks
       placeholder="Missing extension"
     />
   );
