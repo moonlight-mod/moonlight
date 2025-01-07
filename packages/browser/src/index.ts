@@ -79,6 +79,9 @@ window._moonlightBrowserInit = async () => {
       async isFile(path) {
         return (await fs.stat(path)).isFile();
       },
+      async isDir(path) {
+        return (await fs.stat(path)).isDirectory();
+      },
 
       join(...parts) {
         let str = parts.join("/");

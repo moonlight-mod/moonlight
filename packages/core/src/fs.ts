@@ -39,6 +39,9 @@ export default function createFS(): MoonlightFS {
     async isFile(path) {
       return fs.statSync(path).isFile();
     },
+    async isDir(path) {
+      return fs.statSync(path).isDirectory();
+    },
 
     join(...parts) {
       return path.join(...parts);

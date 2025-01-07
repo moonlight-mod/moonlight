@@ -11,6 +11,7 @@ export type MoonlightFS = {
 
   exists: (path: string) => Promise<boolean>;
   isFile: (path: string) => Promise<boolean>;
+  isDir: (path: string) => Promise<boolean>;
 
   join: (...parts: string[]) => string;
   dirname: (path: string) => string;
