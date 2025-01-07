@@ -1,5 +1,8 @@
-- Fixes for latest Discord
-- Added a warning when disabling built in extensions in Moonbase
-- Added a prompt to restart when updating an extension in Moonbase
-- Added a button to view extension source in Moonbase
-- Searching for settings of extensions now works properly in Moonbase
+- Fixed CSP in the browser extension
+- Added support for ESM when loading an extension entrypoint
+- Added screenshots of Moonbase to the README
+- Added an API to write to the extension settings
+- Added isDir to the filesystem API
+- Added localStorage to the moonlight global
+- Updated mappings
+- The extension loader now prioritizes loading developer extensions
