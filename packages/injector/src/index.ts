@@ -24,9 +24,16 @@ let isMoonlightDesktop = false;
 let hasOpenAsar = false;
 let openAsarConfigPreload: string | undefined;
 
+const scriptUrls = ["web.", "sentry."];
+const blockedScripts = new Set<string>();
+const replayedScripts = new Set<string>();
+let blockingScripts = false;
+let replayingScripts = false;
+
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
 });
+
 ipcMain.on(constants.ipcGetAppData, (e) => {
   e.returnValue = app.getPath("appData");
 });
@@ -73,8 +80,17 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
 });
 
 function patchCsp(headers: Record<string, string[]>) {
-  const directives = ["style-src", "connect-src", "img-src", "font-src", "media-src", "worker-src", "prefetch-src"];
-  const values = ["*", "blob:", "data:", "'unsafe-inline'", "disclip:"];
+  const directives = [
+    "script-src",
+    "style-src",
+    "connect-src",
+    "img-src",
+    "font-src",
+    "media-src",
+    "worker-src",
+    "prefetch-src"
+  ];
+  const values = ["*", "blob:", "data:", "'unsafe-inline'", "'unsafe-eval'", "disclip:"];
 
   const csp = "content-security-policy";
   if (headers[csp] == null) return;
@@ -110,11 +126,12 @@ function removeOpenAsarEventIfPresent(eventHandler: (...args: any[]) => void) {
 
 class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
-    oldPreloadPath = opts.webPreferences!.preload;
-
     const isMainWindow = opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
 
-    if (isMainWindow) opts.webPreferences!.preload = require.resolve("./node-preload.js");
+    if (isMainWindow) {
+      if (!oldPreloadPath) oldPreloadPath = opts.webPreferences!.preload;
+      opts.webPreferences!.preload = require.resolve("./node-preload.js");
+    }
 
     // Event for modifying window options
     moonlightHost.events.emit("window-options", opts, isMainWindow);
@@ -140,9 +157,39 @@ class BrowserWindow extends ElectronBrowserWindow {
       }
     });
 
-    // Allow plugins to block some URLs,
-    // this is needed because multiple webRequest handlers cannot be registered at once
     this.webContents.session.webRequest.onBeforeRequest((details, cb) => {
+      // Block scripts for node-preload kickoff
+      if (details.resourceType === "script" && isMainWindow) {
+        if (scriptUrls.some((url) => details.url.includes(url))) {
+          if (!replayingScripts) {
+            blockingScripts = true;
+            blockedScripts.add(details.url);
+          } else {
+            replayedScripts.add(details.url);
+            if (replayedScripts.size === scriptUrls.length) {
+              replayingScripts = false;
+              replayedScripts.clear();
+            }
+          }
+        }
+
+        const shouldBlock = blockingScripts;
+
+        if (blockedScripts.size === scriptUrls.length && blockingScripts) {
+          setTimeout(() => {
+            logger.debug("Kicking off node-preload");
+            this.webContents.send(constants.ipcNodePreloadKickoff, Array.from(blockedScripts));
+            blockingScripts = false;
+            blockedScripts.clear();
+            replayingScripts = true;
+          }, 0);
+        }
+
+        if (shouldBlock) return cb({ cancel: true });
+      }
+
+      // Allow plugins to block some URLs,
+      // this is needed because multiple webRequest handlers cannot be registered at once
       cb({ cancel: blockedUrls.some((u) => u.test(details.url)) });
     });
 

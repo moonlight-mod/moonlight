@@ -49,17 +49,11 @@ async function load() {
     logger.error("Error setting up web-preload", e);
   }
 
-  if (MOONLIGHT_ENV === "web-preload") {
-    window.addEventListener("DOMContentLoaded", () => {
-      installStyles();
-    });
-  } else {
+  if (document.readyState === "complete") {
     installStyles();
+  } else {
+    window.addEventListener("load", installStyles);
   }
 }
 
-if (MOONLIGHT_ENV === "web-preload") {
-  load();
-} else {
-  window._moonlightBrowserLoad = load;
-}
+window._moonlightBrowserLoad = load;
