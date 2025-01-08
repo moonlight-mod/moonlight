@@ -7,7 +7,7 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 // FIXME: not indexed as importable
 const Constants = spacepack.require("discord/Constants");
-const UserSettingsSections = spacepack.findObjectFromKey(Constants, "APPEARANCE_THEME_PICKER");
+const UserSettingsSections = spacepack.findObjectFromKey(Constants, "DEVELOPER_OPTIONS");
 
 const { ThemeDarkIcon } = Components;
 
