@@ -10,6 +10,7 @@ import { createEventEmitter } from "@moonlight-mod/core/util/event";
 import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
 
 async function load() {
+  delete window._moonlightWebLoad;
   initLogger(moonlightNode.config);
   const logger = new Logger("web-preload");
 
@@ -56,4 +57,4 @@ async function load() {
   }
 }
 
-window._moonlightBrowserLoad = load;
+window._moonlightWebLoad = load;

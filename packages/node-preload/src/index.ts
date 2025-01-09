@@ -113,7 +113,7 @@ async function loadPreload() {
   const webPreload = fs.readFileSync(webPreloadPath, "utf8");
   await webFrame.executeJavaScript(webPreload);
 
-  const func = await webFrame.executeJavaScript("async () => { await window._moonlightBrowserLoad(); }");
+  const func = await webFrame.executeJavaScript("async () => { await window._moonlightWebLoad(); }");
   await func();
 }
 

@@ -15,6 +15,8 @@ function getParts(path: string) {
 }
 
 window._moonlightBrowserInit = async () => {
+  delete window._moonlightBrowserInit;
+
   // Set up a virtual filesystem with IndexedDB
   await configure({
     mounts: {
@@ -153,5 +155,5 @@ window._moonlightBrowserInit = async () => {
   });
 
   // This is set by web-preload for us
-  await window._moonlightBrowserLoad();
+  await window._moonlightWebLoad!();
 };
