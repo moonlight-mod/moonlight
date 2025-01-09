@@ -26,9 +26,6 @@ let openAsarConfigPreload: string | undefined;
 
 const scriptUrls = ["web.", "sentry."];
 const blockedScripts = new Set<string>();
-const replayedScripts = new Set<string>();
-let blockingScripts = false;
-let replayingScripts = false;
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
@@ -170,32 +167,18 @@ class BrowserWindow extends ElectronBrowserWindow {
         with esbuild someday).
       */
       if (details.resourceType === "script" && isMainWindow) {
-        if (scriptUrls.some((url) => details.url.includes(url))) {
-          if (!replayingScripts) {
-            blockingScripts = true;
-            blockedScripts.add(details.url);
-          } else {
-            replayedScripts.add(details.url);
-            if (replayedScripts.size === scriptUrls.length) {
-              replayingScripts = false;
-              replayedScripts.clear();
-            }
-          }
-        }
+        const hasUrl = scriptUrls.some((url) => details.url.includes(url) && !details.url.includes("?inj"));
+        if (hasUrl) blockedScripts.add(details.url);
 
-        const shouldBlock = blockingScripts;
-
-        if (blockedScripts.size === scriptUrls.length && blockingScripts) {
+        if (blockedScripts.size === scriptUrls.length) {
           setTimeout(() => {
             logger.debug("Kicking off node-preload");
             this.webContents.send(constants.ipcNodePreloadKickoff, Array.from(blockedScripts));
-            blockingScripts = false;
             blockedScripts.clear();
-            replayingScripts = true;
           }, 0);
         }
 
-        if (shouldBlock) return cb({ cancel: true });
+        if (hasUrl) return cb({ cancel: true });
       }
 
       // Allow plugins to block some URLs,
