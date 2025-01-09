@@ -158,7 +158,17 @@ class BrowserWindow extends ElectronBrowserWindow {
     });
 
     this.webContents.session.webRequest.onBeforeRequest((details, cb) => {
-      // Block scripts for node-preload kickoff
+      /*
+        In order to get moonlight loading to be truly async, we prevent Discord
+        from loading their scripts immediately. We block the requests, keep note
+        of their URLs, and then send them off to node-preload when we get all of
+        them. node-preload then loads node side, web side, and then recreates
+        the script elements to cause them to re-fetch.
+
+        The browser extension also does this, but in a background script (see
+        packages/browser/src/background.js - we should probably get this working
+        with esbuild someday).
+      */
       if (details.resourceType === "script" && isMainWindow) {
         if (scriptUrls.some((url) => details.url.includes(url))) {
           if (!replayingScripts) {
