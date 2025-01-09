@@ -151,6 +151,8 @@ ipcRenderer.on(constants.ipcNodePreloadKickoff, (_, blockedScripts: string[]) =>
 
         blockedScripts.reverse();
         for (const url of blockedScripts) {
+          if (url.includes("/sentry.")) continue;
+
           const script = scripts.find((script) => url.includes(script.src))!;
           const newScript = document.createElement("script");
           for (const attr of script.attributes) {
