@@ -6,6 +6,7 @@ import ExtensionCard from "./card";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
+import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
@@ -67,11 +68,9 @@ export default function ExtensionsPage() {
   );
 
   // Prioritize extensions with updates
-  filtered.sort((a, b) => {
-    if (a.hasUpdate && !b.hasUpdate) return -1;
-    if (!a.hasUpdate && b.hasUpdate) return 1;
-    return 0;
-  });
+  const filteredWithUpdates = filtered.filter((ext) => ext!.hasUpdate);
+  const filteredWithoutUpdates = filtered.filter((ext) => !ext!.hasUpdate);
+  const { FormDivider } = Components;
 
   return (
     <>
@@ -89,7 +88,14 @@ export default function ExtensionsPage() {
         }}
       />
       <FilterBar filter={filter} setFilter={setFilter} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
-      {filtered.map((ext) => (
+
+      {filteredWithUpdates.map((ext) => (
+        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
+      ))}
+      {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
+        <FormDivider className="moonbase-update-divider" />
+      )}
+      {filteredWithoutUpdates.map((ext) => (
         <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
       ))}
     </>

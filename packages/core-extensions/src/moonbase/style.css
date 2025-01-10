@@ -55,6 +55,10 @@ textarea.moonbase-resizeable {
   gap: 8px;
 }
 
+.moonbase-update-divider {
+  margin: 32px 0;
+}
+
 /* crash screen */
 .moonbase-crash-wrapper > [class^="buttons_"] {
   gap: 1rem;
