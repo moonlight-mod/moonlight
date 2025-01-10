@@ -2,14 +2,20 @@ import { InternalItem, Menu, MenuElement } from "@moonlight-mod/types/coreExtens
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import parser from "@moonlight-mod/wp/contextMenu_evilMenu";
 
+// NOTE: We originally had item as a function that returned this, but it didn't
+// quite know how to work out the type and thought it was a JSX element (it
+// *technically* was). This has less type safety, but a @ts-expect-error has
+// zero, so it's better than nothing.
+type ReturnType = MenuElement | MenuElement[];
+
 type Patch = {
   navId: string;
-  item: (props: any) => MenuElement | MenuElement[];
+  item: React.FC<any>;
   anchorId: string;
   before: boolean;
 };
 
-function addItem<T>(navId: string, item: (props: T) => MenuElement | MenuElement[], anchorId: string, before = false) {
+function addItem<T = any>(navId: string, item: React.FC<T>, anchorId: string, before = false) {
   patches.push({ navId, item, anchorId, before });
 }
 
@@ -21,7 +27,7 @@ function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
   for (const patch of matches) {
     const idx = items.findIndex((i) => i.key === patch.anchorId);
     if (idx === -1) continue;
-    items.splice(idx + 1 - +patch.before, 0, ...parser(patch.item(menuProps)));
+    items.splice(idx + 1 - +patch.before, 0, ...parser(patch.item(menuProps) as ReturnType));
   }
 
   return items;

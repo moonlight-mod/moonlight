@@ -10,7 +10,7 @@ import {
 } from "@moonlight-mod/mappings/discord/components/common/index";
 
 export type ContextMenu = {
-  addItem: (navId: string, item: (props: any) => MenuElement, anchorId: string, before?: boolean) => void;
+  addItem: (navId: string, item: React.FC<any>, anchorId: string, before?: boolean) => void;
 
   MenuCheckboxItem: MenuCheckboxItem;
   MenuControlItem: MenuControlItem;
