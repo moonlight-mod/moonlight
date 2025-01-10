@@ -51,7 +51,9 @@ export default function Update() {
             look={Button.Looks.OUTLINED}
             color={Button.Colors.CUSTOM}
             size={Button.Sizes.TINY}
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              MoonbaseSettingsStore.restartDiscord();
+            }}
           >
             Restart Discord
           </Button>

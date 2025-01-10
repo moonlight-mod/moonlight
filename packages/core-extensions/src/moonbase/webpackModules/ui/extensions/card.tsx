@@ -40,11 +40,12 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
   const [restartNeeded, setRestartNeeded] = React.useState(false);
 
-  const { ext, enabled, busy, update, conflicting } = useStateFromStores([MoonbaseSettingsStore], () => {
+  const { ext, enabled, busy, update, conflicting, showingNotice } = useStateFromStores([MoonbaseSettingsStore], () => {
     return {
       ext: MoonbaseSettingsStore.getExtension(uniqueId),
       enabled: MoonbaseSettingsStore.getExtensionEnabled(uniqueId),
       busy: MoonbaseSettingsStore.busy,
+      showingNotice: MoonbaseSettingsStore.showNotice(),
       update: MoonbaseSettingsStore.getExtensionUpdate(uniqueId),
       conflicting: MoonbaseSettingsStore.getExtensionConflicting(uniqueId)
     };
@@ -107,6 +108,14 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               />
             )}
 
+            {restartNeeded && !showingNotice && (
+              <PanelButton
+                icon={() => <CircleWarningIcon color={Components.tokens.colors.STATUS_DANGER} />}
+                onClick={() => MoonbaseSettingsStore.restartDiscord()}
+                tooltipText="You will need to reload/restart your client for this extension to work properly."
+              />
+            )}
+
             {ext.state === ExtensionState.NotDownloaded ? (
               <Tooltip text={COMPAT_TEXT_MAP[ext.compat]} shouldShow={ext.compat !== ExtensionCompat.Compatible}>
                 {(props: any) => (
@@ -121,6 +130,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                       if (deps != null) {
                         await doMissingExtensionPopup(deps);
                       }
+                      MoonbaseSettingsStore.setExtensionEnabled(uniqueId, true);
+                      setRestartNeeded(true);
                     }}
                   >
                     Install
@@ -135,6 +146,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                     tooltipText="Delete"
                     onClick={() => {
                       MoonbaseSettingsStore.deleteExtension(uniqueId);
+                      setRestartNeeded(true);
                     }}
                   />
                 )}
@@ -147,14 +159,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                       MoonbaseSettingsStore.installExtension(uniqueId);
                       setRestartNeeded(true);
                     }}
-                  />
-                )}
-
-                {restartNeeded && (
-                  <PanelButton
-                    icon={() => <CircleWarningIcon color={Components.tokens.colors.STATUS_DANGER} />}
-                    onClick={() => window.location.reload()}
-                    tooltipText="You will need to reload/restart your client for this extension to work properly."
                   />
                 )}
 

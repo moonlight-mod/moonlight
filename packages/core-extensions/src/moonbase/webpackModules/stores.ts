@@ -153,6 +153,7 @@ class MoonbaseSettingsStore extends Store<any> {
     return this.submitting || this.installing;
   }
 
+  // Required for the settings store contract
   showNotice() {
     return this.modified;
   }
@@ -365,6 +366,15 @@ class MoonbaseSettingsStore extends Store<any> {
     this.modified = false;
     this.config = this.clone(this.origConfig);
     this.emitChange();
+  }
+
+  restartDiscord() {
+    if (moonlightNode.isBrowser) {
+      window.location.reload();
+    } else {
+      // @ts-expect-error TODO: DiscordNative
+      window.DiscordNative.app.relaunch();
+    }
   }
 
   // Required because electron likes to make it immutable sometimes.
