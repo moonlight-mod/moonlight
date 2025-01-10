@@ -5,9 +5,10 @@
     <img src="./img/wordmark.png" alt="moonlight" />
   </picture>
 
-<a href="https://discord.gg/FdZBTFCP6F">Discord server</a>
+<a href="https://moonlight-mod.github.io/using/install">Install</a>
+\- <a href="https://moonlight-mod.github.io/ext-dev/getting-started">Docs</a>
+\- <a href="https://discord.gg/FdZBTFCP6F">Discord server</a>
 \- <a href="https://github.com/moonlight-mod/moonlight">GitHub</a>
-\- <a href="https://moonlight-mod.github.io/">Docs</a>
 
   <hr />
 
@@ -22,6 +23,6 @@
 
 moonlight is heavily inspired by hh3 (a private client mod) and the projects before it that it is inspired by, namely EndPwn. All core code is original or used with permission from their respective authors where not copyleft.
 
-**_This is an experimental passion project._** Anything and everything is subject to change, but it is stable enough for developers to experiment with.
+**_This is an experimental passion project._** Anything and everything is subject to change, but it is stable enough for tinkerers and developers to experiment with.
 
 moonlight is licensed under the [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.html) (`LGPL-3.0-or-later`). See [the documentation](https://moonlight-mod.github.io/) for more information.
