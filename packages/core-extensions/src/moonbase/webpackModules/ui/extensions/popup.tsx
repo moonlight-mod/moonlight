@@ -155,11 +155,15 @@ export async function doMissingExtensionPopup(deps: Record<string, MoonbaseExten
   });
 }
 
-function BuiltinExtensionPopup({
+function GenericExtensionPopup({
+  title,
+  content,
   transitionState,
   uniqueId,
   cb
 }: {
+  title: string;
+  content: string;
   transitionState: number | null;
   uniqueId: number;
   cb: () => void;
@@ -168,31 +172,36 @@ function BuiltinExtensionPopup({
 
   return (
     <Popup
+      title={title}
       body={
         <Flex>
-          <Text variant="text-md/normal">
-            This extension is enabled by default. Disabling it might have consequences. Are you sure you want to disable
-            it?
-          </Text>
+          <Text variant="text-md/normal">{content}</Text>
         </Flex>
       }
-      cancelText="No"
       confirmText="Yes"
+      cancelText="No"
       onCancel={close}
       onConfirm={() => {
         close();
         cb();
       }}
-      title="Built in extension"
       transitionState={transitionState}
     />
   );
 }
 
-export async function doBuiltinExtensionPopup(uniqueId: number, cb: () => void) {
+export async function doGenericExtensionPopup(title: string, content: string, uniqueId: number, cb: () => void) {
   await openModalLazy(async () => {
     return ({ transitionState }: { transitionState: number | null }) => {
-      return <BuiltinExtensionPopup transitionState={transitionState} uniqueId={uniqueId} cb={cb} />;
+      return (
+        <GenericExtensionPopup
+          title={title}
+          content={content}
+          transitionState={transitionState}
+          uniqueId={uniqueId}
+          cb={cb}
+        />
+      );
     };
   });
 }

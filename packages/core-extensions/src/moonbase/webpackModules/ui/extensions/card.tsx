@@ -1,5 +1,5 @@
 import { ExtensionState } from "../../../types";
-import { constants, ExtensionLoadSource } from "@moonlight-mod/types";
+import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
@@ -12,7 +12,7 @@ import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/In
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
-import { doBuiltinExtensionPopup, doMissingExtensionPopup } from "./popup";
+import { doGenericExtensionPopup, doMissingExtensionPopup } from "./popup";
 
 export enum ExtensionPage {
   Info,
@@ -132,7 +132,12 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                       if (deps != null) {
                         await doMissingExtensionPopup(deps);
                       }
-                      MoonbaseSettingsStore.setExtensionEnabled(uniqueId, true);
+
+                      // Don't auto enable dangerous extensions
+                      if (!ext.manifest?.meta?.tags?.includes(ExtensionTag.DangerZone)) {
+                        MoonbaseSettingsStore.setExtensionEnabled(uniqueId, true);
+                      }
+
                       setRestartNeeded(true);
                     }}
                   >
@@ -185,7 +190,19 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                     };
 
                     if (enabled && constants.builtinExtensions.includes(ext.id)) {
-                      doBuiltinExtensionPopup(uniqueId, toggle);
+                      doGenericExtensionPopup(
+                        "Built in extension",
+                        "This extension is enabled by default. Disabling it might have consequences. Are you sure you want to disable it?",
+                        uniqueId,
+                        toggle
+                      );
+                    } else if (!enabled && ext.manifest?.meta?.tags?.includes(ExtensionTag.DangerZone)) {
+                      doGenericExtensionPopup(
+                        "Dangerous extension",
+                        "This extension is marked as dangerous. Enabling it might have consequences. Are you sure you want to enable it?",
+                        uniqueId,
+                        toggle
+                      );
                     } else {
                       toggle();
                     }
