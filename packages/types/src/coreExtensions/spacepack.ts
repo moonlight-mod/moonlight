@@ -1,20 +1,70 @@
 import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "../discord";
 
-// Only bothered TSDoc'ing the hard-to-understand functions
-
 export type Spacepack = {
+  /**
+   * Given a Webpack module ID, returns the function for the Webpack module.
+   * Can be double clicked to inspect in DevTools.
+   * @param module The module ID
+   * @returns The Webpack module, if found
+   */
   inspect: (module: number | string) => WebpackModuleFunc | null;
+
+  /**
+   * Find Webpack modules based on matches in code.
+   * @param args A list of finds to match against
+   * @returns The Webpack modules, if found
+   */
   findByCode: (...args: (string | RegExp)[]) => WebpackModule[];
+
+  /**
+   * Find Webpack modules based on their exports.
+   * @param args A list of finds to match exports against
+   * @returns The Webpack modules, if found
+   */
   findByExports: (...args: string[]) => WebpackModule[];
-  // re-export of require
+
+  /**
+   * The Webpack require function.
+   */
   require: WebpackRequireType;
-  // re-export of require.m
+
+  /**
+   * The Webpack module list.
+   * Re-export of require.m.
+   */
   modules: Record<string, WebpackModuleFunc>;
-  // re-export of require.c
+
+  /**
+   * The Webpack module cache.
+   * Re-export of require.c.
+   */
   cache: Record<string, any>;
+
+  /**
+   * Finds an object from a module's exports using the given key.
+   * @param exports Exports from a Webpack module
+   * @param key The key to find with
+   * @returns The object, if found
+   */
   findObjectFromKey: (exports: Record<string, any>, key: string) => any | null;
+
+  /**
+   * Finds an object from a module's exports using the given value.
+   * @param exports Exports from a Webpack module
+   * @param value The value to find with
+   * @returns The object, if found
+   */
   findObjectFromValue: (exports: Record<string, any>, value: any) => any | null;
+
+  /**
+   * Finds an object from a module's exports using the given key-value pair.
+   * @param exports Exports from a Webpack module
+   * @param key The key to find with
+   * @param value The value to find with
+   * @returns The object, if found
+   */
   findObjectFromKeyValuePair: (exports: Record<string, any>, key: string, value: any) => any | null;
+
   /**
    * Finds a function from a module's exports using the given source find.
    * This behaves like findByCode but localized to the exported function.
@@ -27,6 +77,7 @@ export type Spacepack = {
     ...strings: (string | RegExp)[]
     // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   ) => Function | null;
+
   /**
    * Lazy load a Webpack module.
    * @param find A list of finds to discover a target module with
@@ -35,6 +86,7 @@ export type Spacepack = {
    * @returns The target Webpack module
    */
   lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => Promise<any>;
+
   /**
    * Filter a list of Webpack modules to "real" ones from the Discord client.
    * @param modules A list of Webpack modules

@@ -14,8 +14,23 @@ export type Notice = {
 };
 
 export type Notices = Store<any> & {
+  /**
+   * Adds a custom notice to the top of the screen.
+   */
   addNotice: (notice: Notice) => void;
+
+  /**
+   * Removes the current notice from the top of the screen.
+   */
   popNotice: () => void;
+
+  /**
+   * @private
+   */
   getCurrentNotice: () => Notice | null;
+
+  /**
+   * @private
+   */
   shouldShowNotice: () => boolean;
 };

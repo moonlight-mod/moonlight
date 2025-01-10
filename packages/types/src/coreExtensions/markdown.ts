@@ -82,11 +82,26 @@ export type Markdown = {
   slateDecorators: Record<string, string>;
   ruleBlacklists: Record<Ruleset, Record<string, boolean>>;
 
+  /**
+   * Registers a new Markdown rule with simple-markdown.
+   * @param name The name of the rule
+   * @param markdown A function that returns simple-markdown rules
+   * @param slate A function that returns Slate rules
+   * @param decorator A decorator name for Slate
+   * @see https://www.npmjs.com/package/simple-markdown#adding-a-simple-extension
+   * @see https://docs.slatejs.org/
+   */
   addRule: (
     name: string,
     markdown: (rules: Record<string, MarkdownRule>) => MarkdownRule,
     slate: (rules: Record<string, SlateRule>) => SlateRule,
     decorator?: string | undefined
   ) => void;
+
+  /**
+   * Blacklist a rule from a ruleset.
+   * @param ruleset The ruleset name
+   * @param name The rule name
+   */
   blacklistFromRuleset: (ruleset: Ruleset, name: string) => void;
 };
