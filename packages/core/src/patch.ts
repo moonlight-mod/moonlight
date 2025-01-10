@@ -13,6 +13,7 @@ import Logger from "./util/logger";
 import calculateDependencies, { Dependency } from "./util/dependency";
 import WebpackRequire from "@moonlight-mod/types/discord/require";
 import { EventType } from "@moonlight-mod/types/core/event";
+import { processFind, processReplace, testFind } from "./util/patch";
 
 const logger = new Logger("core/patch");
 
@@ -24,6 +25,9 @@ let webpackRequire: WebpackRequireType | null = null;
 const moduleLoadSubscriptions: Map<string, ((moduleId: string) => void)[]> = new Map();
 
 export function registerPatch(patch: IdentifiedPatch) {
+  patch.find = processFind(patch.find);
+  processReplace(patch.replace);
+
   patches.push(patch);
   moonlight.unpatched.add(patch);
 }
@@ -113,9 +117,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         patch.find.lastIndex = 0;
       }
 
-      // indexOf is faster than includes by 0.25% lmao
-      const match =
-        typeof patch.find === "string" ? moduleString.indexOf(patch.find) !== -1 : patch.find.test(moduleString);
+      const match = testFind(moduleString, patch.find);
 
       // Global regexes apply to all modules
       const shouldRemove = typeof patch.find === "string" ? true : !patch.find.global;
@@ -125,10 +127,6 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         const replace = patch.replace as PatchReplace;
 
         if (replace.type === undefined || replace.type === PatchReplaceType.Normal) {
-          // Add support for \i to match rspack's minified names
-          if (typeof replace.match !== "string") {
-            replace.match = new RegExp(replace.match.source.replace(/\\i/g, "[A-Za-z_$][\\w$]*"), replace.match.flags);
-          }
           // tsc fails to detect the overloads for this, so I'll just do this
           // Verbose, but it works
           let replaced;

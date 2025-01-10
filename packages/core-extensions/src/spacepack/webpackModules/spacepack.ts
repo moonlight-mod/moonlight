@@ -1,5 +1,6 @@
 import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "@moonlight-mod/types";
 import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
+import { processFind, testFind } from "@moonlight-mod/core/util/patch";
 
 const webpackRequire = require as unknown as WebpackRequireType;
 const cache = webpackRequire.c;
@@ -42,12 +43,7 @@ export const spacepack: Spacepack = {
 
   findByCode: (...args: (string | RegExp)[]) => {
     return Object.entries(modules)
-      .filter(
-        ([id, mod]) =>
-          !args.some(
-            (item) => !(item instanceof RegExp ? item.test(mod.toString()) : mod.toString().indexOf(item) !== -1)
-          )
-      )
+      .filter(([id, mod]) => !args.some((item) => !testFind(mod.toString(), processFind(item))))
       .map(([id]) => {
         //if (!(id in cache)) require(id);
         //return cache[id];
@@ -137,10 +133,7 @@ export const spacepack: Spacepack = {
     return (
       Object.entries(exports).filter(
         ([index, func]) =>
-          typeof func === "function" &&
-          !strings.some(
-            (query) => !(query instanceof RegExp ? func.toString().match(query) : func.toString().includes(query))
-          )
+          typeof func === "function" && !strings.some((query) => !testFind(func.toString(), processFind(query)))
       )?.[0]?.[1] ?? null
     );
   },
