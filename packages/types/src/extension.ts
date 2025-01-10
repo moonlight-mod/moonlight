@@ -41,6 +41,7 @@ export type ExtensionManifest = {
     deprecated?: boolean;
     tags?: ExtensionTag[];
     source?: string;
+    changelog?: string;
   };
 
   dependencies?: string[];

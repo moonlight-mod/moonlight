@@ -102,6 +102,7 @@ class MoonbaseSettingsStore extends Store<any> {
                     updateManifest: ext
                   };
                   existing.hasUpdate = true;
+                  existing.changelog = ext.meta?.changelog;
                 }
 
                 continue;
@@ -193,7 +194,8 @@ class MoonbaseSettingsStore extends Store<any> {
 
   getExtensionConfig<T>(uniqueId: number, key: string): T | undefined {
     const ext = this.getExtension(uniqueId);
-    return getConfigOption(ext.id, key, this.config, ext.manifest);
+    const settings = ext.settingsOverride ?? ext.manifest.settings;
+    return getConfigOption(ext.id, key, this.config, settings);
   }
 
   getExtensionConfigRaw<T>(id: string, key: string, defaultValue: T | undefined): T | undefined {
@@ -204,12 +206,14 @@ class MoonbaseSettingsStore extends Store<any> {
 
   getExtensionConfigName(uniqueId: number, key: string) {
     const ext = this.getExtension(uniqueId);
-    return ext.manifest.settings?.[key]?.displayName ?? key;
+    const settings = ext.settingsOverride ?? ext.manifest.settings;
+    return settings?.[key]?.displayName ?? key;
   }
 
   getExtensionConfigDescription(uniqueId: number, key: string) {
     const ext = this.getExtension(uniqueId);
-    return ext.manifest.settings?.[key]?.description;
+    const settings = ext.settingsOverride ?? ext.manifest.settings;
+    return settings?.[key]?.description;
   }
 
   setExtensionConfig(id: string, key: string, value: any) {
@@ -255,7 +259,10 @@ class MoonbaseSettingsStore extends Store<any> {
         this.extensions[uniqueId].state = ExtensionState.Disabled;
       }
 
-      if (update != null) this.extensions[uniqueId].compat = checkExtensionCompat(update.updateManifest);
+      if (update != null) {
+        this.extensions[uniqueId].settingsOverride = update.updateManifest.settings;
+        this.extensions[uniqueId].compat = checkExtensionCompat(update.updateManifest);
+      }
 
       delete this.updates[uniqueId];
     } catch (e) {

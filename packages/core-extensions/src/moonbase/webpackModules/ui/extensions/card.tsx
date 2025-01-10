@@ -17,6 +17,7 @@ import { doBuiltinExtensionPopup, doMissingExtensionPopup } from "./popup";
 export enum ExtensionPage {
   Info,
   Description,
+  Changelog,
   Settings
 }
 
@@ -57,8 +58,9 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const { Card, Text, FormSwitch, TabBar, Button } = Components;
 
   const tagline = ext.manifest?.meta?.tagline;
-  const settings = ext.manifest?.settings;
+  const settings = ext.settingsOverride ?? ext.manifest?.settings;
   const description = ext.manifest?.meta?.description;
+  const changelog = ext.changelog;
   const enabledDependants = useStateFromStores([MoonbaseSettingsStore], () =>
     Object.keys(MoonbaseSettingsStore.extensions)
       .filter((uniqueId) => {
@@ -196,7 +198,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
       </div>
 
       <div>
-        {(description != null || settings != null) && (
+        {(description != null || changelog != null || settings != null) && (
           <TabBar
             selectedItem={tab}
             type="top"
@@ -213,6 +215,12 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
             {description != null && (
               <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
                 Description
+              </TabBar.Item>
+            )}
+
+            {changelog != null && (
+              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Changelog}>
+                Changelog
               </TabBar.Item>
             )}
 
@@ -235,6 +243,15 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           {tab === ExtensionPage.Description && (
             <Text variant="text-md/normal" className={MarkupClasses.markup} style={{ width: "100%" }}>
               {MarkupUtils.parse(description ?? "*No description*", true, {
+                allowHeading: true,
+                allowLinks: true,
+                allowList: true
+              })}
+            </Text>
+          )}
+          {tab === ExtensionPage.Changelog && (
+            <Text variant="text-md/normal" className={MarkupClasses.markup} style={{ width: "100%" }}>
+              {MarkupUtils.parse(changelog ?? "*No changelog*", true, {
                 allowHeading: true,
                 allowLinks: true,
                 allowList: true

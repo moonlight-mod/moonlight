@@ -14,9 +14,9 @@ export function getConfigOption<T>(
   ext: string,
   key: string,
   config: Config,
-  manifest?: ExtensionManifest
+  settings?: ExtensionManifest["settings"]
 ): T | undefined {
-  const defaultValue: T | undefined = structuredClone(manifest?.settings?.[key]?.default);
+  const defaultValue: T | undefined = structuredClone(settings?.[key]?.default);
   const cfg = getConfig(ext, config);
   if (cfg == null || typeof cfg === "boolean") return defaultValue;
   return cfg?.[key] ?? defaultValue;

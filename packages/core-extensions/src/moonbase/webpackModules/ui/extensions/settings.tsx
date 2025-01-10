@@ -370,7 +370,7 @@ function Setting({ ext, name, setting, disabled }: SettingsProps) {
 export default function Settings({ ext }: { ext: MoonbaseExtension }) {
   return (
     <Flex className="moonbase-settings" direction={Flex.Direction.VERTICAL}>
-      {Object.entries(ext.manifest.settings!).map(([name, setting]) => (
+      {Object.entries(ext.settingsOverride ?? ext.manifest.settings!).map(([name, setting]) => (
         <Setting
           ext={ext}
           key={name}

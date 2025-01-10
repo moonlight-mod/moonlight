@@ -57,7 +57,7 @@ async function injectGlobals() {
     },
     getConfigOption(ext, name) {
       const manifest = getManifest(extensions, ext);
-      return getConfigOption(ext, name, config, manifest);
+      return getConfigOption(ext, name, config, manifest?.settings);
     },
     setConfigOption(ext, name, value) {
       setConfigOption(config, ext, name, value);

@@ -28,6 +28,8 @@ export type MoonbaseExtension = {
   state: ExtensionState;
   compat: ExtensionCompat;
   hasUpdate: boolean;
+  changelog?: string;
+  settingsOverride?: ExtensionManifest["settings"];
 };
 
 export enum UpdateState {
