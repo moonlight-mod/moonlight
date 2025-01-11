@@ -10,6 +10,7 @@ import { createEventEmitter } from "@moonlight-mod/core/util/event";
 import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
 
 async function load() {
+  delete window._moonlightWebLoad;
   initLogger(moonlightNode.config);
   const logger = new Logger("web-preload");
 
@@ -49,17 +50,11 @@ async function load() {
     logger.error("Error setting up web-preload", e);
   }
 
-  if (MOONLIGHT_ENV === "web-preload") {
-    window.addEventListener("DOMContentLoaded", () => {
-      installStyles();
-    });
-  } else {
+  if (document.readyState === "complete") {
     installStyles();
+  } else {
+    window.addEventListener("load", installStyles);
   }
 }
 
-if (MOONLIGHT_ENV === "web-preload") {
-  load();
-} else {
-  window._moonlightBrowserLoad = load;
-}
+window._moonlightWebLoad = load;

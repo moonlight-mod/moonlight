@@ -24,9 +24,13 @@ let isMoonlightDesktop = false;
 let hasOpenAsar = false;
 let openAsarConfigPreload: string | undefined;
 
+const scriptUrls = ["web.", "sentry."];
+const blockedScripts = new Set<string>();
+
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
 });
+
 ipcMain.on(constants.ipcGetAppData, (e) => {
   e.returnValue = app.getPath("appData");
 });
@@ -73,8 +77,17 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
 });
 
 function patchCsp(headers: Record<string, string[]>) {
-  const directives = ["style-src", "connect-src", "img-src", "font-src", "media-src", "worker-src", "prefetch-src"];
-  const values = ["*", "blob:", "data:", "'unsafe-inline'", "disclip:"];
+  const directives = [
+    "script-src",
+    "style-src",
+    "connect-src",
+    "img-src",
+    "font-src",
+    "media-src",
+    "worker-src",
+    "prefetch-src"
+  ];
+  const values = ["*", "blob:", "data:", "'unsafe-inline'", "'unsafe-eval'", "disclip:"];
 
   const csp = "content-security-policy";
   if (headers[csp] == null) return;
@@ -110,11 +123,12 @@ function removeOpenAsarEventIfPresent(eventHandler: (...args: any[]) => void) {
 
 class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
-    oldPreloadPath = opts.webPreferences!.preload;
-
     const isMainWindow = opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
 
-    if (isMainWindow) opts.webPreferences!.preload = require.resolve("./node-preload.js");
+    if (isMainWindow) {
+      if (!oldPreloadPath) oldPreloadPath = opts.webPreferences!.preload;
+      opts.webPreferences!.preload = require.resolve("./node-preload.js");
+    }
 
     // Event for modifying window options
     moonlightHost.events.emit("window-options", opts, isMainWindow);
@@ -140,9 +154,35 @@ class BrowserWindow extends ElectronBrowserWindow {
       }
     });
 
-    // Allow plugins to block some URLs,
-    // this is needed because multiple webRequest handlers cannot be registered at once
     this.webContents.session.webRequest.onBeforeRequest((details, cb) => {
+      /*
+        In order to get moonlight loading to be truly async, we prevent Discord
+        from loading their scripts immediately. We block the requests, keep note
+        of their URLs, and then send them off to node-preload when we get all of
+        them. node-preload then loads node side, web side, and then recreates
+        the script elements to cause them to re-fetch.
+
+        The browser extension also does this, but in a background script (see
+        packages/browser/src/background.js - we should probably get this working
+        with esbuild someday).
+      */
+      if (details.resourceType === "script" && isMainWindow) {
+        const hasUrl = scriptUrls.some((url) => details.url.includes(url) && !details.url.includes("?inj"));
+        if (hasUrl) blockedScripts.add(details.url);
+
+        if (blockedScripts.size === scriptUrls.length) {
+          setTimeout(() => {
+            logger.debug("Kicking off node-preload");
+            this.webContents.send(constants.ipcNodePreloadKickoff, Array.from(blockedScripts));
+            blockedScripts.clear();
+          }, 0);
+        }
+
+        if (hasUrl) return cb({ cancel: true });
+      }
+
+      // Allow plugins to block some URLs,
+      // this is needed because multiple webRequest handlers cannot be registered at once
       cb({ cancel: blockedUrls.some((u) => u.test(details.url)) });
     });
 

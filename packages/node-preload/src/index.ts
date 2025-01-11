@@ -13,6 +13,7 @@ import { registerCors, registerBlocked, getDynamicCors } from "@moonlight-mod/co
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 
 let initialized = false;
+let logger: Logger;
 
 function setCors() {
   const data = getDynamicCors();
@@ -35,6 +36,8 @@ async function injectGlobals() {
 
   let config = await readConfig();
   initLogger(config);
+  logger = new Logger("node-preload");
+
   const extensions = await getExtensions();
   const processedExtensions = await loadExtensions(extensions);
   const moonlightDir = await getMoonlightDir();
@@ -109,9 +112,12 @@ async function loadPreload() {
   const webPreloadPath = path.join(__dirname, "web-preload.js");
   const webPreload = fs.readFileSync(webPreloadPath, "utf8");
   await webFrame.executeJavaScript(webPreload);
+
+  const func = await webFrame.executeJavaScript("async () => { await window._moonlightWebLoad(); }");
+  await func();
 }
 
-async function init(oldPreloadPath: string) {
+async function init() {
   try {
     await injectGlobals();
     await loadPreload();
@@ -122,10 +128,49 @@ async function init(oldPreloadPath: string) {
       message: message
     });
   }
-
-  // Let Discord start even if we fail
-  if (oldPreloadPath) require(oldPreloadPath);
 }
 
-const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
-init(oldPreloadPath);
+ipcRenderer.on(constants.ipcNodePreloadKickoff, (_, blockedScripts: string[]) => {
+  (async () => {
+    try {
+      await init();
+      logger.debug("Blocked scripts:", blockedScripts);
+
+      const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
+      logger.debug("Old preload path:", oldPreloadPath);
+      if (oldPreloadPath) require(oldPreloadPath);
+
+      // Do this to get global.DiscordNative assigned
+      // @ts-expect-error Lying to discord_desktop_core
+      process.emit("loaded");
+
+      function replayScripts() {
+        const scripts = [...document.querySelectorAll("script")].filter(
+          (script) => script.src && blockedScripts.some((url) => url.includes(script.src))
+        );
+
+        blockedScripts.reverse();
+        for (const url of blockedScripts) {
+          if (url.includes("/sentry.")) continue;
+
+          const script = scripts.find((script) => url.includes(script.src))!;
+          const newScript = document.createElement("script");
+          for (const attr of script.attributes) {
+            if (attr.name === "src") attr.value += "?inj";
+            newScript.setAttribute(attr.name, attr.value);
+          }
+          script.remove();
+          document.documentElement.appendChild(newScript);
+        }
+      }
+
+      if (document.readyState === "complete") {
+        replayScripts();
+      } else {
+        window.addEventListener("load", replayScripts);
+      }
+    } catch (e) {
+      logger.error("Error restoring original scripts:", e);
+    }
+  })();
+});
