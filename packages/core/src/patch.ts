@@ -11,7 +11,6 @@ import {
 } from "@moonlight-mod/types";
 import Logger from "./util/logger";
 import calculateDependencies, { Dependency } from "./util/dependency";
-import WebpackRequire from "@moonlight-mod/types/discord/require";
 import { EventType } from "@moonlight-mod/types/core/event";
 import { processFind, processReplace, testFind } from "./util/patch";
 
@@ -269,12 +268,10 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
             }
           }
 
+          wpModule.dependencies = Array.from(deps);
           if (deps.size !== 0) {
-            wpModule.dependencies = Array.from(deps);
             continue;
           }
-
-          wpModule.dependencies = Array.from(deps);
         }
       }
 
@@ -287,8 +284,8 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
       if (wpModule.run) {
         modules[id] = wpModule.run;
         wpModule.run.__moonlight = true;
+        if (wpModule.entrypoint) entrypoints.push(id);
       }
-      if (wpModule.entrypoint) entrypoints.push(id);
     }
     if (!webpackModules.size) break;
   }
@@ -310,7 +307,18 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
     window.webpackChunkdiscord_app.push([
       [--chunkId],
       modules,
-      (require: typeof WebpackRequire) => entrypoints.map(require)
+      (require: WebpackRequireType) =>
+        entrypoints.map((id) => {
+          try {
+            if (require.m[id] == null) {
+              logger.error(`Failing to load entrypoint module "${id}" because it's not found in Webpack.`);
+            } else {
+              require(id);
+            }
+          } catch (err) {
+            logger.error(`Failed to load entrypoint module "${id}":`, err);
+          }
+        })
     ]);
   }
 }
