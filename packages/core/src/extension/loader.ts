@@ -60,18 +60,11 @@ async function loadExtWeb(ext: DetectedExtension) {
       let idx = 0;
       for (const patch of exports.patches) {
         if (Array.isArray(patch.replace)) {
-          for (const replacement of patch.replace) {
-            const newPatch = Object.assign({}, patch, {
-              replace: replacement
-            });
-
-            registerPatch({ ...newPatch, ext: ext.id, id: idx });
-            idx++;
-          }
-        } else {
           registerPatch({ ...patch, ext: ext.id, id: idx });
-          idx++;
+        } else {
+          registerPatch({ ...patch, replace: [patch.replace], ext: ext.id, id: idx });
         }
+        idx++;
       }
     }
 
