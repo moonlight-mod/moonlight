@@ -103,7 +103,12 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 
   for (const [id, func] of Object.entries(entry)) {
     if (func.__moonlight === true) continue;
-    let moduleString = moduleCache[id];
+
+    // Clone the module string so finds don't get messed up by other extensions
+    const origModuleString = moduleCache[id];
+    let moduleString = origModuleString;
+    const patchedStr = [];
+    const mappedName = moonlight.moonmap.modules[id];
 
     for (let i = 0; i < patches.length; i++) {
       const patch = patches[i];
@@ -116,49 +121,58 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         patch.find.lastIndex = 0;
       }
 
-      const match = testFind(moduleString, patch.find);
+      const match = testFind(origModuleString, patch.find) || patch.find === mappedName;
 
       // Global regexes apply to all modules
       const shouldRemove = typeof patch.find === "string" ? true : !patch.find.global;
 
+      let replaced = moduleString;
+      let hardFailed = false;
       if (match) {
-        // We ensured all arrays get turned into normal PatchReplace objects on register
-        const replace = patch.replace as PatchReplace;
+        // We ensured normal PatchReplace objects get turned into arrays on register
+        const replaces = patch.replace as PatchReplace[];
 
-        if (replace.type === undefined || replace.type === PatchReplaceType.Normal) {
-          // tsc fails to detect the overloads for this, so I'll just do this
-          // Verbose, but it works
-          let replaced;
-          if (typeof replace.replacement === "string") {
-            replaced = moduleString.replace(replace.match, replace.replacement);
-          } else {
-            replaced = moduleString.replace(replace.match, replace.replacement);
-          }
+        for (let i = 0; i < replaces.length; i++) {
+          const replace = replaces[i];
+          let patchId = `${patch.ext}#${patch.id}`;
+          if (replaces.length > 1) patchId += `#${i}`;
+          patchedStr.push(patchId);
 
-          if (replaced === moduleString) {
-            logger.warn("Patch replacement failed", id, patch);
-            continue;
-          }
+          if (replace.type === undefined || replace.type === PatchReplaceType.Normal) {
+            // tsc fails to detect the overloads for this, so I'll just do this
+            // Verbose, but it works
+            if (typeof replace.replacement === "string") {
+              replaced = replaced.replace(replace.match, replace.replacement);
+            } else {
+              replaced = replaced.replace(replace.match, replace.replacement);
+            }
 
-          if (patchModule(id, `${patch.ext}#${patch.id}`, replaced)) {
-            moduleString = replaced;
+            if (replaced === moduleString) {
+              logger.warn("Patch replacement failed", id, patch);
+              if (patch.hardFail) {
+                hardFailed = true;
+                break;
+              } else {
+                continue;
+              }
+            }
+          } else if (replace.type === PatchReplaceType.Module) {
+            // Directly replace the module with a new one
+            const newModule = replace.replacement(replaced);
+            entry[id] = newModule;
+            entry[id].__moonlight = true;
+            replaced = replaced.toString().replace(/\n/g, "") + `//# sourceURL=Webpack-Module-${id}`;
           }
-        } else if (replace.type === PatchReplaceType.Module) {
-          // Directly replace the module with a new one
-          const newModule = replace.replacement(moduleString);
-          entry[id] = newModule;
-          entry[id].__moonlight = true;
-          moduleString = newModule.toString().replace(/\n/g, "") + `//# sourceURL=Webpack-Module-${id}`;
         }
+
+        if (!hardFailed) moduleString = replaced;
 
         moonlight.unpatched.delete(patch);
-
-        if (shouldRemove) {
-          patches.splice(i--, 1);
-        }
+        if (shouldRemove) patches.splice(i--, 1);
       }
     }
 
+    patchModule(id, patchedStr.join(", "), moduleString);
     moduleCache[id] = moduleString;
 
     try {

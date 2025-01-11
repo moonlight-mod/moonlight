@@ -108,6 +108,7 @@ export type PatchReplace =
 export type Patch = {
   find: PatchMatch;
   replace: PatchReplace | PatchReplace[];
+  hardFail?: boolean; // if any patches fail, all fail
   prerequisite?: () => boolean;
 };
 
