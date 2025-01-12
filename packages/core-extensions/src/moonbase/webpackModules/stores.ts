@@ -71,74 +71,70 @@ class MoonbaseSettingsStore extends Store<any> {
       };
     }
 
-    natives!
-      .fetchRepositories(this.config.repositories)
-      .then((ret) => {
-        for (const [repo, exts] of Object.entries(ret)) {
-          try {
-            for (const ext of exts) {
-              const uniqueId = this.extensionIndex++;
-              const extensionData = {
-                id: ext.id,
-                uniqueId,
-                manifest: ext,
-                source: { type: ExtensionLoadSource.Normal, url: repo },
-                state: ExtensionState.NotDownloaded,
-                compat: ExtensionCompat.Compatible,
-                hasUpdate: false
-              };
+    this.checkUpdates();
+  }
 
-              // Don't present incompatible updates
-              if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible) continue;
+  async checkUpdates() {
+    await Promise.all([this.checkExtensionUpdates(), this.checkMoonlightUpdates()]);
+    this.shouldShowNotice = this.newVersion != null || Object.keys(this.updates).length > 0;
+    this.emitChange();
+  }
 
-              const existing = this.getExisting(extensionData);
-              if (existing != null) {
-                // Make sure the download URL is properly updated
-                for (const [id, e] of Object.entries(this.extensions)) {
-                  if (e.id === ext.id && e.source.url === repo) {
-                    this.extensions[parseInt(id)].manifest = {
-                      ...e.manifest,
-                      download: ext.download
-                    };
-                    break;
-                  }
-                }
+  private async checkExtensionUpdates() {
+    const repositories = await natives!.fetchRepositories(this.config.repositories);
 
-                if (this.hasUpdate(extensionData)) {
-                  this.updates[existing.uniqueId] = {
-                    version: ext.version!,
-                    download: ext.download,
-                    updateManifest: ext
-                  };
-                  existing.hasUpdate = true;
-                  existing.changelog = ext.meta?.changelog;
-                }
+    // Reset update state
+    for (const id in this.extensions) {
+      const ext = this.extensions[id];
+      ext.hasUpdate = false;
+      ext.changelog = undefined;
+    }
+    this.updates = {};
 
-                continue;
-              }
+    for (const [repo, exts] of Object.entries(repositories)) {
+      for (const ext of exts) {
+        const uniqueId = this.extensionIndex++;
+        const extensionData = {
+          id: ext.id,
+          uniqueId,
+          manifest: ext,
+          source: { type: ExtensionLoadSource.Normal, url: repo },
+          state: ExtensionState.NotDownloaded,
+          compat: ExtensionCompat.Compatible,
+          hasUpdate: false
+        };
 
-              this.extensions[uniqueId] = extensionData;
-            }
-          } catch (e) {
-            logger.error(`Error processing repository ${repo}`, e);
+        // Don't present incompatible updates
+        if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible) continue;
+
+        const existing = this.getExisting(extensionData);
+        if (existing != null) {
+          // Make sure the download URL is properly updated
+          existing.manifest = {
+            ...existing.manifest,
+            download: ext.download
+          };
+
+          if (this.hasUpdate(extensionData)) {
+            this.updates[existing.uniqueId] = {
+              version: ext.version!,
+              download: ext.download,
+              updateManifest: ext
+            };
+            existing.hasUpdate = true;
+            existing.changelog = ext.meta?.changelog;
           }
+        } else {
+          this.extensions[uniqueId] = extensionData;
         }
+      }
+    }
+  }
 
-        this.emitChange();
-      })
-      .then(() =>
-        this.getExtensionConfigRaw("moonbase", "updateChecking", true)
-          ? natives!.checkForMoonlightUpdate()
-          : new Promise<null>((resolve) => resolve(null))
-      )
-      .then((version) => {
-        this.newVersion = version;
-        this.emitChange();
-      })
-      .then(() => {
-        this.shouldShowNotice = this.newVersion != null || Object.keys(this.updates).length > 0;
-        this.emitChange();
-      });
+  private async checkMoonlightUpdates() {
+    this.newVersion = this.getExtensionConfigRaw("moonbase", "updateChecking", true)
+      ? await natives!.checkForMoonlightUpdate()
+      : null;
   }
 
   private getExisting(ext: MoonbaseExtension) {
@@ -269,8 +265,12 @@ class MoonbaseSettingsStore extends Store<any> {
       }
 
       if (update != null) {
-        this.extensions[uniqueId].settingsOverride = update.updateManifest.settings;
-        this.extensions[uniqueId].compat = checkExtensionCompat(update.updateManifest);
+        const existing = this.extensions[uniqueId];
+        existing.settingsOverride = update.updateManifest.settings;
+        existing.compat = checkExtensionCompat(update.updateManifest);
+        existing.manifest = update.updateManifest;
+        existing.hasUpdate = false;
+        existing.changelog = update.updateManifest.meta?.changelog;
       }
 
       delete this.updates[uniqueId];
