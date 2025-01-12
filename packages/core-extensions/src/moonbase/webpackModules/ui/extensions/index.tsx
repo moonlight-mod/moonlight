@@ -10,14 +10,18 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import HelpMessage from "../HelpMessage";
 
 const SearchBar: any = Object.values(spacepack.findByCode("hideSearchIcon")[0].exports)[0];
+const { CircleInformationIcon, XSmallIcon } = Components;
+const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionsPage() {
-  const { extensions, savedFilter } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
+  const { extensions, savedFilter, showOnlyUpdateable } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
     return {
       extensions: MoonbaseSettingsStore.extensions,
-      savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>("moonbase", "filter", defaultFilter)
+      savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>("moonbase", "filter", defaultFilter),
+      showOnlyUpdateable: MoonbaseSettingsStore.showOnlyUpdateable
     };
   });
 
@@ -93,15 +97,36 @@ export default function ExtensionsPage() {
       />
       <FilterBar filter={filter} setFilter={setFilter} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
+      {showOnlyUpdateable && (
+        <HelpMessage
+          icon={CircleInformationIcon}
+          text="Only displaying updates"
+          className="moonbase-extension-update-section"
+        >
+          <div className="moonbase-help-message-buttons">
+            <PanelButton
+              icon={XSmallIcon}
+              onClick={() => {
+                MoonbaseSettingsStore.showOnlyUpdateable = false;
+              }}
+            />
+          </div>
+        </HelpMessage>
+      )}
+
       {filteredWithUpdates.map((ext) => (
         <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
       ))}
-      {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
-        <FormDivider className="moonbase-update-divider" />
+      {!showOnlyUpdateable && (
+        <>
+          {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
+            <FormDivider className="moonbase-update-divider" />
+          )}
+          {filteredWithoutUpdates.map((ext) => (
+            <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
+          ))}
+        </>
       )}
-      {filteredWithoutUpdates.map((ext) => (
-        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
-      ))}
     </>
   );
 }

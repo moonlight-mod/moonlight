@@ -14,11 +14,12 @@ const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
 const { open } = spacepack.findByExports("setSection", "clearSubsection")[0].exports.Z;
 
+let SettingsNotice;
 const notice = {
   stores: [MoonbaseSettingsStore],
   element: () => {
     // Require it here because lazy loading SUX
-    const SettingsNotice = spacepack.findByCode("onSaveButtonColor", "FocusRingScope")[0].exports.Z;
+    SettingsNotice ??= spacepack.findByCode("onSaveButtonColor", "FocusRingScope")[0].exports.Z;
     return (
       <SettingsNotice
         submitting={MoonbaseSettingsStore.submitting}

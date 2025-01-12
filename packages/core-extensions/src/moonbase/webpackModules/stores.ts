@@ -26,6 +26,15 @@ class MoonbaseSettingsStore extends Store<any> {
   newVersion: string | null;
   shouldShowNotice: boolean;
 
+  #showOnlyUpdateable = false;
+  set showOnlyUpdateable(v: boolean) {
+    this.#showOnlyUpdateable = v;
+    this.emitChange();
+  }
+  get showOnlyUpdateable() {
+    return this.#showOnlyUpdateable;
+  }
+
   extensions: { [id: number]: MoonbaseExtension };
   updates: {
     [id: number]: {

@@ -7,6 +7,7 @@ import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
 import ExtensionsPage from "./extensions";
 import ConfigPage from "./config";
 import Update from "./update";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
 const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0].exports;
@@ -44,6 +45,7 @@ export function Moonbase(props: { initialTab?: number } = {}) {
     () => () => {
       // Normally there's an onSettingsClose prop you can set but we don't expose it and I don't care enough to add support for it right now
       clearSubsection("moonbase");
+      MoonbaseSettingsStore.showOnlyUpdateable = false;
     },
     []
   );

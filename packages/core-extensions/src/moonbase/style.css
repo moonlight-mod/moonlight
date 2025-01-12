@@ -11,6 +11,7 @@ textarea.moonbase-resizeable {
   resize: vertical;
 }
 
+/* Update notice at the top of the client */
 .moonbase-updates-notice {
   background-color: var(--moonbase-bg);
   color: var(--moonbase-fg);
@@ -31,15 +32,22 @@ textarea.moonbase-resizeable {
   gap: 2px;
 }
 
+/* Help messages in Moonbase UI */
+.moonbase-help-message {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.moonbase-extension-update-section {
+  margin-top: 15px;
+}
+
 .moonbase-update-section {
   background-color: var(--moonbase-bg);
   --info-help-foreground: var(--moonbase-fg);
   border: none !important;
   color: var(--moonbase-fg);
-
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 .moonbase-update-section button {
@@ -49,7 +57,7 @@ textarea.moonbase-resizeable {
   border-color: var(--moonbase-fg);
 }
 
-.moonbase-update-section-buttons {
+.moonbase-help-message-buttons {
   display: flex;
   flex-direction: row;
   gap: 8px;
@@ -59,7 +67,7 @@ textarea.moonbase-resizeable {
   margin: 32px 0;
 }
 
-/* crash screen */
+/* Crash screen */
 .moonbase-crash-wrapper > [class^="buttons_"] {
   gap: 1rem;
 }
