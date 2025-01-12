@@ -1,12 +1,10 @@
 import settings from "@moonlight-mod/wp/settings_settings";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { Moonbase, pages } from "@moonlight-mod/wp/moonbase_ui";
+import { Moonbase, pages, RestartAdviceMessage, Update } from "@moonlight-mod/wp/moonbase_ui";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
-
-import Update from "./ui/update";
 
 const { MenuItem, Text, Breadcrumbs } = Components;
 
@@ -72,6 +70,7 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
             {page.name}
           </Breadcrumbs>
 
+          <RestartAdviceMessage />
           <Update />
 
           <page.element />

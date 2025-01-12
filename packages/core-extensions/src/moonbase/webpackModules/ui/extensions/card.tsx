@@ -23,7 +23,7 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, CircleWarningIcon, Tooltip } = Components;
+const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, Tooltip } = Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByExports("tabBar", "tabBarItem", "headerContentWrapper")[0].exports;
@@ -40,14 +40,12 @@ const CONFLICTING_TEXT = "This extension is already installed from another sourc
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
-  const [restartNeeded, setRestartNeeded] = React.useState(false);
 
-  const { ext, enabled, busy, update, conflicting, showingNotice } = useStateFromStores([MoonbaseSettingsStore], () => {
+  const { ext, enabled, busy, update, conflicting } = useStateFromStores([MoonbaseSettingsStore], () => {
     return {
       ext: MoonbaseSettingsStore.getExtension(uniqueId),
       enabled: MoonbaseSettingsStore.getExtensionEnabled(uniqueId),
       busy: MoonbaseSettingsStore.busy,
-      showingNotice: MoonbaseSettingsStore.showNotice(),
       update: MoonbaseSettingsStore.getExtensionUpdate(uniqueId),
       conflicting: MoonbaseSettingsStore.getExtensionConflicting(uniqueId)
     };
@@ -111,14 +109,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               />
             )}
 
-            {restartNeeded && !showingNotice && (
-              <PanelButton
-                icon={() => <CircleWarningIcon color={Components.tokens.colors.STATUS_DANGER} />}
-                onClick={() => MoonbaseSettingsStore.restartDiscord()}
-                tooltipText="You will need to reload/restart your client for this extension to work properly."
-              />
-            )}
-
             {ext.state === ExtensionState.NotDownloaded ? (
               <Tooltip
                 text={conflicting ? CONFLICTING_TEXT : COMPAT_TEXT_MAP[ext.compat]}
@@ -141,8 +131,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                       if (!ext.manifest?.meta?.tags?.includes(ExtensionTag.DangerZone)) {
                         MoonbaseSettingsStore.setExtensionEnabled(uniqueId, true);
                       }
-
-                      setRestartNeeded(true);
                     }}
                   >
                     Install
@@ -157,7 +145,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                     tooltipText="Delete"
                     onClick={() => {
                       MoonbaseSettingsStore.deleteExtension(uniqueId);
-                      setRestartNeeded(true);
                     }}
                   />
                 )}
@@ -168,7 +155,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                     tooltipText="Update"
                     onClick={() => {
                       MoonbaseSettingsStore.installExtension(uniqueId);
-                      setRestartNeeded(true);
                     }}
                   />
                 )}
@@ -190,7 +176,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                   onChange={() => {
                     const toggle = () => {
                       MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
-                      setRestartNeeded(true);
                     };
 
                     if (enabled && constants.builtinExtensions.includes(ext.id)) {

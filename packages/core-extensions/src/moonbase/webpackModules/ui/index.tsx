@@ -8,6 +8,7 @@ import ExtensionsPage from "./extensions";
 import ConfigPage from "./config";
 import Update from "./update";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import RestartAdviceMessage from "./RestartAdvice";
 
 const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
 const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0].exports;
@@ -66,9 +67,12 @@ export function Moonbase(props: { initialTab?: number } = {}) {
         </TabBar>
       </div>
 
+      <RestartAdviceMessage />
       <Update />
 
       {React.createElement(pages[subsection].element)}
     </>
   );
 }
+
+export { RestartAdviceMessage, Update };

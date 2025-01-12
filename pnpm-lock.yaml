@@ -10,7 +10,7 @@ importers:
     devDependencies:
       '@moonlight-mod/eslint-config':
         specifier: github:moonlight-mod/eslint-config
-        version: https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/7eb7bd7c51fe0e3ee9d2a0baf149212d2bb893af(eslint@9.12.0)(prettier@3.1.0)(typescript@5.3.2)
+        version: https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/e262ac24e1a0955a9b3e0d66da247a0a8c0446c9(eslint@9.12.0)(prettier@3.1.0)(typescript@5.3.2)
       esbuild:
         specifier: ^0.19.3
         version: 0.19.3
@@ -62,6 +62,9 @@ importers:
       '@moonlight-mod/types':
         specifier: workspace:*
         version: link:../types
+      microdiff:
+        specifier: ^1.5.0
+        version: 1.5.0
       nanotar:
         specifier: ^0.1.1
         version: 0.1.1
@@ -311,9 +314,9 @@ packages:
     resolution: {integrity: sha512-JBxkERygn7Bv/GbN5Rv8Ul6LVknS+5Bp6RgDC/O8gEBU/yeH5Ui5C/OlWrTb6qct7LjjfT6Re2NxB0ln0yYybA==}
     engines: {node: '>=18.18'}
 
-  '@moonlight-mod/eslint-config@https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/7eb7bd7c51fe0e3ee9d2a0baf149212d2bb893af':
-    resolution: {tarball: https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/7eb7bd7c51fe0e3ee9d2a0baf149212d2bb893af}
-    version: 1.0.0
+  '@moonlight-mod/eslint-config@https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/e262ac24e1a0955a9b3e0d66da247a0a8c0446c9':
+    resolution: {tarball: https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/e262ac24e1a0955a9b3e0d66da247a0a8c0446c9}
+    version: 1.0.1
     peerDependencies:
       eslint: '>= 9'
       typescript: '>= 5.3'
@@ -1004,6 +1007,9 @@ packages:
     resolution: {integrity: sha512-OyvYIOgpzXREySYJ1cqEb2pOKdeQMTfF9M8dRU6nC4hi/GXMmNpe9ssZCrSoTHazu05BSAoRBN/uYeco+ymfOg==}
     engines: {node: '>=18.0.0'}
 
+  microdiff@1.5.0:
+    resolution: {integrity: sha512-Drq+/THMvDdzRYrK0oxJmOKiC24ayUV8ahrt8l3oRK51PWt6gdtrIGrlIH3pT/lFh1z93FbAcidtsHcWbnRz8Q==}
+
   micromatch@4.0.8:
     resolution: {integrity: sha512-PXwfBhYu0hBCPw8Dn0E+WDYb7af3dSLVWKi3HGv84IdF4TyFoC0ysxFd0Goxw7nSv4T/PzEJQxsYsEiFCKo2BA==}
     engines: {node: '>=8.6'}
@@ -1433,7 +1439,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.3.1': {}
 
-  '@moonlight-mod/eslint-config@https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/7eb7bd7c51fe0e3ee9d2a0baf149212d2bb893af(eslint@9.12.0)(prettier@3.1.0)(typescript@5.3.2)':
+  '@moonlight-mod/eslint-config@https://codeload.github.com/moonlight-mod/eslint-config/tar.gz/e262ac24e1a0955a9b3e0d66da247a0a8c0446c9(eslint@9.12.0)(prettier@3.1.0)(typescript@5.3.2)':
     dependencies:
       '@eslint/js': 9.12.0
       eslint: 9.12.0
@@ -2293,6 +2299,8 @@ snapshots:
   merge2@1.4.1: {}
 
   meriyah@6.0.1: {}
+
+  microdiff@1.5.0: {}
 
   micromatch@4.0.8:
     dependencies:

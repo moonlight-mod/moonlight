@@ -38,3 +38,10 @@ export enum UpdateState {
   Installed,
   Failed
 }
+
+// Ordered in terms of priority
+export enum RestartAdvice {
+  NotNeeded, // No action is needed
+  ReloadNeeded, // A reload is needed
+  RestartNeeded // A restart is needed
+}
