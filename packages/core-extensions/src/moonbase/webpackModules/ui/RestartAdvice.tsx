@@ -36,10 +36,12 @@ export default function RestartAdviceMessage() {
   if (restartAdvice === RestartAdvice.NotNeeded) return null;
 
   return (
-    <HelpMessage text={strings[restartAdvice]} icon={CircleWarningIcon} type="warning">
-      <Button color={Button.Colors.YELLOW} size={Button.Sizes.TINY} onClick={actions[restartAdvice]}>
-        {buttonStrings[restartAdvice]}
-      </Button>
-    </HelpMessage>
+    <div className="moonbase-help-message-sticky">
+      <HelpMessage text={strings[restartAdvice]} icon={CircleWarningIcon} type="warning">
+        <Button color={Button.Colors.YELLOW} size={Button.Sizes.TINY} onClick={actions[restartAdvice]}>
+          {buttonStrings[restartAdvice]}
+        </Button>
+      </HelpMessage>
+    </div>
   );
 }
