@@ -4,9 +4,12 @@ import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { RepositoryManifest, UpdateState } from "../types";
+import { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
 
 const { Button, TabBar } = Components;
 const TabBarClasses = spacepack.findByCode(/tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"/)[0].exports;
+
+const MODULE_REGEX = /Webpack-Module-(\d+)/g;
 
 const logger = moonlight.getLogger("moonbase/crashScreen");
 
@@ -83,6 +86,48 @@ function ExtensionUpdateCard({ id, ext }: UpdateCardProps) {
   );
 }
 
+function ExtensionDisableCard({ ext }: { ext: DetectedExtension }) {
+  function disableWithDependents() {
+    const disable = new Set<string>();
+    disable.add(ext.id);
+    for (const [id, dependencies] of moonlightNode.processedExtensions.dependencyGraph) {
+      if (dependencies?.has(ext.id)) disable.add(id);
+    }
+
+    const config = structuredClone(moonlightNode.config);
+    for (const id in config.extensions) {
+      if (!disable.has(id)) continue;
+      if (typeof config.extensions[id] === "boolean") config.extensions[id] = false;
+      else (config.extensions[id] as ConfigExtension).enabled = false;
+    }
+
+    let msg = `Are you sure you want to disable "${ext.manifest.meta?.name ?? ext.id}"`;
+    if (disable.size > 1) {
+      msg += ` and its ${disable.size - 1} dependent${disable.size - 1 === 1 ? "" : "s"}`;
+    }
+    msg += "?";
+
+    if (confirm(msg)) {
+      moonlightNode.writeConfig(config);
+      window.location.reload();
+    }
+  }
+
+  return (
+    <div className="moonbase-crash-extensionCard">
+      <div className="moonbase-crash-extensionCard-meta">
+        <div className="moonbase-crash-extensionCard-title">{ext.manifest.meta?.name ?? ext.id}</div>
+        <div className="moonbase-crash-extensionCard-version">{`v${ext.manifest.version ?? "???"}`}</div>
+      </div>
+      <div className="moonbase-crash-extensionCard-button">
+        <Button color={Button.Colors.RED} onClick={disableWithDependents}>
+          Disable
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export function wrapAction({ action, state }: WrapperProps) {
   const [tab, setTab] = React.useState("crash");
 
@@ -94,6 +139,17 @@ export function wrapAction({ action, state }: WrapperProps) {
     };
   });
 
+  const causes = React.useMemo(() => {
+    const causes = new Set<string>();
+    if (state.error.stack) {
+      for (const [, id] of state.error.stack.matchAll(MODULE_REGEX))
+        for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
+    }
+    for (const [, id] of state.info.componentStack.matchAll(MODULE_REGEX))
+      for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
+    return [...causes];
+  }, []);
+
   return (
     <div className="moonbase-crash-wrapper">
       {action}
@@ -104,10 +160,13 @@ export function wrapAction({ action, state }: WrapperProps) {
         onItemSelect={(v) => setTab(v)}
       >
         <TabBar.Item className={TabBarClasses.tabBarItem} id="crash">
-          Crash Details
+          Crash details
         </TabBar.Item>
         <TabBar.Item className={TabBarClasses.tabBarItem} id="extensions" disabled={updateCount === 0}>
-          {`Extension Updates (${updateCount})`}
+          {`Extension updates (${updateCount})`}
+        </TabBar.Item>
+        <TabBar.Item className={TabBarClasses.tabBarItem} id="causes" disabled={causes.length === 0}>
+          {`Possible causes (${causes.length})`}
         </TabBar.Item>
       </TabBar>
       {tab === "crash" ? (
@@ -126,6 +185,15 @@ export function wrapAction({ action, state }: WrapperProps) {
           {updates.map(([id, ext]) => (
             <ExtensionUpdateCard id={Number(id)} ext={ext} />
           ))}
+        </div>
+      ) : null}
+      {tab === "causes" ? (
+        <div className="moonbase-crash-extensions">
+          {causes
+            .map((ext) => moonlightNode.extensions.find((e) => e.id === ext)!)
+            .map((ext) => (
+              <ExtensionDisableCard ext={ext} />
+            ))}
         </div>
       ) : null}
     </div>

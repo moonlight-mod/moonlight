@@ -15,6 +15,7 @@ async function load() {
   const logger = new Logger("web-preload");
 
   window.moonlight = {
+    patched: new Map(),
     unpatched: new Set(),
     pendingModules: new Set(),
     enabledExtensions: new Set(),

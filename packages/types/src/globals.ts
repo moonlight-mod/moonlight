@@ -56,6 +56,7 @@ export type MoonlightNodeSandboxed = {
 };
 
 export type MoonlightWeb = {
+  patched: Map<string, Set<string>>;
   unpatched: Set<IdentifiedPatch>;
   pendingModules: Set<IdentifiedWebpackModule>;
   enabledExtensions: Set<string>;
