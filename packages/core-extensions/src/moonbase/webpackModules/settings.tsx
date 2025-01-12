@@ -10,7 +10,7 @@ const { MenuItem, Text, Breadcrumbs } = Components;
 
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
-const { open } = spacepack.findByExports("setSection", "clearSubsection")[0].exports.Z;
+const { open } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
 
 let SettingsNotice;
 const notice = {

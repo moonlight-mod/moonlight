@@ -13,7 +13,7 @@ import RestartAdviceMessage from "./RestartAdvice";
 const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
 const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0].exports;
 const TabBarClasses = spacepack.findByCode("nowPlayingColumn:")[0].exports;
-const { setSection, clearSubsection } = spacepack.findByExports("setSection", "clearSubsection")[0].exports.Z;
+const { setSection, clearSubsection } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
 export const pages: {

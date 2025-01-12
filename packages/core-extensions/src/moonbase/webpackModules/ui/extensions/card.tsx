@@ -26,10 +26,10 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, Tooltip } = Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
-const TabBarClasses = spacepack.findByExports("tabBar", "tabBarItem", "headerContentWrapper")[0].exports;
-const MarkupClasses = spacepack.findByExports("markup", "inlineFormat")[0].exports;
+const TabBarClasses = spacepack.findByCode("tabBar:", "tabBarItem:", "headerContentWrapper:")[0].exports;
+const MarkupClasses = spacepack.findByCode("markup:", "inlineFormat:")[0].exports;
 
-const BuildOverrideClasses = spacepack.findByExports("disabledButtonOverride")[0].exports;
+const BuildOverrideClasses = spacepack.findByCode("disabledButtonOverride:")[0].exports;
 
 const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
   [ExtensionCompat.Compatible]: "huh?",

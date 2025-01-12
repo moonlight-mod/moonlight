@@ -59,7 +59,7 @@ function listener() {
         {
           name: "Open Moonbase",
           onClick: () => {
-            const { open } = spacepack.findByExports("setSection", "clearSubsection")[0].exports.Z;
+            const { open } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
             if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
               open("moonbase-extensions");
             } else {
