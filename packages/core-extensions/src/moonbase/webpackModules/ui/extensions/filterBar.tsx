@@ -211,7 +211,7 @@ export default function FilterBar({
       }
     }
     setTagsButtonOffset(offset);
-  }, [windowSize]);
+  }, [windowSize, tagsContainer.current, tagListInner.current, tagListInner.current?.getBoundingClientRect()?.width]);
 
   return (
     <div
@@ -305,6 +305,22 @@ export default function FilterBar({
           </Button>
         )}
       </Popout>
+      <Button
+        size={Button.Sizes.MIN}
+        color={Button.Colors.CUSTOM}
+        className={`${FilterBarClasses.tagsButton} ${FilterBarClasses.tagsButtonPlaceholder}`}
+        innerClassName={FilterBarClasses.tagsButtonInner}
+      >
+        {selectedTags.size > 0 ? (
+          <div style={{ boxSizing: "content-box" }} className={FilterBarClasses.countContainer}>
+            <Text className={FilterBarClasses.countText} color="none" variant="text-xs/medium">
+              {selectedTags.size}
+            </Text>
+          </div>
+        ) : null}
+
+        <ChevronSmallUpIcon size={"custom"} width={20} />
+      </Button>
     </div>
   );
 }
