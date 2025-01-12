@@ -5,10 +5,6 @@ import { MoonlightBranch } from "@moonlight-mod/types";
 import React from "@moonlight-mod/wp/react";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
-// FIXME: not indexed as importable
-const Constants = spacepack.require("discord/Constants");
-const UserSettingsSections = spacepack.findObjectFromKey(Constants, "DEVELOPER_OPTIONS");
-
 const { ThemeDarkIcon } = Components;
 
 function plural(str: string, num: number) {
@@ -64,18 +60,12 @@ function listener() {
           name: "Open Moonbase",
           onClick: () => {
             const { open } = spacepack.findByExports("setSection", "clearSubsection")[0].exports.Z;
-
-            // settings is lazy loaded thus lazily patched
-            // FIXME: figure out a way to detect if settings has been opened
-            //        alreadyjust so the transition isnt as jarring
-            open(UserSettingsSections.ACCOUNT);
-            setTimeout(() => {
-              if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
-                open("moonbase-extensions");
-              } else {
-                open("moonbase", 0);
-              }
-            }, 0);
+            if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
+              open("moonbase-extensions");
+            } else {
+              MoonbaseSettingsStore.showOnlyUpdateable = true;
+              open("moonbase", 0);
+            }
             return true;
           }
         }

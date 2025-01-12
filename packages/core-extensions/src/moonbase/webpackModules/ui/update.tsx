@@ -2,13 +2,10 @@ import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import { UpdateState } from "../../types";
+import HelpMessage from "./HelpMessage";
 
-const { ThemeDarkIcon, Text, Button } = Components;
-const Margins = spacepack.require("discord/styles/shared/Margins.css");
-const HelpMessageClasses = spacepack.findByExports("positive", "iconDiv")[0].exports;
+const { ThemeDarkIcon, Button } = Components;
 
 const logger = moonlight.getLogger("moonbase/ui/update");
 
@@ -25,27 +22,9 @@ export default function Update() {
 
   if (newVersion == null) return null;
 
-  // reimpl of HelpMessage but with a custom icon
   return (
-    <div
-      className={`${Margins.marginBottom20} ${HelpMessageClasses.info} ${HelpMessageClasses.container} moonbase-update-section`}
-    >
-      <Flex direction={Flex.Direction.HORIZONTAL}>
-        <div
-          className={HelpMessageClasses.iconDiv}
-          style={{
-            alignItems: "center"
-          }}
-        >
-          <ThemeDarkIcon size="sm" color="currentColor" className={HelpMessageClasses.icon} />
-        </div>
-
-        <Text variant="text-sm/medium" color="currentColor" className={HelpMessageClasses.text}>
-          {strings[state]}
-        </Text>
-      </Flex>
-
-      <div className="moonbase-update-section-buttons">
+    <HelpMessage text={strings[state]} className="moonbase-update-section" icon={ThemeDarkIcon}>
+      <div className="moonbase-help-message-buttons">
         {state === UpdateState.Installed && (
           <Button
             look={Button.Looks.OUTLINED}
@@ -78,6 +57,6 @@ export default function Update() {
           Update
         </Button>
       </div>
-    </div>
+    </HelpMessage>
   );
 }
