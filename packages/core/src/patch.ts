@@ -111,6 +111,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     const mappedName = moonlight.moonmap.modules[id];
     let modified = false;
 
+    const exts = new Set<string>();
+
     for (let i = 0; i < patches.length; i++) {
       const patch = patches[i];
       if (patch.prerequisite != null && !patch.prerequisite()) {
@@ -169,6 +171,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         if (!hardFailed) {
           moduleString = replaced;
           modified = true;
+          exts.add(patch.ext);
         }
 
         moonlight.unpatched.delete(patch);
@@ -179,6 +182,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     if (modified) {
       patchModule(id, patchedStr.join(", "), moduleString);
       moduleCache[id] = moduleString;
+      moonlight.patched.set(id, exts);
     }
 
     try {
