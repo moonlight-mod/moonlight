@@ -15,10 +15,10 @@ async function load() {
   const logger = new Logger("web-preload");
 
   window.moonlight = {
-    apiLevel: constants.apiLevel,
     unpatched: new Set(),
     pendingModules: new Set(),
     enabledExtensions: new Set(),
+
     events: createEventEmitter<EventType, EventPayloads>(),
     patchingInternals: {
       onModuleLoad,
@@ -29,15 +29,18 @@ async function load() {
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
+    apiLevel: constants.apiLevel,
 
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
     getConfigOption: moonlightNode.getConfigOption.bind(moonlightNode),
     setConfigOption: moonlightNode.setConfigOption.bind(moonlightNode),
+    writeConfig: moonlightNode.writeConfig.bind(moonlightNode),
 
     getNatives: moonlightNode.getNatives.bind(moonlightNode),
     getLogger(id) {
       return new Logger(id);
     },
+
     lunast: new LunAST(),
     moonmap: new Moonmap()
   };

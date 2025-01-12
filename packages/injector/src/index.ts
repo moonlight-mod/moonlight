@@ -6,23 +6,23 @@ import electron, {
 } from "electron";
 import Module from "node:module";
 import { constants, MoonlightBranch } from "@moonlight-mod/types";
-import { readConfig } from "@moonlight-mod/core/config";
+import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import EventEmitter from "node:events";
-import { join, resolve } from "node:path";
+import path from "node:path";
 import persist from "@moonlight-mod/core/persist";
 import createFS from "@moonlight-mod/core/fs";
+import { getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
+import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
 
 const logger = new Logger("injector");
 
 let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
 let blockedUrls: RegExp[] = [];
-let isMoonlightDesktop = false;
-let hasOpenAsar = false;
-let openAsarConfigPreload: string | undefined;
+let injectorConfig: InjectorConfig | undefined;
 
 const scriptUrls = ["web.", "sentry."];
 const blockedScripts = new Set<string>();
@@ -34,8 +34,8 @@ ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
 ipcMain.on(constants.ipcGetAppData, (e) => {
   e.returnValue = app.getPath("appData");
 });
-ipcMain.on(constants.ipcGetIsMoonlightDesktop, (e) => {
-  e.returnValue = isMoonlightDesktop;
+ipcMain.on(constants.ipcGetInjectorConfig, (e) => {
+  e.returnValue = injectorConfig;
 });
 ipcMain.handle(constants.ipcMessageBox, (_, opts) => {
   electron.dialog.showMessageBoxSync(opts);
@@ -114,13 +114,6 @@ function patchCsp(headers: Record<string, string[]>) {
   headers[csp] = [stringified];
 }
 
-function removeOpenAsarEventIfPresent(eventHandler: (...args: any[]) => void) {
-  const code = eventHandler.toString();
-  if (code.indexOf("bw.webContents.on('dom-ready'") > -1) {
-    electron.app.off("browser-window-created", eventHandler);
-  }
-}
-
 class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
     const isMainWindow = opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
@@ -185,27 +178,6 @@ class BrowserWindow extends ElectronBrowserWindow {
       // this is needed because multiple webRequest handlers cannot be registered at once
       cb({ cancel: blockedUrls.some((u) => u.test(details.url)) });
     });
-
-    if (hasOpenAsar) {
-      // Remove DOM injections
-      // Settings can still be opened via:
-      // `DiscordNative.ipc.send("DISCORD_UPDATED_QUOTES","o")`
-      // @ts-expect-error Electron internals
-      const events = electron.app._events["browser-window-created"];
-      if (Array.isArray(events)) {
-        for (const event of events) {
-          removeOpenAsarEventIfPresent(event);
-        }
-      } else if (events != null) {
-        removeOpenAsarEventIfPresent(events);
-      }
-
-      // Config screen fails to context bridge properly
-      // Less than ideal, but better than disabling it everywhere
-      if (opts.webPreferences!.preload === openAsarConfigPreload) {
-        opts.webPreferences!.sandbox = false;
-      }
-    }
   }
 }
 
@@ -226,19 +198,24 @@ Object.defineProperty(BrowserWindow, "name", {
   writable: false
 });
 
-export async function inject(asarPath: string) {
-  isMoonlightDesktop = asarPath === "moonlightDesktop";
+type InjectorConfig = { disablePersist?: boolean; disableLoad?: boolean };
+export async function inject(asarPath: string, _injectorConfig?: InjectorConfig) {
+  injectorConfig = _injectorConfig;
+
   global.moonlightNodeSandboxed = {
     fs: createFS(),
     // These aren't supposed to be used from host
-    addCors(url) {},
-    addBlocked(url) {}
+    addCors() {},
+    addBlocked() {}
   };
 
   try {
-    const config = await readConfig();
+    let config = await readConfig();
     initLogger(config);
     const extensions = await getExtensions();
+    const processedExtensions = await loadExtensions(extensions);
+    const moonlightDir = await getMoonlightDir();
+    const extensionsPath = await getExtensionsPath();
 
     // Duplicated in node-preload... oops
     function getConfig(ext: string) {
@@ -248,72 +225,58 @@ export async function inject(asarPath: string) {
     }
 
     global.moonlightHost = {
-      asarPath,
-      config,
-      events: new EventEmitter(),
-      extensions,
-      processedExtensions: {
-        extensions: [],
-        dependencyGraph: new Map()
+      get config() {
+        return config;
       },
+      extensions,
+      processedExtensions,
+      asarPath,
+      events: new EventEmitter(),
 
       version: MOONLIGHT_VERSION,
       branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
       getConfig,
-      getConfigOption: <T>(ext: string, name: string) => {
-        const config = getConfig(ext);
-        if (config == null) return undefined;
-        const option = config[name];
-        if (option == null) return undefined;
-        return option as T;
+      getConfigOption(ext, name) {
+        const manifest = getManifest(extensions, ext);
+        return getConfigOption(ext, name, config, manifest?.settings);
       },
-      getLogger: (id: string) => {
+      setConfigOption(ext, name, value) {
+        setConfigOption(config, ext, name, value);
+        this.writeConfig(config);
+      },
+      async writeConfig(newConfig) {
+        await writeConfig(newConfig);
+        config = newConfig;
+      },
+
+      getLogger(id) {
         return new Logger(id);
+      },
+      getMoonlightDir() {
+        return moonlightDir;
+      },
+      getExtensionDir: (ext: string) => {
+        return path.join(extensionsPath, ext);
       }
     };
 
-    // Check if we're running with OpenAsar
-    try {
-      require.resolve(join(asarPath, "updater", "updater.js"));
-      hasOpenAsar = true;
-      openAsarConfigPreload = resolve(asarPath, "config", "preload.js");
-      // eslint-disable-next-line no-empty
-    } catch {}
-
-    if (hasOpenAsar) {
-      // Disable command line switch injection
-      // I personally think that the command line switches should be vetted by
-      // the user and not just "trust that these are sane defaults that work
-      // always". I'm not hating on Ducko or anything, I'm just opinionated.
-      // Someone can always make a command line modifier plugin, thats the point
-      // of having host modules.
-      try {
-        const cmdSwitchesPath = require.resolve(join(asarPath, "cmdSwitches.js"));
-        require.cache[cmdSwitchesPath] = new Module(cmdSwitchesPath, require.cache[require.resolve(asarPath)]);
-        require.cache[cmdSwitchesPath]!.exports = () => {};
-      } catch (error) {
-        logger.error("Failed to disable OpenAsar's command line flags:", error);
-      }
-    }
-
     patchElectron();
 
-    global.moonlightHost.processedExtensions = await loadExtensions(extensions);
     await loadProcessedExtensions(global.moonlightHost.processedExtensions);
   } catch (error) {
     logger.error("Failed to inject:", error);
   }
 
-  if (isMoonlightDesktop) return;
-
-  if (!hasOpenAsar && !isMoonlightDesktop) {
+  if (injectorConfig?.disablePersist !== true) {
     persist(asarPath);
   }
 
-  // Need to do this instead of require() or it breaks require.main
-  // @ts-expect-error Module internals
-  Module._load(asarPath, Module, true);
+  if (injectorConfig?.disableLoad !== true) {
+    // Need to do this instead of require() or it breaks require.main
+    // @ts-expect-error Module internals
+    Module._load(asarPath, Module, true);
+  }
 }
 
 function patchElectron() {
