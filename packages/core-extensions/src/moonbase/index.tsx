@@ -54,7 +54,8 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { ext: "spacepack", id: "spacepack" },
       { ext: "settings", id: "settings" },
       { id: "react" },
-      { ext: "moonbase", id: "ui" }
+      { ext: "moonbase", id: "ui" },
+      ':"USER_SETTINGS_MODAL_SET_SECTION"'
     ],
     entrypoint: true
   },
