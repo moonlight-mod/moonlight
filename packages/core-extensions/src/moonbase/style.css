@@ -7,6 +7,11 @@
   margin-top: 0px;
 }
 
+.moonbase-retry-button {
+  padding: 8px;
+  margin-right: 8px;
+}
+
 textarea.moonbase-resizeable {
   resize: vertical;
 }
