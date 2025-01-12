@@ -13,7 +13,7 @@ import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import HelpMessage from "../HelpMessage";
 
 const SearchBar: any = Object.values(spacepack.findByCode("hideSearchIcon")[0].exports)[0];
-const { CircleInformationIcon, XSmallIcon } = Components;
+const { FormDivider, CircleInformationIcon, XSmallIcon } = Components;
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionsPage() {
@@ -77,8 +77,8 @@ export default function ExtensionsPage() {
 
   // Prioritize extensions with updates
   const filteredWithUpdates = filtered.filter((ext) => ext!.hasUpdate);
-  const filteredWithoutUpdates = filtered.filter((ext) => !ext!.hasUpdate);
-  const { FormDivider } = Components;
+  const filterUpdates = showOnlyUpdateable && filteredWithUpdates.length > 0;
+  const filteredWithoutUpdates = filterUpdates ? [] : filtered.filter((ext) => !ext!.hasUpdate);
 
   return (
     <>
@@ -97,7 +97,7 @@ export default function ExtensionsPage() {
       />
       <FilterBar filter={filter} setFilter={setFilter} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
-      {showOnlyUpdateable && (
+      {filterUpdates && (
         <HelpMessage
           icon={CircleInformationIcon}
           text="Only displaying updates"
@@ -117,16 +117,12 @@ export default function ExtensionsPage() {
       {filteredWithUpdates.map((ext) => (
         <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
       ))}
-      {!showOnlyUpdateable && (
-        <>
-          {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
-            <FormDivider className="moonbase-update-divider" />
-          )}
-          {filteredWithoutUpdates.map((ext) => (
-            <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
-          ))}
-        </>
+      {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
+        <FormDivider className="moonbase-update-divider" />
       )}
+      {filteredWithoutUpdates.map((ext) => (
+        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
+      ))}
     </>
   );
 }
