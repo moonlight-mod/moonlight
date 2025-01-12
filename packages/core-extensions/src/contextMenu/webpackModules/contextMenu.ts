@@ -11,12 +11,14 @@ type ReturnType = MenuElement | MenuElement[];
 type Patch = {
   navId: string;
   item: React.FC<any>;
-  anchorId: string;
+  anchor: string | RegExp;
   before: boolean;
 };
 
-function addItem<T = any>(navId: string, item: React.FC<T>, anchorId: string, before = false) {
-  patches.push({ navId, item, anchorId, before });
+function addItem<T = any>(navId: string, item: React.FC<T>, anchor: string | RegExp, before = false) {
+  if (anchor instanceof RegExp && anchor.flags.includes("g"))
+    throw new Error("anchor regular expression should not be global");
+  patches.push({ navId, item, anchor, before });
 }
 
 const patches: Patch[] = [];
@@ -25,7 +27,9 @@ function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
   if (!matches.length) return items;
 
   for (const patch of matches) {
-    const idx = items.findIndex((i) => i.key === patch.anchorId);
+    const idx = items.findIndex((i) =>
+      typeof patch.anchor === "string" ? i.key === patch.anchor : patch.anchor.test(i.key!)
+    );
     if (idx === -1) continue;
     items.splice(idx + 1 - +patch.before, 0, ...parser(patch.item(menuProps) as ReturnType));
   }
