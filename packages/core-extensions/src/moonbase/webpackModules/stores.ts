@@ -409,7 +409,7 @@ class MoonbaseSettingsStore extends Store<any> {
       // Toggling extensions specifically wants to rely on the initial state,
       // that's what was considered when loading extensions.
       const initEnabled = initState && (typeof initState === "boolean" ? initState : initState.enabled);
-      if (initEnabled !== newEnabled) {
+      if (initEnabled !== newEnabled || detected?.manifest.version !== ext.manifest.version) {
         // If we have the extension locally, we confidently know if it has host/preload scripts.
         // If not, we have to respect the environment specified in the manifest.
         // If that is the default, we can't know what's needed.
