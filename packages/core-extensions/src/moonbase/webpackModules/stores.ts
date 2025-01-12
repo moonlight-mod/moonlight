@@ -1,4 +1,4 @@
-import { Config, ExtensionEnvironment, ExtensionLoadSource } from "@moonlight-mod/types";
+import { Config, ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
 import { ExtensionState, MoonbaseExtension, MoonbaseNatives, RepositoryManifest, RestartAdvice } from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
@@ -375,19 +375,16 @@ class MoonbaseSettingsStore extends Store<any> {
 
   #computeRestartAdvice() {
     const i = this.initialConfig; // Initial config, from startup
-    const o = this.savedConfig; // Saved current config
     const n = this.config; // New config about to be saved
 
     let returnedAdvice = RestartAdvice.NotNeeded;
-    const updateAdvice = (r: RestartAdvice) => {
-      if (returnedAdvice < r) returnedAdvice = r;
-    };
+    const updateAdvice = (r: RestartAdvice) => (returnedAdvice < r ? (returnedAdvice = r) : returnedAdvice);
 
     // Top-level keys, repositories is not needed here because Moonbase handles it.
-    if (o.patchAll !== n.patchAll) updateAdvice(RestartAdvice.ReloadNeeded);
-    if (o.loggerLevel !== n.loggerLevel) updateAdvice(RestartAdvice.ReloadNeeded);
-    if (diff(o.devSearchPaths ?? [], n.devSearchPaths ?? [], { cyclesFix: false }).length !== 0)
-      updateAdvice(RestartAdvice.RestartNeeded);
+    if (i.patchAll !== n.patchAll) updateAdvice(RestartAdvice.ReloadNeeded);
+    if (i.loggerLevel !== n.loggerLevel) updateAdvice(RestartAdvice.ReloadNeeded);
+    if (diff(i.devSearchPaths ?? [], n.devSearchPaths ?? [], { cyclesFix: false }).length !== 0)
+      return updateAdvice(RestartAdvice.RestartNeeded);
 
     // Extension specific logic
     for (const id in n.extensions) {
@@ -400,13 +397,12 @@ class MoonbaseSettingsStore extends Store<any> {
       if (!ext) continue;
 
       const initState = i.extensions[id];
-      const oldState = o.extensions[id];
       const newState = n.extensions[id];
 
       const newEnabled = typeof newState === "boolean" ? newState : newState.enabled;
       // If it's enabled but not detected yet, restart.
       if (newEnabled && !detected) {
-        updateAdvice(RestartAdvice.RestartNeeded);
+        return updateAdvice(RestartAdvice.RestartNeeded);
         continue;
       }
 
@@ -419,8 +415,7 @@ class MoonbaseSettingsStore extends Store<any> {
         // If that is the default, we can't know what's needed.
 
         if (detected?.scripts.hostPath || detected?.scripts.nodePath) {
-          updateAdvice(RestartAdvice.RestartNeeded);
-          continue;
+          return updateAdvice(RestartAdvice.RestartNeeded);
         }
 
         switch (ext.manifest.environment) {
@@ -429,20 +424,37 @@ class MoonbaseSettingsStore extends Store<any> {
             updateAdvice(RestartAdvice.ReloadNeeded);
             continue;
           case ExtensionEnvironment.Desktop:
-            updateAdvice(RestartAdvice.RestartNeeded);
-            continue;
+            return updateAdvice(RestartAdvice.RestartNeeded);
           default:
             updateAdvice(RestartAdvice.ReloadNeeded);
             continue;
         }
       }
 
-      const oldConfig = typeof oldState === "boolean" ? {} : oldState.config ?? {};
+      const initConfig = typeof initState === "boolean" ? {} : initState.config ?? {};
       const newConfig = typeof newState === "boolean" ? {} : newState.config ?? {};
 
-      const changes = diff(oldConfig, newConfig, { cyclesFix: false });
-      if (changes.length !== 0) {
-        updateAdvice(RestartAdvice.ReloadNeeded); // TODO: Annotate what action is needed on settings.
+      const def = ext.manifest.settings;
+      if (!def) continue;
+
+      const changedKeys = diff(initConfig, newConfig, { cyclesFix: false }).map((c) => c.path[0]);
+      for (const key in def) {
+        if (!changedKeys.includes(key)) continue;
+
+        const advice = def[key].advice;
+        switch (advice) {
+          case ExtensionSettingsAdvice.None:
+            updateAdvice(RestartAdvice.NotNeeded);
+            continue;
+          case ExtensionSettingsAdvice.Reload:
+            updateAdvice(RestartAdvice.ReloadNeeded);
+            continue;
+          case ExtensionSettingsAdvice.Restart:
+            updateAdvice(RestartAdvice.RestartNeeded);
+            continue;
+          default:
+            updateAdvice(RestartAdvice.ReloadSuggested);
+        }
       }
     }
 

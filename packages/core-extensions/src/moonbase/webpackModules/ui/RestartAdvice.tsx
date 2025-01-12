@@ -9,18 +9,21 @@ const { Button } = Components;
 
 const strings: Record<RestartAdvice, string> = {
   [RestartAdvice.NotNeeded]: "how did you even",
+  [RestartAdvice.ReloadSuggested]: "A reload might be needed to apply some of the changed options.",
   [RestartAdvice.ReloadNeeded]: "A reload is needed to apply some of the changed options.",
   [RestartAdvice.RestartNeeded]: "A restart is needed to apply some of the changed options."
 };
 
 const buttonStrings: Record<RestartAdvice, string> = {
   [RestartAdvice.NotNeeded]: "huh?",
+  [RestartAdvice.ReloadSuggested]: "Reload",
   [RestartAdvice.ReloadNeeded]: "Reload",
   [RestartAdvice.RestartNeeded]: "Restart"
 };
 
 const actions: Record<RestartAdvice, () => void> = {
   [RestartAdvice.NotNeeded]: () => {},
+  [RestartAdvice.ReloadSuggested]: () => window.location.reload(),
   [RestartAdvice.ReloadNeeded]: () => window.location.reload(),
   [RestartAdvice.RestartNeeded]: () => MoonbaseSettingsStore.restartDiscord()
 };
