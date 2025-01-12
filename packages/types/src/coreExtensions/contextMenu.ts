@@ -14,10 +14,10 @@ export type ContextMenu = {
    * Registers a new context menu item for a given context menu type.
    * @param navId The navigation ID for the target context menu (e.g. "user-context", "message")
    * @param item A React component
-   * @param anchorId An existing item's ID to anchor the new item to
+   * @param anchor An existing item's ID to anchor the new item to
    * @param before Whether to insert the new item before the anchor item
    */
-  addItem: (navId: string, item: React.FC<any>, anchorId: string, before?: boolean) => void;
+  addItem: (navId: string, item: React.FC<any>, anchor: string | RegExp, before?: boolean) => void;
 
   MenuCheckboxItem: MenuCheckboxItem;
   MenuControlItem: MenuControlItem;
