@@ -17,8 +17,6 @@ export const patches: Patch[] = [
   },
 
   // Enable staff help menu
-  // FIXME: either make this actually work live (needs a state hook) or just
-  //        wait for #122
   {
     find: ".HEADER_BAR)",
     replace: {
@@ -29,7 +27,6 @@ export const patches: Patch[] = [
   },
 
   // Enable further staff-locked options
-  // FIXME: #122, this doesn't work live
   {
     find: "shouldShowLurkerModeUpsellPopout:",
     replace: {

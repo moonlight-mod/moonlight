@@ -1,4 +1,5 @@
 {
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
   "id": "spacepack",
   "apiLevel": 2,
   "meta": {
@@ -9,6 +10,7 @@
   },
   "settings": {
     "addToGlobalScope": {
+      "advice": "reload",
       "displayName": "Add to global scope",
       "description": "Populates window.spacepack for easier usage in DevTools",
       "type": "boolean",

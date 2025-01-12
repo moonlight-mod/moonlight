@@ -1,4 +1,5 @@
 {
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
   "id": "nativeFixes",
   "meta": {
     "name": "Native Fixes",
@@ -6,32 +7,38 @@
     "authors": ["Cynosphere", "adryd"],
     "tags": ["fixes"]
   },
+  "environment": "desktop",
   "settings": {
     "devtoolsThemeFix": {
+      "advice": "restart",
       "displayName": "Devtools Theme Fix",
       "description": "Temporary workaround for devtools defaulting to light theme on Electron 32",
       "type": "boolean",
       "default": true
     },
     "disableRendererBackgrounding": {
+      "advice": "restart",
       "displayName": "Disable Renderer Backgrounding",
       "description": "This is enabled by default as a power saving measure, but it breaks screensharing and websocket connections fairly often",
       "type": "boolean",
       "default": true
     },
     "linuxAutoscroll": {
+      "advice": "restart",
       "displayName": "Enable middle click autoscroll on Linux",
       "description": "Requires manual configuration of your system to disable middle click paste, has no effect on other operating systems",
       "type": "boolean",
       "default": false
     },
     "linuxSpeechDispatcher": {
+      "advice": "restart",
       "displayName": "Enable speech-dispatcher for TTS on Linux",
       "description": "Fixes text-to-speech. Has no effect on other operating systems",
       "type": "boolean",
       "default": true
     },
     "vaapi": {
+      "advice": "restart",
       "displayName": "Enable VAAPI features on Linux",
       "description": "Provides hardware accelerated video encode and decode. Has no effect on other operating systems",
       "type": "boolean",

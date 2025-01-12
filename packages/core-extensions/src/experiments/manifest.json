@@ -1,4 +1,5 @@
 {
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
   "id": "experiments",
   "apiLevel": 2,
   "meta": {
@@ -9,11 +10,13 @@
   },
   "settings": {
     "devtools": {
+      "advice": "reload",
       "displayName": "Enable staff help menu (DevTools)",
       "type": "boolean",
       "default": false
     },
     "staffSettings": {
+      "advice": "reload",
       "displayName": "Allow access to other staff settings elsewhere",
       "type": "boolean",
       "default": false
