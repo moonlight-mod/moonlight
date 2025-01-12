@@ -36,6 +36,7 @@ const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
   [ExtensionCompat.InvalidApiLevel]: "Incompatible API level",
   [ExtensionCompat.InvalidEnvironment]: "Incompatible platform"
 };
+const CONFLICTING_TEXT = "This extension is already installed from another source.";
 
 export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const [tab, setTab] = React.useState(ExtensionPage.Info);
@@ -119,7 +120,10 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
             )}
 
             {ext.state === ExtensionState.NotDownloaded ? (
-              <Tooltip text={COMPAT_TEXT_MAP[ext.compat]} shouldShow={ext.compat !== ExtensionCompat.Compatible}>
+              <Tooltip
+                text={conflicting ? CONFLICTING_TEXT : COMPAT_TEXT_MAP[ext.compat]}
+                shouldShow={conflicting || ext.compat !== ExtensionCompat.Compatible}
+              >
                 {(props: any) => (
                   <Button
                     {...props}
