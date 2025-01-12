@@ -1,7 +1,9 @@
-export type CustomComponent = React.FC<{
+export type CustomComponentProps = {
   value: any;
   setValue: (value: any) => void;
-}>;
+};
+
+export type CustomComponent = React.FC<CustomComponentProps>;
 
 export type Moonbase = {
   /**
