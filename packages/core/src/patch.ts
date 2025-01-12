@@ -101,6 +101,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     }
   }
 
+  let modified = false;
   for (const [id, func] of Object.entries(entry)) {
     if (func.__moonlight === true) continue;
 
@@ -165,15 +166,20 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           }
         }
 
-        if (!hardFailed) moduleString = replaced;
+        if (!hardFailed) {
+          moduleString = replaced;
+          modified = true;
+        }
 
         moonlight.unpatched.delete(patch);
         if (shouldRemove) patches.splice(i--, 1);
       }
     }
 
-    patchModule(id, patchedStr.join(", "), moduleString);
-    moduleCache[id] = moduleString;
+    if (modified) {
+      patchModule(id, patchedStr.join(", "), moduleString);
+      moduleCache[id] = moduleString;
+    }
 
     try {
       const parsed = moonlight.lunast.parseScript(id, moduleString);
