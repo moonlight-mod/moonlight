@@ -8,18 +8,23 @@ import type { EventPayloads, EventType, MoonlightEventEmitter } from "./core/eve
 import { MoonlightFS } from "./fs";
 
 export type MoonlightHost = {
-  asarPath: string;
   config: Config;
-  events: EventEmitter;
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
+  asarPath: string;
+  events: EventEmitter;
 
   version: string;
   branch: MoonlightBranch;
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
+  setConfigOption: <T>(ext: string, name: string, value: T) => void;
+  writeConfig: (config: Config) => Promise<void>;
+
   getLogger: (id: string) => Logger;
+  getMoonlightDir: () => string;
+  getExtensionDir: (ext: string) => string;
 };
 
 export type MoonlightNode = {
@@ -35,13 +40,12 @@ export type MoonlightNode = {
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   setConfigOption: <T>(ext: string, name: string, value: T) => void;
+  writeConfig: (config: Config) => Promise<void>;
 
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
-
   getMoonlightDir: () => string;
   getExtensionDir: (ext: string) => string;
-  writeConfig: (config: Config) => Promise<void>;
 };
 
 export type MoonlightNodeSandboxed = {
@@ -54,7 +58,6 @@ export type MoonlightWeb = {
   unpatched: Set<IdentifiedPatch>;
   pendingModules: Set<IdentifiedWebpackModule>;
   enabledExtensions: Set<string>;
-  apiLevel: number;
   events: MoonlightEventEmitter<EventType, EventPayloads>;
   patchingInternals: {
     onModuleLoad: (moduleId: string | string[], callback: (moduleId: string) => void) => void;
@@ -65,14 +68,17 @@ export type MoonlightWeb = {
 
   version: string;
   branch: MoonlightBranch;
+  apiLevel: number;
 
   // Re-exports for ease of use
   getConfig: MoonlightNode["getConfig"];
   getConfigOption: MoonlightNode["getConfigOption"];
   setConfigOption: MoonlightNode["setConfigOption"];
+  writeConfig: MoonlightNode["writeConfig"];
 
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;
+
   lunast: LunAST;
   moonmap: Moonmap;
 };

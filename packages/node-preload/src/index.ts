@@ -66,21 +66,20 @@ async function injectGlobals() {
       setConfigOption(config, ext, name, value);
       this.writeConfig(config);
     },
+    async writeConfig(newConfig) {
+      await writeConfig(newConfig);
+      config = newConfig;
+    },
 
     getNatives: (ext: string) => global.moonlightNode.nativesCache[ext],
     getLogger: (id: string) => {
       return new Logger(id);
     },
-
     getMoonlightDir() {
       return moonlightDir;
     },
     getExtensionDir: (ext: string) => {
       return path.join(extensionsPath, ext);
-    },
-    async writeConfig(newConfig) {
-      await writeConfig(newConfig);
-      config = newConfig;
     }
   };
 
