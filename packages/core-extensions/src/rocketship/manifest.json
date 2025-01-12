@@ -1,6 +1,8 @@
 {
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
   "id": "rocketship",
   "apiLevel": 2,
+  "environment": "desktop",
   "meta": {
     "name": "Rocketship",
     "tagline": "Adds new features when using rocketship",

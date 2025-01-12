@@ -15,7 +15,7 @@ import path from "node:path";
 import persist from "@moonlight-mod/core/persist";
 import createFS from "@moonlight-mod/core/fs";
 import { getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
-import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
+import { getConfigPath, getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
 
 const logger = new Logger("injector");
 
@@ -223,7 +223,6 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
       if (val == null || typeof val === "boolean") return undefined;
       return val.config;
     }
-
     global.moonlightHost = {
       get config() {
         return config;
@@ -237,6 +236,7 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
       branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
       getConfig,
+      getConfigPath,
       getConfigOption(ext, name) {
         const manifest = getManifest(extensions, ext);
         return getConfigOption(ext, name, config, manifest?.settings);

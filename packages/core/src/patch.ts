@@ -101,7 +101,6 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     }
   }
 
-  let modified = false;
   for (const [id, func] of Object.entries(entry)) {
     if (func.__moonlight === true) continue;
 
@@ -110,6 +109,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     let moduleString = origModuleString;
     const patchedStr = [];
     const mappedName = moonlight.moonmap.modules[id];
+    let modified = false;
 
     for (let i = 0; i < patches.length; i++) {
       const patch = patches[i];

@@ -4,6 +4,8 @@ import extractAsar from "@moonlight-mod/core/asar";
 import { distDir, repoUrlFile, installedVersionFile } from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
 
+const moonlightGlobal = globalThis.moonlightHost ?? globalThis.moonlightNode;
+
 const githubRepo = "moonlight-mod/moonlight";
 const githubApiUrl = `https://api.github.com/repos/${githubRepo}/releases/latest`;
 const artifactName = "dist.tar.gz";
@@ -11,7 +13,7 @@ const artifactName = "dist.tar.gz";
 const nightlyRefUrl = "https://moonlight-mod.github.io/moonlight/ref";
 const nightlyZipUrl = "https://moonlight-mod.github.io/moonlight/dist.tar.gz";
 
-export const userAgent = `moonlight/${moonlightNode.version} (https://github.com/moonlight-mod/moonlight)`;
+export const userAgent = `moonlight/${moonlightGlobal.version} (https://github.com/moonlight-mod/moonlight)`;
 
 async function getStableRelease(): Promise<{
   name: string;
@@ -30,15 +32,15 @@ async function getStableRelease(): Promise<{
 }
 
 export default function getNatives(): MoonbaseNatives {
-  const logger = moonlightNode.getLogger("moonbase/natives");
+  const logger = moonlightGlobal.getLogger("moonbase/natives");
 
   return {
     async checkForMoonlightUpdate() {
       try {
-        if (moonlightNode.branch === MoonlightBranch.STABLE) {
+        if (moonlightGlobal.branch === MoonlightBranch.STABLE) {
           const json = await getStableRelease();
-          return json.name !== moonlightNode.version ? json.name : null;
-        } else if (moonlightNode.branch === MoonlightBranch.NIGHTLY) {
+          return json.name !== moonlightGlobal.version ? json.name : null;
+        } else if (moonlightGlobal.branch === MoonlightBranch.NIGHTLY) {
           const req = await fetch(nightlyRefUrl, {
             cache: "no-store",
             headers: {
@@ -46,7 +48,7 @@ export default function getNatives(): MoonbaseNatives {
             }
           });
           const ref = (await req.text()).split("\n")[0];
-          return ref !== moonlightNode.version ? ref : null;
+          return ref !== moonlightGlobal.version ? ref : null;
         }
 
         return null;
@@ -96,15 +98,15 @@ export default function getNatives(): MoonbaseNatives {
       }
 
       const [tar, ref] =
-        moonlightNode.branch === MoonlightBranch.STABLE
+        moonlightGlobal.branch === MoonlightBranch.STABLE
           ? await downloadStable()
-          : moonlightNode.branch === MoonlightBranch.NIGHTLY
+          : moonlightGlobal.branch === MoonlightBranch.NIGHTLY
             ? await downloadNightly()
             : [null, null];
 
       if (!tar || !ref) return;
 
-      const dist = moonlightNodeSandboxed.fs.join(moonlightNode.getMoonlightDir(), distDir);
+      const dist = moonlightNodeSandboxed.fs.join(moonlightGlobal.getMoonlightDir(), distDir);
       if (await moonlightNodeSandboxed.fs.exists(dist)) await moonlightNodeSandboxed.fs.rmdir(dist);
       await moonlightNodeSandboxed.fs.mkdir(dist);
 
@@ -122,7 +124,7 @@ export default function getNatives(): MoonbaseNatives {
       }
 
       logger.debug("Writing version file:", ref);
-      const versionFile = moonlightNodeSandboxed.fs.join(moonlightNode.getMoonlightDir(), installedVersionFile);
+      const versionFile = moonlightNodeSandboxed.fs.join(moonlightGlobal.getMoonlightDir(), installedVersionFile);
       await moonlightNodeSandboxed.fs.writeFileString(versionFile, ref.trim());
 
       logger.debug("Update extracted");
@@ -157,7 +159,7 @@ export default function getNatives(): MoonbaseNatives {
         }
       });
 
-      const dir = moonlightNode.getExtensionDir(manifest.id);
+      const dir = moonlightGlobal.getExtensionDir(manifest.id);
       // remake it in case of updates
       if (await moonlightNodeSandboxed.fs.exists(dir)) await moonlightNodeSandboxed.fs.rmdir(dir);
       await moonlightNodeSandboxed.fs.mkdir(dir);
@@ -176,7 +178,7 @@ export default function getNatives(): MoonbaseNatives {
     },
 
     async deleteExtension(id) {
-      const dir = moonlightNode.getExtensionDir(id);
+      const dir = moonlightGlobal.getExtensionDir(id);
       await moonlightNodeSandboxed.fs.rmdir(dir);
     }
   };

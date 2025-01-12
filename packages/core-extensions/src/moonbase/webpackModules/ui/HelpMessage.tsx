@@ -11,16 +11,18 @@ export default function HelpMessage({
   className,
   text,
   icon,
-  children
+  children,
+  type = "info"
 }: {
   className?: string;
   text: string;
   icon: React.ComponentType<any>;
+  type?: "warning" | "positive" | "error" | "info";
   children?: React.ReactNode;
 }) {
   return (
     <div
-      className={`${Margins.marginBottom20} ${HelpMessageClasses.info} ${HelpMessageClasses.container} moonbase-help-message ${className}`}
+      className={`${Margins.marginBottom20} ${HelpMessageClasses[type]} ${HelpMessageClasses.container} moonbase-help-message ${className}`}
     >
       <Flex direction={Flex.Direction.HORIZONTAL}>
         <div

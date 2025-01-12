@@ -7,6 +7,11 @@
   margin-top: 0px;
 }
 
+.moonbase-retry-button {
+  padding: 8px;
+  margin-right: 8px;
+}
+
 textarea.moonbase-resizeable {
   resize: vertical;
 }
@@ -37,6 +42,13 @@ textarea.moonbase-resizeable {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.moonbase-help-message-sticky {
+  position: sticky;
+  top: 24px;
+  z-index: 10;
+  background-color: var(--background-primary);
 }
 
 .moonbase-extension-update-section {

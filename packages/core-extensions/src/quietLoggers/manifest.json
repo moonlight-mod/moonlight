@@ -1,4 +1,5 @@
 {
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
   "id": "quietLoggers",
   "apiLevel": 2,
   "meta": {
@@ -9,6 +10,7 @@
   },
   "settings": {
     "xssDefensesOnly": {
+      "advice": "reload",
       "displayName": "Only hide self-XSS",
       "description": "Only disable self XSS prevention log",
       "type": "boolean",

@@ -16,6 +16,7 @@ import {
   MenuItem
 } from "@moonlight-mod/wp/discord/components/common/index";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 export enum Filter {
   Core = 1 << 0,
@@ -44,7 +45,7 @@ spacepack
 const TagItem = spacepack.findByCode('"forum-tag-"')[0].exports.Z;
 
 // FIXME: type component keys
-const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon } = Components;
+const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon, RetryIcon, Tooltip } = Components;
 
 function toggleTag(selectedTags: Set<string>, setSelectedTags: (tags: Set<string>) => void, tag: string) {
   const newState = new Set(selectedTags);
@@ -211,7 +212,7 @@ export default function FilterBar({
       }
     }
     setTagsButtonOffset(offset);
-  }, [windowSize]);
+  }, [windowSize, tagsContainer.current, tagListInner.current, tagListInner.current?.getBoundingClientRect()?.width]);
 
   return (
     <div
@@ -221,6 +222,20 @@ export default function FilterBar({
       }}
       className={`${FilterBarClasses.tagsContainer} ${Margins.marginBottom8}`}
     >
+      <Tooltip text="Refresh updates" position="top">
+        {(props: any) => (
+          <Button
+            {...props}
+            size={Button.Sizes.MIN}
+            color={Button.Colors.CUSTOM}
+            className={`${FilterBarClasses.sortDropdown} moonbase-retry-button`}
+            innerClassName={FilterBarClasses.sortDropdownInner}
+            onClick={() => MoonbaseSettingsStore.checkUpdates()}
+          >
+            <RetryIcon size={"custom"} width={16} />
+          </Button>
+        )}
+      </Tooltip>
       <Popout
         renderPopout={({ closePopout }: any) => (
           <FilterButtonPopout filter={filter} setFilter={setFilter} closePopout={closePopout} />
@@ -305,6 +320,22 @@ export default function FilterBar({
           </Button>
         )}
       </Popout>
+      <Button
+        size={Button.Sizes.MIN}
+        color={Button.Colors.CUSTOM}
+        className={`${FilterBarClasses.tagsButton} ${FilterBarClasses.tagsButtonPlaceholder}`}
+        innerClassName={FilterBarClasses.tagsButtonInner}
+      >
+        {selectedTags.size > 0 ? (
+          <div style={{ boxSizing: "content-box" }} className={FilterBarClasses.countContainer}>
+            <Text className={FilterBarClasses.countText} color="none" variant="text-xs/medium">
+              {selectedTags.size}
+            </Text>
+          </div>
+        ) : null}
+
+        <ChevronSmallUpIcon size={"custom"} width={20} />
+      </Button>
     </div>
   );
 }

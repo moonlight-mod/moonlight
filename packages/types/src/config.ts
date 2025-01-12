@@ -81,9 +81,16 @@ export type CustomSettingType = {
   default?: any;
 };
 
+export enum ExtensionSettingsAdvice {
+  None = "none",
+  Reload = "reload",
+  Restart = "restart"
+}
+
 export type ExtensionSettingsManifest = {
   displayName?: string;
   description?: string;
+  advice?: ExtensionSettingsAdvice;
 } & (
   | BooleanSettingType
   | NumberSettingType

@@ -1,5 +1,5 @@
-import { Config, ExtensionLoadSource } from "@moonlight-mod/types";
-import { ExtensionState, MoonbaseExtension, MoonbaseNatives, RepositoryManifest } from "../types";
+import { Config, ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
+import { ExtensionState, MoonbaseExtension, MoonbaseNatives, RepositoryManifest, RestartAdvice } from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import getNatives from "../native";
@@ -7,6 +7,7 @@ import { mainRepo } from "@moonlight-mod/types/constants";
 import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
 import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
+import diff from "microdiff";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -14,7 +15,8 @@ let natives: MoonbaseNatives = moonlight.getNatives("moonbase");
 if (moonlightNode.isBrowser) natives = getNatives();
 
 class MoonbaseSettingsStore extends Store<any> {
-  private origConfig: Config;
+  private initialConfig: Config;
+  private savedConfig: Config;
   private config: Config;
   private extensionIndex: number;
   private configComponents: Record<string, Record<string, CustomComponent>> = {};
@@ -35,6 +37,8 @@ class MoonbaseSettingsStore extends Store<any> {
     return this.#showOnlyUpdateable;
   }
 
+  restartAdvice = RestartAdvice.NotNeeded;
+
   extensions: { [id: number]: MoonbaseExtension };
   updates: {
     [id: number]: {
@@ -47,8 +51,9 @@ class MoonbaseSettingsStore extends Store<any> {
   constructor() {
     super(Dispatcher);
 
-    this.origConfig = moonlightNode.config;
-    this.config = this.clone(this.origConfig);
+    this.initialConfig = moonlightNode.config;
+    this.savedConfig = moonlightNode.config;
+    this.config = this.clone(this.savedConfig);
     this.extensionIndex = 0;
 
     this.modified = false;
@@ -71,74 +76,70 @@ class MoonbaseSettingsStore extends Store<any> {
       };
     }
 
-    natives!
-      .fetchRepositories(this.config.repositories)
-      .then((ret) => {
-        for (const [repo, exts] of Object.entries(ret)) {
-          try {
-            for (const ext of exts) {
-              const uniqueId = this.extensionIndex++;
-              const extensionData = {
-                id: ext.id,
-                uniqueId,
-                manifest: ext,
-                source: { type: ExtensionLoadSource.Normal, url: repo },
-                state: ExtensionState.NotDownloaded,
-                compat: ExtensionCompat.Compatible,
-                hasUpdate: false
-              };
+    this.checkUpdates();
+  }
 
-              // Don't present incompatible updates
-              if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible) continue;
+  async checkUpdates() {
+    await Promise.all([this.checkExtensionUpdates(), this.checkMoonlightUpdates()]);
+    this.shouldShowNotice = this.newVersion != null || Object.keys(this.updates).length > 0;
+    this.emitChange();
+  }
 
-              const existing = this.getExisting(extensionData);
-              if (existing != null) {
-                // Make sure the download URL is properly updated
-                for (const [id, e] of Object.entries(this.extensions)) {
-                  if (e.id === ext.id && e.source.url === repo) {
-                    this.extensions[parseInt(id)].manifest = {
-                      ...e.manifest,
-                      download: ext.download
-                    };
-                    break;
-                  }
-                }
+  private async checkExtensionUpdates() {
+    const repositories = await natives!.fetchRepositories(this.savedConfig.repositories);
 
-                if (this.hasUpdate(extensionData)) {
-                  this.updates[existing.uniqueId] = {
-                    version: ext.version!,
-                    download: ext.download,
-                    updateManifest: ext
-                  };
-                  existing.hasUpdate = true;
-                  existing.changelog = ext.meta?.changelog;
-                }
+    // Reset update state
+    for (const id in this.extensions) {
+      const ext = this.extensions[id];
+      ext.hasUpdate = false;
+      ext.changelog = undefined;
+    }
+    this.updates = {};
 
-                continue;
-              }
+    for (const [repo, exts] of Object.entries(repositories)) {
+      for (const ext of exts) {
+        const uniqueId = this.extensionIndex++;
+        const extensionData = {
+          id: ext.id,
+          uniqueId,
+          manifest: ext,
+          source: { type: ExtensionLoadSource.Normal, url: repo },
+          state: ExtensionState.NotDownloaded,
+          compat: ExtensionCompat.Compatible,
+          hasUpdate: false
+        };
 
-              this.extensions[uniqueId] = extensionData;
-            }
-          } catch (e) {
-            logger.error(`Error processing repository ${repo}`, e);
+        // Don't present incompatible updates
+        if (checkExtensionCompat(ext) !== ExtensionCompat.Compatible) continue;
+
+        const existing = this.getExisting(extensionData);
+        if (existing != null) {
+          // Make sure the download URL is properly updated
+          existing.manifest = {
+            ...existing.manifest,
+            download: ext.download
+          };
+
+          if (this.hasUpdate(extensionData)) {
+            this.updates[existing.uniqueId] = {
+              version: ext.version!,
+              download: ext.download,
+              updateManifest: ext
+            };
+            existing.hasUpdate = true;
+            existing.changelog = ext.meta?.changelog;
           }
+        } else {
+          this.extensions[uniqueId] = extensionData;
         }
+      }
+    }
+  }
 
-        this.emitChange();
-      })
-      .then(() =>
-        this.getExtensionConfigRaw("moonbase", "updateChecking", true)
-          ? natives!.checkForMoonlightUpdate()
-          : new Promise<null>((resolve) => resolve(null))
-      )
-      .then((version) => {
-        this.newVersion = version;
-        this.emitChange();
-      })
-      .then(() => {
-        this.shouldShowNotice = this.newVersion != null || Object.keys(this.updates).length > 0;
-        this.emitChange();
-      });
+  private async checkMoonlightUpdates() {
+    this.newVersion = this.getExtensionConfigRaw("moonbase", "updateChecking", true)
+      ? await natives!.checkForMoonlightUpdate()
+      : null;
   }
 
   private getExisting(ext: MoonbaseExtension) {
@@ -154,7 +155,7 @@ class MoonbaseSettingsStore extends Store<any> {
 
   // Jank
   private isModified() {
-    const orig = JSON.stringify(this.origConfig);
+    const orig = JSON.stringify(this.savedConfig);
     const curr = JSON.stringify(this.config);
     return orig !== curr;
   }
@@ -269,8 +270,12 @@ class MoonbaseSettingsStore extends Store<any> {
       }
 
       if (update != null) {
-        this.extensions[uniqueId].settingsOverride = update.updateManifest.settings;
-        this.extensions[uniqueId].compat = checkExtensionCompat(update.updateManifest);
+        const existing = this.extensions[uniqueId];
+        existing.settingsOverride = update.updateManifest.settings;
+        existing.compat = checkExtensionCompat(update.updateManifest);
+        existing.manifest = update.updateManifest;
+        existing.hasUpdate = false;
+        existing.changelog = update.updateManifest.meta?.changelog;
       }
 
       delete this.updates[uniqueId];
@@ -279,6 +284,7 @@ class MoonbaseSettingsStore extends Store<any> {
     }
 
     this.installing = false;
+    this.restartAdvice = this.#computeRestartAdvice();
     this.emitChange();
   }
 
@@ -310,8 +316,8 @@ class MoonbaseSettingsStore extends Store<any> {
         const aRank = this.getRank(a);
         const bRank = this.getRank(b);
         if (aRank === bRank) {
-          const repoIndex = this.config.repositories.indexOf(a.source.url!);
-          const otherRepoIndex = this.config.repositories.indexOf(b.source.url!);
+          const repoIndex = this.savedConfig.repositories.indexOf(a.source.url!);
+          const otherRepoIndex = this.savedConfig.repositories.indexOf(b.source.url!);
           return repoIndex - otherRepoIndex;
         } else {
           return bRank - aRank;
@@ -335,6 +341,7 @@ class MoonbaseSettingsStore extends Store<any> {
     }
 
     this.installing = false;
+    this.restartAdvice = this.#computeRestartAdvice();
     this.emitChange();
   }
 
@@ -366,11 +373,100 @@ class MoonbaseSettingsStore extends Store<any> {
     return this.configComponents[ext]?.[name];
   }
 
+  #computeRestartAdvice() {
+    const i = this.initialConfig; // Initial config, from startup
+    const n = this.config; // New config about to be saved
+
+    let returnedAdvice = RestartAdvice.NotNeeded;
+    const updateAdvice = (r: RestartAdvice) => (returnedAdvice < r ? (returnedAdvice = r) : returnedAdvice);
+
+    // Top-level keys, repositories is not needed here because Moonbase handles it.
+    if (i.patchAll !== n.patchAll) updateAdvice(RestartAdvice.ReloadNeeded);
+    if (i.loggerLevel !== n.loggerLevel) updateAdvice(RestartAdvice.ReloadNeeded);
+    if (diff(i.devSearchPaths ?? [], n.devSearchPaths ?? [], { cyclesFix: false }).length !== 0)
+      return updateAdvice(RestartAdvice.RestartNeeded);
+
+    // Extension specific logic
+    for (const id in n.extensions) {
+      // Installed extension (might not be detected yet)
+      const ext = Object.values(this.extensions).find((e) => e.id === id && e.state !== ExtensionState.NotDownloaded);
+      // Installed and detected extension
+      const detected = moonlightNode.extensions.find((e) => e.id === id);
+
+      // If it's not installed at all, we don't care
+      if (!ext) continue;
+
+      const initState = i.extensions[id];
+      const newState = n.extensions[id];
+
+      const newEnabled = typeof newState === "boolean" ? newState : newState.enabled;
+      // If it's enabled but not detected yet, restart.
+      if (newEnabled && !detected) {
+        return updateAdvice(RestartAdvice.RestartNeeded);
+        continue;
+      }
+
+      // Toggling extensions specifically wants to rely on the initial state,
+      // that's what was considered when loading extensions.
+      const initEnabled = initState && (typeof initState === "boolean" ? initState : initState.enabled);
+      if (initEnabled !== newEnabled) {
+        // If we have the extension locally, we confidently know if it has host/preload scripts.
+        // If not, we have to respect the environment specified in the manifest.
+        // If that is the default, we can't know what's needed.
+
+        if (detected?.scripts.hostPath || detected?.scripts.nodePath) {
+          return updateAdvice(RestartAdvice.RestartNeeded);
+        }
+
+        switch (ext.manifest.environment) {
+          case ExtensionEnvironment.Both:
+          case ExtensionEnvironment.Web:
+            updateAdvice(RestartAdvice.ReloadNeeded);
+            continue;
+          case ExtensionEnvironment.Desktop:
+            return updateAdvice(RestartAdvice.RestartNeeded);
+          default:
+            updateAdvice(RestartAdvice.ReloadNeeded);
+            continue;
+        }
+      }
+
+      const initConfig = typeof initState === "boolean" ? {} : initState.config ?? {};
+      const newConfig = typeof newState === "boolean" ? {} : newState.config ?? {};
+
+      const def = ext.manifest.settings;
+      if (!def) continue;
+
+      const changedKeys = diff(initConfig, newConfig, { cyclesFix: false }).map((c) => c.path[0]);
+      for (const key in def) {
+        if (!changedKeys.includes(key)) continue;
+
+        const advice = def[key].advice;
+        switch (advice) {
+          case ExtensionSettingsAdvice.None:
+            updateAdvice(RestartAdvice.NotNeeded);
+            continue;
+          case ExtensionSettingsAdvice.Reload:
+            updateAdvice(RestartAdvice.ReloadNeeded);
+            continue;
+          case ExtensionSettingsAdvice.Restart:
+            updateAdvice(RestartAdvice.RestartNeeded);
+            continue;
+          default:
+            updateAdvice(RestartAdvice.ReloadSuggested);
+        }
+      }
+    }
+
+    return returnedAdvice;
+  }
+
   writeConfig() {
     this.submitting = true;
+    this.restartAdvice = this.#computeRestartAdvice();
 
     moonlightNode.writeConfig(this.config);
-    this.origConfig = this.clone(this.config);
+    this.savedConfig = this.clone(this.config);
 
     this.submitting = false;
     this.modified = false;
@@ -380,7 +476,7 @@ class MoonbaseSettingsStore extends Store<any> {
   reset() {
     this.submitting = false;
     this.modified = false;
-    this.config = this.clone(this.origConfig);
+    this.config = this.clone(this.savedConfig);
     this.emitChange();
   }
 

@@ -18,6 +18,7 @@ export type MoonlightHost = {
   branch: MoonlightBranch;
 
   getConfig: (ext: string) => ConfigExtension["config"];
+  getConfigPath: () => Promise<string>;
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   setConfigOption: <T>(ext: string, name: string, value: T) => void;
   writeConfig: (config: Config) => Promise<void>;

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
   "id": "moonbase",
   "apiLevel": 2,
   "meta": {
@@ -9,26 +10,30 @@
   "dependencies": ["spacepack", "settings", "common", "notices"],
   "settings": {
     "sections": {
+      "advice": "reload",
       "displayName": "Split into sections",
       "description": "Show the Moonbase tabs as separate sections",
       "type": "boolean"
     },
     "saveFilter": {
+      "advice": "none",
       "displayName": "Persist filter",
       "description": "Save extension filter in config",
       "type": "boolean"
     },
     "updateChecking": {
+      "advice": "none",
       "displayName": "Automatic update checking",
       "description": "Checks for updates to moonlight",
       "type": "boolean",
-      "default": "true"
+      "default": true
     },
     "updateBanner": {
+      "advice": "none",
       "displayName": "Show update banner",
       "description": "Shows a banner for moonlight and extension updates",
       "type": "boolean",
-      "default": "true"
+      "default": true
     }
   },
   "cors": [
