@@ -13,13 +13,21 @@
       "advice": "reload",
       "displayName": "Split into sections",
       "description": "Show the Moonbase tabs as separate sections",
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
+    },
+    "oldLocation": {
+      "advice": "reload",
+      "displayName": "Put Moonbase back at the bottom",
+      "type": "boolean",
+      "default": false
     },
     "saveFilter": {
       "advice": "none",
       "displayName": "Persist filter",
       "description": "Save extension filter in config",
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "updateChecking": {
       "advice": "none",
