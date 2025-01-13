@@ -204,3 +204,29 @@ textarea.moonbase-resizeable {
   line-height: 1.286;
   font-weight: 400;
 }
+
+/* About page */
+.moonbase-wordmark {
+  width: 100%;
+}
+
+.moonbase-devs {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 0rem 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.moonbase-dev-avatar {
+  width: 2rem;
+  border-radius: 50%;
+}
+
+.moonbase-gap {
+  gap: 0.5rem;
+}
+
+.moonbase-about-text {
+  padding-top: 0.5rem;
+}
