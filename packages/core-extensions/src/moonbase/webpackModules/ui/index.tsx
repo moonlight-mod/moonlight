@@ -6,6 +6,7 @@ import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
 
 import ExtensionsPage from "./extensions";
 import ConfigPage from "./config";
+import AboutPage from "./about";
 import Update from "./update";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import RestartAdviceMessage from "./RestartAdvice";
@@ -30,6 +31,11 @@ export const pages: {
     id: "config",
     name: "Config",
     element: ConfigPage
+  },
+  {
+    id: "about",
+    name: "About",
+    element: AboutPage
   }
 ];
 
