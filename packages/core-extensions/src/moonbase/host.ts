@@ -63,14 +63,16 @@ electron.app.whenReady().then(() => {
     const i = entries.findIndex((e) => e.label === "Check for Updates...");
     if (i === -1) return original.call(this, entries);
 
-    entries.splice(i + 1, 0, {
-      label: "moonlight",
-      submenu: [
-        { label: "Update and restart", click: updateAndRestart },
-        { label: "Reset config", click: resetConfig },
-        { label: "About", click: showAbout }
-      ]
-    });
+    if (!entries.find((e) => e.label === "moonlight")) {
+      entries.splice(i + 1, 0, {
+        label: "moonlight",
+        submenu: [
+          { label: "Update and restart", click: updateAndRestart },
+          { label: "Reset config", click: resetConfig },
+          { label: "About", click: showAbout }
+        ]
+      });
+    }
 
     return original.call(this, entries);
   };
