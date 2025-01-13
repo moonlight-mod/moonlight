@@ -199,6 +199,8 @@ export default function FilterBar({
   const tagsContainer = React.useRef<HTMLDivElement>(null);
   const tagListInner = React.useRef<HTMLDivElement>(null);
   const [tagsButtonOffset, setTagsButtonOffset] = React.useState(0);
+  const [checkingUpdates, setCheckingUpdates] = React.useState(false);
+
   React.useLayoutEffect(() => {
     if (tagsContainer.current === null || tagListInner.current === null) return;
     const { left: containerX, top: containerY } = tagsContainer.current.getBoundingClientRect();
@@ -228,9 +230,22 @@ export default function FilterBar({
             {...props}
             size={Button.Sizes.MIN}
             color={Button.Colors.CUSTOM}
-            className={`${FilterBarClasses.sortDropdown} moonbase-retry-button`}
+            className={`${FilterBarClasses.sortDropdown} moonbase-retry-button ${
+              checkingUpdates ? "moonbase-speen" : ""
+            }`}
             innerClassName={FilterBarClasses.sortDropdownInner}
-            onClick={() => MoonbaseSettingsStore.checkUpdates()}
+            onClick={() => {
+              (async () => {
+                try {
+                  setCheckingUpdates(true);
+                  await MoonbaseSettingsStore.checkUpdates();
+                } finally {
+                  // artificial delay because the spin is fun
+                  await new Promise((r) => setTimeout(r, 500));
+                  setCheckingUpdates(false);
+                }
+              })();
+            }}
           >
             <RetryIcon size={"custom"} width={16} />
           </Button>
