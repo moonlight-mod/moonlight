@@ -308,6 +308,14 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
       if (wpModule.run) {
         modules[id] = wpModule.run;
         wpModule.run.__moonlight = true;
+        // @ts-expect-error hacks
+        wpModule.run.call = function (self, module, exports, require) {
+          try {
+            wpModule.run!.apply(self, [module, exports, require]);
+          } catch (err) {
+            logger.error(`Failed to run module "${id}":`, err);
+          }
+        };
         if (wpModule.entrypoint) entrypoints.push(id);
       }
     }
