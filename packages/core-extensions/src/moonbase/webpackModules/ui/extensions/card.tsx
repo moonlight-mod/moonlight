@@ -164,14 +164,20 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                   disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
                   hideBorder={true}
                   style={{ marginBottom: "0px" }}
+                  // @ts-expect-error fix type later
                   tooltipNote={
-                    ext.compat !== ExtensionCompat.Compatible
-                      ? COMPAT_TEXT_MAP[ext.compat]
-                      : implicitlyEnabled
-                        ? `This extension is a dependency of the following enabled extension${
-                            enabledDependants.length > 1 ? "s" : ""
-                          }: ${enabledDependants.map((a) => a.manifest.meta?.name ?? a.id).join(", ")}`
-                        : undefined
+                    ext.compat !== ExtensionCompat.Compatible ? (
+                      COMPAT_TEXT_MAP[ext.compat]
+                    ) : implicitlyEnabled ? (
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div>{`This extension is a dependency of the following enabled extension${
+                          enabledDependants.length > 1 ? "s" : ""
+                        }:`}</div>
+                        {enabledDependants.map((dep) => (
+                          <div>{"• " + (dep.manifest.meta?.name ?? dep.id)}</div>
+                        ))}
+                      </div>
+                    ) : undefined
                   }
                   onChange={() => {
                     const toggle = () => {
