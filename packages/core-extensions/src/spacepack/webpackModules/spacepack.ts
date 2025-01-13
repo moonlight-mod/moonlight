@@ -42,7 +42,7 @@ export const spacepack: Spacepack = {
   },
 
   findByCode: (...args: (string | RegExp)[]) => {
-    return Object.entries(modules)
+    const ret = Object.entries(modules)
       .filter(([id, mod]) => !args.some((item) => !testFind(mod.toString(), processFind(item))))
       .map(([id]) => {
         //if (!(id in cache)) require(id);
@@ -61,6 +61,12 @@ export const spacepack: Spacepack = {
         };
       })
       .filter((item) => item !== null);
+
+    if (ret.length === 0) {
+      logger.warn("Got zero results for", args, new Error().stack!.substring(5));
+    }
+
+    return ret;
   },
 
   findByExports: (...args: string[]) => {
@@ -84,6 +90,7 @@ export const spacepack: Spacepack = {
   },
 
   findObjectFromKey: (exports: Record<string, any>, key: string) => {
+    let ret = null;
     let subKey;
     if (key.indexOf(".") > -1) {
       const splitKey = key.split(".");
@@ -94,48 +101,79 @@ export const spacepack: Spacepack = {
       const obj = exports[exportKey];
       if (obj && obj[key] !== undefined) {
         if (subKey) {
-          if (obj[key][subKey]) return obj;
+          if (obj[key][subKey]) {
+            ret = obj;
+            break;
+          }
         } else {
-          return obj;
+          ret = obj;
+          break;
         }
       }
     }
-    return null;
+
+    if (ret == null) {
+      logger.warn("Failed to get object by key", key, "in", exports, new Error().stack!.substring(5));
+    }
+
+    return ret;
   },
 
   findObjectFromValue: (exports: Record<string, any>, value: any) => {
+    let ret = null;
     for (const exportKey in exports) {
       const obj = exports[exportKey];
       // eslint-disable-next-line eqeqeq
-      if (obj == value) return obj;
+      if (obj == value) {
+        ret = obj;
+        break;
+      }
       for (const subKey in obj) {
         // eslint-disable-next-line eqeqeq
         if (obj && obj[subKey] == value) {
-          return obj;
+          ret = obj;
+          break;
         }
       }
     }
-    return null;
+
+    if (ret == null) {
+      logger.warn("Failed to get object by value", value, "in", exports, new Error().stack!.substring(5));
+    }
+
+    return ret;
   },
 
   findObjectFromKeyValuePair: (exports: Record<string, any>, key: string, value: any) => {
+    let ret = null;
     for (const exportKey in exports) {
       const obj = exports[exportKey];
       // eslint-disable-next-line eqeqeq
       if (obj && obj[key] == value) {
-        return obj;
+        ret = obj;
+        break;
       }
     }
+
+    if (ret == null) {
+      logger.warn("Failed to get object by key value pair", key, value, "in", exports, new Error().stack!.substring(5));
+    }
+
     return null;
   },
 
   findFunctionByStrings: (exports: Record<string, any>, ...strings: (string | RegExp)[]) => {
-    return (
+    const ret =
       Object.entries(exports).filter(
         ([index, func]) =>
           typeof func === "function" && !strings.some((query) => !testFind(func.toString(), processFind(query)))
-      )?.[0]?.[1] ?? null
-    );
+      )?.[0]?.[1] ?? null;
+
+    if (ret == null) {
+      logger.warn("Failed to get function by strings", strings, "in", exports, new Error().stack!.substring(5));
+    }
+
+    return ret;
   },
 
   lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => {
