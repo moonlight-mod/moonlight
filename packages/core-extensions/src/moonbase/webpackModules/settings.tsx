@@ -32,8 +32,11 @@ const notice = {
   }
 };
 
+const oldLocation = MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "oldLocation", false);
+const position = oldLocation ? -2 : -9999;
+
 function addSection(id: string, name: string, element: React.FunctionComponent) {
-  settings.addSection(`moonbase-${id}`, name, element, null, -2, notice);
+  settings.addSection(`moonbase-${id}`, name, element, null, position, notice);
 }
 
 // FIXME: move to component types
@@ -50,10 +53,15 @@ function renderBreadcrumb(crumb: Breadcrumb, last: boolean) {
   );
 }
 
-if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
-  settings.addHeader("Moonbase", -2);
+if (!oldLocation) {
+  settings.addDivider(position);
+}
 
-  for (const page of pages) {
+if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
+  if (oldLocation) settings.addHeader("Moonbase", position);
+
+  const _pages = oldLocation ? pages : pages.reverse();
+  for (const page of _pages) {
     addSection(page.id, page.name, () => {
       const breadcrumbs = [
         { id: "moonbase", label: "Moonbase" },
@@ -78,8 +86,10 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
       );
     });
   }
+
+  if (!oldLocation) settings.addHeader("Moonbase", position);
 } else {
-  settings.addSection("moonbase", "Moonbase", Moonbase, null, -2, notice);
+  settings.addSection("moonbase", "Moonbase", Moonbase, null, position, notice);
 
   settings.addSectionMenuItems(
     "moonbase",
