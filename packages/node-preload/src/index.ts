@@ -129,47 +129,58 @@ async function init() {
   }
 }
 
-ipcRenderer.on(constants.ipcNodePreloadKickoff, (_, blockedScripts: string[]) => {
-  (async () => {
-    try {
-      await init();
-      logger.debug("Blocked scripts:", blockedScripts);
+const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
+const isOverlay = window.location.href.indexOf("discord_overlay") > -1;
 
-      const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
-      logger.debug("Old preload path:", oldPreloadPath);
-      if (oldPreloadPath) require(oldPreloadPath);
+if (isOverlay) {
+  // The overlay has an inline script tag to call to DiscordNative, so we'll
+  // just load it immediately. Somehow moonlight still loads in this env, I
+  // have no idea why - so I suspect it's just forwarding render calls or
+  // something from the original process
+  require(oldPreloadPath);
+} else {
+  ipcRenderer.on(constants.ipcNodePreloadKickoff, (_, blockedScripts: string[]) => {
+    (async () => {
+      try {
+        await init();
+        logger.debug("Blocked scripts:", blockedScripts);
 
-      // Do this to get global.DiscordNative assigned
-      // @ts-expect-error Lying to discord_desktop_core
-      process.emit("loaded");
+        const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
+        logger.debug("Old preload path:", oldPreloadPath);
+        if (oldPreloadPath) require(oldPreloadPath);
 
-      function replayScripts() {
-        const scripts = [...document.querySelectorAll("script")].filter(
-          (script) => script.src && blockedScripts.some((url) => url.includes(script.src))
-        );
+        // Do this to get global.DiscordNative assigned
+        // @ts-expect-error Lying to discord_desktop_core
+        process.emit("loaded");
 
-        blockedScripts.reverse();
-        for (const url of blockedScripts) {
-          if (url.includes("/sentry.")) continue;
+        function replayScripts() {
+          const scripts = [...document.querySelectorAll("script")].filter(
+            (script) => script.src && blockedScripts.some((url) => url.includes(script.src))
+          );
 
-          const script = scripts.find((script) => url.includes(script.src))!;
-          const newScript = document.createElement("script");
-          for (const attr of script.attributes) {
-            if (attr.name === "src") attr.value += "?inj";
-            newScript.setAttribute(attr.name, attr.value);
+          blockedScripts.reverse();
+          for (const url of blockedScripts) {
+            if (url.includes("/sentry.")) continue;
+
+            const script = scripts.find((script) => url.includes(script.src))!;
+            const newScript = document.createElement("script");
+            for (const attr of script.attributes) {
+              if (attr.name === "src") attr.value += "?inj";
+              newScript.setAttribute(attr.name, attr.value);
+            }
+            script.remove();
+            document.documentElement.appendChild(newScript);
           }
-          script.remove();
-          document.documentElement.appendChild(newScript);
         }
-      }
 
-      if (document.readyState === "complete") {
-        replayScripts();
-      } else {
-        window.addEventListener("load", replayScripts);
+        if (document.readyState === "complete") {
+          replayScripts();
+        } else {
+          window.addEventListener("load", replayScripts);
+        }
+      } catch (e) {
+        logger.error("Error restoring original scripts:", e);
       }
-    } catch (e) {
-      logger.error("Error restoring original scripts:", e);
-    }
-  })();
-});
+    })();
+  });
+}
