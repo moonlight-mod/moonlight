@@ -73,7 +73,7 @@ export type MoonlightCommand = {
   type: CommandType;
 
   /**
-   * You likely want BUILT_IN or BUILT_IN_CHAT
+   * You likely want BUILT_IN (or BUILT_IN_TEXT if usable with replies)
    */
   inputType: InputType;
   options: MoonlightCommandOption[];
