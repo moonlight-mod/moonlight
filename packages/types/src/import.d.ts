@@ -4,6 +4,12 @@ declare module "@moonlight-mod/wp/appPanels_appPanels" {
   export = AppPanels;
 }
 
+declare module "@moonlight-mod/wp/commands_commands" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  export const commands: CoreExtensions.Commands.Commands;
+  export default commands;
+}
+
 declare module "@moonlight-mod/wp/common_stores";
 
 declare module "@moonlight-mod/wp/contextMenu_evilMenu" {
@@ -45,10 +51,4 @@ declare module "@moonlight-mod/wp/spacepack_spacepack" {
   import { CoreExtensions } from "@moonlight-mod/types";
   export const spacepack: CoreExtensions.Spacepack.Spacepack;
   export default spacepack;
-}
-
-declare module "@moonlight-mod/wp/commands_commands" {
-  import { CoreExtensions } from "@moonlight-mod/types";
-  export const commands: CoreExtensions.Commands.Commands;
-  export default commands;
 }
