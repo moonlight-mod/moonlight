@@ -58,7 +58,9 @@ export default function getNatives(): MoonbaseNatives {
       }
     },
 
-    async updateMoonlight() {
+    async updateMoonlight(overrideBranch?: MoonlightBranch) {
+      const branch = overrideBranch ?? moonlightGlobal.branch;
+
       // Note: this won't do anything on browser, we should probably disable it
       // entirely when running in browser.
       async function downloadStable(): Promise<[ArrayBuffer, string]> {
@@ -98,9 +100,9 @@ export default function getNatives(): MoonbaseNatives {
       }
 
       const [tar, ref] =
-        moonlightGlobal.branch === MoonlightBranch.STABLE
+        branch === MoonlightBranch.STABLE
           ? await downloadStable()
-          : moonlightGlobal.branch === MoonlightBranch.NIGHTLY
+          : branch === MoonlightBranch.NIGHTLY
             ? await downloadNightly()
             : [null, null];
 
