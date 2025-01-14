@@ -1,0 +1,11 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "commands",
+  "apiLevel": 2,
+  "meta": {
+    "name": "Commands",
+    "tagline": "A library to add commands",
+    "authors": ["Cynosphere", "NotNite"],
+    "tags": ["library"]
+  }
+}
