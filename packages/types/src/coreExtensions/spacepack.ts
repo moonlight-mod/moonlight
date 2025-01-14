@@ -18,6 +18,7 @@ export type Spacepack = {
 
   /**
    * Find Webpack modules based on their exports.
+   * @deprecated This has race conditions. Consider using findByCode instead.
    * @param args A list of finds to match exports against
    * @returns The Webpack modules, if found
    */
