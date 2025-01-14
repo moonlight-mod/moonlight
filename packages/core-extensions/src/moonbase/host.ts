@@ -51,6 +51,19 @@ async function resetConfig() {
   electron.app.exit(0);
 }
 
+async function changeBranch(branch: MoonlightBranch) {
+  if (moonlightHost.branch === branch) return;
+  if (!(await confirm("switch branches"))) return;
+  try {
+    await natives.updateMoonlight(branch);
+    await electron.dialog.showMessageBox({ message: "Branch switch successful, restarting Discord." });
+    electron.app.relaunch();
+    electron.app.exit(0);
+  } catch (e) {
+    await electron.dialog.showMessageBox({ message: "Failed to switch branches:\n" + e, type: "error" });
+  }
+}
+
 function showAbout() {
   electron.dialog.showMessageBox({
     title: "About moonlight",
@@ -77,18 +90,7 @@ electron.app.whenReady().then(() => {
             label: branch,
             type: "radio",
             checked: moonlightHost.branch === branch,
-            click: async () => {
-              if (moonlightHost.branch === branch) return;
-              if (!(await confirm("switch branches"))) return;
-              try {
-                await natives.updateMoonlight(branch);
-                await electron.dialog.showMessageBox({ message: "Branch switch successful, restarting Discord." });
-                electron.app.relaunch();
-                electron.app.exit(0);
-              } catch (e) {
-                await electron.dialog.showMessageBox({ message: "Failed to switch branches:\n" + e, type: "error" });
-              }
-            }
+            click: () => changeBranch(branch)
           }))
         });
       }
