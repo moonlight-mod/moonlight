@@ -33,11 +33,17 @@ export type SelectOption =
     };
 
 export type BooleanSettingType = {
+  /**
+   * Displays as a simple switch.
+   */
   type: ExtensionSettingType.Boolean;
   default?: boolean;
 };
 
 export type NumberSettingType = {
+  /**
+   * Displays as a simple slider.
+   */
   type: ExtensionSettingType.Number;
   default?: number;
   min?: number;
@@ -45,38 +51,60 @@ export type NumberSettingType = {
 };
 
 export type StringSettingType = {
+  /**
+   * Displays as a single line string input.
+   */
   type: ExtensionSettingType.String;
   default?: string;
 };
 
 export type MultilineTextInputSettingType = {
+  /**
+   * Displays as a multiple line string input.
+   */
   type: ExtensionSettingType.MultilineString;
   default?: string;
 };
 
 export type SelectSettingType = {
+  /**
+   * A dropdown to pick between one of many values.
+   */
   type: ExtensionSettingType.Select;
   options: SelectOption[];
   default?: string;
 };
 
 export type MultiSelectSettingType = {
+  /**
+   * A dropdown to pick multiple values.
+   */
   type: ExtensionSettingType.MultiSelect;
   options: string[];
   default?: string[];
 };
 
 export type ListSettingType = {
+  /**
+   * A list of strings that the user can add or remove from.
+   */
   type: ExtensionSettingType.List;
   default?: string[];
 };
 
 export type DictionarySettingType = {
+  /**
+   * A dictionary (key-value pair) that the user can add or remove from.
+   */
   type: ExtensionSettingType.Dictionary;
   default?: Record<string, string>;
 };
 
 export type CustomSettingType = {
+  /**
+   * A custom component.
+   * You can use the registerConfigComponent function in the Moonbase API to register a React component to render here.
+   */
   type: ExtensionSettingType.Custom;
   default?: any;
 };
@@ -88,8 +116,21 @@ export enum ExtensionSettingsAdvice {
 }
 
 export type ExtensionSettingsManifest = {
+  /**
+   * A human friendly name for the setting.
+   */
   displayName?: string;
+
+  /**
+   * A longer description for the setting.
+   * Markdown is not supported.
+   */
   description?: string;
+
+  /**
+   * The "advice" to give upon changing this setting.
+   * Can be configured to reload the client, restart the client, or do nothing.
+   */
   advice?: ExtensionSettingsAdvice;
 } & (
   | BooleanSettingType
