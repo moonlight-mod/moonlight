@@ -5,3 +5,4 @@ export * as ContextMenu from "./coreExtensions/contextMenu";
 export * as Notices from "./coreExtensions/notices";
 export * as Moonbase from "./coreExtensions/moonbase";
 export * as AppPanels from "./coreExtensions/appPanels";
+export * as Commands from "./coreExtensions/commands";

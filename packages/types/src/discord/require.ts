@@ -1,4 +1,5 @@
 import { AppPanels } from "../coreExtensions/appPanels";
+import { Commands } from "../coreExtensions/commands";
 import { ContextMenu, EvilItemParser } from "../coreExtensions/contextMenu";
 import { Markdown } from "../coreExtensions/markdown";
 import { Moonbase } from "../coreExtensions/moonbase";
@@ -9,6 +10,8 @@ import { Spacepack } from "../coreExtensions/spacepack";
 declare function WebpackRequire(id: string): any;
 
 declare function WebpackRequire(id: "appPanels_appPanels"): AppPanels;
+
+declare function WebpackRequire(id: "commands_commands"): Commands;
 
 declare function WebpackRequire(id: "contextMenu_evilMenu"): EvilItemParser;
 declare function WebpackRequire(id: "contextMenu_contextMenu"): ContextMenu;

@@ -46,3 +46,9 @@ declare module "@moonlight-mod/wp/spacepack_spacepack" {
   export const spacepack: CoreExtensions.Spacepack.Spacepack;
   export default spacepack;
 }
+
+declare module "@moonlight-mod/wp/commands_commands" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  export const commands: CoreExtensions.Commands.Commands;
+  export default commands;
+}
