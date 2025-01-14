@@ -160,7 +160,10 @@ class BrowserWindow extends ElectronBrowserWindow {
         with esbuild someday).
       */
       if (details.resourceType === "script" && isMainWindow) {
-        const hasUrl = scriptUrls.some((url) => details.url.includes(url) && !details.url.includes("?inj"));
+        const url = new URL(details.url);
+        const hasUrl = scriptUrls.some((scriptUrl) => {
+          return details.url.includes(scriptUrl) && !url.searchParams.has("inj") && url.host.endsWith("discord.com");
+        });
         if (hasUrl) blockedScripts.add(details.url);
 
         if (blockedScripts.size === scriptUrls.length) {
