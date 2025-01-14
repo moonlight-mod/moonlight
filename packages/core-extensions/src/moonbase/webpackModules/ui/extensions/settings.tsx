@@ -14,6 +14,8 @@ import React from "@moonlight-mod/wp/react";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -21,11 +23,16 @@ type SettingsProps = {
   setting: ExtensionSettingsManifest;
   disabled: boolean;
 };
-
 type SettingsComponent = React.ComponentType<SettingsProps>;
 
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
+
+function markdownify(str: string) {
+  return MarkupUtils.parse(str, true, {
+    hideSimpleEmbedContent: true,
+    allowLinks: true
+  });
+}
 
 function useConfigEntry<T>(uniqueId: number, name: string) {
   return useStateFromStores(
@@ -53,7 +60,8 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
       onChange={(value: boolean) => {
         MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
       }}
-      note={description}
+      // @ts-expect-error TODO: mappings
+      note={markdownify(description)}
       className={`${Margins.marginReset} ${Margins.marginTop20}`}
     >
       {displayName}
@@ -71,7 +79,7 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText>{description}</FormText>}
+      {description && <FormText>{markdownify(description)}</FormText>}
       <Slider
         initialValue={value ?? 0}
         disabled={disabled}
@@ -92,7 +100,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
+      {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
       <TextInput
         value={value ?? ""}
         onChange={(value: string) => {
@@ -110,7 +118,7 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
+      {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
       <TextArea
         rows={5}
         value={value ?? ""}
@@ -133,7 +141,7 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
+      {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
       <SingleSelect
         autofocus={false}
         clearable={false}
@@ -157,7 +165,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText className={Margins.marginBottom8}>{description}</FormText>}
+      {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
       <Select
         autofocus={false}
         clearable={false}
@@ -205,7 +213,7 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText className={Margins.marginBottom4}>{description}</FormText>}
+      {description && <FormText className={Margins.marginBottom4}>{markdownify(description)}</FormText>}
       <Flex direction={Flex.Direction.VERTICAL}>
         {entries.map((val, i) => (
           // FIXME: stylesheets
@@ -265,7 +273,7 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText className={Margins.marginBottom4}>{description}</FormText>}
+      {description && <FormText className={Margins.marginBottom4}>{markdownify(description)}</FormText>}
       <Flex direction={Flex.Direction.VERTICAL}>
         {entries.map(([key, val], i) => (
           // FIXME: stylesheets
