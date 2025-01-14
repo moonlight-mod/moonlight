@@ -66,7 +66,15 @@ export type RegisteredCommand = {
 export type MoonlightCommand = {
   id: string;
   description: string;
+
+  /**
+   * You likely want CHAT
+   */
   type: CommandType;
+
+  /**
+   * You likely want BUILT_IN or BUILT_IN_CHAT
+   */
   inputType: InputType;
   options: MoonlightCommandOption[];
   predicate?: (state: CommandPredicateState) => boolean;
