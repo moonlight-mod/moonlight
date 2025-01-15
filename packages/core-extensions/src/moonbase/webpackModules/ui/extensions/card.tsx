@@ -248,7 +248,9 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
           justify={Flex.Justify.START}
           wrap={Flex.Wrap.WRAP}
           style={{
-            padding: "16px 16px"
+            padding: "16px 16px",
+            // This looks wonky in the settings tab
+            rowGap: tab === ExtensionPage.Info ? "16px" : undefined
           }}
         >
           {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
