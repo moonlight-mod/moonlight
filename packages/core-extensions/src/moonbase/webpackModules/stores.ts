@@ -274,7 +274,6 @@ class MoonbaseSettingsStore extends Store<any> {
         existing.settingsOverride = update.updateManifest.settings;
         existing.compat = checkExtensionCompat(update.updateManifest);
         existing.manifest = update.updateManifest;
-        existing.hasUpdate = false;
         existing.changelog = update.updateManifest.meta?.changelog;
       }
 
@@ -403,7 +402,6 @@ class MoonbaseSettingsStore extends Store<any> {
       // If it's enabled but not detected yet, restart.
       if (newEnabled && !detected) {
         return updateAdvice(RestartAdvice.RestartNeeded);
-        continue;
       }
 
       // Toggling extensions specifically wants to rely on the initial state,
