@@ -23,7 +23,16 @@ export enum ExtensionPage {
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, Tooltip } = Components;
+const {
+  BeakerIcon,
+  DownloadIcon,
+  TrashIcon,
+  AngleBracketsIcon,
+  ChannelListIcon,
+  HeartIcon,
+  WindowTopOutlineIcon,
+  Tooltip
+} = Components;
 
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 const TabBarClasses = spacepack.findByCode("tabBar:", "tabBarItem:", "headerContentWrapper:")[0].exports;
@@ -38,9 +47,19 @@ const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
 };
 const CONFLICTING_TEXT = "This extension is already installed from another source.";
 
-export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
-  const [tab, setTab] = React.useState(ExtensionPage.Info);
+function PanelLinkButton({ icon, tooltip, link }: { icon: React.ReactNode; tooltip: string; link: string }) {
+  return (
+    <PanelButton
+      icon={icon}
+      tooltipText={tooltip}
+      onClick={() => {
+        window.open(link);
+      }}
+    />
+  );
+}
 
+export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const { ext, enabled, busy, update, conflicting } = useStateFromStores([MoonbaseSettingsStore], () => {
     return {
       ext: MoonbaseSettingsStore.getExtension(uniqueId),
@@ -51,22 +70,31 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
     };
   });
 
-  // Why it work like that :sob:
-  if (ext == null) return <></>;
+  const [tab, setTab] = React.useState(
+    update != null && ext?.changelog != null ? ExtensionPage.Changelog : ExtensionPage.Info
+  );
 
   const { Card, Text, FormSwitch, TabBar, Button } = Components;
 
-  const tagline = ext.manifest?.meta?.tagline;
-  const settings = ext.settingsOverride ?? ext.manifest?.settings;
-  const description = ext.manifest?.meta?.description;
-  const changelog = ext.changelog;
+  const tagline = ext?.manifest?.meta?.tagline;
+  const settings = ext?.settingsOverride ?? ext.manifest?.settings;
+  const description = ext?.manifest?.meta?.description;
+  const changelog = ext?.changelog;
+  const linkButtons = [
+    ext?.manifest?.meta?.source && (
+      <PanelLinkButton icon={AngleBracketsIcon} tooltip="View source" link={ext.manifest.meta.source} />
+    ),
+    ext?.source?.url && <PanelLinkButton icon={ChannelListIcon} tooltip="View repository" link={ext.source.url} />,
+    ext?.manifest?.meta?.donate && <PanelLinkButton icon={HeartIcon} tooltip="Donate" link={ext.manifest.meta.donate} />
+  ].filter((x) => x != null);
+
   const enabledDependants = useStateFromStores([MoonbaseSettingsStore], () =>
     Object.keys(MoonbaseSettingsStore.extensions)
       .filter((uniqueId) => {
         const potentialDependant = MoonbaseSettingsStore.getExtension(parseInt(uniqueId));
 
         return (
-          potentialDependant.manifest.dependencies?.includes(ext.id) &&
+          potentialDependant.manifest.dependencies?.includes(ext?.id) &&
           MoonbaseSettingsStore.getExtensionEnabled(parseInt(uniqueId))
         );
       })
@@ -74,7 +102,16 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   );
   const implicitlyEnabled = enabledDependants.length > 0;
 
-  return (
+  const hasDuplicateEntry = useStateFromStores([MoonbaseSettingsStore], () =>
+    Object.entries(MoonbaseSettingsStore.extensions).some(
+      ([otherUniqueId, otherExt]) =>
+        otherExt != null && otherExt?.id === ext?.id && parseInt(otherUniqueId) !== uniqueId
+    )
+  );
+
+  return ext == null ? (
+    <></>
+  ) : (
     <Card editable={true} className={IntegrationCard.card}>
       <div className={IntegrationCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
@@ -99,13 +136,10 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               gap: "1rem"
             }}
           >
-            {ext.manifest.meta?.source != null && (
+            {hasDuplicateEntry && ext?.source?.url && (
               <PanelButton
-                icon={AngleBracketsIcon}
-                tooltipText="View source"
-                onClick={() => {
-                  window.open(ext.manifest.meta!.source);
-                }}
+                icon={WindowTopOutlineIcon}
+                tooltipText={`This extension is from the following repository: ${ext.source.url}`}
               />
             )}
 
@@ -210,38 +244,53 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
       </div>
 
       <div>
-        {(description != null || changelog != null || settings != null) && (
-          <TabBar
-            selectedItem={tab}
-            type="top"
-            onItemSelect={setTab}
-            className={TabBarClasses.tabBar}
-            style={{
-              padding: "0 20px"
-            }}
-          >
-            <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Info}>
-              Info
-            </TabBar.Item>
+        {(description != null || changelog != null || settings != null || linkButtons.length > 0) && (
+          <Flex>
+            <TabBar
+              selectedItem={tab}
+              type="top"
+              onItemSelect={setTab}
+              className={TabBarClasses.tabBar}
+              style={{
+                padding: "0 20px"
+              }}
+            >
+              <Flex direction={Flex.Direction.HORIZONTAL}>
+                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Info}>
+                  Info
+                </TabBar.Item>
 
-            {description != null && (
-              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
-                Description
-              </TabBar.Item>
-            )}
+                {description != null && (
+                  <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
+                    Description
+                  </TabBar.Item>
+                )}
 
-            {changelog != null && (
-              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Changelog}>
-                Changelog
-              </TabBar.Item>
-            )}
+                {changelog != null && (
+                  <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Changelog}>
+                    Changelog
+                  </TabBar.Item>
+                )}
+                {settings != null && (
+                  <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Settings}>
+                    Settings
+                  </TabBar.Item>
+                )}
+              </Flex>
+            </TabBar>
 
-            {settings != null && (
-              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Settings}>
-                Settings
-              </TabBar.Item>
+            {linkButtons.length > 0 && (
+              <Flex
+                align={Flex.Align.CENTER}
+                justify={Flex.Justify.END}
+                direction={Flex.Direction.HORIZONTAL}
+                grow={1}
+                className="moonbase-link-buttons"
+              >
+                {linkButtons}
+              </Flex>
             )}
-          </TabBar>
+          </Flex>
         )}
 
         <Flex
