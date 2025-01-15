@@ -1,0 +1,11 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "componentEditor",
+  "apiLevel": 2,
+  "meta": {
+    "name": "Component Editor",
+    "tagline": "A library to add to commonly patched components",
+    "authors": ["Cynosphere"],
+    "tags": ["library"]
+  }
+}
