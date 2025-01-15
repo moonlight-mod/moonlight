@@ -12,6 +12,22 @@ declare module "@moonlight-mod/wp/commands_commands" {
 
 declare module "@moonlight-mod/wp/common_stores";
 
+declare module "@moonlight-mod/wp/componentEditor_dmList" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  export const dmList: CoreExtensions.ComponentEditor.DMList;
+  export default dmList;
+}
+declare module "@moonlight-mod/wp/componentEditor_memberList" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  export const memberList: CoreExtensions.ComponentEditor.MemberList;
+  export default memberList;
+}
+declare module "@moonlight-mod/wp/componentEditor_messages" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  export const message: CoreExtensions.ComponentEditor.Messages;
+  export default message;
+}
+
 declare module "@moonlight-mod/wp/contextMenu_evilMenu" {
   import { CoreExtensions } from "@moonlight-mod/types";
   const EvilParser: CoreExtensions.ContextMenu.EvilItemParser;
