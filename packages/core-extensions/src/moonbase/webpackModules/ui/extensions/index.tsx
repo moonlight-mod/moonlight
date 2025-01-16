@@ -13,7 +13,7 @@ import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import HelpMessage from "../HelpMessage";
 
 const SearchBar: any = Object.values(spacepack.findByCode("hideSearchIcon")[0].exports)[0];
-const { FormDivider, CircleInformationIcon, XSmallIcon } = Components;
+const { FormDivider, CircleInformationIcon, XSmallIcon, Button } = Components;
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionsPage() {
@@ -26,6 +26,7 @@ export default function ExtensionsPage() {
   });
 
   const [query, setQuery] = React.useState("");
+  const [hitUpdateAll, setHitUpdateAll] = React.useState(false);
 
   const filterState = React.useState(defaultFilter);
 
@@ -104,6 +105,19 @@ export default function ExtensionsPage() {
           className="moonbase-extension-update-section"
         >
           <div className="moonbase-help-message-buttons">
+            <Button
+              look={Button.Looks.OUTLINED}
+              color={Button.Colors.PRIMARY}
+              size={Button.Sizes.TINY}
+              disabled={hitUpdateAll}
+              onClick={() => {
+                setHitUpdateAll(true);
+                MoonbaseSettingsStore.updateAllExtensions();
+                MoonbaseSettingsStore.showOnlyUpdateable = false;
+              }}
+            >
+              Update all
+            </Button>
             <PanelButton
               icon={XSmallIcon}
               onClick={() => {

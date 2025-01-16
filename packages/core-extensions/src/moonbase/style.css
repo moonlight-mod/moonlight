@@ -94,6 +94,7 @@ textarea.moonbase-resizeable {
   display: flex;
   flex-direction: row;
   gap: 8px;
+  align-items: center;
 }
 
 .moonbase-update-divider {

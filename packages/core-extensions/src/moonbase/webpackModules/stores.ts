@@ -254,6 +254,16 @@ class MoonbaseSettingsStore extends Store<any> {
     this.emitChange();
   }
 
+  async updateAllExtensions() {
+    for (const id of Object.keys(this.updates)) {
+      try {
+        await this.installExtension(parseInt(id));
+      } catch (e) {
+        logger.error("Error bulk updating extension", id, e);
+      }
+    }
+  }
+
   async installExtension(uniqueId: number) {
     const ext = this.getExtension(uniqueId);
     if (!("download" in ext.manifest)) {
