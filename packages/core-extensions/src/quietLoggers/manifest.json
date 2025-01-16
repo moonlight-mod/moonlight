@@ -15,6 +15,13 @@
       "description": "Only disable self XSS prevention log",
       "type": "boolean",
       "default": false
+    },
+    "silenceDiscordLogger": {
+      "advice": "reload",
+      "displayName": "Silence Discord logger",
+      "description": "Hides all messages from Discord's logger (the logs that start with purple text in brackets)",
+      "type": "boolean",
+      "default": false
     }
   }
 }

@@ -3,6 +3,8 @@ import { Patch } from "@moonlight-mod/types";
 const notXssDefensesOnly = () =>
   (moonlight.getConfigOption<boolean>("quietLoggers", "xssDefensesOnly") ?? false) === false;
 
+const silenceDiscordLogger = moonlight.getConfigOption<boolean>("quietLoggers", "silenceDiscordLogger") ?? false;
+
 // These patches MUST run before the simple patches, these are to remove loggers
 // that end up causing syntax errors by the normal patch
 const loggerFixes: Patch[] = [
@@ -58,15 +60,6 @@ export const patches: Patch[] = [
       replacement: "(true)"
     }
   },
-  // The various [bracket style] logs
-  {
-    find: "Σ:",
-    replace: {
-      match: "for",
-      replacement: "return;for"
-    },
-    prerequisite: notXssDefensesOnly
-  },
   // Highlight.js deprecation warnings
   {
     find: "Deprecated as of",
@@ -75,6 +68,15 @@ export const patches: Patch[] = [
       replacement: "false&&console."
     },
     prerequisite: notXssDefensesOnly
+  },
+  // Discord's logger
+  {
+    find: "Σ:",
+    replace: {
+      match: "for",
+      replacement: "return;for"
+    },
+    prerequisite: () => silenceDiscordLogger && notXssDefensesOnly()
   },
   ...loggerFixes,
   ...stubPatches.map((patch) => ({
