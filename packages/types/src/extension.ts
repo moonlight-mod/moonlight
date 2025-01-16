@@ -85,6 +85,11 @@ export type ExtensionManifest = {
     source?: string;
 
     /**
+     * A donation link (or other method of support). If you don't want financial contributions, consider putting your favorite charity here!
+     */
+    donate?: string;
+
+    /**
      * A changelog to show in Moonbase.
      * Moonbase will show the changelog for the latest version, even if it is not installed.
      */
