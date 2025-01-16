@@ -107,7 +107,7 @@ export default function ExtensionsPage() {
           <div className="moonbase-help-message-buttons">
             <Button
               look={Button.Looks.OUTLINED}
-              color={Button.Colors.BRAND}
+              color={Button.Colors.PRIMARY}
               size={Button.Sizes.TINY}
               disabled={hitUpdateAll}
               onClick={() => {
