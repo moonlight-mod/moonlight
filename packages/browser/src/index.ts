@@ -127,9 +127,9 @@ window._moonlightBrowserInit = async () => {
       const manifest = getManifest(extensions, ext);
       return getConfigOption(ext, name, config, manifest?.settings);
     },
-    setConfigOption(ext, name, value) {
+    async setConfigOption(ext, name, value) {
       setConfigOption(config, ext, name, value);
-      this.writeConfig(config);
+      await this.writeConfig(config);
     },
 
     getNatives: () => {},
