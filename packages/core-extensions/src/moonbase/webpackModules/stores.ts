@@ -429,8 +429,8 @@ class MoonbaseSettingsStore extends Store<any> {
         }
       }
 
-      const initConfig = typeof initState === "boolean" ? {} : initState.config ?? {};
-      const newConfig = typeof newState === "boolean" ? {} : newState.config ?? {};
+      const initConfig = typeof initState === "boolean" ? {} : initState?.config ?? {};
+      const newConfig = typeof newState === "boolean" ? {} : newState?.config ?? {};
 
       const def = ext.manifest.settings;
       if (!def) continue;
