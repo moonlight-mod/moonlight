@@ -53,6 +53,7 @@ function IconButton({
       onClick={() => {
         if (openInClient) {
           try {
+            // discord/utils/MaskedLinkUtils handleClick
             const openLink = spacepack.findFunctionByStrings(
               spacepack.findByCode(".trackAnnouncementMessageLinkClicked({messageId:")[0].exports,
               ".trackAnnouncementMessageLinkClicked({messageId:"

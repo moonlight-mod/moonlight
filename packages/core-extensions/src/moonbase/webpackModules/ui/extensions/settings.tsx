@@ -184,6 +184,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
+// discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css
 const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports;
 
 // FIXME: type component keys

@@ -30,7 +30,9 @@ export enum Filter {
 }
 export const defaultFilter = 127 as Filter;
 
+// discord/styles/shared/Margins.css
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
+// discord/modules/forums/web/SortMenu.css
 const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0].exports;
 
 let FilterDialogClasses: any;
@@ -38,13 +40,15 @@ let FilterBarClasses: any;
 spacepack
   .lazyLoad('"Missing channel in Channel.openChannelContextMenu"', /e\("(\d+)"\)/g, /webpackId:(\d+?),/)
   .then(() => {
+    // discord/modules/forums/web/Forums.css
     FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0].exports;
+    // discord/modules/forums/web/Header.css
     FilterDialogClasses = spacepack.findByCode("countContainer:", "tagContainer:")[0].exports;
   });
 
+// discord/modules/forums/web/Tag
 const TagItem = spacepack.findByCode('"forum-tag-"')[0].exports.Z;
 
-// FIXME: type component keys
 const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon, RetryIcon, Tooltip } = Components;
 
 function toggleTag(selectedTags: Set<string>, setSelectedTags: (tags: Set<string>) => void, tag: string) {

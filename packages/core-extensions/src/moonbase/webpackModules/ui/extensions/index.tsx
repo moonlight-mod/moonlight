@@ -12,8 +12,10 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import HelpMessage from "../HelpMessage";
 
+// discord/uikit/search/SearchBar
 const SearchBar: any = Object.values(spacepack.findByCode("hideSearchIcon")[0].exports)[0];
 const { FormDivider, CircleInformationIcon, XSmallIcon } = Components;
+// discord/components/common/PanelButton
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionsPage() {

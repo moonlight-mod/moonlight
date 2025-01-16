@@ -11,9 +11,13 @@ import Update from "./update";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import RestartAdviceMessage from "./RestartAdvice";
 
+// discord/components/common/BaseHeaderBar
 const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
+// discord/components/common/HeaderBar.css
 const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0].exports;
+// discord/modules/people/web/PeoplePage.css
 const TabBarClasses = spacepack.findByCode("nowPlayingColumn:")[0].exports;
+// discord/actions/UserSettingsModalActionCreators
 const { setSection, clearSubsection } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
 

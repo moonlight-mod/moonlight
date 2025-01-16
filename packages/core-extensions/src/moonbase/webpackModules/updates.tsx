@@ -59,6 +59,7 @@ function listener() {
         {
           name: "Open Moonbase",
           onClick: () => {
+            // discord/actions/UserSettingsModalActionCreators .default
             const { open } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
             if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
               open("moonbase-extensions");

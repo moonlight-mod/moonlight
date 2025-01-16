@@ -10,6 +10,7 @@ const { MenuItem, Text, Breadcrumbs } = Components;
 
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
 
+// discord/actions/UserSettingsModalActionCreators
 const { open } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
 
 let SettingsNotice;
@@ -17,6 +18,7 @@ const notice = {
   stores: [MoonbaseSettingsStore],
   element: () => {
     // Require it here because lazy loading SUX
+    // discord/components/common/SettingsNotice
     SettingsNotice ??= spacepack.findByCode("onSaveButtonColor", "FocusRingScope")[0].exports.Z;
     return (
       <SettingsNotice

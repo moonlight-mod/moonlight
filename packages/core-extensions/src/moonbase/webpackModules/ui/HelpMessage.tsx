@@ -4,6 +4,7 @@ import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
+// discord/components/common/HelpMessage.css
 const HelpMessageClasses = spacepack.findByCode("positive:", "iconDiv:")[0].exports;
 
 // reimpl of HelpMessage but with a custom icon

@@ -20,7 +20,9 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
+// discord/components/common/FormSwitch.css
 const FormClasses = spacepack.findByCode("dividerDefault:")[0].exports;
+// discord/styles/shared/Margins.css
 const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
 
 let RemoveButtonClasses: any;
@@ -30,9 +32,12 @@ spacepack
     /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
     /webpackId:(\d+),name:"GuildSettings"/
   )
-  .then(() => (RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports));
+  .then(
+    () =>
+      // discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css
+      (RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports)
+  );
 
-// FIXME: type component keys
 const { CircleXIcon } = Components;
 
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {

@@ -25,10 +25,14 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, Tooltip } = Components;
 
+// discord/components/common/PanelButton
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
+// discord/modules/discovery/web/Discovery.css
 const TabBarClasses = spacepack.findByCode("tabBar:", "tabBarItem:", "headerContentWrapper:")[0].exports;
+// discord/styles/shared/Markup.css
 const MarkupClasses = spacepack.findByCode("markup:", "inlineFormat:")[0].exports;
 
+// discord/modules/build_overrides/web/BuildOverride.css
 const BuildOverrideClasses = spacepack.findByCode("disabledButtonOverride:")[0].exports;
 
 const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {

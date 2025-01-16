@@ -8,7 +8,8 @@ import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 
 const { openModalLazy, useModalsStore, closeModal } = Components;
-const Popup = spacepack.findByCode(".minorContainer", "secondaryAction")[0].exports.default;
+// discord/components/modals/ConfirmModal
+const ConfirmModal = spacepack.findByCode(".minorContainer", "secondaryAction")[0].exports.default;
 
 function close() {
   const ModalStore = useModalsStore.getState();
@@ -75,7 +76,7 @@ function MissingExtensionPopup({
   );
 
   return (
-    <Popup
+    <ConfirmModal
       body={
         <Flex
           style={{
@@ -171,7 +172,7 @@ function GenericExtensionPopup({
   const { Text } = Components;
 
   return (
-    <Popup
+    <ConfirmModal
       title={title}
       body={
         <Flex>

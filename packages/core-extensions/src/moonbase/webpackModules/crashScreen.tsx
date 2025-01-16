@@ -7,6 +7,8 @@ import { RepositoryManifest, UpdateState } from "../types";
 import { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
 
 const { Button, TabBar } = Components;
+// TODO: confirm this is loaded with main chunk or something
+// discord/modules/discovery/web/Discovery.css
 const TabBarClasses = spacepack.findByCode(/tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"/)[0].exports;
 
 const MODULE_REGEX = /Webpack-Module-(\d+)/g;
