@@ -77,16 +77,7 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
 });
 
 function patchCsp(headers: Record<string, string[]>) {
-  const directives = [
-    "script-src",
-    "style-src",
-    "connect-src",
-    "img-src",
-    "font-src",
-    "media-src",
-    "worker-src",
-    "prefetch-src"
-  ];
+  const directives = ["script-src", "style-src", "connect-src", "img-src", "font-src", "media-src", "worker-src"];
   const values = ["*", "blob:", "data:", "'unsafe-inline'", "'unsafe-eval'", "disclip:"];
 
   const csp = "content-security-policy";
