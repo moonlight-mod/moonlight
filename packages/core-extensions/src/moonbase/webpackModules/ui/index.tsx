@@ -8,7 +8,6 @@ import ExtensionsPage from "./extensions";
 import ConfigPage from "./config";
 import AboutPage from "./about";
 import Update from "./update";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import RestartAdviceMessage from "./RestartAdvice";
 
 const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
@@ -52,7 +51,6 @@ export function Moonbase(props: { initialTab?: number } = {}) {
     () => () => {
       // Normally there's an onSettingsClose prop you can set but we don't expose it and I don't care enough to add support for it right now
       clearSubsection("moonbase");
-      MoonbaseSettingsStore.showOnlyUpdateable = false;
     },
     []
   );
