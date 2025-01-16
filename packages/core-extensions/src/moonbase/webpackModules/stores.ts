@@ -28,15 +28,6 @@ class MoonbaseSettingsStore extends Store<any> {
   newVersion: string | null;
   shouldShowNotice: boolean;
 
-  #showOnlyUpdateable = false;
-  set showOnlyUpdateable(v: boolean) {
-    this.#showOnlyUpdateable = v;
-    this.emitChange();
-  }
-  get showOnlyUpdateable() {
-    return this.#showOnlyUpdateable;
-  }
-
   restartAdvice = RestartAdvice.NotNeeded;
 
   extensions: { [id: number]: MoonbaseExtension };
@@ -251,6 +242,13 @@ class MoonbaseSettingsStore extends Store<any> {
 
     this.config.extensions[ext.id] = val;
     this.modified = this.isModified();
+    this.emitChange();
+  }
+
+  dismissAllExtensionUpdates() {
+    for (const id in this.extensions) {
+      this.extensions[id].hasUpdate = false;
+    }
     this.emitChange();
   }
 

@@ -255,41 +255,37 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 padding: "0 20px"
               }}
             >
-              <Flex direction={Flex.Direction.HORIZONTAL}>
-                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Info}>
-                  Info
+              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Info}>
+                Info
+              </TabBar.Item>
+
+              {description != null && (
+                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
+                  Description
                 </TabBar.Item>
+              )}
 
-                {description != null && (
-                  <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
-                    Description
-                  </TabBar.Item>
-                )}
-
-                {changelog != null && (
-                  <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Changelog}>
-                    Changelog
-                  </TabBar.Item>
-                )}
-                {settings != null && (
-                  <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Settings}>
-                    Settings
-                  </TabBar.Item>
-                )}
-              </Flex>
+              {changelog != null && (
+                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Changelog}>
+                  Changelog
+                </TabBar.Item>
+              )}
+              {settings != null && (
+                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Settings}>
+                  Settings
+                </TabBar.Item>
+              )}
             </TabBar>
 
-            {linkButtons.length > 0 && (
-              <Flex
-                align={Flex.Align.CENTER}
-                justify={Flex.Justify.END}
-                direction={Flex.Direction.HORIZONTAL}
-                grow={1}
-                className="moonbase-link-buttons"
-              >
-                {linkButtons}
-              </Flex>
-            )}
+            <Flex
+              align={Flex.Align.CENTER}
+              justify={Flex.Justify.END}
+              direction={Flex.Direction.HORIZONTAL}
+              grow={1}
+              className="moonbase-link-buttons"
+            >
+              {linkButtons.length > 0 && linkButtons}
+            </Flex>
           </Flex>
         )}
 

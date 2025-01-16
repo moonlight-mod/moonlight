@@ -17,11 +17,10 @@ const { FormDivider, CircleInformationIcon, XSmallIcon, Button } = Components;
 const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionsPage() {
-  const { extensions, savedFilter, showOnlyUpdateable } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
+  const { extensions, savedFilter } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
     return {
       extensions: MoonbaseSettingsStore.extensions,
-      savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>("moonbase", "filter", defaultFilter),
-      showOnlyUpdateable: MoonbaseSettingsStore.showOnlyUpdateable
+      savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>("moonbase", "filter", defaultFilter)
     };
   });
 
@@ -78,8 +77,7 @@ export default function ExtensionsPage() {
 
   // Prioritize extensions with updates
   const filteredWithUpdates = filtered.filter((ext) => ext!.hasUpdate);
-  const filterUpdates = showOnlyUpdateable && filteredWithUpdates.length > 0;
-  const filteredWithoutUpdates = filterUpdates ? [] : filtered.filter((ext) => !ext!.hasUpdate);
+  const filteredWithoutUpdates = filtered.filter((ext) => !ext!.hasUpdate);
 
   return (
     <>
@@ -98,22 +96,20 @@ export default function ExtensionsPage() {
       />
       <FilterBar filter={filter} setFilter={setFilter} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
-      {filterUpdates && (
+      {filteredWithUpdates.length > 0 && (
         <HelpMessage
           icon={CircleInformationIcon}
-          text="Only displaying updates"
+          text="Extension updates are available"
           className="moonbase-extension-update-section"
         >
           <div className="moonbase-help-message-buttons">
             <Button
-              look={Button.Looks.OUTLINED}
-              color={Button.Colors.PRIMARY}
+              color={Button.Colors.BRAND}
               size={Button.Sizes.TINY}
               disabled={hitUpdateAll}
               onClick={() => {
                 setHitUpdateAll(true);
                 MoonbaseSettingsStore.updateAllExtensions();
-                MoonbaseSettingsStore.showOnlyUpdateable = false;
               }}
             >
               Update all
@@ -121,7 +117,7 @@ export default function ExtensionsPage() {
             <PanelButton
               icon={XSmallIcon}
               onClick={() => {
-                MoonbaseSettingsStore.showOnlyUpdateable = false;
+                MoonbaseSettingsStore.dismissAllExtensionUpdates();
               }}
             />
           </div>
