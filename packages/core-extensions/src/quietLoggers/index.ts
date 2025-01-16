@@ -58,6 +58,24 @@ export const patches: Patch[] = [
       replacement: "(true)"
     }
   },
+  // The various [bracket style] logs
+  {
+    find: "Σ:",
+    replace: {
+      match: "for",
+      replacement: "return;for"
+    },
+    prerequisite: notXssDefensesOnly
+  },
+  // Highlight.js deprecation warnings
+  {
+    find: "Deprecated as of",
+    replace: {
+      match: /console\./g,
+      replacement: "false&&console."
+    },
+    prerequisite: notXssDefensesOnly
+  },
   ...loggerFixes,
   ...stubPatches.map((patch) => ({
     find: patch[0],
