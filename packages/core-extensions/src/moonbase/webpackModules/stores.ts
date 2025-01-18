@@ -437,11 +437,18 @@ class MoonbaseSettingsStore extends Store<any> {
         }
       }
 
-      const initConfig = typeof initState === "boolean" ? {} : initState?.config ?? {};
-      const newConfig = typeof newState === "boolean" ? {} : newState?.config ?? {};
+      const initConfig = typeof initState === "boolean" ? {} : { ...initState?.config };
+      const newConfig = typeof newState === "boolean" ? {} : { ...newState?.config };
 
       const def = ext.manifest.settings;
       if (!def) continue;
+
+      for (const key in def) {
+        const defaultValue = def[key].default;
+
+        initConfig[key] ??= defaultValue;
+        newConfig[key] ??= defaultValue;
+      }
 
       const changedKeys = diff(initConfig, newConfig, { cyclesFix: false }).map((c) => c.path[0]);
       for (const key in def) {
