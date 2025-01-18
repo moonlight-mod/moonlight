@@ -446,8 +446,8 @@ class MoonbaseSettingsStore extends Store<any> {
       for (const key in def) {
         const defaultValue = def[key].default;
 
-        if (initConfig[key] == null) Object.defineProperty(initConfig, key, { value: defaultValue, enumerable: true });
-        if (newConfig[key] == null) Object.defineProperty(newConfig, key, { value: defaultValue, enumerable: true });
+        initConfig[key] ??= defaultValue;
+        newConfig[key] ??= defaultValue;
       }
 
       const changedKeys = diff(initConfig, newConfig, { cyclesFix: false }).map((c) => c.path[0]);
