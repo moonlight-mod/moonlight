@@ -1,15 +1,19 @@
 import { ExtensionState } from "../../../types";
 import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
-import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import AppCard from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
+import AppCardClasses from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
+import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
+import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
+import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
+import BuildOverrideClasses from "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverride.css";
 
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import ExtensionInfo from "./info";
 import Settings from "./settings";
 import { doGenericExtensionPopup, doMissingExtensionPopup } from "./popup";
@@ -21,19 +25,7 @@ export enum ExtensionPage {
   Settings
 }
 
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-
 const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, Tooltip } = Components;
-
-// discord/components/common/PanelButton
-const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
-// discord/modules/discovery/web/Discovery.css
-const TabBarClasses = spacepack.findByCode("tabBar:", "tabBarItem:", "headerContentWrapper:")[0].exports;
-// discord/styles/shared/Markup.css
-const MarkupClasses = spacepack.findByCode("markup:", "inlineFormat:")[0].exports;
-
-// discord/modules/build_overrides/web/BuildOverride.css
-const BuildOverrideClasses = spacepack.findByCode("disabledButtonOverride:")[0].exports;
 
 const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
   [ExtensionCompat.Compatible]: "huh?",
@@ -79,8 +71,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const implicitlyEnabled = enabledDependants.length > 0;
 
   return (
-    <Card editable={true} className={AppCard.card}>
-      <div className={AppCard.cardHeader}>
+    <Card editable={true} className={AppCardClasses.card}>
+      <div className={AppCardClasses.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
           <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
             <Text variant="text-md/semibold">{ext.manifest?.meta?.name ?? ext.id}</Text>
@@ -219,29 +211,29 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
             selectedItem={tab}
             type="top"
             onItemSelect={setTab}
-            className={TabBarClasses.tabBar}
+            className={DiscoveryClasses.tabBar}
             style={{
               padding: "0 20px"
             }}
           >
-            <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Info}>
+            <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Info}>
               Info
             </TabBar.Item>
 
             {description != null && (
-              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
+              <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Description}>
                 Description
               </TabBar.Item>
             )}
 
             {changelog != null && (
-              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Changelog}>
+              <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Changelog}>
                 Changelog
               </TabBar.Item>
             )}
 
             {settings != null && (
-              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Settings}>
+              <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Settings}>
                 Settings
               </TabBar.Item>
             )}

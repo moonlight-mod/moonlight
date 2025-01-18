@@ -17,6 +17,20 @@ import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
+let GuildSettingsRoleEditClasses: any;
+spacepack
+  .lazyLoad(
+    "renderArtisanalHack",
+    /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
+    /webpackId:(\d+),name:"GuildSettings"/
+  )
+  .then(
+    () =>
+      (GuildSettingsRoleEditClasses = spacepack.require(
+        "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
+      ))
+  );
+
 type SettingsProps = {
   ext: MoonbaseExtension;
   name: string;
@@ -60,8 +74,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
       onChange={(value: boolean) => {
         MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
       }}
-      // @ts-expect-error TODO: mappings
-      note={markdownify(description)}
+      note={description != null ? markdownify(description) : undefined}
       className={`${Margins.marginReset} ${Margins.marginTop20}`}
     >
       {displayName}
@@ -184,19 +197,16 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-// discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css
-const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports;
-
 // FIXME: type component keys
 const { CircleXIcon } = Components;
 
 function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disabled: boolean }) {
   const { Tooltip, Clickable } = Components;
   return (
-    <div className={RemoveButtonClasses.removeButtonContainer}>
+    <div className={GuildSettingsRoleEditClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
         {(props: any) => (
-          <Clickable {...props} className={RemoveButtonClasses.removeButton} onClick={onClick}>
+          <Clickable {...props} className={GuildSettingsRoleEditClasses.removeButton} onClick={onClick}>
             <CircleXIcon width={16} height={16} />
           </Clickable>
         )}

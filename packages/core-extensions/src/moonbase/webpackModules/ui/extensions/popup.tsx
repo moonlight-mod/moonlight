@@ -1,15 +1,13 @@
 // TODO: clean up the styling here
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import React from "@moonlight-mod/wp/react";
 import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import ConfirmModal from "@moonlight-mod/wp/discord/components/modals/ConfirmModal";
 
 const { openModalLazy, useModalsStore, closeModal } = Components;
-// discord/components/modals/ConfirmModal
-const ConfirmModal = spacepack.findByCode(".minorContainer", "secondaryAction")[0].exports.default;
 
 function close() {
   const ModalStore = useModalsStore.getState();

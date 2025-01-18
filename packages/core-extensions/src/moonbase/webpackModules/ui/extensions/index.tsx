@@ -7,16 +7,14 @@ import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import HelpMessage from "../HelpMessage";
 
-// discord/uikit/search/SearchBar
-const SearchBar: any = Object.values(spacepack.findByCode("hideSearchIcon")[0].exports)[0];
+const SearchBar = spacepack.require("discord/uikit/search/SearchBar").default;
 const { FormDivider, CircleInformationIcon, XSmallIcon } = Components;
-// discord/components/common/PanelButton
-const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
 
 export default function ExtensionsPage() {
   const { extensions, savedFilter, showOnlyUpdateable } = useStateFromStoresObject([MoonbaseSettingsStore], () => {

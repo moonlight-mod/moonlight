@@ -1,5 +1,4 @@
 import { tagNames } from "./info";
-
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import * as React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
@@ -17,6 +16,8 @@ import {
 } from "@moonlight-mod/wp/discord/components/common/index";
 import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
+import TagItem from "@moonlight-mod/wp/discord/modules/forums/web/Tag";
 
 export enum Filter {
   Core = 1 << 0,
@@ -30,24 +31,16 @@ export enum Filter {
 }
 export const defaultFilter = 127 as Filter;
 
-// discord/styles/shared/Margins.css
-const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
-// discord/modules/forums/web/SortMenu.css
-const SortMenuClasses = spacepack.findByCode("container:", "clearText:")[0].exports;
-
-let FilterDialogClasses: any;
-let FilterBarClasses: any;
+let HeaderClasses: any;
+let ForumsClasses: any;
+let SortMenuClasses: any;
 spacepack
   .lazyLoad('"Missing channel in Channel.openChannelContextMenu"', /e\("(\d+)"\)/g, /webpackId:(\d+?),/)
   .then(() => {
-    // discord/modules/forums/web/Forums.css
-    FilterBarClasses = spacepack.findByCode("tagsButtonWithCount:")[0].exports;
-    // discord/modules/forums/web/Header.css
-    FilterDialogClasses = spacepack.findByCode("countContainer:", "tagContainer:")[0].exports;
+    ForumsClasses = spacepack.require("discord/modules/forums/web/Forums.css");
+    HeaderClasses = spacepack.require("discord/modules/forums/web/Header.css");
+    SortMenuClasses = spacepack.require("discord/modules/forums/web/SortMenu.css");
   });
-
-// discord/modules/forums/web/Tag
-const TagItem = spacepack.findByCode('"forum-tag-"')[0].exports.Z;
 
 const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon, RetryIcon, Tooltip } = Components;
 
@@ -144,36 +137,36 @@ function FilterButtonPopout({
 
 function TagButtonPopout({ selectedTags, setSelectedTags, setPopoutRef, closePopout }: any) {
   return (
-    <Dialog ref={setPopoutRef} className={FilterDialogClasses.container}>
-      <div className={FilterDialogClasses.header}>
-        <div className={FilterDialogClasses.headerLeft}>
-          <Heading color="interactive-normal" variant="text-xs/bold" className={FilterDialogClasses.headerText}>
+    <Dialog ref={setPopoutRef} className={HeaderClasses.container}>
+      <div className={HeaderClasses.header}>
+        <div className={HeaderClasses.headerLeft}>
+          <Heading color="interactive-normal" variant="text-xs/bold" className={HeaderClasses.headerText}>
             Select tags
           </Heading>
-          <div className={FilterDialogClasses.countContainer}>
-            <Text className={FilterDialogClasses.countText} color="none" variant="text-xs/medium">
+          <div className={HeaderClasses.countContainer}>
+            <Text className={HeaderClasses.countText} color="none" variant="text-xs/medium">
               {selectedTags.size}
             </Text>
           </div>
         </div>
       </div>
-      <div className={FilterDialogClasses.tagContainer}>
+      <div className={HeaderClasses.tagContainer}>
         {Object.keys(tagNames).map((tag) => (
           <TagItem
             key={tag}
-            className={FilterDialogClasses.tag}
-            tag={{ name: tagNames[tag as keyof typeof tagNames] }}
+            className={HeaderClasses.tag}
+            tag={{ name: tagNames[tag as keyof typeof tagNames], id: tagNames[tag as keyof typeof tagNames] }}
             onClick={() => toggleTag(selectedTags, setSelectedTags, tag)}
             selected={selectedTags.has(tag)}
           />
         ))}
       </div>
-      <div className={FilterDialogClasses.separator} />
+      <div className={HeaderClasses.separator} />
       <Button
         look={Button.Looks.LINK}
         size={Button.Sizes.MIN}
         color={Button.Colors.CUSTOM}
-        className={FilterDialogClasses.clear}
+        className={HeaderClasses.clear}
         onClick={() => {
           setSelectedTags(new Set());
           closePopout();
@@ -226,7 +219,7 @@ export default function FilterBar({
       style={{
         paddingTop: "12px"
       }}
-      className={`${FilterBarClasses.tagsContainer} ${Margins.marginBottom8}`}
+      className={`${ForumsClasses.tagsContainer} ${Margins.marginBottom8}`}
     >
       <Tooltip text="Refresh updates" position="top">
         {(props: any) => (
@@ -234,10 +227,8 @@ export default function FilterBar({
             {...props}
             size={Button.Sizes.MIN}
             color={Button.Colors.CUSTOM}
-            className={`${FilterBarClasses.sortDropdown} moonbase-retry-button ${
-              checkingUpdates ? "moonbase-speen" : ""
-            }`}
-            innerClassName={FilterBarClasses.sortDropdownInner}
+            className={`${ForumsClasses.sortDropdown} moonbase-retry-button ${checkingUpdates ? "moonbase-speen" : ""}`}
+            innerClassName={ForumsClasses.sortDropdownInner}
             onClick={() => {
               (async () => {
                 try {
@@ -267,11 +258,11 @@ export default function FilterBar({
             {...props}
             size={Button.Sizes.MIN}
             color={Button.Colors.CUSTOM}
-            className={FilterBarClasses.sortDropdown}
-            innerClassName={FilterBarClasses.sortDropdownInner}
+            className={ForumsClasses.sortDropdown}
+            innerClassName={ForumsClasses.sortDropdownInner}
           >
             <ArrowsUpDownIcon size="xs" />
-            <Text className={FilterBarClasses.sortDropdownText} variant="text-sm/medium" color="interactive-normal">
+            <Text className={ForumsClasses.sortDropdownText} variant="text-sm/medium" color="interactive-normal">
               Sort & filter
             </Text>
             {isShown ? (
@@ -282,14 +273,14 @@ export default function FilterBar({
           </Button>
         )}
       </Popout>
-      <div className={FilterBarClasses.divider} />
-      <div className={FilterBarClasses.tagList}>
-        <div ref={tagListInner} className={FilterBarClasses.tagListInner}>
+      <div className={ForumsClasses.divider} />
+      <div className={ForumsClasses.tagList}>
+        <div ref={tagListInner} className={ForumsClasses.tagListInner}>
           {Object.keys(tagNames).map((tag) => (
             <TagItem
               key={tag}
-              className={FilterBarClasses.tag}
-              tag={{ name: tagNames[tag as keyof typeof tagNames] }}
+              className={ForumsClasses.tag}
+              tag={{ name: tagNames[tag as keyof typeof tagNames], id: tag }}
               onClick={() => toggleTag(selectedTags, setSelectedTags, tag)}
               selected={selectedTags.has(tag)}
             />
@@ -317,14 +308,12 @@ export default function FilterBar({
               left: tagsButtonOffset
             }}
             // TODO: Use Discord's class name utility
-            className={`${FilterBarClasses.tagsButton} ${
-              selectedTags.size > 0 ? FilterBarClasses.tagsButtonWithCount : ""
-            }`}
-            innerClassName={FilterBarClasses.tagsButtonInner}
+            className={`${ForumsClasses.tagsButton} ${selectedTags.size > 0 ? ForumsClasses.tagsButtonWithCount : ""}`}
+            innerClassName={ForumsClasses.tagsButtonInner}
           >
             {selectedTags.size > 0 ? (
-              <div style={{ boxSizing: "content-box" }} className={FilterBarClasses.countContainer}>
-                <Text className={FilterBarClasses.countText} color="none" variant="text-xs/medium">
+              <div style={{ boxSizing: "content-box" }} className={ForumsClasses.countContainer}>
+                <Text className={ForumsClasses.countText} color="none" variant="text-xs/medium">
                   {selectedTags.size}
                 </Text>
               </div>
@@ -342,12 +331,12 @@ export default function FilterBar({
       <Button
         size={Button.Sizes.MIN}
         color={Button.Colors.CUSTOM}
-        className={`${FilterBarClasses.tagsButton} ${FilterBarClasses.tagsButtonPlaceholder}`}
-        innerClassName={FilterBarClasses.tagsButtonInner}
+        className={`${ForumsClasses.tagsButton} ${ForumsClasses.tagsButtonPlaceholder}`}
+        innerClassName={ForumsClasses.tagsButtonInner}
       >
         {selectedTags.size > 0 ? (
-          <div style={{ boxSizing: "content-box" }} className={FilterBarClasses.countContainer}>
-            <Text className={FilterBarClasses.countText} color="none" variant="text-xs/medium">
+          <div style={{ boxSizing: "content-box" }} className={ForumsClasses.countContainer}>
+            <Text className={ForumsClasses.countText} color="none" variant="text-xs/medium">
               {selectedTags.size}
             </Text>
           </div>

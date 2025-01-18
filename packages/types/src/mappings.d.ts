@@ -57,6 +57,8 @@ declare module "@moonlight-mod/wp/discord/components/common/Alerts" {
 
 declare module "@moonlight-mod/wp/discord/components/common/BaseHeaderBar" {
   import { MappedModules } from "@moonlight-mod/mappings";
+  export const Icon: MappedModules["discord/components/common/BaseHeaderBar"]["Icon"];
+  export const Divider: MappedModules["discord/components/common/BaseHeaderBar"]["Divider"];
   const _default: MappedModules["discord/components/common/BaseHeaderBar"]["default"];
   export default _default;
 }
@@ -116,7 +118,11 @@ declare module "@moonlight-mod/wp/discord/components/common/HelpMessage.css" {
   export const error: MappedModules["discord/components/common/HelpMessage.css"]["error"];
 }
 
-declare module "@moonlight-mod/wp/discord/components/common/PanelButton" {}
+declare module "@moonlight-mod/wp/discord/components/common/PanelButton" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/components/common/PanelButton"]["default"];
+  export default _default;
+}
 
 declare module "@moonlight-mod/wp/discord/components/common/Scroller.css" {
   import { MappedModules } from "@moonlight-mod/mappings";
