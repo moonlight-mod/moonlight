@@ -120,6 +120,12 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 {(props: any) => <BeakerIcon {...props} class={BuildOverrideClasses.infoIcon} size="xs" />}
               </Tooltip>
             )}
+
+            {hasDuplicateEntry && ext?.source?.url && (
+              <Tooltip text={`This extension is from the following repository: ${ext.source.url}`} position="top">
+                {(props: any) => <WindowTopOutlineIcon {...props} class={BuildOverrideClasses.infoIcon} size="xs" />}
+              </Tooltip>
+            )}
           </Flex>
 
           {tagline != null && <Text variant="text-sm/normal">{MarkupUtils.parse(tagline)}</Text>}
@@ -134,13 +140,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               gap: "1rem"
             }}
           >
-            {hasDuplicateEntry && ext?.source?.url && (
-              <PanelButton
-                icon={WindowTopOutlineIcon}
-                tooltipText={`This extension is from the following repository: ${ext.source.url}`}
-              />
-            )}
-
             {ext.state === ExtensionState.NotDownloaded ? (
               <Tooltip
                 text={conflicting ? CONFLICTING_TEXT : COMPAT_TEXT_MAP[ext.compat]}
