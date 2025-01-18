@@ -25,7 +25,8 @@ import {
   SingleSelect,
   Button,
   useVariableSelect,
-  multiSelect
+  multiSelect,
+  Select as DiscordSelect
 } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
@@ -188,7 +189,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
       {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
-      <Select
+      <DiscordSelect
         autofocus={false}
         clearable={false}
         closeOnSelect={false}

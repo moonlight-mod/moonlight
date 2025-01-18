@@ -84,8 +84,7 @@ export default function Update() {
               fetch(`https://raw.githubusercontent.com/moonlight-mod/moonlight/refs/tags/${newVersion}/CHANGELOG.md`)
                 .then((r) => r.text())
                 .then((changelog) =>
-                  // TODO: these types don't work???
-                  openModal((modalProps: any) => {
+                  openModal((modalProps) => {
                     return <MoonlightChangelog {...modalProps} changelog={changelog} version={newVersion} />;
                   })
                 );
