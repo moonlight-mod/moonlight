@@ -1,14 +1,11 @@
 import React from "@moonlight-mod/wp/react";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { Notice, NoticeCloseButton, PrimaryCTANoticeButton } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import NoticesStore from "@moonlight-mod/wp/notices_notices";
-import type { Notice } from "@moonlight-mod/types/coreExtensions/notices";
+import type { Notice as NoticeType } from "@moonlight-mod/types/coreExtensions/notices";
 
-// FIXME: types
-const { Notice, NoticeCloseButton, PrimaryCTANoticeButton } = Components;
-
-function popAndDismiss(notice: Notice) {
+function popAndDismiss(notice: NoticeType) {
   NoticesStore.popNotice();
   if (notice?.onDismiss) {
     notice.onDismiss();

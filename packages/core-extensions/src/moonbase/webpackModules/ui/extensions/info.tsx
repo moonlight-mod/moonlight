@@ -2,8 +2,7 @@ import { ExtensionTag } from "@moonlight-mod/types";
 import { MoonbaseExtension } from "../../../types";
 
 import React from "@moonlight-mod/wp/react";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 
 type Dependency = {
   id: string;
@@ -34,12 +33,7 @@ export const tagNames: Record<ExtensionTag, string> = {
   [ExtensionTag.Library]: "Library"
 };
 
-const UserInfoClasses = spacepack.findByCode("infoScroller", "userInfoSection", "userInfoSectionHeader")[0].exports;
-
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-
-// FIXME: type component keys
-const { Text } = Components;
 
 function InfoSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -48,9 +42,7 @@ function InfoSection({ title, children }: { title: string; children: React.React
         marginRight: "1em"
       }}
     >
-      <Text variant="eyebrow" className={UserInfoClasses.userInfoSectionHeader}>
-        {title}
-      </Text>
+      <Text variant="eyebrow">{title}</Text>
 
       <Text variant="text-sm/normal">{children}</Text>
     </div>

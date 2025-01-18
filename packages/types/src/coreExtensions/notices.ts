@@ -1,4 +1,4 @@
-import type { Store } from "@moonlight-mod/mappings/discord/packages/flux";
+import type { Store } from "@moonlight-mod/mappings/discord/packages/flux/Store";
 
 export type NoticeButton = {
   name: string;

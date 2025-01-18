@@ -1,13 +1,10 @@
 import React from "@moonlight-mod/wp/react";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { Button, TabBar } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { RepositoryManifest, UpdateState } from "../types";
 import { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
-
-const { Button, TabBar } = Components;
-const TabBarClasses = spacepack.findByCode(/tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"/)[0].exports;
+import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
 
 const MODULE_REGEX = /Webpack-Module-(\d+)/g;
 
@@ -154,18 +151,18 @@ export function wrapAction({ action, state }: WrapperProps) {
     <div className="moonbase-crash-wrapper">
       {action}
       <TabBar
-        className={`${TabBarClasses.tabBar} moonbase-crash-tabs`}
+        className={`${DiscoveryClasses.tabBar} moonbase-crash-tabs`}
         type="top"
         selectedItem={tab}
         onItemSelect={(v) => setTab(v)}
       >
-        <TabBar.Item className={TabBarClasses.tabBarItem} id="crash">
+        <TabBar.Item className={DiscoveryClasses.tabBarItem} id="crash">
           Crash details
         </TabBar.Item>
-        <TabBar.Item className={TabBarClasses.tabBarItem} id="extensions" disabled={updateCount === 0}>
+        <TabBar.Item className={DiscoveryClasses.tabBarItem} id="extensions" disabled={updateCount === 0}>
           {`Extension updates (${updateCount})`}
         </TabBar.Item>
-        <TabBar.Item className={TabBarClasses.tabBarItem} id="causes" disabled={causes.length === 0}>
+        <TabBar.Item className={DiscoveryClasses.tabBarItem} id="causes" disabled={causes.length === 0}>
           {`Possible causes (${causes.length})`}
         </TabBar.Item>
       </TabBar>

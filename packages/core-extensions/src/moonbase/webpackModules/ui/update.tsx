@@ -1,27 +1,24 @@
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import { UpdateState } from "../../types";
 import HelpMessage from "./HelpMessage";
 import { MoonlightBranch } from "@moonlight-mod/types";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-
-const {
+import {
   ThemeDarkIcon,
   Button,
-  openModal,
   Text,
   ModalRoot,
   ModalSize,
   ModalContent,
   ModalHeader,
   Heading,
-  ModalCloseButton
-} = Components;
-const MarkupClasses = spacepack.findByCode("markup:", "inlineFormat:")[0].exports;
+  ModalCloseButton,
+  openModal
+} from "@moonlight-mod/wp/discord/components/common/index";
+import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 
 const logger = moonlight.getLogger("moonbase/ui/update");
 
@@ -46,13 +43,11 @@ function MoonlightChangelog({
   return (
     <ModalRoot transitionState={transitionState} size={ModalSize.DYNAMIC}>
       <ModalHeader>
-        {/* @ts-expect-error TODO: mappings */}
         <Flex.Child grow={1} shrink={1}>
           <Heading variant="heading-lg/semibold">moonlight</Heading>
           <Text variant="text-xs/normal">{version}</Text>
         </Flex.Child>
 
-        {/* @ts-expect-error ^^^^ */}
         <Flex.Child grow={0}>
           <ModalCloseButton onClick={onClose} />
         </Flex.Child>
@@ -89,8 +84,7 @@ export default function Update() {
               fetch(`https://raw.githubusercontent.com/moonlight-mod/moonlight/refs/tags/${newVersion}/CHANGELOG.md`)
                 .then((r) => r.text())
                 .then((changelog) =>
-                  // @ts-expect-error TODO: mappings
-                  openModal((modalProps: { transitionState: number | null; onClose: () => void }) => {
+                  openModal((modalProps) => {
                     return <MoonlightChangelog {...modalProps} changelog={changelog} version={newVersion} />;
                   })
                 );

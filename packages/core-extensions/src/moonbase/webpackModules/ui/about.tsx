@@ -1,11 +1,17 @@
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import {
+  Card,
+  Text,
+  useThemeContext,
+  Button,
+  AngleBracketsIcon,
+  BookCheckIcon,
+  ClydeIcon
+} from "@moonlight-mod/wp/discord/components/common/index";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import React from "@moonlight-mod/wp/react";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/IntegrationCard.css";
+import AppCardClasses from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-
-const { Card, Text, useThemeContext, Button, AngleBracketsIcon, BookCheckIcon, ClydeIcon } = Components;
 
 const wordmark = "https://raw.githubusercontent.com/moonlight-mod/moonlight/refs/heads/main/img/wordmark.png";
 const wordmarkLight =
@@ -21,8 +27,8 @@ function parse(str: string) {
 
 function Dev({ name, picture, link }: { name: string; picture: string; link: string }) {
   return (
-    <Card editable={true} className={IntegrationCard.card}>
-      <div className={IntegrationCard.cardHeader + " moonbase-dev"}>
+    <Card editable={true} className={AppCardClasses.card}>
+      <div className={AppCardClasses.cardHeader + " moonbase-dev"}>
         <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
           <img src={picture} alt={name} className="moonbase-dev-avatar" />
 
@@ -53,11 +59,8 @@ function IconButton({
       onClick={() => {
         if (openInClient) {
           try {
-            const openLink = spacepack.findFunctionByStrings(
-              spacepack.findByCode(".trackAnnouncementMessageLinkClicked({messageId:")[0].exports,
-              ".trackAnnouncementMessageLinkClicked({messageId:"
-            ) as ({ href }: { href: string }) => void;
-            openLink({ href: link });
+            const { handleClick } = spacepack.require("discord/utils/MaskedLinkUtils");
+            handleClick({ href: link });
           } catch {
             window.open(link);
           }

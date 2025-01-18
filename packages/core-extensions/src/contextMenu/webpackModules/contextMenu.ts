@@ -58,6 +58,7 @@ module.exports = {
 };
 
 // Unmangle Menu elements
+// spacepack.require.m[moonlight.moonmap.modules["discord/modules/menus/web/Menu"]].toString();
 const code =
   spacepack.require.m[
     spacepack.findByCode("Menu API only allows Items and groups of Items as children.")[0].id

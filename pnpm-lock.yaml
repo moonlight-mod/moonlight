@@ -93,8 +93,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@moonlight-mod/mappings':
-        specifier: ^1.0.10
-        version: 1.0.10(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.3)
+        specifier: ^1.1.6
+        version: 1.1.6(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.3)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.3
         version: 1.0.3
@@ -117,8 +117,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@moonlight-mod/mappings':
-        specifier: ^1.0.10
-        version: 1.0.10(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.3)
+        specifier: ^1.1.6
+        version: 1.1.6(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.3)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.3
         version: 1.0.3
@@ -324,8 +324,8 @@ packages:
   '@moonlight-mod/lunast@1.0.0':
     resolution: {integrity: sha512-kJgf41K12i6/2LbXK97CNO+pNO7ADGh9N4bCQcOPwosocKMcwKHDEZUgPqeihNshY3c3AEW1LiyXjlsl24PdDw==}
 
-  '@moonlight-mod/mappings@1.0.10':
-    resolution: {integrity: sha512-L04To4MhlxOWxvvfVIRwj7d8H5qHthjUfikSx9WMk60qt67+6dFzN9CoAG9uG5l1B27IIEG3voVXBr0oSkooYw==}
+  '@moonlight-mod/mappings@1.1.6':
+    resolution: {integrity: sha512-xVVjZVJCxI+5n6f5VJLerSnSoUpu3Jt17aKG7PCDEcamqbS1PFwyBtVBlA2DLc/z6lIAHF7H+q4NDIQLH+chtg==}
     peerDependencies:
       '@moonlight-mod/lunast': ^1.0.0
       '@moonlight-mod/moonmap': ^1.0.0
@@ -349,6 +349,9 @@ packages:
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
 
+  '@types/chroma-js@3.1.0':
+    resolution: {integrity: sha512-Uwl3SOtUkbQ6Ye6ZYu4q4xdLGBzmY839sEHYtOT7i691neeyd+7fXWT5VIkcUSfNwIFrIjQutNYQn9h4q5HFvg==}
+
   '@types/estree-jsx@1.0.5':
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
 
@@ -361,14 +364,23 @@ packages:
   '@types/flux@3.1.14':
     resolution: {integrity: sha512-WRXN0kQPCnqxN0/PgNgc7WBF6c8rbSHsEep3/qBLpsQ824RONdOmTs0TV7XhIW2GDNRAHO2CqCgAFLR5PChosw==}
 
+  '@types/highlightjs@9.12.6':
+    resolution: {integrity: sha512-Qfd1DUrwE851Hc3tExADJY4qY8yeZMt06Xw9AJm/UtpneepJS3MZY29c33BY0wP899veaaHD4gZzYiSuQm84Fg==}
+
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+
+  '@types/lodash@4.17.14':
+    resolution: {integrity: sha512-jsxagdikDiDBeIRaPYtArcT8my4tN1og7MtMRquFT3XNA6axxyHDRUemqDz/taRDdOUn0GnGHRCuff4q48sW9A==}
 
   '@types/node@18.17.17':
     resolution: {integrity: sha512-cOxcXsQ2sxiwkykdJqvyFS+MLQPLvIdwh5l6gNg8qF6s+C7XSkEWOZjK+XhUZd+mYvHV/180g2cnCcIl4l06Pw==}
 
   '@types/node@20.16.10':
     resolution: {integrity: sha512-vQUKgWTjEIRFCvK6CyriPH3MZYiYlNy0fKiEYHWbcoWLEgs4opurGGKlebrTLqdSMIbXImH6XExNiIyNUv3WpA==}
+
+  '@types/platform@1.3.6':
+    resolution: {integrity: sha512-ZmSaqHuvzv+jC232cFoz2QqPUkaj6EvMmCrWcx3WRr7xTPVFCMUOTcOq8m2d+Zw1iKRc1kDiaA+jtNrV0hkVew==}
 
   '@types/prop-types@15.7.13':
     resolution: {integrity: sha512-hCZTSvwbzWGvhqxp/RqVqwU999pBf2vp7hzIjiYOsl8wqOmUxkQ6ddw1cV3l8811+kdUFus/q4d1Y3E3SyEifA==}
@@ -1459,11 +1471,15 @@ snapshots:
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
 
-  '@moonlight-mod/mappings@1.0.10(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.3)':
+  '@moonlight-mod/mappings@1.1.6(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.3)':
     dependencies:
       '@moonlight-mod/lunast': 1.0.0
       '@moonlight-mod/moonmap': 1.0.3
+      '@types/chroma-js': 3.1.0
       '@types/flux': 3.1.14
+      '@types/highlightjs': 9.12.6
+      '@types/lodash': 4.17.14
+      '@types/platform': 1.3.6
       '@types/react': 18.3.10
       csstype: 3.1.3
 
@@ -1483,6 +1499,8 @@ snapshots:
 
   '@pkgr/core@0.1.1': {}
 
+  '@types/chroma-js@3.1.0': {}
+
   '@types/estree-jsx@1.0.5':
     dependencies:
       '@types/estree': 1.0.6
@@ -1496,13 +1514,19 @@ snapshots:
       '@types/fbemitter': 2.0.35
       '@types/react': 18.3.10
 
+  '@types/highlightjs@9.12.6': {}
+
   '@types/json-schema@7.0.15': {}
+
+  '@types/lodash@4.17.14': {}
 
   '@types/node@18.17.17': {}
 
   '@types/node@20.16.10':
     dependencies:
       undici-types: 6.19.8
+
+  '@types/platform@1.3.6': {}
 
   '@types/prop-types@15.7.13': {}
 

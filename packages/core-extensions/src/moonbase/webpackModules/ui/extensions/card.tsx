@@ -1,15 +1,32 @@
 import { ExtensionState } from "../../../types";
 import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
-import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import {
+  BeakerIcon,
+  DownloadIcon,
+  TrashIcon,
+  AngleBracketsIcon,
+  Tooltip,
+  Card,
+  Text,
+  FormSwitch,
+  TabBar,
+  Button,
+  ChannelListIcon,
+  HeartIcon,
+  WindowTopOutlineIcon
+} from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/IntegrationCard.css";
-
+import AppCardClasses from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
+import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
+import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
+import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
+import BuildOverrideClasses from "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverride.css";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import ExtensionInfo from "./info";
 import Settings from "./settings";
 import { doGenericExtensionPopup, doMissingExtensionPopup } from "./popup";
@@ -20,25 +37,6 @@ export enum ExtensionPage {
   Changelog,
   Settings
 }
-
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-
-const {
-  BeakerIcon,
-  DownloadIcon,
-  TrashIcon,
-  AngleBracketsIcon,
-  ChannelListIcon,
-  HeartIcon,
-  WindowTopOutlineIcon,
-  Tooltip
-} = Components;
-
-const PanelButton = spacepack.findByCode("Masks.PANEL_BUTTON")[0].exports.Z;
-const TabBarClasses = spacepack.findByCode("tabBar:", "tabBarItem:", "headerContentWrapper:")[0].exports;
-const MarkupClasses = spacepack.findByCode("markup:", "inlineFormat:")[0].exports;
-
-const BuildOverrideClasses = spacepack.findByCode("disabledButtonOverride:")[0].exports;
 
 const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
   [ExtensionCompat.Compatible]: "huh?",
@@ -74,18 +72,18 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
     update != null && ext?.changelog != null ? ExtensionPage.Changelog : ExtensionPage.Info
   );
 
-  const { Card, Text, FormSwitch, TabBar, Button } = Components;
-
-  const tagline = ext?.manifest?.meta?.tagline;
-  const settings = ext?.settingsOverride ?? ext.manifest?.settings;
-  const description = ext?.manifest?.meta?.description;
-  const changelog = ext?.changelog;
+  const tagline = ext.manifest?.meta?.tagline;
+  const settings = ext.settingsOverride ?? ext.manifest?.settings;
+  const description = ext.manifest?.meta?.description;
+  const changelog = ext.changelog;
   const linkButtons = [
     ext?.manifest?.meta?.source && (
-      <PanelLinkButton icon={AngleBracketsIcon} tooltip="View source" link={ext.manifest.meta.source} />
+      <PanelLinkButton icon={<AngleBracketsIcon />} tooltip="View source" link={ext.manifest.meta.source} />
     ),
-    ext?.source?.url && <PanelLinkButton icon={ChannelListIcon} tooltip="View repository" link={ext.source.url} />,
-    ext?.manifest?.meta?.donate && <PanelLinkButton icon={HeartIcon} tooltip="Donate" link={ext.manifest.meta.donate} />
+    ext?.source?.url && <PanelLinkButton icon={<ChannelListIcon />} tooltip="View repository" link={ext.source.url} />,
+    ext?.manifest?.meta?.donate && (
+      <PanelLinkButton icon={<HeartIcon />} tooltip="Donate" link={ext.manifest.meta.donate} />
+    )
   ].filter((x) => x != null);
 
   const enabledDependants = useStateFromStores([MoonbaseSettingsStore], () =>
@@ -112,8 +110,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   return ext == null ? (
     <></>
   ) : (
-    <Card editable={true} className={IntegrationCard.card}>
-      <div className={IntegrationCard.cardHeader}>
+    <Card editable={true} className={AppCardClasses.card}>
+      <div className={AppCardClasses.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
           <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
             <Text variant="text-md/semibold">{ext.manifest?.meta?.name ?? ext.id}</Text>
@@ -250,28 +248,23 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
               selectedItem={tab}
               type="top"
               onItemSelect={setTab}
-              className={TabBarClasses.tabBar}
+              className={DiscoveryClasses.tabBar}
               style={{
                 padding: "0 20px"
               }}
             >
-              <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Info}>
+              <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Info}>
                 Info
               </TabBar.Item>
 
-              {description != null && (
-                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Description}>
-                  Description
-                </TabBar.Item>
-              )}
-
               {changelog != null && (
-                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Changelog}>
+                <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Changelog}>
                   Changelog
                 </TabBar.Item>
               )}
+
               {settings != null && (
-                <TabBar.Item className={TabBarClasses.tabBarItem} id={ExtensionPage.Settings}>
+                <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Settings}>
                   Settings
                 </TabBar.Item>
               )}

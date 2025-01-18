@@ -16,31 +16,32 @@ import {
   Clickable
 } from "@moonlight-mod/wp/discord/components/common/index";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { CircleXIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
+import FormSwitchClasses from "@moonlight-mod/wp/discord/components/common/FormSwitch.css";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
-const FormClasses = spacepack.findByCode("dividerDefault:")[0].exports;
-const Margins = spacepack.findByCode("marginCenterHorz:")[0].exports;
-
-let RemoveButtonClasses: any;
+let GuildSettingsRoleEditClasses: any;
 spacepack
   .lazyLoad(
     "renderArtisanalHack",
     /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
     /webpackId:(\d+),name:"GuildSettings"/
   )
-  .then(() => (RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports));
-
-// FIXME: type component keys
-const { CircleXIcon } = Components;
+  .then(
+    () =>
+      (GuildSettingsRoleEditClasses = spacepack.require(
+        "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
+      ))
+  );
 
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (
-    <div className={RemoveButtonClasses.removeButtonContainer}>
+    <div className={GuildSettingsRoleEditClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
         {(props: any) => (
-          <Clickable {...props} className={RemoveButtonClasses.removeButton} onClick={onClick}>
+          <Clickable {...props} className={GuildSettingsRoleEditClasses.removeButton} onClick={onClick}>
             <CircleXIcon width={24} height={24} />
           </Clickable>
         )}
@@ -121,14 +122,14 @@ export default function ConfigPage() {
         <FormText className={Margins.marginBottom4}>A list of remote repositories to display extensions from</FormText>
         <ArrayFormItem config="repositories" />
       </FormItem>
-      <FormDivider className={FormClasses.dividerDefault} />
+      <FormDivider className={FormSwitchClasses.dividerDefault} />
       <FormItem title="Extension search paths" className={Margins.marginTop20}>
         <FormText className={Margins.marginBottom4}>
           A list of local directories to search for built extensions
         </FormText>
         <ArrayFormItem config="devSearchPaths" />
       </FormItem>
-      <FormDivider className={FormClasses.dividerDefault} />
+      <FormDivider className={FormSwitchClasses.dividerDefault} />
       <FormSwitch
         className={Margins.marginTop20}
         value={MoonbaseSettingsStore.getConfigOption("patchAll") ?? false}

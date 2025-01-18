@@ -11,11 +11,41 @@ import { ExtensionState, MoonbaseExtension } from "../../../types";
 
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import React from "@moonlight-mod/wp/react";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import {
+  FormSwitch,
+  FormItem,
+  FormText,
+  TextInput,
+  Slider,
+  TextArea,
+  Tooltip,
+  Clickable,
+  CircleXIcon,
+  Text,
+  SingleSelect,
+  Button,
+  useVariableSelect,
+  multiSelect,
+  Select as DiscordSelect
+} from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+
+let GuildSettingsRoleEditClasses: any;
+spacepack
+  .lazyLoad(
+    "renderArtisanalHack",
+    /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
+    /webpackId:(\d+),name:"GuildSettings"/
+  )
+  .then(
+    () =>
+      (GuildSettingsRoleEditClasses = spacepack.require(
+        "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
+      ))
+  );
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -49,7 +79,6 @@ function useConfigEntry<T>(uniqueId: number, name: string) {
 }
 
 function Boolean({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormSwitch } = Components;
   const { value, displayName, description } = useConfigEntry<boolean>(ext.uniqueId, name);
 
   return (
@@ -60,8 +89,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
       onChange={(value: boolean) => {
         MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
       }}
-      // @ts-expect-error TODO: mappings
-      note={markdownify(description)}
+      note={description != null ? markdownify(description) : undefined}
       className={`${Margins.marginReset} ${Margins.marginTop20}`}
     >
       {displayName}
@@ -70,7 +98,6 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function Number({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, Slider } = Components;
   const { value, displayName, description } = useConfigEntry<number>(ext.uniqueId, name);
 
   const castedSetting = setting as NumberSettingType;
@@ -95,7 +122,6 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function String({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextInput } = Components;
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
@@ -113,7 +139,6 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextArea } = Components;
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
@@ -133,7 +158,6 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function Select({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, SingleSelect } = Components;
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   const castedSetting = setting as SelectSettingType;
@@ -157,7 +181,6 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, Select, useVariableSelect, multiSelect } = Components;
   const { value, displayName, description } = useConfigEntry<string | string[]>(ext.uniqueId, name);
 
   const castedSetting = setting as MultiSelectSettingType;
@@ -166,7 +189,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
       {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
-      <Select
+      <DiscordSelect
         autofocus={false}
         clearable={false}
         closeOnSelect={false}
@@ -184,18 +207,12 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-const RemoveButtonClasses = spacepack.findByCode("removeButtonContainer")[0].exports;
-
-// FIXME: type component keys
-const { CircleXIcon } = Components;
-
 function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disabled: boolean }) {
-  const { Tooltip, Clickable } = Components;
   return (
-    <div className={RemoveButtonClasses.removeButtonContainer}>
+    <div className={GuildSettingsRoleEditClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
         {(props: any) => (
-          <Clickable {...props} className={RemoveButtonClasses.removeButton} onClick={onClick}>
+          <Clickable {...props} className={GuildSettingsRoleEditClasses.removeButton} onClick={onClick}>
             <CircleXIcon width={16} height={16} />
           </Clickable>
         )}
@@ -205,7 +222,6 @@ function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disable
 }
 
 function List({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextInput, Button } = Components;
   const { value, displayName, description } = useConfigEntry<string[]>(ext.uniqueId, name);
 
   const entries = value ?? [];
@@ -265,7 +281,6 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
 }
 
 function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
-  const { FormItem, FormText, TextInput, Button } = Components;
   const { value, displayName, description } = useConfigEntry<Record<string, string>>(ext.uniqueId, name);
 
   const entries = Object.entries(value ?? {});
@@ -347,7 +362,6 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
   );
 
   if (Component == null) {
-    const { Text } = Components;
     return (
       <Text variant="text-md/normal">{`Custom setting "${displayName}" is missing a component. Perhaps the extension is not installed?`}</Text>
     );

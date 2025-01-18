@@ -3,9 +3,7 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Notices from "@moonlight-mod/wp/notices_notices";
 import { MoonlightBranch } from "@moonlight-mod/types";
 import React from "@moonlight-mod/wp/react";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
-
-const { ThemeDarkIcon } = Components;
+import { ThemeDarkIcon } from "@moonlight-mod/wp/discord/components/common/index";
 
 function plural(str: string, num: number) {
   return `${str}${num > 1 ? "s" : ""}`;
@@ -59,11 +57,11 @@ function listener() {
         {
           name: "Open Moonbase",
           onClick: () => {
-            const { open } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
+            const { open } = spacepack.require("discord/actions/UserSettingsModalActionCreators").default;
             if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
               open("moonbase-extensions");
             } else {
-              open("moonbase", 0);
+              open("moonbase", "0");
             }
             return true;
           }

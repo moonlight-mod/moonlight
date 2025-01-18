@@ -1,5 +1,4 @@
 import React from "@moonlight-mod/wp/react";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { Text, TabBar } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
@@ -9,12 +8,11 @@ import ConfigPage from "./config";
 import AboutPage from "./about";
 import Update from "./update";
 import RestartAdviceMessage from "./RestartAdvice";
-
-const { Divider } = spacepack.findByCode(".forumOrHome]:")[0].exports.Z;
-const TitleBarClasses = spacepack.findByCode("iconWrapper:", "children:")[0].exports;
-const TabBarClasses = spacepack.findByCode("nowPlayingColumn:")[0].exports;
-const { setSection, clearSubsection } = spacepack.findByCode(':"USER_SETTINGS_MODAL_SET_SECTION"')[0].exports.Z;
-const Margins = spacepack.require("discord/styles/shared/Margins.css");
+import { Divider } from "@moonlight-mod/wp/discord/components/common/BaseHeaderBar";
+import HeaderBarClasses from "@moonlight-mod/wp/discord/components/common/HeaderBar.css";
+import PeoplePageClasses from "@moonlight-mod/wp/discord/modules/people/web/PeoplePage.css";
+import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
+import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 
 export const pages: {
   id: string;
@@ -42,7 +40,7 @@ export function Moonbase(props: { initialTab?: number } = {}) {
   const subsection = useStateFromStores([UserSettingsModalStore], () => UserSettingsModalStore.getSubsection() ?? 0);
   const setSubsection = React.useCallback(
     (to: string) => {
-      if (subsection !== to) setSection("moonbase", to);
+      if (subsection !== to) UserSettingsModalActionCreators.setSection("moonbase", to);
     },
     [subsection]
   );
@@ -50,21 +48,26 @@ export function Moonbase(props: { initialTab?: number } = {}) {
   React.useEffect(
     () => () => {
       // Normally there's an onSettingsClose prop you can set but we don't expose it and I don't care enough to add support for it right now
-      clearSubsection("moonbase");
+      UserSettingsModalActionCreators.clearSubsection("moonbase");
     },
     []
   );
 
   return (
     <>
-      <div className={`${TitleBarClasses.children} ${Margins.marginBottom20}`}>
-        <Text className={TitleBarClasses.titleWrapper} variant="heading-lg/semibold" tag="h2">
+      <div className={`${HeaderBarClasses.children} ${Margins.marginBottom20}`}>
+        <Text className={HeaderBarClasses.titleWrapper} variant="heading-lg/semibold" tag="h2">
           Moonbase
         </Text>
         <Divider />
-        <TabBar selectedItem={subsection} onItemSelect={setSubsection} type="top-pill" className={TabBarClasses.tabBar}>
+        <TabBar
+          selectedItem={subsection}
+          onItemSelect={setSubsection}
+          type="top-pill"
+          className={PeoplePageClasses.tabBar}
+        >
           {pages.map((page, i) => (
-            <TabBar.Item key={page.id} id={i} className={TabBarClasses.item}>
+            <TabBar.Item key={page.id} id={i} className={PeoplePageClasses.item}>
               {page.name}
             </TabBar.Item>
           ))}
