@@ -6,7 +6,12 @@ import ExtensionCard from "./card";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
-import { FormDivider, CircleInformationIcon, XSmallIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import {
+  FormDivider,
+  CircleInformationIcon,
+  XSmallIcon,
+  Button
+} from "@moonlight-mod/wp/discord/components/common/index";
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
@@ -16,15 +21,15 @@ import HelpMessage from "../HelpMessage";
 const SearchBar = spacepack.require("discord/uikit/search/SearchBar").default;
 
 export default function ExtensionsPage() {
-  const { extensions, savedFilter, showOnlyUpdateable } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
+  const { extensions, savedFilter } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
     return {
       extensions: MoonbaseSettingsStore.extensions,
-      savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>("moonbase", "filter", defaultFilter),
-      showOnlyUpdateable: MoonbaseSettingsStore.showOnlyUpdateable
+      savedFilter: MoonbaseSettingsStore.getExtensionConfigRaw<number>("moonbase", "filter", defaultFilter)
     };
   });
 
   const [query, setQuery] = React.useState("");
+  const [hitUpdateAll, setHitUpdateAll] = React.useState(false);
 
   const filterState = React.useState(defaultFilter);
 
@@ -76,8 +81,7 @@ export default function ExtensionsPage() {
 
   // Prioritize extensions with updates
   const filteredWithUpdates = filtered.filter((ext) => ext!.hasUpdate);
-  const filterUpdates = showOnlyUpdateable && filteredWithUpdates.length > 0;
-  const filteredWithoutUpdates = filterUpdates ? [] : filtered.filter((ext) => !ext!.hasUpdate);
+  const filteredWithoutUpdates = filtered.filter((ext) => !ext!.hasUpdate);
 
   return (
     <>
@@ -96,17 +100,28 @@ export default function ExtensionsPage() {
       />
       <FilterBar filter={filter} setFilter={setFilter} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
 
-      {filterUpdates && (
+      {filteredWithUpdates.length > 0 && (
         <HelpMessage
           icon={CircleInformationIcon}
-          text="Only displaying updates"
+          text="Extension updates are available"
           className="moonbase-extension-update-section"
         >
           <div className="moonbase-help-message-buttons">
+            <Button
+              color={Button.Colors.BRAND}
+              size={Button.Sizes.TINY}
+              disabled={hitUpdateAll}
+              onClick={() => {
+                setHitUpdateAll(true);
+                MoonbaseSettingsStore.updateAllExtensions();
+              }}
+            >
+              Update all
+            </Button>
             <PanelButton
               icon={XSmallIcon}
               onClick={() => {
-                MoonbaseSettingsStore.showOnlyUpdateable = false;
+                MoonbaseSettingsStore.dismissAllExtensionUpdates();
               }}
             />
           </div>

@@ -7,7 +7,6 @@ import ExtensionsPage from "./extensions";
 import ConfigPage from "./config";
 import AboutPage from "./about";
 import Update from "./update";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import RestartAdviceMessage from "./RestartAdvice";
 import { Divider } from "@moonlight-mod/wp/discord/components/common/BaseHeaderBar";
 import HeaderBarClasses from "@moonlight-mod/wp/discord/components/common/HeaderBar.css";
@@ -50,7 +49,6 @@ export function Moonbase(props: { initialTab?: number } = {}) {
     () => () => {
       // Normally there's an onSettingsClose prop you can set but we don't expose it and I don't care enough to add support for it right now
       UserSettingsModalActionCreators.clearSubsection("moonbase");
-      MoonbaseSettingsStore.showOnlyUpdateable = false;
     },
     []
   );

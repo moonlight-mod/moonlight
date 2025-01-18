@@ -40,7 +40,7 @@ export type MoonlightNode = {
 
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
-  setConfigOption: <T>(ext: string, name: string, value: T) => void;
+  setConfigOption: <T>(ext: string, name: string, value: T) => Promise<void>;
   writeConfig: (config: Config) => Promise<void>;
 
   getNatives: (ext: string) => any | undefined;

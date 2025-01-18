@@ -61,7 +61,6 @@ function listener() {
             if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
               open("moonbase-extensions");
             } else {
-              MoonbaseSettingsStore.showOnlyUpdateable = true;
               open("moonbase", "0");
             }
             return true;
