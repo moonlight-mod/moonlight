@@ -42,7 +42,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { id: "react" },
       { id: "discord/components/common/index" },
       { ext: "moonbase", id: "stores" },
-      { id: "discord/modules/guild_settings/IntegrationCard.css" },
+      { id: "discord/modules/guild_settings/web/AppCard.css" },
       "Masks.PANEL_BUTTON",
       '"Missing channel in Channel.openChannelContextMenu"',
       ".forumOrHome]:"

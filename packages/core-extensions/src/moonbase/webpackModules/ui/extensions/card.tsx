@@ -8,7 +8,7 @@ import React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/IntegrationCard.css";
+import AppCard from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
 
 import ExtensionInfo from "./info";
 import Settings from "./settings";
@@ -79,8 +79,8 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
   const implicitlyEnabled = enabledDependants.length > 0;
 
   return (
-    <Card editable={true} className={IntegrationCard.card}>
-      <div className={IntegrationCard.cardHeader}>
+    <Card editable={true} className={AppCard.card}>
+      <div className={AppCard.cardHeader}>
         <Flex direction={Flex.Direction.VERTICAL}>
           <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
             <Text variant="text-md/semibold">{ext.manifest?.meta?.name ?? ext.id}</Text>

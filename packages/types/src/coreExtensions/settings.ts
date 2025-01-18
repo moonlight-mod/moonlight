@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import type { Store } from "@moonlight-mod/mappings/discord/packages/flux";
+import type { Store } from "@moonlight-mod/mappings/discord/packages/flux/Store";
 
 export type NoticeProps = {
   stores: Store<any>[];

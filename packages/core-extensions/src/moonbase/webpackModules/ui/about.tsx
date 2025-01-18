@@ -2,7 +2,7 @@ import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import React from "@moonlight-mod/wp/react";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import IntegrationCard from "@moonlight-mod/wp/discord/modules/guild_settings/IntegrationCard.css";
+import AppCard from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 const { Card, Text, useThemeContext, Button, AngleBracketsIcon, BookCheckIcon, ClydeIcon } = Components;
@@ -21,8 +21,8 @@ function parse(str: string) {
 
 function Dev({ name, picture, link }: { name: string; picture: string; link: string }) {
   return (
-    <Card editable={true} className={IntegrationCard.card}>
-      <div className={IntegrationCard.cardHeader + " moonbase-dev"}>
+    <Card editable={true} className={AppCard.card}>
+      <div className={AppCard.cardHeader + " moonbase-dev"}>
         <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
           <img src={picture} alt={name} className="moonbase-dev-avatar" />
 
