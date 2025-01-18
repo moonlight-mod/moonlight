@@ -1,13 +1,17 @@
 // TODO: clean up the styling here
 import React from "@moonlight-mod/wp/react";
 import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import {
+  openModalLazy,
+  useModalsStore,
+  closeModal,
+  SingleSelect,
+  Text
+} from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import ConfirmModal from "@moonlight-mod/wp/discord/components/modals/ConfirmModal";
-
-const { openModalLazy, useModalsStore, closeModal } = Components;
 
 function close() {
   const ModalStore = useModalsStore.getState();
@@ -31,8 +35,6 @@ function ExtensionSelect({
   option: string | undefined;
   setOption: (pick: string | undefined) => void;
 }) {
-  const { SingleSelect } = Components;
-
   return (
     <SingleSelect
       key={id}
@@ -60,8 +62,6 @@ function MissingExtensionPopup({
   deps: Record<string, MoonbaseExtension[]>;
   transitionState: number | null;
 }) {
-  const { Text } = Components;
-
   const amountNotAvailable = Object.values(deps).filter((candidates) => candidates.length === 0).length;
 
   const [options, setOptions] = React.useState<Record<string, string | undefined>>(
@@ -167,8 +167,6 @@ function GenericExtensionPopup({
   uniqueId: number;
   cb: () => void;
 }) {
-  const { Text } = Components;
-
   return (
     <ConfirmModal
       title={title}

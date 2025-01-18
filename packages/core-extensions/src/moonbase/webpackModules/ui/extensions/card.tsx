@@ -2,7 +2,18 @@ import { ExtensionState } from "../../../types";
 import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
 
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import {
+  BeakerIcon,
+  DownloadIcon,
+  TrashIcon,
+  AngleBracketsIcon,
+  Tooltip,
+  Card,
+  Text,
+  FormSwitch,
+  TabBar,
+  Button
+} from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
@@ -24,8 +35,6 @@ export enum ExtensionPage {
   Changelog,
   Settings
 }
-
-const { BeakerIcon, DownloadIcon, TrashIcon, AngleBracketsIcon, Tooltip } = Components;
 
 const COMPAT_TEXT_MAP: Record<ExtensionCompat, string> = {
   [ExtensionCompat.Compatible]: "huh?",
@@ -49,8 +58,6 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
 
   // Why it work like that :sob:
   if (ext == null) return <></>;
-
-  const { Card, Text, FormSwitch, TabBar, Button } = Components;
 
   const tagline = ext.manifest?.meta?.tagline;
   const settings = ext.settingsOverride ?? ext.manifest?.settings;

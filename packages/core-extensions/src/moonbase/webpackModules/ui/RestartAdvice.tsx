@@ -1,11 +1,9 @@
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { Button, CircleWarningIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import { RestartAdvice } from "../../types";
 import HelpMessage from "./HelpMessage";
-
-const { Button } = Components;
 
 const strings: Record<RestartAdvice, string> = {
   [RestartAdvice.NotNeeded]: "how did you even",
@@ -27,8 +25,6 @@ const actions: Record<RestartAdvice, () => void> = {
   [RestartAdvice.ReloadNeeded]: () => window.location.reload(),
   [RestartAdvice.RestartNeeded]: () => MoonbaseSettingsStore.restartDiscord()
 };
-
-const { CircleWarningIcon } = Components;
 
 export default function RestartAdviceMessage() {
   const restartAdvice = useStateFromStores([MoonbaseSettingsStore], () => MoonbaseSettingsStore.restartAdvice);

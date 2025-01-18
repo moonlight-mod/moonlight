@@ -1,12 +1,10 @@
 import React from "@moonlight-mod/wp/react";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { Button, TabBar } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { RepositoryManifest, UpdateState } from "../types";
 import { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
 import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
-
-const { Button, TabBar } = Components;
 
 const MODULE_REGEX = /Webpack-Module-(\d+)/g;
 

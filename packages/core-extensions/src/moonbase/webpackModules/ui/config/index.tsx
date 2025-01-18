@@ -16,7 +16,7 @@ import {
   Clickable
 } from "@moonlight-mod/wp/discord/components/common/index";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { CircleXIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import FormSwitchClasses from "@moonlight-mod/wp/discord/components/common/FormSwitch.css";
 
@@ -35,8 +35,6 @@ spacepack
         "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
       ))
   );
-
-const { CircleXIcon } = Components;
 
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (

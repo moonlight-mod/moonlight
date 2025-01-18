@@ -6,7 +6,7 @@ import ExtensionCard from "./card";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { FormDivider, CircleInformationIcon, XSmallIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
@@ -14,7 +14,6 @@ import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import HelpMessage from "../HelpMessage";
 
 const SearchBar = spacepack.require("discord/uikit/search/SearchBar").default;
-const { FormDivider, CircleInformationIcon, XSmallIcon } = Components;
 
 export default function ExtensionsPage() {
   const { extensions, savedFilter, showOnlyUpdateable } = useStateFromStoresObject([MoonbaseSettingsStore], () => {

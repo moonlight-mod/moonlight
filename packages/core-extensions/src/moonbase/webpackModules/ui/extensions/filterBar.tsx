@@ -12,9 +12,13 @@ import {
   Menu,
   MenuGroup,
   MenuCheckboxItem,
-  MenuItem
+  MenuItem,
+  ChevronSmallDownIcon,
+  ChevronSmallUpIcon,
+  ArrowsUpDownIcon,
+  RetryIcon,
+  Tooltip
 } from "@moonlight-mod/wp/discord/components/common/index";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import TagItem from "@moonlight-mod/wp/discord/modules/forums/web/Tag";
@@ -41,8 +45,6 @@ spacepack
     HeaderClasses = spacepack.require("discord/modules/forums/web/Header.css");
     SortMenuClasses = spacepack.require("discord/modules/forums/web/SortMenu.css");
   });
-
-const { ChevronSmallDownIcon, ChevronSmallUpIcon, ArrowsUpDownIcon, RetryIcon, Tooltip } = Components;
 
 function toggleTag(selectedTags: Set<string>, setSelectedTags: (tags: Set<string>) => void, tag: string) {
   const newState = new Set(selectedTags);

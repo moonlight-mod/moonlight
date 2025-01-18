@@ -1,11 +1,9 @@
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
+import { ThemeDarkIcon, Button } from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import { UpdateState } from "../../types";
 import HelpMessage from "./HelpMessage";
-
-const { ThemeDarkIcon, Button } = Components;
 
 const logger = moonlight.getLogger("moonbase/ui/update");
 

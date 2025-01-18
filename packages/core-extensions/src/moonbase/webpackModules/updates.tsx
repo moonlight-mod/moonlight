@@ -3,9 +3,7 @@ import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Notices from "@moonlight-mod/wp/notices_notices";
 import { MoonlightBranch } from "@moonlight-mod/types";
 import React from "@moonlight-mod/wp/react";
-import * as Components from "@moonlight-mod/wp/discord/components/common/index";
-
-const { ThemeDarkIcon } = Components;
+import { ThemeDarkIcon } from "@moonlight-mod/wp/discord/components/common/index";
 
 function plural(str: string, num: number) {
   return `${str}${num > 1 ? "s" : ""}`;
