@@ -101,6 +101,18 @@ textarea.moonbase-resizeable {
   margin: 32px 0;
 }
 
+.moonlight-card-info-header {
+  margin-bottom: 0.25rem;
+}
+
+.moonlight-card-badge {
+  border-radius: 0.1875rem;
+  padding: 0 0.275rem;
+  margin-right: 0.4em;
+  background-color: var(--badge-color, var(--bg-mod-strong));
+  color: #ffffff;
+}
+
 /* Crash screen */
 .moonbase-crash-wrapper > [class^="buttons_"] {
   gap: 1rem;

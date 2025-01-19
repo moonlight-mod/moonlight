@@ -42,7 +42,9 @@ function InfoSection({ title, children }: { title: string; children: React.React
         marginRight: "1em"
       }}
     >
-      <Text variant="eyebrow">{title}</Text>
+      <Text variant="eyebrow" className="moonlight-card-info-header">
+        {title}
+      </Text>
 
       <Text variant="text-sm/normal">{children}</Text>
     </div>
@@ -52,13 +54,12 @@ function InfoSection({ title, children }: { title: string; children: React.React
 function Badge({ color, children }: { color: string; children: React.ReactNode }) {
   return (
     <span
-      style={{
-        borderRadius: ".1875rem",
-        padding: "0 0.275rem",
-        marginRight: "0.4em",
-        backgroundColor: color,
-        color: "#fff"
-      }}
+      className="moonlight-card-badge"
+      style={
+        {
+          "--badge-color": color
+        } as React.CSSProperties
+      }
     >
       {children}
     </span>
@@ -130,7 +131,7 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
             const name = tagNames[tag];
 
             return (
-              <Badge key={i} color={tag === ExtensionTag.DangerZone ? "var(--red-400)" : "var(--brand-500)"}>
+              <Badge key={i} color={tag === ExtensionTag.DangerZone ? "var(--red-400)" : "var(--bg-mod-strong)"}>
                 {name}
               </Badge>
             );
@@ -141,16 +142,16 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
       {dependencies.length > 0 && (
         <InfoSection title="Dependencies">
           {dependencies.map((dep) => {
-            const colors = {
-              [DependencyType.Dependency]: "var(--brand-500)",
-              [DependencyType.Optional]: "var(--orange-400)",
+            /*const colors = {
+              [DependencyType.Dependency]: "var(--bg-mod-strong)",
+              [DependencyType.Optional]: "var(--bg-mod-faint)",
               [DependencyType.Incompatible]: "var(--red-400)"
             };
-            const color = colors[dep.type];
+            const color = colors[dep.type];*/
             const name = MoonbaseSettingsStore.tryGetExtensionName(dep.id);
 
             return (
-              <Badge color={color} key={dep.id}>
+              <Badge color="var(--bg-mod-strong)" key={dep.id}>
                 {name}
               </Badge>
             );
