@@ -72,6 +72,8 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
   const version = ext.manifest?.version;
 
   const dependencies: Dependency[] = [];
+  const incompatible: Dependency[] = [];
+
   if (ext.manifest.dependencies != null) {
     dependencies.push(
       ...ext.manifest.dependencies.map((dep) => ({
@@ -91,7 +93,7 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
   }
 
   if (ext.manifest.incompatible != null) {
-    dependencies.push(
+    incompatible.push(
       ...ext.manifest.incompatible.map((dep) => ({
         id: dep,
         type: DependencyType.Incompatible
@@ -142,12 +144,21 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
       {dependencies.length > 0 && (
         <InfoSection title="Dependencies">
           {dependencies.map((dep) => {
-            /*const colors = {
-              [DependencyType.Dependency]: "var(--bg-mod-strong)",
-              [DependencyType.Optional]: "var(--bg-mod-faint)",
-              [DependencyType.Incompatible]: "var(--red-400)"
-            };
-            const color = colors[dep.type];*/
+            const name = MoonbaseSettingsStore.tryGetExtensionName(dep.id);
+
+            // TODO: figure out a decent way to distinguish suggested
+            return (
+              <Badge color="var(--bg-mod-strong)" key={dep.id}>
+                {name}
+              </Badge>
+            );
+          })}
+        </InfoSection>
+      )}
+
+      {incompatible.length > 0 && (
+        <InfoSection title="Incompatible">
+          {incompatible.map((dep) => {
             const name = MoonbaseSettingsStore.tryGetExtensionName(dep.id);
 
             return (
