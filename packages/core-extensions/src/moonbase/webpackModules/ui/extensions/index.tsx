@@ -76,7 +76,10 @@ export default function ExtensionsPage() {
       ) &&
       (filter & Filter.Incompatible ||
         ext.compat === ExtensionCompat.Compatible ||
-        (ext.compat === ExtensionCompat.InvalidApiLevel && ext.hasUpdate))
+        (ext.compat === ExtensionCompat.InvalidApiLevel && ext.hasUpdate)) &&
+      (filter & Filter.Deprecated ||
+        ext.manifest?.meta?.deprecated !== true ||
+        ext.state !== ExtensionState.NotDownloaded)
   );
 
   // Prioritize extensions with updates

@@ -31,7 +31,8 @@ export enum Filter {
   Disabled = 1 << 4,
   Installed = 1 << 5,
   Repository = 1 << 6,
-  Incompatible = 1 << 7
+  Incompatible = 1 << 7,
+  Deprecated = 1 << 8
 }
 export const defaultFilter = 127 as Filter;
 
@@ -121,6 +122,12 @@ function FilterButtonPopout({
             label="Show incompatible"
             checked={(filter & Filter.Incompatible) === Filter.Incompatible}
             action={() => toggleFilter(Filter.Incompatible)}
+          />
+          <MenuCheckboxItem
+            id="l-deprecated"
+            label="Show deprecated"
+            checked={(filter & Filter.Deprecated) === Filter.Deprecated}
+            action={() => toggleFilter(Filter.Deprecated)}
           />
           <MenuItem
             id="reset-all"
