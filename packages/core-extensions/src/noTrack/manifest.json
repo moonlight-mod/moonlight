@@ -10,6 +10,8 @@
   },
   "blocked": [
     "https://*.discord.com/api/v*/science",
-    "https://*.discord.com/api/v*/metrics"
+    "https://*.discord.com/api/v*/metrics",
+    "https://*.discordapp.com/api/v*/science",
+    "https://*.discordapp.com/api/v*/metrics"
   ]
 }

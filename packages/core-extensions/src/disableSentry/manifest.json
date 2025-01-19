@@ -12,6 +12,9 @@
     "https://*.sentry.io/*",
     "https://*.discord.com/error-reporting-proxy/*",
     "https://discord.com/assets/sentry.*.js",
-    "https://*.discord.com/assets/sentry.*.js"
+    "https://*.discord.com/assets/sentry.*.js",
+    "https://*.discordapp.com/error-reporting-proxy/*",
+    "https://discordapp.com/assets/sentry.*.js",
+    "https://*.discordapp.com/assets/sentry.*.js"
   ]
 }
