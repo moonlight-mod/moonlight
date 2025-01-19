@@ -256,6 +256,12 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
                 Info
               </TabBar.Item>
 
+              {description != null && (
+                <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Description}>
+                  Description
+                </TabBar.Item>
+              )}
+
               {changelog != null && (
                 <TabBar.Item className={DiscoveryClasses.tabBarItem} id={ExtensionPage.Changelog}>
                   Changelog
