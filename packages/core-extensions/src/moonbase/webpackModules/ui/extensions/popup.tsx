@@ -11,11 +11,20 @@ import {
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import ConfirmModal from "@moonlight-mod/wp/discord/components/modals/ConfirmModal";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+
+let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").default;
 
 function close() {
   const ModalStore = useModalsStore.getState();
   closeModal(ModalStore.default[0].key);
+}
+
+// do this to avoid a hard dependency
+function lazyLoad() {
+  if (!ConfirmModal) {
+    ConfirmModal = spacepack.require("discord/components/modals/ConfirmModal").default;
+  }
 }
 
 const presentableLoadSources: Record<ExtensionLoadSource, string> = {
@@ -62,6 +71,7 @@ function MissingExtensionPopup({
   deps: Record<string, MoonbaseExtension[]>;
   transitionState: number | null;
 }) {
+  lazyLoad();
   const amountNotAvailable = Object.values(deps).filter((candidates) => candidates.length === 0).length;
 
   const [options, setOptions] = React.useState<Record<string, string | undefined>>(
@@ -167,6 +177,8 @@ function GenericExtensionPopup({
   uniqueId: number;
   cb: () => void;
 }) {
+  lazyLoad();
+
   return (
     <ConfirmModal
       title={title}
