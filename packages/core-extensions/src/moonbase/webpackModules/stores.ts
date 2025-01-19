@@ -477,6 +477,7 @@ class MoonbaseSettingsStore extends Store<any> {
   writeConfig() {
     this.submitting = true;
     this.restartAdvice = this.#computeRestartAdvice();
+    const modifiedRepos = diff(this.savedConfig.repositories, this.config.repositories);
 
     moonlightNode.writeConfig(this.config);
     this.savedConfig = this.clone(this.config);
@@ -484,6 +485,8 @@ class MoonbaseSettingsStore extends Store<any> {
     this.submitting = false;
     this.modified = false;
     this.emitChange();
+
+    if (modifiedRepos) this.checkUpdates();
   }
 
   reset() {
