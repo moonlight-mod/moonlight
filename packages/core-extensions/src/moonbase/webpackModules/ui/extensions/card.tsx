@@ -15,7 +15,8 @@ import {
   Button,
   ChannelListIcon,
   HeartIcon,
-  WindowTopOutlineIcon
+  WindowTopOutlineIcon,
+  WarningIcon
 } from "@moonlight-mod/wp/discord/components/common/index";
 import React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
@@ -124,6 +125,12 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
             {hasDuplicateEntry && ext?.source?.url && (
               <Tooltip text={`This extension is from the following repository: ${ext.source.url}`} position="top">
                 {(props: any) => <WindowTopOutlineIcon {...props} class={BuildOverrideClasses.infoIcon} size="xs" />}
+              </Tooltip>
+            )}
+
+            {ext.manifest?.meta?.deprecated && (
+              <Tooltip text="This extension is deprecated" position="top">
+                {(props: any) => <WarningIcon {...props} class={BuildOverrideClasses.infoIcon} size="xs" />}
               </Tooltip>
             )}
           </Flex>
