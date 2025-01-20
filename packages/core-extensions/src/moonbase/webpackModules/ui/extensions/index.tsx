@@ -20,6 +20,8 @@ import HelpMessage from "../HelpMessage";
 
 const SearchBar = spacepack.require("discord/uikit/search/SearchBar").default;
 
+const validTags: string[] = Object.values(ExtensionTag);
+
 export default function ExtensionsPage() {
   const { extensions, savedFilter } = useStateFromStoresObject([MoonbaseSettingsStore], () => {
     return {
@@ -41,7 +43,17 @@ export default function ExtensionsPage() {
     filter = filterState[0];
     setFilter = filterState[1];
   }
+
   const [selectedTags, setSelectedTags] = React.useState(new Set<string>());
+  const selectTag = React.useCallback(
+    (tag: string) => {
+      const newState = new Set(selectedTags);
+      if (validTags.includes(tag)) newState.add(tag);
+      setSelectedTags(newState);
+    },
+    [selectedTags]
+  );
+
   const sorted = Object.values(extensions).sort((a, b) => {
     const aName = a.manifest.meta?.name ?? a.id;
     const bName = b.manifest.meta?.name ?? b.id;
@@ -132,13 +144,13 @@ export default function ExtensionsPage() {
       )}
 
       {filteredWithUpdates.map((ext) => (
-        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
+        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} selectTag={selectTag} />
       ))}
       {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
         <FormDivider className="moonbase-update-divider" />
       )}
       {filteredWithoutUpdates.map((ext) => (
-        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} />
+        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} selectTag={selectTag} />
       ))}
     </>
   );

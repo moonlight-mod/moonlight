@@ -58,7 +58,7 @@ function PanelLinkButton({ icon, tooltip, link }: { icon: React.ReactNode; toolt
   );
 }
 
-export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
+export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: number; selectTag: (tag: string) => void }) {
   const { ext, enabled, busy, update, conflicting } = useStateFromStores([MoonbaseSettingsStore], () => {
     return {
       ext: MoonbaseSettingsStore.getExtension(uniqueId),
@@ -303,7 +303,7 @@ export default function ExtensionCard({ uniqueId }: { uniqueId: number }) {
             rowGap: tab === ExtensionPage.Info ? "16px" : undefined
           }}
         >
-          {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} />}
+          {tab === ExtensionPage.Info && <ExtensionInfo ext={ext} selectTag={selectTag} />}
           {tab === ExtensionPage.Description && (
             <Text variant="text-md/normal" className={MarkupClasses.markup} style={{ width: "100%" }}>
               {MarkupUtils.parse(description ?? "*No description*", true, {

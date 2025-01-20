@@ -54,12 +54,15 @@ function InfoSection({ title, children }: { title: string; children: React.React
 function Badge({
   color,
   children,
-  style = {}
+  style = {},
+  onClick
 }: {
   color: string;
   children: React.ReactNode;
   style?: React.CSSProperties;
+  onClick?: () => void;
 }) {
+  if (onClick) style.cursor ??= "pointer";
   return (
     <span
       className="moonlight-card-badge"
@@ -69,13 +72,20 @@ function Badge({
           ...style
         } as React.CSSProperties
       }
+      onClick={onClick}
     >
       {children}
     </span>
   );
 }
 
-export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
+export default function ExtensionInfo({
+  ext,
+  selectTag
+}: {
+  ext: MoonbaseExtension;
+  selectTag: (tag: string) => void;
+}) {
   const authors = ext.manifest?.meta?.authors;
   const tags = ext.manifest?.meta?.tags;
   const version = ext.manifest?.version;
@@ -148,7 +158,7 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
             }
 
             return (
-              <Badge key={i} color={color} style={style}>
+              <Badge key={i} color={color} style={style} onClick={() => selectTag(tag)}>
                 {name}
               </Badge>
             );
