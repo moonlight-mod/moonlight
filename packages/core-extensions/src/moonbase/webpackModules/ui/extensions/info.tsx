@@ -51,13 +51,22 @@ function InfoSection({ title, children }: { title: string; children: React.React
   );
 }
 
-function Badge({ color, children }: { color: string; children: React.ReactNode }) {
+function Badge({
+  color,
+  children,
+  style = {}
+}: {
+  color: string;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) {
   return (
     <span
       className="moonlight-card-badge"
       style={
         {
-          "--badge-color": color
+          "--badge-color": color,
+          ...style
         } as React.CSSProperties
       }
     >
@@ -131,9 +140,15 @@ export default function ExtensionInfo({ ext }: { ext: MoonbaseExtension }) {
         <InfoSection title="Tags">
           {tags.map((tag, i) => {
             const name = tagNames[tag];
+            let color = "var(--bg-mod-strong)";
+            let style;
+            if (tag === ExtensionTag.DangerZone) {
+              color = "var(--red-460)";
+              style = { color: "var(--primary-230)" };
+            }
 
             return (
-              <Badge key={i} color={tag === ExtensionTag.DangerZone ? "var(--red-400)" : "var(--bg-mod-strong)"}>
+              <Badge key={i} color={color} style={style}>
                 {name}
               </Badge>
             );
