@@ -1,5 +1,12 @@
 import { Config, ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
-import { ExtensionState, MoonbaseExtension, MoonbaseNatives, RepositoryManifest, RestartAdvice } from "../types";
+import {
+  ExtensionState,
+  MoonbaseExtension,
+  MoonbaseNatives,
+  RepositoryManifest,
+  RestartAdvice,
+  UpdateState
+} from "../types";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import getNatives from "../native";
@@ -25,6 +32,10 @@ class MoonbaseSettingsStore extends Store<any> {
   submitting: boolean;
   installing: boolean;
 
+  #updateState = UpdateState.Ready;
+  get updateState() {
+    return this.#updateState;
+  }
   newVersion: string | null;
   shouldShowNotice: boolean;
 
@@ -353,7 +364,18 @@ class MoonbaseSettingsStore extends Store<any> {
   }
 
   async updateMoonlight() {
-    await natives.updateMoonlight();
+    this.#updateState = UpdateState.Working;
+    this.emitChange();
+
+    await natives
+      .updateMoonlight()
+      .then(() => (this.#updateState = UpdateState.Installed))
+      .catch((e) => {
+        logger.error(e);
+        this.#updateState = UpdateState.Failed;
+      });
+
+    this.emitChange();
   }
 
   getConfigOption<K extends keyof Config>(key: K): Config[K] {
@@ -381,6 +403,9 @@ class MoonbaseSettingsStore extends Store<any> {
   }
 
   #computeRestartAdvice() {
+    // If moonlight update needs a restart, always hide advice.
+    if (this.#updateState === UpdateState.Installed) return RestartAdvice.NotNeeded;
+
     const i = this.initialConfig; // Initial config, from startup
     const n = this.config; // New config about to be saved
 
@@ -486,7 +511,7 @@ class MoonbaseSettingsStore extends Store<any> {
     this.modified = false;
     this.emitChange();
 
-    if (modifiedRepos) this.checkUpdates();
+    if (modifiedRepos.length !== 0) this.checkUpdates();
   }
 
   reset() {

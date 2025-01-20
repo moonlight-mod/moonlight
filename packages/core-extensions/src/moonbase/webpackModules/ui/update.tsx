@@ -20,8 +20,6 @@ import {
 } from "@moonlight-mod/wp/discord/components/common/index";
 import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 
-const logger = moonlight.getLogger("moonbase/ui/update");
-
 const strings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",
   [UpdateState.Working]: "Updating moonlight...",
@@ -67,8 +65,10 @@ function MoonlightChangelog({
 }
 
 export default function Update() {
-  const [state, setState] = React.useState(UpdateState.Ready);
-  const newVersion = useStateFromStores([MoonbaseSettingsStore], () => MoonbaseSettingsStore.newVersion);
+  const [newVersion, state] = useStateFromStores([MoonbaseSettingsStore], () => [
+    MoonbaseSettingsStore.newVersion,
+    MoonbaseSettingsStore.updateState
+  ]);
 
   if (newVersion == null) return null;
 
@@ -113,14 +113,7 @@ export default function Update() {
           size={Button.Sizes.TINY}
           disabled={state !== UpdateState.Ready}
           onClick={() => {
-            setState(UpdateState.Working);
-
-            MoonbaseSettingsStore.updateMoonlight()
-              .then(() => setState(UpdateState.Installed))
-              .catch((e) => {
-                logger.error(e);
-                setState(UpdateState.Failed);
-              });
+            MoonbaseSettingsStore.updateMoonlight();
           }}
         >
           Update
