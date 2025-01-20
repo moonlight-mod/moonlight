@@ -110,7 +110,6 @@ textarea.moonbase-resizeable {
   padding: 0 0.275rem;
   margin-right: 0.4em;
   background-color: var(--badge-color, var(--bg-mod-strong));
-  color: #ffffff;
 }
 
 /* Crash screen */
