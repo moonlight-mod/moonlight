@@ -4,7 +4,7 @@
   "meta": {
     "name": "Native Fixes",
     "tagline": "Various configurable fixes for Discord and Electron",
-    "authors": ["Cynosphere", "adryd"],
+    "authors": ["Cynosphere", "adryd", "NotNite"],
     "tags": ["fixes"]
   },
   "environment": "desktop",
@@ -43,6 +43,13 @@
       "description": "Provides hardware accelerated video encode and decode. Has no effect on other operating systems",
       "type": "boolean",
       "default": true
+    },
+    "linuxUpdater": {
+      "advice": "restart",
+      "displayName": "Linux Updater",
+      "description": "Actually implements updating Discord on Linux. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
     }
   },
   "apiLevel": 2
