@@ -1,6 +1,12 @@
 // auto-generated
 declare module "@moonlight-mod/wp/chroma-js" {}
 
+declare module "@moonlight-mod/wp/classnames" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["classnames"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/dependency-graph" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const DepGraph: MappedModules["dependency-graph"]["DepGraph"];
@@ -1095,6 +1101,33 @@ declare module "@moonlight-mod/wp/discord/modules/guild_settings/web/SearchSecti
   export const removeTip: MappedModules["discord/modules/guild_settings/web/SearchSection.css"]["removeTip"];
 }
 
+declare module "@moonlight-mod/wp/discord/modules/guild_sidebar/web/CategoryChannel.css" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const containerDefault: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["containerDefault"];
+  export const containerDragBefore: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["containerDragBefore"];
+  export const containerDragAfter: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["containerDragAfter"];
+  export const addButton: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["addButton"];
+  export const forceVisible: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["forceVisible"];
+  export const iconVisibility: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["iconVisibility"];
+  export const addButtonIcon: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["addButtonIcon"];
+  export const wrapper: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["wrapper"];
+  export const wrapperStatic: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["wrapperStatic"];
+  export const clickable: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["clickable"];
+  export const children: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["children"];
+  export const mainContent: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["mainContent"];
+  export const icon: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["icon"];
+  export const collapsed: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["collapsed"];
+  export const muted: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["muted"];
+  export const name: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["name"];
+  export const dismissWrapper: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["dismissWrapper"];
+  export const dismissButton: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["dismissButton"];
+  export const dismiss: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["dismiss"];
+  export const voiceChannelsButton: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["voiceChannelsButton"];
+  export const voiceChannelsToggleIcon: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["voiceChannelsToggleIcon"];
+  export const refreshVoiceChannelsButton: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["refreshVoiceChannelsButton"];
+  export const refreshVoiceChannelsButtonInner: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["refreshVoiceChannelsButtonInner"];
+}
+
 declare module "@moonlight-mod/wp/discord/modules/markup/MarkupUtils" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/markup/MarkupUtils"]["default"];
@@ -1253,6 +1286,57 @@ declare module "@moonlight-mod/wp/discord/packages/flux" {
   export const useStateFromStoresObject: MappedModules["discord/packages/flux"]["useStateFromStoresObject"];
 }
 
+declare module "@moonlight-mod/wp/discord/packages/flux/BatchedStoreListener" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/packages/flux/BatchedStoreListener"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/packages/flux/ChangeListeners" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/packages/flux/ChangeListeners"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/packages/flux/Dispatcher" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const Dispatcher: MappedModules["discord/packages/flux/Dispatcher"]["Dispatcher"];
+}
+
+declare module "@moonlight-mod/wp/discord/packages/flux/Emitter" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/packages/flux/Emitter"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/packages/flux/LoggingUtils" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/packages/flux/LoggingUtils"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/packages/flux/PersistedStore" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const PersistedStore: MappedModules["discord/packages/flux/PersistedStore"]["PersistedStore"];
+}
+
+declare module "@moonlight-mod/wp/discord/packages/flux/Store" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const Store: MappedModules["discord/packages/flux/Store"]["Store"];
+}
+
+declare module "@moonlight-mod/wp/discord/packages/flux/connectStores" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/packages/flux/connectStores"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/records/UserRecord" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/records/UserRecord"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/styles/shared/Margins.css" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const marginReset: MappedModules["discord/styles/shared/Margins.css"]["marginReset"];
@@ -1285,6 +1369,12 @@ declare module "@moonlight-mod/wp/discord/utils/ClipboardUtils" {
 declare module "@moonlight-mod/wp/discord/utils/HTTPUtils" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const HTTP: MappedModules["discord/utils/HTTPUtils"]["HTTP"];
+}
+
+declare module "@moonlight-mod/wp/discord/utils/MaskedLinkUtils" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const isLinkTrusted: MappedModules["discord/utils/MaskedLinkUtils"]["isLinkTrusted"];
+  export const handleClick: MappedModules["discord/utils/MaskedLinkUtils"]["handleClick"];
 }
 
 declare module "@moonlight-mod/wp/discord/utils/NativeUtils" {
