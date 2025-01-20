@@ -129,10 +129,8 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
       {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
       <TextInput
         value={value ?? ""}
-        onChange={(value: string) => {
-          if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
-        }}
+        disabled={disabled}
+        onChange={(value: string) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)}
       />
     </FormItem>
   );
@@ -147,11 +145,9 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
       <TextArea
         rows={5}
         value={value ?? ""}
+        disabled={disabled}
         className={"moonbase-resizeable"}
-        onChange={(value: string) => {
-          if (disabled) return;
-          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
-        }}
+        onChange={(value: string) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)}
       />
     </FormItem>
   );
