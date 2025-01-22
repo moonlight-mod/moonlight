@@ -6,7 +6,7 @@ import { loadExtensions } from "@moonlight-mod/core/extension/loader";
 import { MoonlightBranch, MoonlightNode } from "@moonlight-mod/types";
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 import { IndexedDB } from "@zenfs/dom";
-import { configure } from "@zenfs/core";
+import { configureSingle } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
 
 function getParts(path: string) {
@@ -18,15 +18,9 @@ window._moonlightBrowserInit = async () => {
   delete window._moonlightBrowserInit;
 
   // Set up a virtual filesystem with IndexedDB
-  await configure({
-    mounts: {
-      "/": {
-        backend: IndexedDB,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore tsc tweaking
-        storeName: "moonlight-fs"
-      }
-    }
+  await configureSingle({
+    backend: IndexedDB,
+    storeName: "moonlight-fs"
   });
 
   window.moonlightNodeSandboxed = {
