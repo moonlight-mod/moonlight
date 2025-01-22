@@ -5,7 +5,7 @@
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/lunast": "^1.0.0",
-    "@moonlight-mod/mappings": "^1.1.8",
+    "@moonlight-mod/mappings": "^1.1.9",
     "@moonlight-mod/moonmap": "^1.0.3",
     "@moonlight-mod/types": "workspace:*"
   }
