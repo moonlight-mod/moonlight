@@ -164,7 +164,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
             const newModule = replace.replacement(replaced);
             entry[id] = newModule;
             entry[id].__moonlight = true;
-            replaced = replaced.toString().replace(/\n/g, "") + `//# sourceURL=Webpack-Module-${id}`;
+            replaced = newModule.toString().replace(/\n/g, "");
           }
         }
 
