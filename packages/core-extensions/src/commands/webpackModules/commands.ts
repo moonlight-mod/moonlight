@@ -40,11 +40,27 @@ export const commands: Commands = {
   },
 
   registerLegacyCommand(id, command) {
+    if (command.match) {
+      if (command.match instanceof RegExp) {
+        command.match = this.anyScopeRegex(command.match);
+      } else if (command.match.regex && typeof command.match !== "function") {
+        command.match = this.anyScopeRegex(command.match.regex);
+      }
+    }
+
     if (!legacyCommands) {
       queuedLegacyCommands![id] = command;
     } else {
       legacyCommands[id] = command;
     }
+  },
+
+  anyScopeRegex(regex) {
+    const out = function (str: string) {
+      return regex.exec(str);
+    };
+    out.regex = regex;
+    return out;
   },
 
   _getCommands() {

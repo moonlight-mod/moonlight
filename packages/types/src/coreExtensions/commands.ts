@@ -94,6 +94,10 @@ export type CommandOption = {
     }
 );
 
+export type AnyScopeRegex = RegExp["exec"] & {
+  regex: RegExp;
+};
+
 export type Commands = {
   /**
    * Register a command in the internal slash command system
@@ -104,6 +108,11 @@ export type Commands = {
    * Register a legacy command that works via regex
    */
   registerLegacyCommand: (id: string, command: LegacyCommand) => void;
+
+  /**
+   * Creates a regular expression that legacy commands can understand
+   */
+  anyScopeRegex: (regex: RegExp) => AnyScopeRegex;
 
   /**
    * @private
@@ -121,8 +130,6 @@ export type LegacyReturn = {
 };
 
 export type LegacyCommand = {
-  match?: {
-    regex: RegExp;
-  };
+  match?: RegExp | { regex: RegExp } | AnyScopeRegex;
   action: (content: string, context: LegacyContext) => LegacyReturn;
 };
