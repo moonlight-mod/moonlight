@@ -121,6 +121,8 @@ export type LegacyReturn = {
 };
 
 export type LegacyCommand = {
-  match?: RegExp;
+  match?: {
+    regex: RegExp;
+  };
   action: (content: string, context: LegacyContext) => LegacyReturn;
 };
