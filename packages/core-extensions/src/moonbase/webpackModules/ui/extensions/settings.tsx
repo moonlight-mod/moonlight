@@ -26,7 +26,8 @@ import {
   Button,
   useVariableSelect,
   multiSelect,
-  Select as DiscordSelect
+  Select as DiscordSelect,
+  NumberInputStepper
 } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
@@ -101,22 +102,34 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<number>(ext.uniqueId, name);
 
   const castedSetting = setting as NumberSettingType;
-  const min = castedSetting.min ?? 0;
-  const max = castedSetting.max ?? 100;
+  const min = castedSetting.min;
+  const max = castedSetting.max;
+
+  const onChange = (value: number) => {
+    const rounded = min == null || max == null ? Math.round(value) : Math.max(min, Math.min(max, Math.round(value)));
+    MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
+  };
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {description && <FormText>{markdownify(description)}</FormText>}
-      <Slider
-        initialValue={value ?? 0}
-        disabled={disabled}
-        minValue={castedSetting.min ?? 0}
-        maxValue={castedSetting.max ?? 100}
-        onValueChange={(value: number) => {
-          const rounded = Math.max(min, Math.min(max, Math.round(value)));
-          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, rounded);
-        }}
-      />
+      {min == null || max == null ? (
+        <Flex justify={Flex.Justify.BETWEEN} direction={Flex.Direction.HORIZONTAL}>
+          {description && <FormText>{markdownify(description)}</FormText>}
+          <NumberInputStepper value={value ?? 0} onChange={onChange} />
+        </Flex>
+      ) : (
+        <>
+          {description && <FormText>{markdownify(description)}</FormText>}
+          <Slider
+            initialValue={value ?? 0}
+            disabled={disabled}
+            minValue={min}
+            maxValue={max}
+            onValueChange={onChange}
+            onValueRender={(value: number) => `${Math.round(value)}`}
+          />
+        </>
+      )}
     </FormItem>
   );
 }
