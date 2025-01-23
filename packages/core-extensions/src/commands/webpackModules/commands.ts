@@ -30,7 +30,7 @@ export const commands: Commands = {
       applicationId: APPLICATION_ID,
       untranslatedDescription: command.description,
       displayDescription: command.description,
-      options: command.options.map((o) => ({
+      options: command.options?.map((o) => ({
         ...o,
         displayName: o.name,
         displayDescription: o.description

@@ -16,32 +16,89 @@ export enum InputType {
 }
 
 export enum OptionType {
-  ATTACHMENT = 11,
-  BOOLEAN = 5,
-  CHANNEL = 7,
-  INTEGER = 4,
-  MENTIONABLE = 9,
-  NUMBER = 10,
-  ROLE = 8,
-  STRING = 3,
   SUB_COMMAND = 1,
   SUB_COMMAND_GROUP = 2,
-  USER = 6
+  STRING = 3,
+  INTEGER = 4,
+  BOOLEAN = 5,
+  USER = 6,
+  CHANNEL = 7,
+  ROLE = 8,
+  MENTIONABLE = 9,
+  NUMBER = 10,
+  ATTACHMENT = 11
 }
 
-export type RegisteredCommandOption = {
-  name: string;
+export enum ChannelType {
+  GUILD_TEXT = 0,
+  DM = 1,
+  GUILD_VOICE = 2,
+  GROUP_DM = 3,
+  GUILD_CATEGORY = 4,
+  GUILD_ANNOUNCEMENT = 5,
+  GUILD_STORE = 6,
+  ANNOUNCEMENT_THREAD = 10,
+  PUBLIC_THREAD = 11,
+  PRIVATE_THREAD = 12,
+  GUILD_STAGE_VOICE = 13,
+  GUILD_DIRECTORY = 14,
+  GUILD_FORUM = 15,
+  GUILD_MEDIA = 16,
+  LOBBY = 17,
+  DM_SDK = 18
+}
+
+export type RegisteredCommandOption = MoonlightCommandOption & {
   displayName: string;
-  type: OptionType;
-  description: string;
   displayDescription: string;
 };
 
-export type MoonlightCommandOption = {
+export type CommandOptionChoice<T> = {
   name: string;
-  type: OptionType;
-  description: string;
+  value: T;
 };
+
+type CommandOptionBase<T> = {
+  type: T;
+  name: string;
+  description: string;
+  required?: T extends OptionType.SUB_COMMAND
+    ? never
+    : T extends OptionType.SUB_COMMAND_GROUP
+      ? never
+      : boolean | undefined;
+  choices?: T extends OptionType.STRING
+    ? CommandOptionChoice<string>[]
+    : T extends OptionType.INTEGER
+      ? CommandOptionChoice<number>[]
+      : T extends OptionType.NUMBER
+        ? CommandOptionChoice<number>[]
+        : never;
+  options?: T extends OptionType.SUB_COMMAND
+    ? MoonlightCommandOption[]
+    : T extends OptionType.SUB_COMMAND_GROUP
+      ? MoonlightCommandOption[]
+      : never;
+  channelTypes?: T extends OptionType.CHANNEL ? ChannelType[] : never;
+  minValue?: T extends OptionType.INTEGER ? number : T extends OptionType.NUMBER ? number : never;
+  maxValue?: T extends OptionType.INTEGER ? number : T extends OptionType.NUMBER ? number : never;
+  minLength?: T extends OptionType.STRING ? number : never;
+  maxLength?: T extends OptionType.STRING ? number : never;
+};
+
+// This is bad lol
+export type MoonlightCommandOption =
+  | CommandOptionBase<OptionType.SUB_COMMAND>
+  | CommandOptionBase<OptionType.SUB_COMMAND_GROUP>
+  | CommandOptionBase<OptionType.STRING>
+  | CommandOptionBase<OptionType.INTEGER>
+  | CommandOptionBase<OptionType.BOOLEAN>
+  | CommandOptionBase<OptionType.USER>
+  | CommandOptionBase<OptionType.CHANNEL>
+  | CommandOptionBase<OptionType.ROLE>
+  | CommandOptionBase<OptionType.MENTIONABLE>
+  | CommandOptionBase<OptionType.NUMBER>
+  | CommandOptionBase<OptionType.ATTACHMENT>;
 
 // TODO: types
 export type CommandPredicateState = {
@@ -58,7 +115,7 @@ export type RegisteredCommand = {
   applicationId: string; // set to -3!
   untranslatedDescription: string;
   displayDescription: string;
-  options: RegisteredCommandOption[];
+  options?: RegisteredCommandOption[];
   predicate?: (state: CommandPredicateState) => boolean;
   execute: (options: CommandOption[]) => void;
 };
@@ -76,7 +133,7 @@ export type MoonlightCommand = {
    * You likely want BUILT_IN (or BUILT_IN_TEXT if usable with replies)
    */
   inputType: InputType;
-  options: MoonlightCommandOption[];
+  options?: MoonlightCommandOption[];
   predicate?: (state: CommandPredicateState) => boolean;
   execute: (options: CommandOption[]) => void;
 };
@@ -91,6 +148,18 @@ export type CommandOption = {
   | {
       type: OptionType.STRING;
       value: string;
+    }
+  | {
+      type: OptionType.NUMBER | OptionType.INTEGER;
+      value: number;
+    }
+  | {
+      type: OptionType.BOOLEAN;
+      value: boolean;
+    }
+  | {
+      type: OptionType.SUB_COMMAND | OptionType.SUB_COMMAND_GROUP;
+      options: CommandOption[];
     }
 );
 
