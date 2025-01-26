@@ -136,6 +136,10 @@ export type ExtensionManifest = {
    */
   blocked?: string[];
 
+  /**
+   * A mapping from CSP directives to URLs to allow.
+   * @example { "script-src": ["https://example.com"] }
+   */
   csp?: Record<string, string[]>;
 };
 
