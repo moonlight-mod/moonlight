@@ -98,7 +98,8 @@ window._moonlightBrowserInit = async () => {
     },
     // TODO
     addCors(url) {},
-    addBlocked(url) {}
+    addBlocked(url) {},
+    addCsp(directive, urls) {}
   };
 
   // Actual loading begins here
