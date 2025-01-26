@@ -76,7 +76,7 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
   blockedUrls = compiled;
 });
 
-function patchCsp(headers: Record<string, string[]>) {
+function patchCsp(headers: Record<string, string[]>, extensionCspOverrides: Record<string, string[]>) {
   const directives = ["script-src", "style-src", "connect-src", "img-src", "font-src", "media-src", "worker-src"];
   const values = ["*", "blob:", "data:", "'unsafe-inline'", "'unsafe-eval'", "disclip:"];
 
@@ -95,6 +95,11 @@ function patchCsp(headers: Record<string, string[]>) {
 
   for (const directive of directives) {
     parts[directive] = values;
+  }
+
+  for (const [directive, urls] of Object.entries(extensionCspOverrides)) {
+    parts[directive] ??= [];
+    parts[directive].push(...urls);
   }
 
   const stringified = Object.entries<string[]>(parts)
@@ -122,11 +127,23 @@ class BrowserWindow extends ElectronBrowserWindow {
     // Event for when a window is created
     moonlightHost.events.emit("window-created", this, isMainWindow);
 
+    const extensionCspOverrides: Record<string, string[]> = {};
+
+    {
+      const extCsps = moonlightHost.processedExtensions.extensions.map((x) => x.manifest.csp ?? {});
+      for (const csp of extCsps) {
+        for (const [directive, urls] of Object.entries(csp)) {
+          extensionCspOverrides[directive] ??= [];
+          extensionCspOverrides[directive].push(...urls);
+        }
+      }
+    }
+
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
         // Patch CSP so things can use externally hosted assets
         if (details.resourceType === "mainFrame") {
-          patchCsp(details.responseHeaders);
+          patchCsp(details.responseHeaders, extensionCspOverrides);
         }
 
         // Allow plugins to bypass CORS for specific URLs
