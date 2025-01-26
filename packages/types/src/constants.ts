@@ -12,7 +12,6 @@ export const ipcGetInjectorConfig = "_moonlight_getInjectorConfig";
 export const ipcMessageBox = "_moonlight_messageBox";
 export const ipcSetCorsList = "_moonlight_setCorsList";
 export const ipcSetBlockedList = "_moonlight_setBlockedList";
-export const ipcSetCspList = "_moonlight_setCspList";
 
 export const apiLevel = 2;
 

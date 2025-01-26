@@ -135,8 +135,6 @@ export type ExtensionManifest = {
    * @example https://moonlight-mod.github.io/
    */
   blocked?: string[];
-
-  csp?: Record<string, string[]>;
 };
 
 export enum ExtensionEnvironment {

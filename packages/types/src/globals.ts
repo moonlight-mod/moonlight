@@ -53,7 +53,6 @@ export type MoonlightNodeSandboxed = {
   fs: MoonlightFS;
   addCors: (url: string) => void;
   addBlocked: (url: string) => void;
-  addCsp: (directive: string, urls: string[]) => void;
 };
 
 export type MoonlightWeb = {

@@ -9,7 +9,7 @@ import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/dat
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import createFS from "@moonlight-mod/core/fs";
-import { registerCors, registerBlocked, getDynamicCors, registerCsp } from "@moonlight-mod/core/cors";
+import { registerCors, registerBlocked, getDynamicCors } from "@moonlight-mod/core/cors";
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 
 let initialized = false;
@@ -19,7 +19,6 @@ function setCors() {
   const data = getDynamicCors();
   ipcRenderer.invoke(constants.ipcSetCorsList, data.cors);
   ipcRenderer.invoke(constants.ipcSetBlockedList, data.blocked);
-  ipcRenderer.invoke(constants.ipcSetCspList, data.csp);
 }
 
 async function injectGlobals() {
@@ -31,10 +30,6 @@ async function injectGlobals() {
     },
     addBlocked(url) {
       registerBlocked(url);
-      if (initialized) setCors();
-    },
-    addCsp(directive, urls) {
-      registerCsp(directive, urls);
       if (initialized) setCors();
     }
   };
@@ -105,13 +100,6 @@ async function injectGlobals() {
   const extBlocked = moonlightNode.processedExtensions.extensions.flatMap((e) => e.manifest.blocked ?? []);
   for (const blocked of extBlocked) {
     registerBlocked(blocked);
-  }
-
-  const extCsps = moonlightNode.processedExtensions.extensions.map((x) => x.manifest.csp ?? {});
-  for (const csp of extCsps) {
-    for (const [directive, urls] of Object.entries(csp)) {
-      registerCsp(directive, urls);
-    }
   }
 
   setCors();

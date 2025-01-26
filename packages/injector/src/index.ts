@@ -22,7 +22,6 @@ const logger = new Logger("injector");
 let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
 let blockedUrls: RegExp[] = [];
-let cspOverrides: Record<string, string[]> = {};
 let injectorConfig: InjectorConfig | undefined;
 
 const scriptUrls = ["web.", "sentry."];
@@ -43,9 +42,6 @@ ipcMain.handle(constants.ipcMessageBox, (_, opts) => {
 });
 ipcMain.handle(constants.ipcSetCorsList, (_, list) => {
   corsAllow = list;
-});
-ipcMain.handle(constants.ipcSetCspList, (_, obj) => {
-  cspOverrides = obj;
 });
 
 const reEscapeRegExp = /[\\^$.*+?()[\]{}|]/g;
@@ -99,11 +95,6 @@ function patchCsp(headers: Record<string, string[]>) {
 
   for (const directive of directives) {
     parts[directive] = values;
-  }
-
-  for (const [directive, urls] of Object.entries(cspOverrides)) {
-    parts[directive] ??= [];
-    parts[directive].push(...urls);
   }
 
   const stringified = Object.entries<string[]>(parts)
@@ -213,8 +204,7 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
     fs: createFS(),
     // These aren't supposed to be used from host
     addCors() {},
-    addBlocked() {},
-    addCsp() {}
+    addBlocked() {}
   };
 
   try {
