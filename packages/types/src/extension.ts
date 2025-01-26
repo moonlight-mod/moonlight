@@ -135,6 +135,12 @@ export type ExtensionManifest = {
    * @example https://moonlight-mod.github.io/
    */
   blocked?: string[];
+
+  /**
+   * A mapping from CSP directives to URLs to allow.
+   * @example { "script-src": ["https://example.com"] }
+   */
+  csp?: Record<string, string[]>;
 };
 
 export enum ExtensionEnvironment {
