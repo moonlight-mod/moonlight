@@ -6,8 +6,8 @@ export const patches: Patch[] = [
     find: "profiledRootComponent:",
     replace: {
       type: PatchReplaceType.Normal,
-      match: /(?<=\.Z=){.+?}}/,
-      replacement: 'require("disableSentry_stub").proxy()'
+      match: /Z:\(\)=>\i/,
+      replacement: 'Z:()=>require("disableSentry_stub").proxy()'
     }
   },
   {

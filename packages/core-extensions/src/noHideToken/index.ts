@@ -4,8 +4,8 @@ export const patches: Patch[] = [
   {
     find: "hideToken:function",
     replace: {
-      match: /(?<=hideToken:function\(\){)/,
-      replacement: `return()=>{};`
+      match: /hideToken:\(\)=>.+?,/,
+      replacement: `hideToken:()=>{},`
     }
   }
 ];

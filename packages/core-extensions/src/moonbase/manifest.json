@@ -7,7 +7,7 @@
     "tagline": "The official settings UI for moonlight",
     "authors": ["Cynosphere", "NotNite", "redstonekasi"]
   },
-  "dependencies": ["spacepack", "settings", "common", "notices"],
+  "dependencies": ["spacepack", "settings", "common", "notices", "contextMenu"],
   "settings": {
     "sections": {
       "advice": "reload",

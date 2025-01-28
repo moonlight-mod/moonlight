@@ -10,15 +10,13 @@ import {
   Popout,
   Dialog,
   Menu,
-  MenuGroup,
-  MenuCheckboxItem,
-  MenuItem,
   ChevronSmallDownIcon,
   ChevronSmallUpIcon,
   ArrowsUpDownIcon,
   RetryIcon,
   Tooltip
 } from "@moonlight-mod/wp/discord/components/common/index";
+import { MenuGroup, MenuCheckboxItem, MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import TagItem from "@moonlight-mod/wp/discord/modules/forums/web/Tag";
