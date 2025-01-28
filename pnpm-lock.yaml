@@ -93,8 +93,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@moonlight-mod/mappings':
-        specifier: ^1.1.10
-        version: 1.1.10(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
+        specifier: ^1.1.11
+        version: 1.1.11(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.4
         version: 1.0.4
@@ -117,8 +117,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@moonlight-mod/mappings':
-        specifier: ^1.1.10
-        version: 1.1.10(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
+        specifier: ^1.1.11
+        version: 1.1.11(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.4
         version: 1.0.4
@@ -324,11 +324,11 @@ packages:
   '@moonlight-mod/lunast@1.0.0':
     resolution: {integrity: sha512-kJgf41K12i6/2LbXK97CNO+pNO7ADGh9N4bCQcOPwosocKMcwKHDEZUgPqeihNshY3c3AEW1LiyXjlsl24PdDw==}
 
-  '@moonlight-mod/mappings@1.1.10':
-    resolution: {integrity: sha512-lOEwhi0+lv49EWd1BsE87ynpCfkad61wA8poKzZNEdMRwINI2FHwr6QmG86JcEfWq2flDHuUkr9fwTaKEqMm1Q==}
+  '@moonlight-mod/mappings@1.1.11':
+    resolution: {integrity: sha512-6tMA+2CvQ0MUCUTlEWzY8p9D7BTn2MngMaBktaApjBBaZHNbgZ6EvCBd7SAzmPQHdL95cT0kZGEqzgP31KreCQ==}
     peerDependencies:
       '@moonlight-mod/lunast': ^1.0.0
-      '@moonlight-mod/moonmap': ^1.0.0
+      '@moonlight-mod/moonmap': ^1.0.4
 
   '@moonlight-mod/moonmap@1.0.4':
     resolution: {integrity: sha512-NES5a+ZSfgyRBZ7pBL8PZL40Au5vTDskvC/Gqx0bs3woikkkdjbZiW9RPypwUQqzdBDIP//ga+xF9UhKSADdLw==}
@@ -1334,6 +1334,24 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
+  zustand@5.0.3:
+    resolution: {integrity: sha512-14fwWQtU3pH4dE0dOpdMiWjddcH+QzKIgk1cl8epwSE7yag43k/AD/m4L6+K7DytAOr9gGBe3/EXj9g7cdostg==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=18.0.0'
+      immer: '>=9.0.6'
+      react: '>=18.0.0'
+      use-sync-external-store: '>=1.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+      use-sync-external-store:
+        optional: true
+
 snapshots:
 
   '@aashutoshrathi/word-wrap@1.2.6': {}
@@ -1474,7 +1492,7 @@ snapshots:
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
 
-  '@moonlight-mod/mappings@1.1.10(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)':
+  '@moonlight-mod/mappings@1.1.11(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)':
     dependencies:
       '@moonlight-mod/lunast': 1.0.0
       '@moonlight-mod/moonmap': 1.0.4
@@ -1485,6 +1503,11 @@ snapshots:
       '@types/platform': 1.3.6
       '@types/react': 18.3.10
       csstype: 3.1.3
+      zustand: 5.0.3(@types/react@18.3.10)
+    transitivePeerDependencies:
+      - immer
+      - react
+      - use-sync-external-store
 
   '@moonlight-mod/moonmap@1.0.4': {}
 
@@ -2707,3 +2730,7 @@ snapshots:
       isexe: 2.0.0
 
   yocto-queue@0.1.0: {}
+
+  zustand@5.0.3(@types/react@18.3.10):
+    optionalDependencies:
+      '@types/react': 18.3.10
