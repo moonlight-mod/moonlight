@@ -8,6 +8,8 @@ import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonl
 import { IndexedDB } from "@zenfs/dom";
 import { configureSingle } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
+import { NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
+import { createEventEmitter } from "@moonlight-mod/core/util/event";
 
 function getParts(path: string) {
   if (path.startsWith("/")) path = path.substring(1);
@@ -110,6 +112,7 @@ window._moonlightBrowserInit = async () => {
     processedExtensions,
     nativesCache: {},
     isBrowser: true,
+    events: createEventEmitter<NodeEventType, NodeEventPayloads>(),
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
@@ -141,6 +144,7 @@ window._moonlightBrowserInit = async () => {
     async writeConfig(newConfig) {
       await writeConfig(newConfig);
       config = newConfig;
+      this.events.dispatchEvent(NodeEventType.ConfigSaved, newConfig);
     }
   };
 

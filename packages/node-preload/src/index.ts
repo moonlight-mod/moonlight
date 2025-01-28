@@ -11,6 +11,8 @@ import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/ext
 import createFS from "@moonlight-mod/core/fs";
 import { registerCors, registerBlocked, getDynamicCors } from "@moonlight-mod/core/cors";
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
+import { NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
+import { createEventEmitter } from "@moonlight-mod/core/util/event";
 
 let initialized = false;
 let logger: Logger;
@@ -51,6 +53,7 @@ async function injectGlobals() {
     processedExtensions,
     nativesCache: {},
     isBrowser: false,
+    events: createEventEmitter<NodeEventType, NodeEventPayloads>(),
 
     version: MOONLIGHT_VERSION,
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
@@ -69,6 +72,7 @@ async function injectGlobals() {
     async writeConfig(newConfig) {
       await writeConfig(newConfig);
       config = newConfig;
+      this.events.dispatchEvent(NodeEventType.ConfigSaved, newConfig);
     },
 
     getNatives: (ext: string) => global.moonlightNode.nativesCache[ext],
