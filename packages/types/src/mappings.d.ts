@@ -600,6 +600,26 @@ declare module "@moonlight-mod/wp/discord/modules/messages/web/Message.css" {
   export const badgesContainer: MappedModules["discord/modules/messages/web/Message.css"]["badgesContainer"];
 }
 
+declare module "@moonlight-mod/wp/discord/modules/modals/Modals" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const closeAllModals: MappedModules["discord/modules/modals/Modals"]["closeAllModals"];
+  export const closeAllModalsForContext: MappedModules["discord/modules/modals/Modals"]["closeAllModalsForContext"];
+  export const closeModal: MappedModules["discord/modules/modals/Modals"]["closeModal"];
+  export const closeModalInAllContexts: MappedModules["discord/modules/modals/Modals"]["closeModalInAllContexts"];
+  export const getInteractingModalContext: MappedModules["discord/modules/modals/Modals"]["getInteractingModalContext"];
+  export const hasAnyModalOpen: MappedModules["discord/modules/modals/Modals"]["hasAnyModalOpen"];
+  export const hasAnyModalOpenSelector: MappedModules["discord/modules/modals/Modals"]["hasAnyModalOpenSelector"];
+  export const hasModalOpen: MappedModules["discord/modules/modals/Modals"]["hasModalOpen"];
+  export const hasModalOpenSelector: MappedModules["discord/modules/modals/Modals"]["hasModalOpenSelector"];
+  export const modalContextFromAppContext: MappedModules["discord/modules/modals/Modals"]["modalContextFromAppContext"];
+  export const openModal: MappedModules["discord/modules/modals/Modals"]["openModal"];
+  export const openModalLazy: MappedModules["discord/modules/modals/Modals"]["openModalLazy"];
+  export const updateModal: MappedModules["discord/modules/modals/Modals"]["updateModal"];
+  export const useHasAnyModalOpen: MappedModules["discord/modules/modals/Modals"]["useHasAnyModalOpen"];
+  export const useIsModalAtTop: MappedModules["discord/modules/modals/Modals"]["useIsModalAtTop"];
+  export const useModalsStore: MappedModules["discord/modules/modals/Modals"]["useModalsStore"];
+}
+
 declare module "@moonlight-mod/wp/discord/modules/oauth2/index" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const OAuth2AuthorizeModal: MappedModules["discord/modules/oauth2/index"]["OAuth2AuthorizeModal"];
