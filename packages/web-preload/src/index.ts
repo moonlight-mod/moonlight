@@ -7,7 +7,7 @@ import LunAST from "@moonlight-mod/lunast";
 import Moonmap from "@moonlight-mod/moonmap";
 import loadMappings from "@moonlight-mod/mappings";
 import { createEventEmitter } from "@moonlight-mod/core/util/event";
-import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
+import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
 
 async function load() {
   delete window._moonlightWebLoad;
@@ -20,7 +20,7 @@ async function load() {
     pendingModules: new Set(),
     enabledExtensions: new Set(),
 
-    events: createEventEmitter<EventType, EventPayloads>(),
+    events: createEventEmitter<WebEventType, WebEventPayloads>(),
     patchingInternals: {
       onModuleLoad,
       registerPatch,

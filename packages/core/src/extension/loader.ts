@@ -13,7 +13,7 @@ import { registerPatch, registerWebpackModule } from "../patch";
 import calculateDependencies from "../util/dependency";
 import { createEventEmitter } from "../util/event";
 import { registerStyles } from "../styles";
-import { EventPayloads, EventType } from "@moonlight-mod/types/core/event";
+import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
 
 const logger = new Logger("core/extension/loader");
 
@@ -202,7 +202,7 @@ export async function loadExtensions(exts: DetectedExtension[]): Promise<Process
 }
 
 export async function loadProcessedExtensions({ extensions, dependencyGraph }: ProcessedExtensions) {
-  const eventEmitter = createEventEmitter<EventType, EventPayloads>();
+  const eventEmitter = createEventEmitter<WebEventType, WebEventPayloads>();
   const finished: Set<string> = new Set();
 
   logger.trace(
@@ -224,11 +224,11 @@ export async function loadProcessedExtensions({ extensions, dependencyGraph }: P
           }
 
           function done() {
-            eventEmitter.removeEventListener(EventType.ExtensionLoad, cb);
+            eventEmitter.removeEventListener(WebEventType.ExtensionLoad, cb);
             r();
           }
 
-          eventEmitter.addEventListener(EventType.ExtensionLoad, cb);
+          eventEmitter.addEventListener(WebEventType.ExtensionLoad, cb);
           if (finished.has(dep)) done();
         })
     );
@@ -242,7 +242,7 @@ export async function loadProcessedExtensions({ extensions, dependencyGraph }: P
     await loadExt(ext);
 
     finished.add(ext.id);
-    eventEmitter.dispatchEvent(EventType.ExtensionLoad, ext.id);
+    eventEmitter.dispatchEvent(WebEventType.ExtensionLoad, ext.id);
     logger.debug(`Loaded "${ext.id}"`);
   }
 

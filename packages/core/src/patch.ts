@@ -11,7 +11,7 @@ import {
 } from "@moonlight-mod/types";
 import Logger from "./util/logger";
 import calculateDependencies, { Dependency } from "./util/dependency";
-import { EventType } from "@moonlight-mod/types/core/event";
+import { WebEventType } from "@moonlight-mod/types/core/event";
 import { processFind, processReplace, testFind } from "./util/patch";
 
 const logger = new Logger("core/patch");
@@ -402,7 +402,7 @@ export async function installWebpackPatcher() {
       const realPush = jsonp.push;
       if (jsonp.push.__moonlight !== true) {
         jsonp.push = (items) => {
-          moonlight.events.dispatchEvent(EventType.ChunkLoad, {
+          moonlight.events.dispatchEvent(WebEventType.ChunkLoad, {
             chunkId: items[0],
             modules: items[1],
             require: items[2]
@@ -450,7 +450,7 @@ export async function installWebpackPatcher() {
     set(modules: any) {
       const { stack } = new Error();
       if (stack!.includes("/assets/") && !Array.isArray(modules)) {
-        moonlight.events.dispatchEvent(EventType.ChunkLoad, {
+        moonlight.events.dispatchEvent(WebEventType.ChunkLoad, {
           modules: modules
         });
         patchModules(modules);
