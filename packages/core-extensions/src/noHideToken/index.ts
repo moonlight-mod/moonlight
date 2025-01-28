@@ -2,10 +2,10 @@ import { Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: "hideToken:function",
+    find: "hideToken:()=>",
     replace: {
-      match: /(?<=hideToken:function\(\){)/,
-      replacement: `return()=>{};`
+      match: /hideToken:\(\)=>.+?,/,
+      replacement: `hideToken:()=>{},`
     }
   }
 ];

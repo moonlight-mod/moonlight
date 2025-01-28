@@ -7,9 +7,9 @@ export const patches: Patch[] = [
     replace: [
       // inject commands
       {
-        match: /return (\i)=\i/,
+        match: /return (\i)\.filter/,
         replacement: (orig, commands) =>
-          `${commands}=[...${commands},...require("commands_commands").default._getCommands()];${orig}`
+          `return [...${commands},...require("commands_commands").default._getCommands()].filter`
       },
 
       // section

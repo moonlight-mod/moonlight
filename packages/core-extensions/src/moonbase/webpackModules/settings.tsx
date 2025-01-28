@@ -5,7 +5,8 @@ import { Moonbase, pages, RestartAdviceMessage, Update } from "@moonlight-mod/wp
 import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import { MenuItem, Text, Breadcrumbs } from "@moonlight-mod/wp/discord/components/common/index";
+import { Text, Breadcrumbs } from "@moonlight-mod/wp/discord/components/common/index";
+import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 
 const notice = {
   stores: [MoonbaseSettingsStore],

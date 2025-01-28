@@ -3,7 +3,7 @@ import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/typ
 
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import {
-  BeakerIcon,
+  ScienceIcon,
   DownloadIcon,
   TrashIcon,
   AngleBracketsIcon,
@@ -118,7 +118,7 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
             <Text variant="text-md/semibold">{ext.manifest?.meta?.name ?? ext.id}</Text>
             {ext.source.type === ExtensionLoadSource.Developer && (
               <Tooltip text="This is a local extension" position="top">
-                {(props: any) => <BeakerIcon {...props} class={BuildOverrideClasses.infoIcon} size="xs" />}
+                {(props: any) => <ScienceIcon {...props} class={BuildOverrideClasses.infoIcon} size="xs" />}
               </Tooltip>
             )}
 
