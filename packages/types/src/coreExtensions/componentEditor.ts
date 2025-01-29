@@ -121,14 +121,27 @@ export enum MessageBadgeIndicies {
 }
 
 export type Messages = {
+  /**
+   * Adds a component to the username of a message
+   */
   addToUsername: (id: string, component: React.FC<any>, anchor?: MessageUsernameAnchors, before?: boolean) => void;
+  /**
+   * Adds a component to the username badge area of a message (e.g. where role icons/new member badge is)
+   */
   addUsernameBadge: (
     id: string,
     component: React.FC<any>,
     anchor?: MessageUsernameBadgeAnchors,
     before?: boolean
   ) => void;
+  /**
+   * Adds a component to the end of a message header (e.g. silent indicator)
+   */
   addBadge: (id: string, component: React.FC<any>, anchor?: MessageBadgeAnchors, before?: boolean) => void;
+  /**
+   * Adds a component to message accessories (e.g. embeds)
+   */
+  addAccessory: (id: string, component: React.FC<any>) => void;
   /**
    * @private
    */
@@ -141,5 +154,9 @@ export type Messages = {
    * @private
    */
   _patchBadges: Patcher<any>;
+  /**
+   * @private
+   */
+  _patchAccessories: Patcher<any>;
 };
 //#endregion

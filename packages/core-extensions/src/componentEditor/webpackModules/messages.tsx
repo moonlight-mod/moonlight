@@ -12,6 +12,7 @@ import React from "@moonlight-mod/wp/react";
 const username: Record<string, MessageUsername> = {};
 const usernameBadges: Record<string, MessageUsernameBadge> = {};
 const badges: Record<string, MessageBadge> = {};
+const accessories: Record<string, React.FC<any>> = {};
 
 function addEntries(
   elements: React.ReactNode[],
@@ -43,6 +44,13 @@ function addEntries(
   }
 }
 
+function addComponents(elements: React.ReactNode[], components: Record<string, React.FC<any>>, props: any) {
+  for (const [id, Component] of Object.entries(components)) {
+    const component = <Component {...props} key={id} />;
+    elements.push(component);
+  }
+}
+
 export const messages: Messages = {
   addToUsername(id, component, anchor, before = false) {
     username[id] = {
@@ -65,6 +73,9 @@ export const messages: Messages = {
       before
     };
   },
+  addAccessory(id, component) {
+    accessories[id] = component;
+  },
   _patchUsername(elements, props) {
     addEntries(elements, username, MessageUsernameIndicies, props);
     return elements;
@@ -75,6 +86,10 @@ export const messages: Messages = {
   },
   _patchBadges(elements, props) {
     addEntries(elements, badges, MessageBadgeIndicies, props);
+    return elements;
+  },
+  _patchAccessories(elements, props) {
+    addComponents(elements, accessories, props);
     return elements;
   }
 };

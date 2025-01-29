@@ -59,6 +59,14 @@ export const patches: Patch[] = [
           `children:require("componentEditor_messages").default._patchUsername(${elements},arguments[0])`
       }
     ]
+  },
+  {
+    find: '.provider&&"Discord"===',
+    replace: {
+      match: /(?<=\.container\),)children:(\[.+?this\.renderSuppressConfirmModal\(\),.+?\])}\)/,
+      replacement: (_, elements) =>
+        `children:require("componentEditor_messages").default._patchAccessories(${elements},this.props)})`
+    }
   }
 ];
 
