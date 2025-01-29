@@ -157,6 +157,8 @@ class BrowserWindow extends ElectronBrowserWindow {
           details.responseHeaders[key] = ["*"];
         }
 
+        moonlightHost.events.emit("headers-received", details, isMainWindow);
+
         cb({ cancel: false, responseHeaders: details.responseHeaders });
       }
     });

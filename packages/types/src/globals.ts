@@ -11,7 +11,7 @@ import type {
   NodeEventType,
   NodeEventPayloads
 } from "./core/event";
-import { MoonlightFS } from "./fs";
+import type { MoonlightFS } from "./fs";
 
 export type MoonlightHost = {
   config: Config;
