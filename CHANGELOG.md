@@ -1,2 +1,3 @@
 - Fixes for latest Discord
-- Added event for when the config is saved
+- Fixed some issues relating to the `moonlight.unpatched` global
+- Added `headers-received` event for extensions (thanks @uwx!)
