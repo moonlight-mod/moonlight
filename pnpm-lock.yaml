@@ -93,8 +93,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@moonlight-mod/mappings':
-        specifier: ^1.1.11
-        version: 1.1.11(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
+        specifier: ^1.1.13
+        version: 1.1.13(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.4
         version: 1.0.4
@@ -117,8 +117,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@moonlight-mod/mappings':
-        specifier: ^1.1.11
-        version: 1.1.11(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
+        specifier: ^1.1.13
+        version: 1.1.13(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.4
         version: 1.0.4
@@ -324,8 +324,8 @@ packages:
   '@moonlight-mod/lunast@1.0.0':
     resolution: {integrity: sha512-kJgf41K12i6/2LbXK97CNO+pNO7ADGh9N4bCQcOPwosocKMcwKHDEZUgPqeihNshY3c3AEW1LiyXjlsl24PdDw==}
 
-  '@moonlight-mod/mappings@1.1.11':
-    resolution: {integrity: sha512-6tMA+2CvQ0MUCUTlEWzY8p9D7BTn2MngMaBktaApjBBaZHNbgZ6EvCBd7SAzmPQHdL95cT0kZGEqzgP31KreCQ==}
+  '@moonlight-mod/mappings@1.1.13':
+    resolution: {integrity: sha512-ilaPgvI3OgTXsNj0/knaAnU8aSq6xEtNj3BPEUIJVsCkVapHFKPDu4J4igTZ+knuC8vUx2ZYheRTd0t51qtViw==}
     peerDependencies:
       '@moonlight-mod/lunast': ^1.0.0
       '@moonlight-mod/moonmap': ^1.0.4
@@ -1492,7 +1492,7 @@ snapshots:
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
 
-  '@moonlight-mod/mappings@1.1.11(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)':
+  '@moonlight-mod/mappings@1.1.13(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)':
     dependencies:
       '@moonlight-mod/lunast': 1.0.0
       '@moonlight-mod/moonmap': 1.0.4
