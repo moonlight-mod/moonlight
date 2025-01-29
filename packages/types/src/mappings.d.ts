@@ -748,6 +748,12 @@ declare module "@moonlight-mod/wp/discord/utils/ClipboardUtils" {
   export const copy: MappedModules["discord/utils/ClipboardUtils"]["copy"];
 }
 
+declare module "@moonlight-mod/wp/discord/utils/ComponentDispatchUtils" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const ComponentDispatcher: MappedModules["discord/utils/ComponentDispatchUtils"]["ComponentDispatcher"];
+  export const ComponentDispatch: MappedModules["discord/utils/ComponentDispatchUtils"]["ComponentDispatch"];
+}
+
 declare module "@moonlight-mod/wp/discord/utils/HTTPUtils" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const HTTP: MappedModules["discord/utils/HTTPUtils"]["HTTP"];
