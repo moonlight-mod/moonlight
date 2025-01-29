@@ -117,6 +117,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     for (let i = 0; i < patches.length; i++) {
       const patch = patches[i];
       if (patch.prerequisite != null && !patch.prerequisite()) {
+        moonlight.unpatched.delete(patch);
         continue;
       }
 
@@ -136,6 +137,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         // We ensured normal PatchReplace objects get turned into arrays on register
         const replaces = patch.replace as PatchReplace[];
 
+        let isPatched = true;
         for (let i = 0; i < replaces.length; i++) {
           const replace = replaces[i];
           let patchId = `${patch.ext}#${patch.id}`;
@@ -153,6 +155,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 
             if (replaced === moduleString) {
               logger.warn("Patch replacement failed", id, patch);
+              isPatched = false;
               if (patch.hardFail) {
                 hardFailed = true;
                 break;
@@ -176,7 +179,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           exts.add(patch.ext);
         }
 
-        moonlight.unpatched.delete(patch);
+        if (isPatched) moonlight.unpatched.delete(patch);
         if (shouldRemove) patches.splice(i--, 1);
       }
     }
