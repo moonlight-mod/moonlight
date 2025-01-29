@@ -43,6 +43,8 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { id: "discord/components/common/index" },
       { ext: "moonbase", id: "stores" },
       { id: "discord/modules/guild_settings/web/AppCard.css" },
+      { ext: "contextMenu", id: "contextMenu" },
+      { id: "discord/modules/modals/Modals" },
       "Masks.PANEL_BUTTON",
       '"Missing channel in Channel.openChannelContextMenu"',
       ".forumOrHome]:"
@@ -55,6 +57,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { ext: "settings", id: "settings" },
       { id: "react" },
       { ext: "moonbase", id: "ui" },
+      { ext: "contextMenu", id: "contextMenu" },
       ':"USER_SETTINGS_MODAL_SET_SECTION"'
     ],
     entrypoint: true

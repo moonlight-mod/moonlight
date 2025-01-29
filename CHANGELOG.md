@@ -1,1 +1,2 @@
-- Fixed some bugs in patching logic
+- Fixes for latest Discord
+- Added event for when the config is saved

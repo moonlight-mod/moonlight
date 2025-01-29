@@ -8,7 +8,7 @@ let code =
 
 const parserSym = code.match(/(?<=_patchMenu\(.,).+?(?=\()/)![0];
 
-code = code.replace(/(?<=function\(\){return ).(?=})/, parserSym);
+code = code.replace(/{(.):\(\)=>./, (orig, e) => `{${e}:()=>${parserSym}`);
 const mod = new Function("module", "exports", "require", `(${code}).apply(this, arguments)`);
 
 const exp: any = {};

@@ -52,7 +52,7 @@ export const spacepack: Spacepack = {
         try {
           exports = require(id);
         } catch (e) {
-          logger.error(`Error requiring module "${id}": `, e);
+          logger.error(`findByCode: Error requiring module "${id}": `, args, e);
         }
 
         return {
@@ -63,7 +63,7 @@ export const spacepack: Spacepack = {
       .filter((item) => item !== null);
 
     if (ret.length === 0) {
-      logger.warn("Got zero results for", args, new Error().stack!.substring(5));
+      logger.warn("findByCode: Got zero results for", args, new Error().stack!.substring(5));
     }
 
     return ret;
@@ -113,7 +113,7 @@ export const spacepack: Spacepack = {
     }
 
     if (ret == null) {
-      logger.warn("Failed to get object by key", key, "in", exports, new Error().stack!.substring(5));
+      logger.warn("Failed to find object by key", key, "in", exports, new Error().stack!.substring(5));
     }
 
     return ret;
@@ -138,7 +138,7 @@ export const spacepack: Spacepack = {
     }
 
     if (ret == null) {
-      logger.warn("Failed to get object by value", value, "in", exports, new Error().stack!.substring(5));
+      logger.warn("Failed to find object by value", value, "in", exports, new Error().stack!.substring(5));
     }
 
     return ret;
@@ -156,7 +156,14 @@ export const spacepack: Spacepack = {
     }
 
     if (ret == null) {
-      logger.warn("Failed to get object by key value pair", key, value, "in", exports, new Error().stack!.substring(5));
+      logger.warn(
+        "Failed to find object by key value pair",
+        key,
+        value,
+        "in",
+        exports,
+        new Error().stack!.substring(5)
+      );
     }
 
     return null;
@@ -170,7 +177,7 @@ export const spacepack: Spacepack = {
       )?.[0]?.[1] ?? null;
 
     if (ret == null) {
-      logger.warn("Failed to get function by strings", strings, "in", exports, new Error().stack!.substring(5));
+      logger.warn("Failed to find function by strings", strings, "in", exports, new Error().stack!.substring(5));
     }
 
     return ret;
@@ -178,7 +185,10 @@ export const spacepack: Spacepack = {
 
   lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => {
     const mod = Array.isArray(find) ? spacepack.findByCode(...find) : spacepack.findByCode(find);
-    if (mod.length < 1) return Promise.reject("Module find failed");
+    if (mod.length < 1) {
+      logger.warn("lazyLoad: Module find failed", find, chunk, module, new Error().stack!.substring(5));
+      return Promise.reject("Module find failed");
+    }
 
     const findId = mod[0].id;
     const findCode = webpackRequire.m[findId].toString().replace(/\n/g, "");
@@ -191,10 +201,16 @@ export const spacepack: Spacepack = {
       if (match) chunkIds = [...match[0].matchAll(/"(\d+)"/g)].map(([, id]) => id);
     }
 
-    if (!chunkIds || chunkIds.length === 0) return Promise.reject("Chunk ID match failed");
+    if (!chunkIds || chunkIds.length === 0) {
+      logger.warn("lazyLoad: Chunk ID match failed", find, chunk, module, new Error().stack!.substring(5));
+      return Promise.reject("Chunk ID match failed");
+    }
 
     const moduleId = findCode.match(module)?.[1];
-    if (!moduleId) return Promise.reject("Module ID match failed");
+    if (!moduleId) {
+      logger.warn("lazyLoad: Module ID match failed", find, chunk, module, new Error().stack!.substring(5));
+      return Promise.reject("Module ID match failed");
+    }
 
     return Promise.all(chunkIds.map((c) => webpackRequire.e(c))).then(() => webpackRequire(moduleId));
   },

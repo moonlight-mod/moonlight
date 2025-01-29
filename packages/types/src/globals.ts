@@ -4,7 +4,13 @@ import type { DetectedExtension, IdentifiedPatch, IdentifiedWebpackModule, Proce
 import type EventEmitter from "events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
-import type { EventPayloads, EventType, MoonlightEventEmitter } from "./core/event";
+import type {
+  WebEventPayloads,
+  WebEventType,
+  MoonlightEventEmitter,
+  NodeEventType,
+  NodeEventPayloads
+} from "./core/event";
 import { MoonlightFS } from "./fs";
 
 export type MoonlightHost = {
@@ -34,6 +40,7 @@ export type MoonlightNode = {
   processedExtensions: ProcessedExtensions;
   nativesCache: Record<string, any>;
   isBrowser: boolean;
+  events: MoonlightEventEmitter<NodeEventType, NodeEventPayloads>;
 
   version: string;
   branch: MoonlightBranch;
@@ -60,7 +67,7 @@ export type MoonlightWeb = {
   unpatched: Set<IdentifiedPatch>;
   pendingModules: Set<IdentifiedWebpackModule>;
   enabledExtensions: Set<string>;
-  events: MoonlightEventEmitter<EventType, EventPayloads>;
+  events: MoonlightEventEmitter<WebEventType, WebEventPayloads>;
   patchingInternals: {
     onModuleLoad: (moduleId: string | string[], callback: (moduleId: string) => void) => void;
     registerPatch: (patch: IdentifiedPatch) => void;

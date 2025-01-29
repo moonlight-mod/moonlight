@@ -7,8 +7,8 @@ const child_process = require("child_process");
 
 const cwd = process.cwd();
 const onDisk = {
-  "@moonlight-mod/lunast": "../lunast",
-  "@moonlight-mod/moonmap": "../moonmap",
+  //"@moonlight-mod/lunast": "../lunast",
+  //"@moonlight-mod/moonmap": "../moonmap",
   "@moonlight-mod/mappings": "../mappings"
 };
 

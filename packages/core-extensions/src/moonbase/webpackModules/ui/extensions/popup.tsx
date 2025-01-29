@@ -1,13 +1,8 @@
 // TODO: clean up the styling here
 import React from "@moonlight-mod/wp/react";
 import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
-import {
-  openModalLazy,
-  useModalsStore,
-  closeModal,
-  SingleSelect,
-  Text
-} from "@moonlight-mod/wp/discord/components/common/index";
+import { openModalLazy, useModalsStore, closeModal } from "@moonlight-mod/wp/discord/modules/modals/Modals";
+import { SingleSelect, Text } from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";

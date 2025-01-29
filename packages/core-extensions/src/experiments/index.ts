@@ -11,8 +11,8 @@ export const patches: Patch[] = [
   {
     find: '"scientist:triggered"', // Scientist? Triggered.
     replace: {
-      match: /(?<=personal_connection_id\|\|)!1/,
-      replacement: "!0"
+      match: ".personal_connection_id",
+      replacement: ".personal_connection_id || true"
     }
   },
 

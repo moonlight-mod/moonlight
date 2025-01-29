@@ -148,7 +148,13 @@ class BrowserWindow extends ElectronBrowserWindow {
 
         // Allow plugins to bypass CORS for specific URLs
         if (corsAllow.some((x) => details.url.startsWith(x))) {
-          details.responseHeaders["access-control-allow-origin"] = ["*"];
+          if (!details.responseHeaders) details.responseHeaders = {};
+
+          // Work around HTTP header case sensitivity by reusing the header name if it exists
+          // https://github.com/moonlight-mod/moonlight/issues/201
+          const fallback = "access-control-allow-origin";
+          const key = Object.keys(details.responseHeaders).find((h) => h.toLowerCase() === fallback) ?? fallback;
+          details.responseHeaders[key] = ["*"];
         }
 
         cb({ cancel: false, responseHeaders: details.responseHeaders });
