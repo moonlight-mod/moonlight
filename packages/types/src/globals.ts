@@ -11,14 +11,19 @@ import type {
   NodeEventType,
   NodeEventPayloads
 } from "./core/event";
-import { MoonlightFS } from "./fs";
+import type { MoonlightFS } from "./fs";
+import type { BrowserWindow, BrowserWindowConstructorOptions, OnHeadersReceivedListenerDetails } from "electron";
 
 export type MoonlightHost = {
   config: Config;
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
   asarPath: string;
-  events: EventEmitter;
+  events: EventEmitter<{
+    "window-created": [window: BrowserWindow, isMainWindow: boolean];
+    "window-options": [windowOptions: BrowserWindowConstructorOptions, isMainWindow: boolean];
+    "on-headers-received": [details: OnHeadersReceivedListenerDetails, isMainWindow: boolean];
+  }>;
 
   version: string;
   branch: MoonlightBranch;
