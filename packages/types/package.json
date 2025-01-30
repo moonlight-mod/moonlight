@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@moonlight-mod/lunast": "^1.0.0",
-    "@moonlight-mod/mappings": "^1.1.15",
+    "@moonlight-mod/mappings": "^1.1.16",
     "@moonlight-mod/moonmap": "^1.0.4",
     "@types/react": "^18.3.10",
     "csstype": "^3.1.2",
