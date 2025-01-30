@@ -113,7 +113,7 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
       if (filePath === "resources/app.asar") {
         // You tried
         targetFilePath = path.join(targetDir, "resources", "_app.asar");
-      } else if (filePath === appName) {
+      } else if (filePath === appName || filePath === "chrome_crashpad_handler") {
         // Can't write over the executable? Just move it! 4head
         if (await exists(targetFilePath)) {
           await fs.rename(targetFilePath, targetFilePath + ".bak");
