@@ -233,6 +233,7 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const ModalHeader: MappedModules["discord/components/common/index"]["ModalHeader"];
   export const ModalRoot: MappedModules["discord/components/common/index"]["ModalRoot"];
   export const NumberInputStepper: MappedModules["discord/components/common/index"]["NumberInputStepper"];
+  export const SearchableSelect: MappedModules["discord/components/common/index"]["SearchableSelect"];
   export const createToast: MappedModules["discord/components/common/index"]["createToast"];
   export const popToast: MappedModules["discord/components/common/index"]["popToast"];
   export const showToast: MappedModules["discord/components/common/index"]["showToast"];
