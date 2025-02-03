@@ -38,7 +38,7 @@ export type Settings = {
     label: string,
     element: React.FunctionComponent,
     color?: string | null,
-    pos?: number | ((section: unknown) => number),
+    pos?: number | ((sections: SettingsSection[]) => number),
     notice?: NoticeProps
   ) => void;
 
@@ -53,13 +53,13 @@ export type Settings = {
    * Places a divider in the settings menu.
    * @param pos The position in the settings menu to place the divider
    */
-  addDivider: (pos: number | ((section: unknown) => number) | null) => void;
+  addDivider: (pos: number | ((sections: SettingsSection[]) => number) | null) => void;
 
   /**
    * Places a header in the settings menu.
    * @param pos The position in the settings menu to place the header
    */
-  addHeader: (label: string, pos: number | ((section: unknown) => number) | null) => void;
+  addHeader: (label: string, pos: number | ((sections: SettingsSection[]) => number) | null) => void;
 
   /**
    * @private
