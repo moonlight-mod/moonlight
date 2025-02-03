@@ -43,6 +43,10 @@ export const Settings: SettingsType = {
 
   _mutateSections: (sections) => {
     for (const section of Settings.ourSections) {
+      // Discord's `pos` only supports numbers, so lets call the function to get the position.
+      if (typeof section.pos === "function") {
+        section.pos = section.pos(sections);
+      }
       sections.splice(section.pos < 0 ? sections.length + section.pos : section.pos, 0, section);
     }
 
