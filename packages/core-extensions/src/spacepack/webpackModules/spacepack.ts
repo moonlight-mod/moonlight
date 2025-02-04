@@ -184,6 +184,9 @@ export const spacepack: Spacepack = {
   },
 
   lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => {
+    chunk = processFind(chunk);
+    module = processFind(module);
+
     const mod = Array.isArray(find) ? spacepack.findByCode(...find) : spacepack.findByCode(find);
     if (mod.length < 1) {
       logger.warn("lazyLoad: Module find failed", find, chunk, module, new Error().stack!.substring(5));
