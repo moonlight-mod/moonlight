@@ -55,6 +55,12 @@ declare module "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreator
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/common/AppStartPerformance" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/common/AppStartPerformance"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/components/common/Alerts" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/components/common/Alerts"]["default"];
