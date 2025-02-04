@@ -10,6 +10,7 @@ declare module "@moonlight-mod/wp/commands_commands" {
   export default commands;
 }
 
+declare module "@moonlight-mod/wp/common_ErrorBoundary";
 declare module "@moonlight-mod/wp/common_stores";
 
 declare module "@moonlight-mod/wp/componentEditor_dmList" {

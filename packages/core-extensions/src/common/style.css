@@ -1,0 +1,27 @@
+.moonlight-error-boundary {
+  margin: 0 0 15px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 22px;
+  color: var(--text-normal, white);
+  background: hsl(var(--red-400-hsl) / 0.1);
+  border: 2px solid hsl(var(--red-400-hsl) / 0.5);
+
+  .theme-light & {
+    color: var(--text-normal, black) !important;
+  }
+
+  & > h3 {
+    margin-bottom: 0.25rem;
+  }
+
+  & > .hljs {
+    background: var(--background-secondary);
+    border: 1px solid var(--background-tertiary);
+    white-space: pre-wrap;
+    font-family: var(--font-code);
+    user-select: text;
+  }
+}
