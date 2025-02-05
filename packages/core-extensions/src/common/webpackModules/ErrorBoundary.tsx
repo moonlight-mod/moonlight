@@ -29,11 +29,10 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     const { noop, fallback: FallbackComponent, children, message } = this.props;
     const { errored, error, componentStack } = this.state;
 
-    if (noop) return null;
     if (FallbackComponent) return <FallbackComponent children={children} {...this.state} />;
 
     if (errored) {
-      return (
+      return noop ? null : (
         <div className={`moonlight-error-boundary`}>
           <h3>{message ?? "An error occurred rendering this component:"}</h3>
           <code className="hljs">{`${error}\n\nComponent stack:\n${componentStack}`}</code>
