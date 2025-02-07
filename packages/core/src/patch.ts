@@ -79,7 +79,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     const wrapped =
       `(${replaced}).apply(this, arguments)\n` +
       `// Patched by moonlight: ${patchedStr}\n` +
-      `//# sourceURL=Webpack-Module-${id}`;
+      `//# sourceURL=Webpack-Module-${id.slice(0, 3)}/${id}`;
 
     try {
       const func = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
@@ -205,7 +205,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 
     if (moonlightNode.config.patchAll === true) {
       if ((typeof id !== "string" || !id.includes("_")) && !entry[id].__moonlight) {
-        const wrapped = `(${moduleCache[id]}).apply(this, arguments)\n` + `//# sourceURL=Webpack-Module-${id}`;
+        const wrapped =
+          `(${moduleCache[id]}).apply(this, arguments)\n` + `//# sourceURL=Webpack-Module-${id.slice(0, 3)}/${id}`;
         entry[id] = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
         entry[id].__moonlight = true;
       }
