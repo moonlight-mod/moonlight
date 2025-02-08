@@ -139,10 +139,10 @@ export function wrapAction({ action, state }: WrapperProps) {
   const causes = React.useMemo(() => {
     const causes = new Set<string>();
     if (state.error.stack) {
-      for (const [, id] of state.error.stack.matchAll(MODULE_REGEX))
+      for (const [, , id] of state.error.stack.matchAll(MODULE_REGEX))
         for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
     }
-    for (const [, id] of state.info.componentStack.matchAll(MODULE_REGEX))
+    for (const [, , id] of state.info.componentStack.matchAll(MODULE_REGEX))
       for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
     return [...causes];
   }, []);
