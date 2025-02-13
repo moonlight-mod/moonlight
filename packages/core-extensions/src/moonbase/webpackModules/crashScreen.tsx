@@ -6,7 +6,7 @@ import { RepositoryManifest, UpdateState } from "../types";
 import { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
 import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
 
-const MODULE_REGEX = /Webpack-Module-(\d+)\/(\d+)/g;
+const MODULE_REGEX = /Webpack-Module\/(\d+)\/(\d+)/g;
 
 const logger = moonlight.getLogger("moonbase/crashScreen");
 
