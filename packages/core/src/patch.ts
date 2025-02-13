@@ -66,33 +66,41 @@ export function onModuleLoad(module: string | string[], callback: (moduleId: str
 const moduleCache: Record<string, string> = {};
 const patched: Record<string, Array<string>> = {};
 
-function patchModules(entry: WebpackJsonpEntry[1]) {
-  function patchModule(id: string, patchId: string, replaced: string) {
-    // Store what extensions patched what modules for easier debugging
-    patched[id] = patched[id] || [];
-    patched[id].push(patchId);
+function createSourceURL(id: string) {
+  const remapped = Object.entries(moonlight.moonmap.modules).find((m) => m[1] === id)?.[0];
 
-    // Webpack module arguments are minified, so we replace them with consistent names
-    // We have to wrap it so things don't break, though
-    const patchedStr = patched[id].sort().join(", ");
-
-    const wrapped =
-      `(${replaced}).apply(this, arguments)\n` +
-      `// Patched by moonlight: ${patchedStr}\n` +
-      `//# sourceURL=Webpack-Module/${id.slice(0, 3)}/${id}`;
-
-    try {
-      const func = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
-      entry[id] = func;
-      entry[id].__moonlight = true;
-      return true;
-    } catch (e) {
-      logger.warn("Error constructing function for patch", patchId, e);
-      patched[id].pop();
-      return false;
-    }
+  if (remapped) {
+    return `// Webpack Module: ${id}\n//# sourceURL=${remapped}`;
   }
 
+  return `//# sourceURL=Webpack-Module/${id.slice(0, 3)}/${id}`;
+}
+
+function patchModule(id: string, patchId: string, replaced: string, entry: WebpackJsonpEntry[1]) {
+  // Store what extensions patched what modules for easier debugging
+  patched[id] = patched[id] ?? [];
+  patched[id].push(patchId);
+
+  // Webpack module arguments are minified, so we replace them with consistent names
+  // We have to wrap it so things don't break, though
+  const patchedStr = patched[id].sort().join(", ");
+
+  const wrapped =
+    `(${replaced}).apply(this, arguments)\n` + `// Patched by moonlight: ${patchedStr}\n` + createSourceURL(id);
+
+  try {
+    const func = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
+    entry[id] = func;
+    entry[id].__moonlight = true;
+    return true;
+  } catch (e) {
+    logger.warn("Error constructing function for patch", patchId, e);
+    patched[id].pop();
+    return false;
+  }
+}
+
+function patchModules(entry: WebpackJsonpEntry[1]) {
   // Populate the module cache
   for (const [id, func] of Object.entries(entry)) {
     if (!Object.hasOwn(moduleCache, id) && func.__moonlight !== true) {
@@ -185,7 +193,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     }
 
     if (modified) {
-      if (!swappedModule) patchModule(id, patchedStr.join(", "), moduleString);
+      if (!swappedModule) patchModule(id, patchedStr.join(", "), moduleString, entry);
       moduleCache[id] = moduleString;
       moonlight.patched.set(id, exts);
     }
@@ -194,7 +202,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       const parsed = moonlight.lunast.parseScript(id, moduleString);
       if (parsed != null) {
         for (const [parsedId, parsedScript] of Object.entries(parsed)) {
-          if (patchModule(parsedId, "lunast", parsedScript)) {
+          if (patchModule(parsedId, "lunast", parsedScript, entry)) {
             moduleCache[parsedId] = parsedScript;
           }
         }
@@ -205,8 +213,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 
     if (moonlightNode.config.patchAll === true) {
       if ((typeof id !== "string" || !id.includes("_")) && !entry[id].__moonlight) {
-        const wrapped =
-          `(${moduleCache[id]}).apply(this, arguments)\n` + `//# sourceURL=Webpack-Module/${id.slice(0, 3)}/${id}`;
+        const wrapped = `(${moduleCache[id]}).apply(this, arguments)\n` + createSourceURL(id);
         entry[id] = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
         entry[id].__moonlight = true;
       }
@@ -329,6 +336,8 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
   }
 
   for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
+    // @ts-expect-error probably should fix the type on this idk
+    func.__moonlight = true;
     injectedWpModules.push({ id: name, run: func });
     modules[name] = func;
     inject = true;
