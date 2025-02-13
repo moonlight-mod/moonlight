@@ -37,7 +37,7 @@ export const spacepack: Spacepack = {
       "module",
       "exports",
       "require",
-      `(${funcStr}).apply(this, arguments)\n` + `//# sourceURL=Webpack-Module-${module}`
+      `(${funcStr}).apply(this, arguments)\n` + `//# sourceURL=Webpack-Module/${module.slice(0, 3)}/${module}`
     ) as WebpackModuleFunc;
   },
 

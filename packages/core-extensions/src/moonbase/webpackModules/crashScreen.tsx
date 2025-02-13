@@ -6,7 +6,7 @@ import { RepositoryManifest, UpdateState } from "../types";
 import { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
 import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
 
-const MODULE_REGEX = /Webpack-Module-(\d+)/g;
+const MODULE_REGEX = /Webpack-Module\/(\d+)\/(\d+)/g;
 
 const logger = moonlight.getLogger("moonbase/crashScreen");
 
@@ -139,10 +139,10 @@ export function wrapAction({ action, state }: WrapperProps) {
   const causes = React.useMemo(() => {
     const causes = new Set<string>();
     if (state.error.stack) {
-      for (const [, id] of state.error.stack.matchAll(MODULE_REGEX))
+      for (const [, , id] of state.error.stack.matchAll(MODULE_REGEX))
         for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
     }
-    for (const [, id] of state.info.componentStack.matchAll(MODULE_REGEX))
+    for (const [, , id] of state.info.componentStack.matchAll(MODULE_REGEX))
       for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
     return [...causes];
   }, []);
