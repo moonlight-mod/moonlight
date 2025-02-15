@@ -144,6 +144,21 @@ export function wrapAction({ action, state }: WrapperProps) {
     }
     for (const [, , id] of state.info.componentStack.matchAll(MODULE_REGEX))
       for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
+
+    for (const [path, id] of Object.entries(moonlight.moonmap.modules)) {
+      const MAPPING_REGEX = new RegExp(
+        // @ts-expect-error Only Firefox has RegExp.escape
+        `(${RegExp.escape ? RegExp.escape(path) : path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`
+      );
+
+      if (state.error.stack) {
+        for (const match of state.error.stack.matchAll(MAPPING_REGEX))
+          if (match) for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
+      }
+      for (const match of state.info.componentStack.matchAll(MAPPING_REGEX))
+        if (match) for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
+    }
+
     return [...causes];
   }, []);
 
