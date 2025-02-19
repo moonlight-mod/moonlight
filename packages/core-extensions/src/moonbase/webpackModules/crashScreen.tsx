@@ -148,7 +148,8 @@ export function wrapAction({ action, state }: WrapperProps) {
     for (const [path, id] of Object.entries(moonlight.moonmap.modules)) {
       const MAPPING_REGEX = new RegExp(
         // @ts-expect-error Only Firefox has RegExp.escape
-        `(${RegExp.escape ? RegExp.escape(path) : path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`
+        `(${RegExp.escape ? RegExp.escape(path) : path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
+        "g"
       );
 
       if (state.error.stack) {
