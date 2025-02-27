@@ -8,14 +8,14 @@ export const patches: Patch[] = [
       {
         // CvQlAA mapped to ERRORS_ACTION_TO_TAKE
         // FIXME: Better patch find?
-        match: /,(\(0,(.)\.jsx\))\("p",{children:.\.intl\.string\(.\..\.CvQlAA\)}\)/,
+        match: /,(\(0,(\i)\.jsx\))\("p",{children:\i\.\i\.string\(\i\.\i\.CvQlAA\)}\)/,
         replacement: (_, createElement, ReactJSX) =>
           `,${createElement}(require("moonbase_crashScreen")?.UpdateText??${ReactJSX}.Fragment,{state:this.state,setState:this.setState.bind(this)})`
       },
 
       // wrap actions field to display error details
       {
-        match: /(?<=return(\(0,(.)\.jsx\))\(.+?,)action:(.),className:/,
+        match: /(?<=return(\(0,(\i)\.jsx\))\(.+?,)action:(\i),className:/,
         replacement: (_, createElement, ReactJSX, action) =>
           `action:require("moonbase_crashScreen")?.wrapAction?${createElement}(require("moonbase_crashScreen").wrapAction,{action:${action},state:this.state}):${action},className:`
       },
@@ -23,7 +23,7 @@ export const patches: Patch[] = [
       // add update button
       // +hivLS -> ERRORS_RELOAD
       {
-        match: /(?<=\["\+hivLS"\]\)}\),(\(0,(.)\.jsx\))\(.,{}\))/,
+        match: /(?<=\["\+hivLS"\]\)}\),(\(0,(\i)\.jsx\))\(\i,{}\))/,
         replacement: (_, createElement, ReactJSX) =>
           `,${createElement}(require("moonbase_crashScreen")?.UpdateButton??${ReactJSX}.Fragment,{state:this.state,setState:this.setState.bind(this)})`
       }

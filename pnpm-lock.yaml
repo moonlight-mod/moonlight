@@ -90,11 +90,11 @@ importers:
   packages/types:
     dependencies:
       '@moonlight-mod/lunast':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
       '@moonlight-mod/mappings':
         specifier: ^1.1.18
-        version: 1.1.18(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
+        version: 1.1.18(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.4)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.4
         version: 1.0.4
@@ -114,11 +114,11 @@ importers:
         specifier: workspace:*
         version: link:../core
       '@moonlight-mod/lunast':
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
       '@moonlight-mod/mappings':
         specifier: ^1.1.18
-        version: 1.1.18(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)
+        version: 1.1.18(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.4)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.4
         version: 1.0.4
@@ -321,8 +321,8 @@ packages:
       eslint: '>= 9'
       typescript: '>= 5.3'
 
-  '@moonlight-mod/lunast@1.0.0':
-    resolution: {integrity: sha512-kJgf41K12i6/2LbXK97CNO+pNO7ADGh9N4bCQcOPwosocKMcwKHDEZUgPqeihNshY3c3AEW1LiyXjlsl24PdDw==}
+  '@moonlight-mod/lunast@1.0.1':
+    resolution: {integrity: sha512-K3vxzDlfFuYKjciIW2FMlcZ1qrrkAGDGpSBlNqYGtJ0sMt9bRCd2lpSpg6AX/giSljDtmAUXa/5mOfUoDQxjBA==}
 
   '@moonlight-mod/mappings@1.1.18':
     resolution: {integrity: sha512-aPh080zi2xEBKhBEnXUuPkIjVVhX0RrXFZ5lvMHLuaEOl4vTvaC8PG56558ArfbUof1VMy3j2wduT4cubn3w2A==}
@@ -1486,15 +1486,15 @@ snapshots:
       - prettier
       - supports-color
 
-  '@moonlight-mod/lunast@1.0.0':
+  '@moonlight-mod/lunast@1.0.1':
     dependencies:
       astring: 1.9.0
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
 
-  '@moonlight-mod/mappings@1.1.18(@moonlight-mod/lunast@1.0.0)(@moonlight-mod/moonmap@1.0.4)':
+  '@moonlight-mod/mappings@1.1.18(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.4)':
     dependencies:
-      '@moonlight-mod/lunast': 1.0.0
+      '@moonlight-mod/lunast': 1.0.1
       '@moonlight-mod/moonmap': 1.0.4
       '@types/chroma-js': 3.1.0
       '@types/flux': 3.1.14
