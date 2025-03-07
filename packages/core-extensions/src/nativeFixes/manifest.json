@@ -23,6 +23,13 @@
       "type": "boolean",
       "default": true
     },
+    "vulkan": {
+      "advice": "restart",
+      "displayName": "Enable Vulkan renderer",
+      "description": "Uses the Vulkan backend for rendering",
+      "type": "boolean",
+      "default": false
+    },
     "linuxAutoscroll": {
       "advice": "restart",
       "displayName": "Enable middle click autoscroll on Linux",
@@ -43,6 +50,13 @@
       "description": "Provides hardware accelerated video encode and decode. Has no effect on other operating systems",
       "type": "boolean",
       "default": true
+    },
+    "vaapiIgnoreDriverChecks": {
+      "advice": "restart",
+      "displayName": "Ignore VAAPI driver checks on Linux",
+      "description": "Forces hardware video acceleration on some graphics drivers at the cost of stability. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
     },
     "linuxUpdater": {
       "advice": "restart",
