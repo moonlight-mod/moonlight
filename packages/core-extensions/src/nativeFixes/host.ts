@@ -29,6 +29,10 @@ if (moonlightHost.getConfigOption<boolean>("nativeFixes", "disableRendererBackgr
   app.commandLine.appendSwitch("disable-background-timer-throttling");
 }
 
+if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vulkan") ?? false) {
+  enabledFeatures.push("Vulkan", "DefaultANGLEVulkan", "VulkanFromANGLE");
+}
+
 if (process.platform === "linux") {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxAutoscroll") ?? false) {
     app.commandLine.appendSwitch("enable-blink-features", "MiddleClickAutoscroll");
@@ -43,9 +47,13 @@ if (process.platform === "linux") {
 //       hardware acceleration is disabled
 const noAccel = app.commandLine.hasSwitch("disable-gpu-compositing");
 if ((moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapi") ?? true) && !noAccel) {
-  if (process.platform === "linux")
+  if (process.platform === "linux") {
     // These will eventually be renamed https://source.chromium.org/chromium/chromium/src/+/5482210941a94d70406b8da962426e4faca7fce4
     enabledFeatures.push("VaapiVideoEncoder", "VaapiVideoDecoder", "VaapiVideoDecodeLinuxGL");
+
+    if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapiIgnoreDriverChecks") ?? false)
+      enabledFeatures.push("VaapiIgnoreDriverChecks");
+  }
 }
 
 app.commandLine.appendSwitch("enable-features", [...new Set(enabledFeatures)].join(","));
