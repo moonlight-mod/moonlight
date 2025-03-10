@@ -15,7 +15,7 @@ export const patches: Patch[] = [
         replacement: 'children:require("componentEditor_dmList").default._patchItems(['
       },
       {
-        match: /(?<=onMouseDown:\i}\))]/,
+        match: /(?<=(onMouseDown|nameplate):\i}\))]/,
         replacement: "],arguments[0])"
       }
     ],
