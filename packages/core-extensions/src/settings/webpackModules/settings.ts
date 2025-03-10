@@ -1,18 +1,20 @@
 import { SettingsSection, Settings as SettingsType } from "@moonlight-mod/types/coreExtensions/settings";
+import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 
 export const Settings: SettingsType = {
   ourSections: [],
   sectionNames: [],
   sectionMenuItems: {},
 
-  addSection: (section, label, element, color = null, pos, notice) => {
+  addSection: (section, label, element, color = null, pos, notice, onClick) => {
     const data: SettingsSection = {
       section,
       label,
       color,
       element,
       pos: pos ?? -4,
-      notice: notice
+      notice: notice,
+      onClick: onClick ?? (() => UserSettingsModalActionCreators.open(section))
     };
 
     Settings.ourSections.push(data);

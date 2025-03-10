@@ -16,6 +16,7 @@ export type SettingsSection =
       element: React.FunctionComponent;
       pos: number | ((sections: SettingsSection[]) => number);
       notice?: NoticeProps;
+      onClick?: () => void;
       _moonlight_submenu?: () => ReactElement | ReactElement[];
     };
 
@@ -32,6 +33,7 @@ export type Settings = {
    * @param color A color to use for the section
    * @param pos The position in the settings menu to place the section
    * @param notice A notice to display when in the section
+   * @param onClick A custom action to execute when clicked from the context menu
    */
   addSection: (
     section: string,
@@ -39,7 +41,8 @@ export type Settings = {
     element: React.FunctionComponent,
     color?: string | null,
     pos?: number | ((sections: SettingsSection[]) => number),
-    notice?: NoticeProps
+    notice?: NoticeProps,
+    onClick?: () => void
   ) => void;
 
   /**
