@@ -41,6 +41,10 @@ if (process.platform === "linux") {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxSpeechDispatcher") ?? true) {
     app.commandLine.appendSwitch("enable-speech-dispatcher");
   }
+
+  if (moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxHevcSupport") ?? true) {
+    enabledFeatures.push("PlatformHEVCDecoderSupport");
+  }
 }
 
 // NOTE: Only tested if this appears on Windows, it should appear on all when

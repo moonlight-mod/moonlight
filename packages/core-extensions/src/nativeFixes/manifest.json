@@ -64,6 +64,13 @@
       "description": "Actually implements updating Discord on Linux. Has no effect on other operating systems",
       "type": "boolean",
       "default": false
+    },
+    "linuxHevcSupport": {
+      "advice": "restart",
+      "displayName": "HEVC support on Linux",
+      "description": "You might also need to enable Vulkan renderer. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": true
     }
   },
   "apiLevel": 2
