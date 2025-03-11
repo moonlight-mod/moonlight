@@ -1,8 +1,11 @@
-# Core
+## Core
+
+- Changed the format of names of Webpack modules (thanks @uwx!)
 - Updated mappings
 
-# Libraries
-- Support for message accessories in Component Editor
-- Settings sections now allow for a function to compute position (thanks @MeguminSama!)
-- Error boundary component in Common
-- `spacepack.lazyLoad` now supports `\i` in regular expressions
+## Core extensions
+
+- Native Fixes: Add Vulkan and VAAPI driver check ignore options (thanks @TheEssem!)
+- Component Editor: Fixed a client crash from a broken patch
+- Settings: Fixed custom sections not opening from the context menu
+- Moonbase: Fixed patches for the crash scren
