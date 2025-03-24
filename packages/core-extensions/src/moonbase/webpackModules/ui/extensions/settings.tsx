@@ -33,6 +33,7 @@ import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack
@@ -377,7 +378,9 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
   }
 
   return (
-    <Component value={value} setValue={(value) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)} />
+    <ErrorBoundary>
+      <Component value={value} setValue={(value) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)} />
+    </ErrorBoundary>
   );
 }
 

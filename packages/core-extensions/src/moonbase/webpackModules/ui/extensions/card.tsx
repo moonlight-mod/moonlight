@@ -28,6 +28,7 @@ import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Di
 import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 import BuildOverrideClasses from "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverride.css";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import ExtensionInfo from "./info";
 import Settings from "./settings";
 import { doGenericExtensionPopup, doMissingExtensionPopup } from "./popup";
@@ -322,7 +323,11 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
               })}
             </Text>
           )}
-          {tab === ExtensionPage.Settings && <Settings ext={ext} />}
+          {tab === ExtensionPage.Settings && (
+            <ErrorBoundary>
+              <Settings ext={ext} />
+            </ErrorBoundary>
+          )}
         </Flex>
       </div>
     </Card>

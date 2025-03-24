@@ -15,6 +15,7 @@ import {
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import HelpMessage from "../HelpMessage";
 
@@ -144,13 +145,17 @@ export default function ExtensionsPage() {
       )}
 
       {filteredWithUpdates.map((ext) => (
-        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} selectTag={selectTag} />
+        <ErrorBoundary>
+          <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} selectTag={selectTag} />
+        </ErrorBoundary>
       ))}
       {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
         <FormDivider className="moonbase-update-divider" />
       )}
       {filteredWithoutUpdates.map((ext) => (
-        <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} selectTag={selectTag} />
+        <ErrorBoundary>
+          <ExtensionCard uniqueId={ext.uniqueId} key={ext.uniqueId} selectTag={selectTag} />
+        </ErrorBoundary>
       ))}
     </>
   );
