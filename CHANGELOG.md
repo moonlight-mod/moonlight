@@ -1,11 +1,10 @@
 ## Core
 
-- Changed the format of names of Webpack modules (thanks @uwx!)
-- Updated mappings
+- Updated moonmap, now logs when remapped exports fail
+- Updated mappings to fix Moonbase
 
 ## Core extensions
 
-- Native Fixes: Add Vulkan and VAAPI driver check ignore options (thanks @TheEssem!)
-- Component Editor: Fixed a client crash from a broken patch
-- Settings: Fixed custom sections not opening from the context menu
-- Moonbase: Fixed patches for the crash scren
+- Extensions: Visual Refresh support for staff help button (devtools)
+- Native Fixes: Added flag to enable HEVC on Linux (your mileage may vary)
+- Moonbase: Added error boundaries, should no longer crash in most cases when things break
