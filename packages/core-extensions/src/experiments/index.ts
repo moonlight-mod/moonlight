@@ -25,6 +25,23 @@ export const patches: Patch[] = [
         `&&(((moonlight.getConfigOption("experiments","devtools")??false)?true:${isStaff})?(0,`
     }
   },
+  // staff help menu - visual refresh
+  {
+    find: '("AppTitleBar")',
+    replace: {
+      match: /{hasBugReporterAccess:(\i)}=\i\.\i\.useExperiment\({location:"HeaderBar"},{autoTrackExposure:!1}\);/,
+      replacement: (orig, isStaff) =>
+        `${orig}if(moonlight.getConfigOption("experiments","devtools")??false)${isStaff}=true;`
+    }
+  },
+  {
+    find: 'navId:"staff-help-popout",',
+    replace: {
+      match: /isDiscordDeveloper:(\i)}\),/,
+      replacement: (_, isStaff) =>
+        `isDiscordDeveloper:(moonlight.getConfigOption("experiments","devtools")??false)||${isStaff}}),`
+    }
+  },
 
   // Enable further staff-locked options
   {
