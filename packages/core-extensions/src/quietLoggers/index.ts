@@ -30,10 +30,10 @@ loggerFixes.forEach((patch) => {
 // Patches to simply remove a logger call
 const stubPatches = [
   // "sh" is not a valid locale.
-  ["is not a valid locale", /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g],
+  ["is not a valid locale", /void (.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g],
   ['"[BUILD INFO] Release Channel: "', /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?\)\),/],
   ['.APP_NATIVE_CRASH,"Storage"', /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/],
-  ['.APP_NATIVE_CRASH,"Storage"', 'console.log("AppCrashedFatalReport: getLastCrash not supported.");'],
+  ['.APP_NATIVE_CRASH,"Storage"', 'void console.log("AppCrashedFatalReport: getLastCrash not supported.")'],
   ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
   ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
   ['throw Error("Messages are still loading.");', /console\.warn\("Unsupported Locale",.\),/],
