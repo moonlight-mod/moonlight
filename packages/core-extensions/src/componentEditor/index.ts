@@ -44,8 +44,8 @@ export const patches: Patch[] = [
     find: '},"new-member")),',
     replace: [
       {
-        match: /(?<=\.BADGES]=)(\i)(;|})/,
-        replacement: (_, badges, trailing) =>
+        match: /(?<=\.BADGES](=|:))(\i)(;|})/,
+        replacement: (_, leading, badges, trailing) =>
           `require("componentEditor_messages").default._patchUsernameBadges(${badges},arguments[0])${trailing}`
       },
       {
