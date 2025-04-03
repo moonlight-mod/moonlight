@@ -1,9 +1,9 @@
 // Janky script to get around pnpm link issues
 // Probably don't use this. Probably
-/* eslint-disable no-console */
-const fs = require("fs");
-const path = require("path");
-const child_process = require("child_process");
+/* eslint-disable no-console -- buildscript */
+import fs from "node:fs";
+import path from "node:path";
+import child_process from "node:child_process";
 
 const cwd = process.cwd();
 const onDisk = {
@@ -12,19 +12,19 @@ const onDisk = {
   "@moonlight-mod/mappings": "../mappings"
 };
 
-function exec(cmd, dir) {
+function exec(cmd: string, dir: string): void {
   child_process.execSync(cmd, { cwd: dir, stdio: "inherit" });
 }
 
-function getDeps(packageJSON) {
-  const ret = {};
+function getDeps(packageJSON: Record<string, Record<string, string>>) {
+  const ret: Record<string, string> = {};
   Object.assign(ret, packageJSON.dependencies || {});
   Object.assign(ret, packageJSON.devDependencies || {});
   Object.assign(ret, packageJSON.peerDependencies || {});
   return ret;
 }
 
-function link(dir) {
+function link(dir: string): void {
   const packageJSONPath = path.join(dir, "package.json");
   if (!fs.existsSync(packageJSONPath)) return;
   const packageJSON = JSON.parse(fs.readFileSync(packageJSONPath, "utf8"));
@@ -32,18 +32,15 @@ function link(dir) {
 
   for (const [dep, relativePath] of Object.entries(onDisk)) {
     const fullPath = path.join(cwd, relativePath);
-    if (deps[dep]) {
-      exec(`pnpm link ${fullPath}`, dir);
-    }
+    if (deps[dep]) exec(`pnpm link ${fullPath}`, dir);
   }
 }
 
-function undo(dir) {
+function undo(dir: string) {
   exec("pnpm unlink", dir);
   try {
-    if (fs.existsSync(path.join(dir, "pnpm-lock.yaml"))) {
+    if (fs.existsSync(path.join(dir, "pnpm-lock.yaml")))
       exec("git restore pnpm-lock.yaml", dir);
-    }
   } catch {
     // ignored
   }
@@ -54,11 +51,8 @@ const packages = fs.readdirSync("./packages");
 
 for (const path of Object.values(onDisk)) {
   console.log(path);
-  if (shouldUndo) {
-    undo(path);
-  } else {
-    link(path);
-  }
+  if (shouldUndo) undo(path);
+  else link(path);
 }
 
 if (shouldUndo) {

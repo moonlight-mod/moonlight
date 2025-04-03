@@ -3,7 +3,7 @@ dist/
 dist.tar.gz
 .DS_Store
 eslint_report.json
-
+.eslintcache
 # Nix
 /result
 *.drv

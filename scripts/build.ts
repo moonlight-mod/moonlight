@@ -1,11 +1,10 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console -- buildscript */
 import * as esbuild from "esbuild";
-import copyStaticFiles from "esbuild-copy-static-files";
+import path from "node:path";
+import fs from "node:fs";
+import crypto from "node:crypto";
 
-import path from "path";
-import fs from "fs";
-
-const config = {
+const config: Record<string, string> = {
   injector: "packages/injector/src/index.ts",
   "node-preload": "packages/node-preload/src/index.ts",
   "web-preload": "packages/web-preload/src/index.ts"
@@ -32,14 +31,10 @@ const external = [
 ];
 
 let lastMessages = new Set();
-/** @type {import("esbuild").Plugin} */
-const deduplicatedLogging = {
+const deduplicatedLogging: esbuild.Plugin = {
   name: "deduplicated-logging",
   setup(build) {
-    build.onStart(() => {
-      lastMessages.clear();
-    });
-
+    build.onStart(() => lastMessages.clear());
     build.onEnd(async (result) => {
       const formatted = await Promise.all([
         esbuild.formatMessages(result.warnings, {
@@ -65,22 +60,36 @@ const timeFormatter = new Intl.DateTimeFormat(undefined, {
   second: "numeric",
   hour12: false
 });
-/** @type {import("esbuild").Plugin} */
-const taggedBuildLog = (tag) => ({
+const taggedBuildLog: (tag: string) => esbuild.Plugin = (tag) => ({
   name: "build-log",
-  setup(build) {
-    build.onEnd((result) => {
-      console.log(`[${timeFormatter.format(new Date())}] [${tag}] build finished`);
-    });
-  }
+  setup: build => build.onEnd(() => console.log(`[${timeFormatter.format(new Date())}] [${tag}] build finished`))
 });
 
-async function build(name, entry) {
+const digest = (path: string): string => crypto.createHash('md5')
+  .update(fs.readFileSync(path, 'utf-8'), 'utf-8').digest('hex');
+
+const copyStaticFiles: (options: { src: string; dest: string; }) => esbuild.Plugin = (options) => ({
+  name: 'copy-static-files',
+  setup: (build) => build.onEnd(() => fs.cpSync(options.src, options.dest, {
+    dereference: true,
+    errorOnExist: false,
+    force: true,
+    preserveTimestamps: true,
+    recursive: true,
+    filter: (src, dest) => {
+      if (!fs.existsSync(dest)) return true;
+      if (fs.statSync(dest).isDirectory()) return true;
+      return digest(src) !== digest(dest);
+    },
+  })),
+});
+
+async function build(name: string, entry: string) {
   let outfile = path.join("./dist", name + ".js");
   const browserDir = mv2 ? "browser-mv2" : "browser";
   if (name === "browser") outfile = path.join("./dist", browserDir, "index.js");
 
-  const dropLabels = [];
+  const dropLabels: string[] = [];
   const labels = {
     injector: ["injector"],
     nodePreload: ["node-preload"],
@@ -96,7 +105,7 @@ async function build(name, entry) {
     }
   }
 
-  const define = {
+  const define: Record<`MOONLIGHT_${string}`, string> = {
     MOONLIGHT_ENV: `"${name}"`,
     MOONLIGHT_PROD: prod.toString(),
     MOONLIGHT_BRANCH: `"${buildBranch}"`,
@@ -110,8 +119,8 @@ async function build(name, entry) {
 
   const nodeDependencies = ["glob"];
   const ignoredExternal = name === "web-preload" ? nodeDependencies : [];
-
   const plugins = [deduplicatedLogging, taggedBuildLog(name)];
+
   if (name === "browser") {
     plugins.push(
       copyStaticFiles({
@@ -143,8 +152,7 @@ async function build(name, entry) {
     );
   }
 
-  /** @type {import("esbuild").BuildOptions} */
-  const esbuildConfig = {
+  const esbuildConfig: esbuild.BuildOptions = {
     entryPoints: [entry],
     outfile,
 
@@ -176,9 +184,9 @@ async function build(name, entry) {
   };
 
   if (name === "browser") {
-    const coreExtensionsJson = {};
+    const coreExtensionsJson: Record<string, string> = {};
 
-    function readDir(dir) {
+    function readDir(dir: string) {
       const files = fs.readdirSync(dir);
       for (const file of files) {
         const filePath = dir + "/" + file;
@@ -206,13 +214,14 @@ async function build(name, entry) {
   }
 }
 
-async function buildExt(ext, side, fileExt) {
+async function buildExt(ext: string, side: string, fileExt: string) {
   const outdir = path.join("./dist", "core-extensions", ext);
   if (!fs.existsSync(outdir)) {
     fs.mkdirSync(outdir, { recursive: true });
   }
 
-  const entryPoints = [`packages/core-extensions/src/${ext}/${side}.${fileExt}`];
+  const entryPoints: Array<string | { in: string; out: string; }> =
+    [`packages/core-extensions/src/${ext}/${side}.${fileExt}`];
 
   const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
   if (fs.existsSync(wpModulesDir) && side === "index") {
@@ -234,7 +243,7 @@ async function buildExt(ext, side, fileExt) {
     }
   }
 
-  const wpImportPlugin = {
+  const wpImportPlugin: esbuild.Plugin = {
     name: "webpackImports",
     setup(build) {
       build.onResolve({ filter: /^@moonlight-mod\/wp\// }, (args) => {
@@ -250,8 +259,8 @@ async function buildExt(ext, side, fileExt) {
   const styleInput = `packages/core-extensions/src/${ext}/style.css`;
   const styleOutput = `dist/core-extensions/${ext}/style.css`;
 
-  const esbuildConfig = {
-    entryPoints,
+  const esbuildConfig: esbuild.BuildOptions = {
+    entryPoints: entryPoints as esbuild.BuildOptions['entryPoints'],
     outdir,
 
     format: "iife",
