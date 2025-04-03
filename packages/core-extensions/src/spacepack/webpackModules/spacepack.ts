@@ -1,5 +1,5 @@
-import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "@moonlight-mod/types";
-import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
+import type { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "@moonlight-mod/types";
+import type { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
 import { processFind, testFind } from "@moonlight-mod/core/util/patch";
 
 const webpackRequire = require as unknown as WebpackRequireType;
@@ -41,17 +41,18 @@ export const spacepack: Spacepack = {
     ) as WebpackModuleFunc;
   },
 
-  findByCode: (...args: (string | RegExp)[]) => {
+  findByCode: (...args: Array<string | RegExp>) => {
     const ret = Object.entries(modules)
-      .filter(([id, mod]) => !args.some((item) => !testFind(mod.toString(), processFind(item))))
+      .filter(([_id, mod]) => !args.some(item => !testFind(mod.toString(), processFind(item))))
       .map(([id]) => {
-        //if (!(id in cache)) require(id);
-        //return cache[id];
+        // if (!(id in cache)) require(id);
+        // return cache[id];
 
         let exports;
         try {
           exports = require(id);
-        } catch (e) {
+        }
+        catch (e) {
           logger.error(`findByCode: Error requiring module "${id}": `, args, e);
         }
 
@@ -60,7 +61,7 @@ export const spacepack: Spacepack = {
           exports
         };
       })
-      .filter((item) => item !== null);
+      .filter(item => item !== null);
 
     if (ret.length === 0) {
       logger.warn("findByCode: Got zero results for", args, new Error().stack!.substring(5));
@@ -72,17 +73,17 @@ export const spacepack: Spacepack = {
   findByExports: (...args: string[]) => {
     return Object.entries(cache)
       .filter(
-        ([id, { exports }]) =>
+        ([_id, { exports }]) =>
           !args.some(
-            (item) =>
+            item =>
               !(
-                exports !== undefined &&
-                exports !== window &&
-                (exports?.[item] || exports?.default?.[item] || exports?.Z?.[item] || exports?.ZP?.[item])
+                exports !== undefined
+                && exports !== window
+                && (exports?.[item] || exports?.default?.[item] || exports?.Z?.[item] || exports?.ZP?.[item])
               )
           )
       )
-      .map((item) => item[1])
+      .map(item => item[1])
       .reduce<WebpackModule[]>((prev, curr) => {
         if (!prev.includes(curr)) prev.push(curr);
         return prev;
@@ -92,7 +93,7 @@ export const spacepack: Spacepack = {
   findObjectFromKey: (exports: Record<string, any>, key: string) => {
     let ret = null;
     let subKey;
-    if (key.indexOf(".") > -1) {
+    if (key.includes(".")) {
       const splitKey = key.split(".");
       key = splitKey[0];
       subKey = splitKey[1];
@@ -105,7 +106,8 @@ export const spacepack: Spacepack = {
             ret = obj;
             break;
           }
-        } else {
+        }
+        else {
           ret = obj;
           break;
         }
@@ -123,13 +125,13 @@ export const spacepack: Spacepack = {
     let ret = null;
     for (const exportKey in exports) {
       const obj = exports[exportKey];
-      // eslint-disable-next-line eqeqeq
+      // eslint-disable-next-line eqeqeq -- unknown obj
       if (obj == value) {
         ret = obj;
         break;
       }
       for (const subKey in obj) {
-        // eslint-disable-next-line eqeqeq
+        // eslint-disable-next-line eqeqeq -- unknown obj
         if (obj && obj[subKey] == value) {
           ret = obj;
           break;
@@ -148,7 +150,7 @@ export const spacepack: Spacepack = {
     let ret = null;
     for (const exportKey in exports) {
       const obj = exports[exportKey];
-      // eslint-disable-next-line eqeqeq
+      // eslint-disable-next-line eqeqeq -- unknown obj
       if (obj && obj[key] == value) {
         ret = obj;
         break;
@@ -169,11 +171,11 @@ export const spacepack: Spacepack = {
     return null;
   },
 
-  findFunctionByStrings: (exports: Record<string, any>, ...strings: (string | RegExp)[]) => {
-    const ret =
-      Object.entries(exports).filter(
-        ([index, func]) =>
-          typeof func === "function" && !strings.some((query) => !testFind(func.toString(), processFind(query)))
+  findFunctionByStrings: (exports: Record<string, any>, ...strings: Array<string | RegExp>) => {
+    const ret
+      = Object.entries(exports).filter(
+        ([_index, func]) =>
+          typeof func === "function" && !strings.some(query => !testFind(func.toString(), processFind(query)))
       )?.[0]?.[1] ?? null;
 
     if (ret == null) {
@@ -183,14 +185,14 @@ export const spacepack: Spacepack = {
     return ret;
   },
 
-  lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => {
+  lazyLoad: (find: string | RegExp | Array<string | RegExp>, chunk: RegExp, module: RegExp) => {
     chunk = processFind(chunk);
     module = processFind(module);
 
     const mod = Array.isArray(find) ? spacepack.findByCode(...find) : spacepack.findByCode(find);
     if (mod.length < 1) {
       logger.warn("lazyLoad: Module find failed", find, chunk, module, new Error().stack!.substring(5));
-      return Promise.reject("Module find failed");
+      return Promise.reject(new Error("Module find failed"));
     }
 
     const findId = mod[0].id;
@@ -199,27 +201,28 @@ export const spacepack: Spacepack = {
     let chunkIds;
     if (chunk.flags.includes("g")) {
       chunkIds = [...findCode.matchAll(chunk)].map(([, id]) => id);
-    } else {
+    }
+    else {
       const match = findCode.match(chunk);
       if (match) chunkIds = [...match[0].matchAll(/"(\d+)"/g)].map(([, id]) => id);
     }
 
     if (!chunkIds || chunkIds.length === 0) {
       logger.warn("lazyLoad: Chunk ID match failed", find, chunk, module, new Error().stack!.substring(5));
-      return Promise.reject("Chunk ID match failed");
+      return Promise.reject(new Error("Chunk ID match failed"));
     }
 
     const moduleId = findCode.match(module)?.[1];
     if (!moduleId) {
       logger.warn("lazyLoad: Module ID match failed", find, chunk, module, new Error().stack!.substring(5));
-      return Promise.reject("Module ID match failed");
+      return Promise.reject(new Error("Module ID match failed"));
     }
 
-    return Promise.all(chunkIds.map((c) => webpackRequire.e(c))).then(() => webpackRequire(moduleId));
+    return Promise.all(chunkIds.map(c => webpackRequire.e(c))).then(() => webpackRequire(moduleId));
   },
 
   filterReal: (modules: WebpackModule[]) => {
-    return modules.filter((module) => module.id.toString().match(/^\d+$/));
+    return modules.filter(module => module.id.toString().match(/^\d+$/));
   }
 };
 

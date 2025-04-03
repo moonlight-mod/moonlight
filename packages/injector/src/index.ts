@@ -1,21 +1,18 @@
-import electron, {
-  BrowserWindowConstructorOptions,
-  BrowserWindow as ElectronBrowserWindow,
-  ipcMain,
-  app
-} from "electron";
+import type { MoonlightBranch } from "@moonlight-mod/types";
+import type { BrowserWindowConstructorOptions } from "electron";
+import EventEmitter from "node:events";
 import Module from "node:module";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
+import path from "node:path";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
-import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
-import EventEmitter from "node:events";
-import path from "node:path";
-import persist from "@moonlight-mod/core/persist";
 import createFS from "@moonlight-mod/core/fs";
+import persist from "@moonlight-mod/core/persist";
 import { getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 import { getConfigPath, getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
+import { constants } from "@moonlight-mod/types";
+import electron, { app, BrowserWindow as ElectronBrowserWindow, ipcMain } from "electron";
 
 const logger = new Logger("injector");
 
@@ -25,7 +22,7 @@ let blockedUrls: RegExp[] = [];
 let injectorConfig: InjectorConfig | undefined;
 
 const scriptUrls = ["web.", "sentry."];
-const blockedScripts = new Set<string>();
+const blockedScripts: Set<string> = new Set();
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
@@ -67,9 +64,9 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
       }
       regex += escapeRegExp(parts.join("."));
 
-      regex += "\\/" + escapeRegExp(match.groups.path).replace("\\*", ".*?");
+      regex += `\\/${escapeRegExp(match.groups.path).replace("\\*", ".*?")}`;
 
-      return new RegExp("^" + regex + "$");
+      return new RegExp(`^${regex}$`);
     })
     .filter(Boolean) as RegExp[];
 
@@ -87,10 +84,10 @@ function patchCsp(headers: Record<string, string[]>, extensionCspOverrides: Reco
   const entries = headers[csp][0]
     .trim()
     .split(";")
-    .map((x) => x.trim())
-    .filter((x) => x.length > 0)
-    .map((x) => x.split(" "))
-    .map((x) => [x[0], x.slice(1)]);
+    .map(x => x.trim())
+    .filter(x => x.length > 0)
+    .map(x => x.split(" "))
+    .map(x => [x[0], x.slice(1)]);
   const parts = Object.fromEntries(entries);
 
   for (const directive of directives) {
@@ -112,7 +109,7 @@ function patchCsp(headers: Record<string, string[]>, extensionCspOverrides: Reco
 
 class BrowserWindow extends ElectronBrowserWindow {
   constructor(opts: BrowserWindowConstructorOptions) {
-    const isMainWindow = opts.webPreferences!.preload!.indexOf("discord_desktop_core") > -1;
+    const isMainWindow = opts.webPreferences!.preload!.includes("discord_desktop_core");
 
     if (isMainWindow) {
       if (!oldPreloadPath) oldPreloadPath = opts.webPreferences!.preload;
@@ -130,7 +127,7 @@ class BrowserWindow extends ElectronBrowserWindow {
     const extensionCspOverrides: Record<string, string[]> = {};
 
     {
-      const extCsps = moonlightHost.processedExtensions.extensions.map((x) => x.manifest.csp ?? {});
+      const extCsps = moonlightHost.processedExtensions.extensions.map(x => x.manifest.csp ?? {});
       for (const csp of extCsps) {
         for (const [directive, urls] of Object.entries(csp)) {
           extensionCspOverrides[directive] ??= [];
@@ -147,13 +144,13 @@ class BrowserWindow extends ElectronBrowserWindow {
         }
 
         // Allow plugins to bypass CORS for specific URLs
-        if (corsAllow.some((x) => details.url.startsWith(x))) {
+        if (corsAllow.some(x => details.url.startsWith(x))) {
           if (!details.responseHeaders) details.responseHeaders = {};
 
           // Work around HTTP header case sensitivity by reusing the header name if it exists
           // https://github.com/moonlight-mod/moonlight/issues/201
           const fallback = "access-control-allow-origin";
-          const key = Object.keys(details.responseHeaders).find((h) => h.toLowerCase() === fallback) ?? fallback;
+          const key = Object.keys(details.responseHeaders).find(h => h.toLowerCase() === fallback) ?? fallback;
           details.responseHeaders[key] = ["*"];
         }
 
@@ -179,9 +176,9 @@ class BrowserWindow extends ElectronBrowserWindow {
         const url = new URL(details.url);
         const hasUrl = scriptUrls.some((scriptUrl) => {
           return (
-            details.url.includes(scriptUrl) &&
-            !url.searchParams.has("inj") &&
-            (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"))
+            details.url.includes(scriptUrl)
+            && !url.searchParams.has("inj")
+            && (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"))
           );
         });
         if (hasUrl) blockedScripts.add(details.url);
@@ -199,7 +196,7 @@ class BrowserWindow extends ElectronBrowserWindow {
 
       // Allow plugins to block some URLs,
       // this is needed because multiple webRequest handlers cannot be registered at once
-      cb({ cancel: blockedUrls.some((u) => u.test(details.url)) });
+      cb({ cancel: blockedUrls.some(u => u.test(details.url)) });
     });
   }
 }
@@ -221,7 +218,7 @@ Object.defineProperty(BrowserWindow, "name", {
   writable: false
 });
 
-type InjectorConfig = { disablePersist?: boolean; disableLoad?: boolean };
+interface InjectorConfig { disablePersist?: boolean; disableLoad?: boolean }
 export async function inject(asarPath: string, _injectorConfig?: InjectorConfig) {
   injectorConfig = _injectorConfig;
 
@@ -287,7 +284,8 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
     patchElectron();
 
     await loadProcessedExtensions(global.moonlightHost.processedExtensions);
-  } catch (error) {
+  }
+  catch (error) {
     logger.error("Failed to inject:", error);
   }
 
@@ -297,7 +295,7 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
 
   if (injectorConfig?.disableLoad !== true) {
     // Need to do this instead of require() or it breaks require.main
-    // @ts-expect-error Module internals
+    // @ts-expect-error: Module internals
     Module._load(asarPath, Module, true);
   }
 }
@@ -312,7 +310,8 @@ function patchElectron() {
         enumerable: true,
         configurable: false
       });
-    } else {
+    }
+    else {
       Object.defineProperty(electronClone, property, Object.getOwnPropertyDescriptor(electron, property)!);
     }
   }

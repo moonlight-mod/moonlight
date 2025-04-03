@@ -2,21 +2,22 @@
 /// <reference types="react" />
 /// <reference types="./import" />
 /// <reference types="./mappings" />
-/* eslint-disable no-var */
+/* eslint-disable no-var, vars-on-top -- creating window globals */
 
-import { MoonlightEnv, MoonlightHost, MoonlightNode, MoonlightNodeSandboxed, MoonlightWeb } from "./globals";
+import type { MoonlightEnv, MoonlightHost, MoonlightNode, MoonlightNodeSandboxed, MoonlightWeb } from "./globals";
 
-export * from "./discord";
 export * from "./config";
-export * from "./extension";
+export * as constants from "./constants";
 export * as CoreExtensions from "./coreExtensions";
+export * from "./discord";
+export * from "./extension";
+export * from "./fs";
 export * from "./globals";
 export * from "./logger";
-export * as constants from "./constants";
-export * from "./fs";
 
 export type { AST } from "@moonlight-mod/lunast";
-export { ModuleExport, ModuleExportType } from "@moonlight-mod/moonmap";
+export type { ModuleExport } from "@moonlight-mod/moonmap";
+export { ModuleExportType } from "@moonlight-mod/moonmap";
 
 declare global {
   const MOONLIGHT_ENV: MoonlightEnv;

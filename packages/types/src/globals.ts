@@ -1,19 +1,19 @@
-import type { Logger } from "./logger";
-import type { Config, ConfigExtension } from "./config";
-import type { DetectedExtension, IdentifiedPatch, IdentifiedWebpackModule, ProcessedExtensions } from "./extension";
-import type EventEmitter from "events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
+import type EventEmitter from "node:events";
+import type { Config, ConfigExtension } from "./config";
 import type {
-  WebEventPayloads,
-  WebEventType,
   MoonlightEventEmitter,
+  NodeEventPayloads,
   NodeEventType,
-  NodeEventPayloads
+  WebEventPayloads,
+  WebEventType
 } from "./core/event";
+import type { DetectedExtension, IdentifiedPatch, IdentifiedWebpackModule, ProcessedExtensions } from "./extension";
 import type { MoonlightFS } from "./fs";
+import type { Logger } from "./logger";
 
-export type MoonlightHost = {
+export interface MoonlightHost {
   config: Config;
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
@@ -32,9 +32,9 @@ export type MoonlightHost = {
   getLogger: (id: string) => Logger;
   getMoonlightDir: () => string;
   getExtensionDir: (ext: string) => string;
-};
+}
 
-export type MoonlightNode = {
+export interface MoonlightNode {
   config: Config;
   extensions: DetectedExtension[];
   processedExtensions: ProcessedExtensions;
@@ -54,15 +54,15 @@ export type MoonlightNode = {
   getLogger: (id: string) => Logger;
   getMoonlightDir: () => string;
   getExtensionDir: (ext: string) => string;
-};
+}
 
-export type MoonlightNodeSandboxed = {
+export interface MoonlightNodeSandboxed {
   fs: MoonlightFS;
   addCors: (url: string) => void;
   addBlocked: (url: string) => void;
-};
+}
 
-export type MoonlightWeb = {
+export interface MoonlightWeb {
   patched: Map<string, Set<string>>;
   unpatched: Set<IdentifiedPatch>;
   pendingModules: Set<IdentifiedWebpackModule>;
@@ -90,7 +90,7 @@ export type MoonlightWeb = {
 
   lunast: LunAST;
   moonmap: Moonmap;
-};
+}
 
 export enum MoonlightEnv {
   Injector = "injector",

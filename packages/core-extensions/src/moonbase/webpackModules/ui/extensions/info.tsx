@@ -1,13 +1,15 @@
+import type { MoonbaseExtension } from "../../../types";
 import { ExtensionTag } from "@moonlight-mod/types";
-import { MoonbaseExtension } from "../../../types";
+
+import { Text } from "@moonlight-mod/wp/discord/components/common/index";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
 import React from "@moonlight-mod/wp/react";
-import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 
-type Dependency = {
+interface Dependency {
   id: string;
   type: DependencyType;
-};
+}
 
 enum DependencyType {
   Dependency = "dependency",
@@ -33,8 +35,6 @@ export const tagNames: Record<ExtensionTag, string> = {
   [ExtensionTag.Library]: "Library"
 };
 
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-
 function InfoSection({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div
@@ -42,7 +42,7 @@ function InfoSection({ title, children }: { title: string; children: React.React
         marginRight: "1em"
       }}
     >
-      <Text variant="eyebrow" className="moonlight-card-info-header">
+      <Text className="moonlight-card-info-header" variant="eyebrow">
         {title}
       </Text>
 
@@ -66,13 +66,13 @@ function Badge({
   return (
     <span
       className="moonlight-card-badge"
+      onClick={onClick}
       style={
         {
           "--badge-color": color,
           ...style
         } as React.CSSProperties
       }
-      onClick={onClick}
     >
       {children}
     </span>
@@ -95,7 +95,7 @@ export default function ExtensionInfo({
 
   if (ext.manifest.dependencies != null) {
     dependencies.push(
-      ...ext.manifest.dependencies.map((dep) => ({
+      ...ext.manifest.dependencies.map(dep => ({
         id: dep,
         type: DependencyType.Dependency
       }))
@@ -104,7 +104,7 @@ export default function ExtensionInfo({
 
   if (ext.manifest.suggested != null) {
     dependencies.push(
-      ...ext.manifest.suggested.map((dep) => ({
+      ...ext.manifest.suggested.map(dep => ({
         id: dep,
         type: DependencyType.Optional
       }))
@@ -113,7 +113,7 @@ export default function ExtensionInfo({
 
   if (ext.manifest.incompatible != null) {
     incompatible.push(
-      ...ext.manifest.incompatible.map((dep) => ({
+      ...ext.manifest.incompatible.map(dep => ({
         id: dep,
         type: DependencyType.Incompatible
       }))
@@ -133,7 +133,8 @@ export default function ExtensionInfo({
                   {comma}
                 </span>
               );
-            } else {
+            }
+            else {
               // TODO: resolve IDs
               return (
                 <span key={i}>
@@ -158,7 +159,7 @@ export default function ExtensionInfo({
             }
 
             return (
-              <Badge key={i} color={color} style={style} onClick={() => selectTag(tag)}>
+              <Badge color={color} key={i} onClick={() => selectTag(tag)} style={style}>
                 {name}
               </Badge>
             );

@@ -1,6 +1,6 @@
-import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "../discord";
+import type { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "../discord";
 
-export type Spacepack = {
+export interface Spacepack {
   /**
    * Given a Webpack module ID, returns the function for the Webpack module.
    * Can be double clicked to inspect in DevTools.
@@ -14,7 +14,7 @@ export type Spacepack = {
    * @param args A list of finds to match against
    * @returns The Webpack modules, if found
    */
-  findByCode: (...args: (string | RegExp)[]) => WebpackModule[];
+  findByCode: (...args: Array<string | RegExp>) => WebpackModule[];
 
   /**
    * Find Webpack modules based on their exports.
@@ -75,8 +75,8 @@ export type Spacepack = {
    */
   findFunctionByStrings: (
     exports: Record<string, any>,
-    ...strings: (string | RegExp)[]
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    ...strings: Array<string | RegExp>
+    // eslint-disable-next-line ts/no-unsafe-function-type -- generic webpack search
   ) => Function | null;
 
   /**
@@ -86,7 +86,7 @@ export type Spacepack = {
    * @param module A RegExp to match the target Webpack module
    * @returns The target Webpack module
    */
-  lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => Promise<any>;
+  lazyLoad: (find: string | RegExp | Array<string | RegExp>, chunk: RegExp, module: RegExp) => Promise<any>;
 
   /**
    * Filter a list of Webpack modules to "real" ones from the Discord client.
@@ -94,4 +94,4 @@ export type Spacepack = {
    * @returns A filtered list of Webpack modules
    */
   filterReal: (modules: WebpackModule[]) => WebpackModule[];
-};
+}

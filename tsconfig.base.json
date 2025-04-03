@@ -6,7 +6,7 @@
     "incremental": true,
     "target": "ES2022",
     "jsx": "react",
-    "lib": ["ESNext", "ESNext.Disposable"],
+    "lib": ["ESNext", "ESNext.Disposable", "DOM", "DOM.Iterable"],
     "module": "ES2020",
     "moduleResolution": "Bundler",
     "resolveJsonModule": true,

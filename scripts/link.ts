@@ -1,14 +1,15 @@
 // Janky script to get around pnpm link issues
 // Probably don't use this. Probably
-/* eslint-disable no-console -- buildscript */
+
+import child_process from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import child_process from "node:child_process";
+import process from "node:process";
 
 const cwd = process.cwd();
 const onDisk = {
-  //"@moonlight-mod/lunast": "../lunast",
-  //"@moonlight-mod/moonmap": "../moonmap",
+  // "@moonlight-mod/lunast": "../lunast",
+  // "@moonlight-mod/moonmap": "../moonmap",
   "@moonlight-mod/mappings": "../mappings"
 };
 
@@ -41,7 +42,8 @@ function undo(dir: string) {
   try {
     if (fs.existsSync(path.join(dir, "pnpm-lock.yaml")))
       exec("git restore pnpm-lock.yaml", dir);
-  } catch {
+  }
+  catch {
     // ignored
   }
 }
@@ -63,7 +65,8 @@ if (shouldUndo) {
     console.log(dir);
     undo(dir);
   }
-} else {
+}
+else {
   for (const pkg of packages) {
     const dir = path.join(cwd, "packages", pkg);
     console.log(dir);

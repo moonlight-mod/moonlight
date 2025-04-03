@@ -1,11 +1,11 @@
-export type CustomComponentProps = {
+export interface CustomComponentProps {
   value: any;
   setValue: (value: any) => void;
-};
+}
 
 export type CustomComponent = React.FC<CustomComponentProps>;
 
-export type Moonbase = {
+export interface Moonbase {
   /**
    * Registers a custom component for an extension setting.
    * The extension setting must be of type "custom".
@@ -14,4 +14,4 @@ export type Moonbase = {
    * @param component A React component
    */
   registerConfigComponent: (ext: string, option: string, component: CustomComponent) => void;
-};
+}

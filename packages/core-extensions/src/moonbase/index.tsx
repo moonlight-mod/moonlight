@@ -1,4 +1,4 @@
-import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
+import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
@@ -46,7 +46,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { ext: "contextMenu", id: "contextMenu" },
       { id: "discord/modules/modals/Modals" },
       "Masks.PANEL_BUTTON",
-      '"Missing channel in Channel.openChannelContextMenu"',
+      "\"Missing channel in Channel.openChannelContextMenu\"",
       ".forumOrHome]:"
     ]
   },
@@ -58,7 +58,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { id: "react" },
       { ext: "moonbase", id: "ui" },
       { ext: "contextMenu", id: "contextMenu" },
-      ':"USER_SETTINGS_MODAL_SET_SECTION"'
+      ":\"USER_SETTINGS_MODAL_SET_SECTION\""
     ],
     entrypoint: true
   },

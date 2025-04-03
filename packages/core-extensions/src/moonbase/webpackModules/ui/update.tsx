@@ -1,24 +1,24 @@
+import { MoonlightBranch } from "@moonlight-mod/types";
+import {
+  Button,
+  Heading,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalRoot,
+  ModalSize,
+  openModal,
+  Text,
+  ThemeDarkIcon
+} from "@moonlight-mod/wp/discord/components/common/index";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
 import { UpdateState } from "../../types";
 import HelpMessage from "./HelpMessage";
-import { MoonlightBranch } from "@moonlight-mod/types";
-import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import {
-  ThemeDarkIcon,
-  Button,
-  Text,
-  ModalRoot,
-  ModalSize,
-  ModalContent,
-  ModalHeader,
-  Heading,
-  ModalCloseButton,
-  openModal
-} from "@moonlight-mod/wp/discord/components/common/index";
-import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 
 const strings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",
@@ -39,7 +39,7 @@ function MoonlightChangelog({
   onClose: () => void;
 }) {
   return (
-    <ModalRoot transitionState={transitionState} size={ModalSize.DYNAMIC}>
+    <ModalRoot size={ModalSize.DYNAMIC} transitionState={transitionState}>
       <ModalHeader>
         <Flex.Child grow={1} shrink={1}>
           <Heading variant="heading-lg/semibold">moonlight</Heading>
@@ -52,7 +52,7 @@ function MoonlightChangelog({
       </ModalHeader>
 
       <ModalContent>
-        <Text variant="text-md/normal" className={MarkupClasses.markup} style={{ padding: "1rem" }}>
+        <Text className={MarkupClasses.markup} style={{ padding: "1rem" }} variant="text-md/normal">
           {MarkupUtils.parse(changelog, true, {
             allowHeading: true,
             allowList: true,
@@ -73,22 +73,22 @@ export default function Update() {
   if (newVersion == null) return null;
 
   return (
-    <HelpMessage text={strings[state]} className="moonbase-update-section" icon={ThemeDarkIcon}>
+    <HelpMessage className="moonbase-update-section" icon={ThemeDarkIcon} text={strings[state]}>
       <div className="moonbase-help-message-buttons">
         {moonlight.branch === MoonlightBranch.STABLE && (
           <Button
-            look={Button.Looks.OUTLINED}
             color={Button.Colors.CUSTOM}
-            size={Button.Sizes.TINY}
+            look={Button.Looks.OUTLINED}
             onClick={() => {
               fetch(`https://raw.githubusercontent.com/moonlight-mod/moonlight/refs/tags/${newVersion}/CHANGELOG.md`)
-                .then((r) => r.text())
-                .then((changelog) =>
+                .then(r => r.text())
+                .then(changelog =>
                   openModal((modalProps) => {
                     return <MoonlightChangelog {...modalProps} changelog={changelog} version={newVersion} />;
                   })
                 );
             }}
+            size={Button.Sizes.TINY}
           >
             View changelog
           </Button>
@@ -96,25 +96,25 @@ export default function Update() {
 
         {state === UpdateState.Installed && (
           <Button
-            look={Button.Looks.OUTLINED}
             color={Button.Colors.CUSTOM}
-            size={Button.Sizes.TINY}
+            look={Button.Looks.OUTLINED}
             onClick={() => {
               MoonbaseSettingsStore.restartDiscord();
             }}
+            size={Button.Sizes.TINY}
           >
             Restart Discord
           </Button>
         )}
 
         <Button
-          look={Button.Looks.OUTLINED}
           color={Button.Colors.CUSTOM}
-          size={Button.Sizes.TINY}
           disabled={state !== UpdateState.Ready}
+          look={Button.Looks.OUTLINED}
           onClick={() => {
             MoonbaseSettingsStore.updateMoonlight();
           }}
+          size={Button.Sizes.TINY}
         >
           Update
         </Button>

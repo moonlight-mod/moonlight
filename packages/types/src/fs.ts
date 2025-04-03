@@ -1,4 +1,4 @@
-export type MoonlightFS = {
+export interface MoonlightFS {
   readFile: (path: string) => Promise<Uint8Array>;
   readFileString: (path: string) => Promise<string>;
   writeFile: (path: string, data: Uint8Array) => Promise<void>;
@@ -15,4 +15,4 @@ export type MoonlightFS = {
 
   join: (...parts: string[]) => string;
   dirname: (path: string) => string;
-};
+}

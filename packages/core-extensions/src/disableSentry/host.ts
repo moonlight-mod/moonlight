@@ -1,5 +1,5 @@
-import { join } from "node:path";
 import { Module } from "node:module";
+import { join } from "node:path";
 
 const logger = moonlightHost.getLogger("disableSentry");
 
@@ -15,7 +15,8 @@ if (moonlightHost.asarPath !== "moonlightDesktop") {
       captureMessage: () => {}
     };
     logger.debug("Stubbed Sentry host side!");
-  } catch (err) {
+  }
+  catch (err) {
     logger.error("Failed to stub Sentry host side:", err);
   }
 }

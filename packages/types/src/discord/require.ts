@@ -1,12 +1,12 @@
-import { AppPanels } from "../coreExtensions/appPanels";
-import { Commands } from "../coreExtensions/commands";
-import { DMList, MemberList, Messages } from "../coreExtensions/componentEditor";
-import { ContextMenu, EvilItemParser } from "../coreExtensions/contextMenu";
-import { Markdown } from "../coreExtensions/markdown";
-import { Moonbase } from "../coreExtensions/moonbase";
-import { Notices } from "../coreExtensions/notices";
-import { Settings } from "../coreExtensions/settings";
-import { Spacepack } from "../coreExtensions/spacepack";
+import type { AppPanels } from "../coreExtensions/appPanels";
+import type { Commands } from "../coreExtensions/commands";
+import type { DMList, MemberList, Messages } from "../coreExtensions/componentEditor";
+import type { ContextMenu, EvilItemParser } from "../coreExtensions/contextMenu";
+import type { Markdown } from "../coreExtensions/markdown";
+import type { Moonbase } from "../coreExtensions/moonbase";
+import type { Notices } from "../coreExtensions/notices";
+import type { Settings } from "../coreExtensions/settings";
+import type { Spacepack } from "../coreExtensions/spacepack";
 
 declare function WebpackRequire(id: string): any;
 

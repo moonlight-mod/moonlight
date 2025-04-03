@@ -1,9 +1,9 @@
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { MoonlightBranch } from "@moonlight-mod/types";
+import { ThemeDarkIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Notices from "@moonlight-mod/wp/notices_notices";
-import { MoonlightBranch } from "@moonlight-mod/types";
 import React from "@moonlight-mod/wp/react";
-import { ThemeDarkIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 function plural(str: string, num: number) {
   return `${str}${num > 1 ? "s" : ""}`;
@@ -11,8 +11,8 @@ function plural(str: string, num: number) {
 
 function listener() {
   if (
-    MoonbaseSettingsStore.shouldShowNotice &&
-    MoonbaseSettingsStore.getExtensionConfigRaw("moonbase", "updateBanner", true)
+    MoonbaseSettingsStore.shouldShowNotice
+    && MoonbaseSettingsStore.getExtensionConfigRaw("moonbase", "updateBanner", true)
   ) {
     MoonbaseSettingsStore.removeChangeListener(listener);
 
@@ -23,8 +23,8 @@ function listener() {
     let message;
 
     if (version != null) {
-      message =
-        moonlightNode.branch === MoonlightBranch.NIGHTLY
+      message
+        = moonlightNode.branch === MoonlightBranch.NIGHTLY
           ? `A new version of moonlight is available`
           : `moonlight ${version} is available`;
     }
@@ -33,7 +33,8 @@ function listener() {
       let concat = false;
       if (message == null) {
         message = "";
-      } else {
+      }
+      else {
         concat = true;
         message += ", and ";
       }
@@ -48,7 +49,7 @@ function listener() {
     Notices.addNotice({
       element: (
         <div className="moonbase-updates-notice_text-wrapper">
-          <ThemeDarkIcon size="sm" color="currentColor" />
+          <ThemeDarkIcon color="currentColor" size="sm" />
           {message}
         </div>
       ),
@@ -60,7 +61,8 @@ function listener() {
             const { open } = spacepack.require("discord/actions/UserSettingsModalActionCreators").default;
             if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
               open("moonbase-extensions");
-            } else {
+            }
+            else {
               open("moonbase", "0");
             }
             return true;

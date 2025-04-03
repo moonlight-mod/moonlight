@@ -1,6 +1,6 @@
-import { ExtensionSettingsManifest } from "./config";
-import { Snowflake } from "./discord";
-import { WebpackModuleFunc } from "./discord/webpack";
+import type { ExtensionSettingsManifest } from "./config";
+import type { Snowflake } from "./discord";
+import type { WebpackModuleFunc } from "./discord/webpack";
 
 export enum ExtensionTag {
   Accessibility = "accessibility",
@@ -23,11 +23,11 @@ export enum ExtensionTag {
 export type ExtensionAuthor =
   | string
   | {
-      name: string;
-      id?: Snowflake;
-    };
+    name: string;
+    id?: Snowflake;
+  };
 
-export type ExtensionManifest = {
+export interface ExtensionManifest {
   $schema?: string;
 
   /**
@@ -141,7 +141,7 @@ export type ExtensionManifest = {
    * @example { "script-src": ["https://example.com"] }
    */
   csp?: Record<string, string[]>;
-};
+}
 
 export enum ExtensionEnvironment {
   /**
@@ -166,7 +166,7 @@ export enum ExtensionLoadSource {
   Normal
 }
 
-export type DetectedExtension = {
+export interface DetectedExtension {
   id: string;
   manifest: ExtensionManifest;
   source: { type: ExtensionLoadSource; url?: string };
@@ -178,12 +178,12 @@ export type DetectedExtension = {
     hostPath?: string;
     style?: string;
   };
-};
+}
 
-export type ProcessedExtensions = {
+export interface ProcessedExtensions {
   extensions: DetectedExtension[];
   dependencyGraph: Map<string, Set<string> | null>;
-};
+}
 
 export type PatchMatch = string | RegExp;
 export type PatchReplaceFn = (substring: string, ...args: string[]) => string;
@@ -196,40 +196,40 @@ export enum PatchReplaceType {
 
 export type PatchReplace =
   | {
-      type?: PatchReplaceType.Normal;
-      match: PatchMatch;
-      replacement: string | PatchReplaceFn;
-    }
+    type?: PatchReplaceType.Normal;
+    match: PatchMatch;
+    replacement: string | PatchReplaceFn;
+  }
   | {
-      type: PatchReplaceType.Module;
-      replacement: PatchReplaceModule;
-    };
+    type: PatchReplaceType.Module;
+    replacement: PatchReplaceModule;
+  };
 
-export type Patch = {
+export interface Patch {
   find: PatchMatch;
   replace: PatchReplace | PatchReplace[];
   hardFail?: boolean; // if any patches fail, all fail
   prerequisite?: () => boolean;
-};
+}
 
-export type ExplicitExtensionDependency = {
+export interface ExplicitExtensionDependency {
   ext?: string;
   id: string;
-};
+}
 
 export type ExtensionDependency = string | RegExp | ExplicitExtensionDependency;
 
-export type ExtensionWebpackModule = {
+export interface ExtensionWebpackModule {
   entrypoint?: boolean;
   dependencies?: ExtensionDependency[];
   run?: WebpackModuleFunc;
-};
+}
 
-export type ExtensionWebExports = {
+export interface ExtensionWebExports {
   patches?: Patch[];
   webpackModules?: Record<string, ExtensionWebpackModule>;
   styles?: string[];
-};
+}
 
 export type IdentifiedPatch = Patch & {
   ext: string;

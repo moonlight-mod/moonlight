@@ -20,8 +20,8 @@ export interface LinkData {
 }
 
 export interface PatchBay {
-  unlink(): void;
+  unlink: () => void;
 
-  list<T extends string = DefaultProps>(props?: T[]): Node<T>[];
-  link(data: Optional<LinkData, "exclude"> | Optional<LinkData, "include">): boolean;
+  list: <T extends string = DefaultProps>(props?: T[]) => Array<Node<T>>;
+  link: (data: Optional<LinkData, "exclude"> | Optional<LinkData, "include">) => boolean;
 }

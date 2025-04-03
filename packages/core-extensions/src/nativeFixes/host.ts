@@ -1,13 +1,13 @@
-import { app, nativeTheme } from "electron";
-import * as path from "node:path";
-import * as fs from "node:fs/promises";
 import * as fsSync from "node:fs";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { app, nativeTheme } from "electron";
 import { parseTarGzip } from "nanotar";
 
 const logger = moonlightHost.getLogger("nativeFixes/host");
 const enabledFeatures = app.commandLine.getSwitchValue("enable-features").split(",");
 
-moonlightHost.events.on("window-created", function (browserWindow) {
+moonlightHost.events.on("window-created", (browserWindow) => {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "devtoolsThemeFix") ?? true) {
     browserWindow.webContents.on("devtools-opened", () => {
       if (!nativeTheme.shouldUseDarkColors) return;
@@ -88,7 +88,7 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
     });
 
     const reader = resp.body!.getReader();
-    const contentLength = parseInt(resp.headers.get("Content-Length") ?? "0");
+    const contentLength = Number.parseInt(resp.headers.get("Content-Length") ?? "0");
     logger.info(`Expecting ${contentLength} bytes for the update`);
     const bytes = new Uint8Array(contentLength);
     let pos = 0;
@@ -98,7 +98,8 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
       const { done, value } = await reader.read();
       if (done) {
         break;
-      } else {
+      }
+      else {
         bytes.set(value, pos);
         pos += value.length;
 
@@ -114,7 +115,7 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
 
     for (const file of files) {
       if (!file.data) continue;
-      // @ts-expect-error What do you mean their own types are wrong
+      // @ts-expect-error: What do you mean their own types are wrong
       if (file.type !== "file") continue;
 
       // Discord update files are inside of a main "Discord(PTB|Canary)" folder
@@ -125,11 +126,12 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
       if (filePath === "resources/app.asar") {
         // You tried
         targetFilePath = path.join(targetDir, "resources", "_app.asar");
-      } else if (filePath === appName || filePath === "chrome_crashpad_handler") {
+      }
+      else if (filePath === appName || filePath === "chrome_crashpad_handler") {
         // Can't write over the executable? Just move it! 4head
         if (await exists(targetFilePath)) {
-          await fs.rename(targetFilePath, targetFilePath + ".bak");
-          await fs.unlink(targetFilePath + ".bak");
+          await fs.rename(targetFilePath, `${targetFilePath}.bak`);
+          await fs.unlink(`${targetFilePath}.bak`);
         }
       }
       const targetFileDir = path.dirname(targetFilePath);
@@ -173,13 +175,15 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
             this.updateUrl,
             this.quitAndInstall.bind(this)
           );
-        } catch (e) {
+        }
+        catch (e) {
           logger.error("Error updating", e);
         }
       })();
 
       return this;
-    } else {
+    }
+    else {
       return realEmit.call(this, event, ...args);
     }
   };

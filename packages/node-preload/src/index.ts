@@ -1,18 +1,20 @@
-import { webFrame, ipcRenderer, contextBridge } from "electron";
+import type { MoonlightBranch } from "@moonlight-mod/types";
+import type { NodeEventPayloads } from "@moonlight-mod/types/core/event";
 import fs from "node:fs";
 import path from "node:path";
-
+import process from "node:process";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
+import { getDynamicCors, registerBlocked, registerCors } from "@moonlight-mod/core/cors";
 import { getExtensions } from "@moonlight-mod/core/extension";
-import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
-import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import createFS from "@moonlight-mod/core/fs";
-import { registerCors, registerBlocked, getDynamicCors } from "@moonlight-mod/core/cors";
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
-import { NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
+import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
 import { createEventEmitter } from "@moonlight-mod/core/util/event";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
+import { constants } from "@moonlight-mod/types";
+import { NodeEventType } from "@moonlight-mod/types/core/event";
+import { contextBridge, ipcRenderer, webFrame } from "electron";
 
 let initialized = false;
 let logger: Logger;
@@ -90,7 +92,7 @@ async function injectGlobals() {
   await loadProcessedExtensions(processedExtensions);
   contextBridge.exposeInMainWorld("moonlightNode", moonlightNode);
 
-  const extCors = moonlightNode.processedExtensions.extensions.flatMap((x) => x.manifest.cors ?? []);
+  const extCors = moonlightNode.processedExtensions.extensions.flatMap(x => x.manifest.cors ?? []);
   for (const cors of extCors) {
     registerCors(cors);
   }
@@ -101,7 +103,7 @@ async function injectGlobals() {
     registerCors(url.toString());
   }
 
-  const extBlocked = moonlightNode.processedExtensions.extensions.flatMap((e) => e.manifest.blocked ?? []);
+  const extBlocked = moonlightNode.processedExtensions.extensions.flatMap(e => e.manifest.blocked ?? []);
   for (const blocked of extBlocked) {
     registerBlocked(blocked);
   }
@@ -124,17 +126,18 @@ async function init() {
   try {
     await injectGlobals();
     await loadPreload();
-  } catch (e) {
+  }
+  catch (e) {
     const message = e instanceof Error ? e.stack : e;
     await ipcRenderer.invoke(constants.ipcMessageBox, {
       title: "moonlight node-preload error",
-      message: message
+      message
     });
   }
 }
 
 const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
-const isOverlay = window.location.href.indexOf("discord_overlay") > -1;
+const isOverlay = window.location.href.includes("discord_overlay");
 
 if (isOverlay) {
   // The overlay has an inline script tag to call to DiscordNative, so we'll
@@ -142,7 +145,8 @@ if (isOverlay) {
   // have no idea why - so I suspect it's just forwarding render calls or
   // something from the original process
   require(oldPreloadPath);
-} else {
+}
+else {
   ipcRenderer.on(constants.ipcNodePreloadKickoff, (_, blockedScripts: string[]) => {
     (async () => {
       try {
@@ -154,35 +158,37 @@ if (isOverlay) {
         if (oldPreloadPath) require(oldPreloadPath);
 
         // Do this to get global.DiscordNative assigned
-        // @ts-expect-error Lying to discord_desktop_core
+        // @ts-expect-error: Lying to discord_desktop_core
         process.emit("loaded");
 
         function replayScripts() {
           const scripts = [...document.querySelectorAll("script")].filter(
-            (script) => script.src && blockedScripts.some((url) => url.includes(script.src))
+            script => script.src && blockedScripts.some(url => url.includes(script.src))
           );
 
           blockedScripts.reverse();
           for (const url of blockedScripts) {
             if (url.includes("/sentry.")) continue;
 
-            const script = scripts.find((script) => url.includes(script.src))!;
+            const script = scripts.find(script => url.includes(script.src))!;
             const newScript = document.createElement("script");
             for (const attr of script.attributes) {
               if (attr.name === "src") attr.value += "?inj";
               newScript.setAttribute(attr.name, attr.value);
             }
             script.remove();
-            document.documentElement.appendChild(newScript);
+            document.documentElement.append(newScript);
           }
         }
 
         if (document.readyState === "complete") {
           replayScripts();
-        } else {
+        }
+        else {
           window.addEventListener("load", replayScripts);
         }
-      } catch (e) {
+      }
+      catch (e) {
         logger.error("Error restoring original scripts:", e);
       }
     })();

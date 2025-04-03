@@ -1,4 +1,4 @@
-import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
+import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   // dm list
@@ -12,7 +12,7 @@ export const patches: Patch[] = [
       },
       {
         match: /(?<=selected:\i,)children:\[/,
-        replacement: 'children:require("componentEditor_dmList").default._patchItems(['
+        replacement: "children:require(\"componentEditor_dmList\").default._patchItems(["
       },
       {
         match: /(?<=(onMouseDown|nameplate):\i}\))]/,
@@ -41,7 +41,7 @@ export const patches: Patch[] = [
 
   // messages
   {
-    find: '},"new-member")),',
+    find: "},\"new-member\")),",
     replace: [
       {
         match: /(?<=\.BADGES]=)(\i);/,
@@ -61,7 +61,7 @@ export const patches: Patch[] = [
     ]
   },
   {
-    find: '.provider&&"Discord"===',
+    find: ".provider&&\"Discord\"===",
     replace: {
       match: /(?<=\.container\),)children:(\[.+?this\.renderSuppressConfirmModal\(\),.+?\])}\)/,
       replacement: (_, elements) =>

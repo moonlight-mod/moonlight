@@ -1,4 +1,4 @@
-import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
+import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
@@ -30,7 +30,7 @@ export const patches: Patch[] = [
     ]
   },
   {
-    find: '"Slate: Unknown decoration attribute: "',
+    find: "\"Slate: Unknown decoration attribute: \"",
     replace: {
       match: /=({strong:.+?});/,
       replacement: (_, rules) => `=require("markdown_markdown")._addSlateDecorators(${rules});`

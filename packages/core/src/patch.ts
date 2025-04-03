@@ -1,17 +1,20 @@
-import {
-  PatchReplace,
-  PatchReplaceType,
+import type {
   ExplicitExtensionDependency,
   IdentifiedPatch,
   IdentifiedWebpackModule,
+  PatchReplace,
   WebpackJsonp,
   WebpackJsonpEntry,
   WebpackModuleFunc,
   WebpackRequireType
 } from "@moonlight-mod/types";
-import Logger from "./util/logger";
-import calculateDependencies, { Dependency } from "./util/dependency";
+import type { Dependency } from "./util/dependency";
+import {
+  PatchReplaceType
+} from "@moonlight-mod/types";
 import { WebEventType } from "@moonlight-mod/types/core/event";
+import calculateDependencies from "./util/dependency";
+import Logger from "./util/logger";
 import { processFind, processReplace, testFind } from "./util/patch";
 
 const logger = new Logger("core/patch");
@@ -21,7 +24,7 @@ const patches: IdentifiedPatch[] = [];
 let webpackModules: Set<IdentifiedWebpackModule> = new Set();
 let webpackRequire: WebpackRequireType | null = null;
 
-const moduleLoadSubscriptions: Map<string, ((moduleId: string) => void)[]> = new Map();
+const moduleLoadSubscriptions: Map<string, Array<(moduleId: string) => void>> = new Map();
 
 export function registerPatch(patch: IdentifiedPatch) {
   patch.find = processFind(patch.find);
@@ -48,7 +51,8 @@ export function onModuleLoad(module: string | string[], callback: (moduleId: str
   for (const moduleId of moduleIds) {
     if (moduleLoadSubscriptions.has(moduleId)) {
       moduleLoadSubscriptions.get(moduleId)?.push(callback);
-    } else {
+    }
+    else {
       moduleLoadSubscriptions.set(moduleId, [callback]);
     }
   }
@@ -64,10 +68,10 @@ export function onModuleLoad(module: string | string[], callback: (moduleId: str
   what Webpack modules.
 */
 const moduleCache: Record<string, string> = {};
-const patched: Record<string, Array<string>> = {};
+const patched: Record<string, string[]> = {};
 
 function createSourceURL(id: string) {
-  const remapped = Object.entries(moonlight.moonmap.modules).find((m) => m[1] === id)?.[0];
+  const remapped = Object.entries(moonlight.moonmap.modules).find(m => m[1] === id)?.[0];
 
   if (remapped) {
     return `// Webpack Module: ${id}\n//# sourceURL=${remapped}`;
@@ -85,15 +89,16 @@ function patchModule(id: string, patchId: string, replaced: string, entry: Webpa
   // We have to wrap it so things don't break, though
   const patchedStr = patched[id].sort().join(", ");
 
-  const wrapped =
-    `(${replaced}).apply(this, arguments)\n` + `// Patched by moonlight: ${patchedStr}\n` + createSourceURL(id);
+  const wrapped
+    = `(${replaced}).apply(this, arguments)\n` + `// Patched by moonlight: ${patchedStr}\n${createSourceURL(id)}`;
 
   try {
     const func = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
     entry[id] = func;
     entry[id].__moonlight = true;
     return true;
-  } catch (e) {
+  }
+  catch (e) {
     logger.warn("Error constructing function for patch", patchId, e);
     patched[id].pop();
     return false;
@@ -120,7 +125,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     let modified = false;
     let swappedModule = false;
 
-    const exts = new Set<string>();
+    const exts: Set<string> = new Set();
 
     for (let i = 0; i < patches.length; i++) {
       const patch = patches[i];
@@ -157,7 +162,8 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
             // Verbose, but it works
             if (typeof replace.replacement === "string") {
               replaced = replaced.replace(replace.match, replace.replacement);
-            } else {
+            }
+            else {
               replaced = replaced.replace(replace.match, replace.replacement);
             }
 
@@ -167,11 +173,13 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
               if (patch.hardFail) {
                 hardFailed = true;
                 break;
-              } else {
+              }
+              else {
                 continue;
               }
             }
-          } else if (replace.type === PatchReplaceType.Module) {
+          }
+          else if (replace.type === PatchReplaceType.Module) {
             // Directly replace the module with a new one
             const newModule = replace.replacement(replaced);
             entry[id] = newModule;
@@ -207,13 +215,14 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           }
         }
       }
-    } catch (e) {
+    }
+    catch (e) {
       logger.error("Failed to parse script for LunAST", id, e);
     }
 
     if (moonlightNode.config.patchAll === true) {
       if ((typeof id !== "string" || !id.includes("_")) && !entry[id].__moonlight) {
-        const wrapped = `(${moduleCache[id]}).apply(this, arguments)\n` + createSourceURL(id);
+        const wrapped = `(${moduleCache[id]}).apply(this, arguments)\n${createSourceURL(id)}`;
         entry[id] = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
         entry[id].__moonlight = true;
       }
@@ -225,8 +234,9 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
       for (const callback of loadCallbacks) {
         try {
           callback(id);
-        } catch (e) {
-          logger.error("Error in module load subscription: " + e);
+        }
+        catch (e) {
+          logger.error(`Error in module load subscription: ${e}`);
         }
       }
       moduleLoadSubscriptions.delete(id);
@@ -250,7 +260,7 @@ function depToString(x: ExplicitExtensionDependency) {
 function handleModuleDependencies() {
   const modules = Array.from(webpackModules.values());
 
-  const dependencies: Dependency<string, IdentifiedWebpackModule>[] = modules.map((wp) => {
+  const dependencies: Array<Dependency<string, IdentifiedWebpackModule>> = modules.map((wp) => {
     return {
       id: depToString(wp),
       data: wp
@@ -259,20 +269,20 @@ function handleModuleDependencies() {
 
   const [sorted, _] = calculateDependencies(dependencies, {
     fetchDep: (id) => {
-      return modules.find((x) => id === depToString(x)) ?? null;
+      return modules.find(x => id === depToString(x)) ?? null;
     },
 
     getDeps: (item) => {
       const deps = item.data?.dependencies ?? [];
       return (
         deps.filter(
-          (dep) => !(dep instanceof RegExp || typeof dep === "string") && dep.ext != null
+          dep => !(dep instanceof RegExp || typeof dep === "string") && dep.ext != null
         ) as ExplicitExtensionDependency[]
       ).map(depToString);
     }
   });
 
-  webpackModules = new Set(sorted.map((x) => x.data));
+  webpackModules = new Set(sorted.map(x => x.data));
 }
 
 const injectedWpModules: IdentifiedWebpackModule[] = [];
@@ -294,12 +304,14 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
           for (const dep of deps) {
             if (typeof dep === "string") {
               if (modStr.includes(dep)) deps.delete(dep);
-            } else if (dep instanceof RegExp) {
+            }
+            else if (dep instanceof RegExp) {
               if (dep.test(modStr)) deps.delete(dep);
-            } else if (
+            }
+            else if (
               dep.ext != null
-                ? injectedWpModules.find((x) => x.ext === dep.ext && x.id === dep.id)
-                : injectedWpModules.find((x) => x.id === dep.id)
+                ? injectedWpModules.find(x => x.ext === dep.ext && x.id === dep.id)
+                : injectedWpModules.find(x => x.id === dep.id)
             ) {
               deps.delete(dep);
             }
@@ -321,11 +333,12 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
       if (wpModule.run) {
         modules[id] = wpModule.run;
         wpModule.run.__moonlight = true;
-        // @ts-expect-error hacks
+        // @ts-expect-error: hacks
         wpModule.run.call = function (self, module, exports, require) {
           try {
             wpModule.run!.apply(self, [module, exports, require]);
-          } catch (err) {
+          }
+          catch (err) {
             logger.error(`Failed to run module "${id}":`, err);
           }
         };
@@ -336,7 +349,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
   }
 
   for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
-    // @ts-expect-error probably should fix the type on this idk
+    // @ts-expect-error: probably should fix the type on this idk
     func.__moonlight = true;
     injectedWpModules.push({ id: name, run: func });
     modules[name] = func;
@@ -359,10 +372,12 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
           try {
             if (require.m[id] == null) {
               logger.error(`Failing to load entrypoint module "${id}" because it's not found in Webpack.`);
-            } else {
+            }
+            else {
               require(id);
             }
-          } catch (err) {
+          }
+          catch (err) {
             logger.error(`Failed to load entrypoint module "${id}":`, err);
           }
         })
@@ -431,7 +446,8 @@ export async function installWebpackPatcher() {
             }
 
             return res;
-          } catch (err) {
+          }
+          catch (err) {
             logger.error("Failed to inject Webpack modules:", err);
             return 0;
           }
@@ -458,13 +474,14 @@ export async function installWebpackPatcher() {
     }
   });
 
+  // eslint-disable-next-line no-extend-native, accessor-pairs -- webpack fuckery
   Object.defineProperty(Function.prototype, "m", {
     configurable: true,
     set(modules: any) {
       const { stack } = new Error();
       if (stack!.includes("/assets/") && !Array.isArray(modules)) {
         moonlight.events.dispatchEvent(WebEventType.ChunkLoad, {
-          modules: modules
+          modules
         });
         patchModules(modules);
 

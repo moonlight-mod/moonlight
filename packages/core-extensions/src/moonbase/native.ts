@@ -1,7 +1,7 @@
-import { MoonlightBranch } from "@moonlight-mod/types";
 import type { MoonbaseNatives, RepositoryManifest } from "./types";
 import extractAsar from "@moonlight-mod/core/asar";
-import { distDir, repoUrlFile, installedVersionFile } from "@moonlight-mod/types/constants";
+import { MoonlightBranch } from "@moonlight-mod/types";
+import { distDir, installedVersionFile, repoUrlFile } from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
 
 const moonlightGlobal = globalThis.moonlightHost ?? globalThis.moonlightNode;
@@ -17,10 +17,10 @@ export const userAgent = `moonlight/${moonlightGlobal.version} (https://github.c
 
 async function getStableRelease(): Promise<{
   name: string;
-  assets: {
+  assets: Array<{
     name: string;
     browser_download_url: string;
-  }[];
+  }>;
 }> {
   const req = await fetch(githubApiUrl, {
     cache: "no-store",
@@ -40,7 +40,8 @@ export default function getNatives(): MoonbaseNatives {
         if (moonlightGlobal.branch === MoonlightBranch.STABLE) {
           const json = await getStableRelease();
           return json.name !== moonlightGlobal.version ? json.name : null;
-        } else if (moonlightGlobal.branch === MoonlightBranch.NIGHTLY) {
+        }
+        else if (moonlightGlobal.branch === MoonlightBranch.NIGHTLY) {
           const req = await fetch(nightlyRefUrl, {
             cache: "no-store",
             headers: {
@@ -52,7 +53,8 @@ export default function getNatives(): MoonbaseNatives {
         }
 
         return null;
-      } catch (e) {
+      }
+      catch (e) {
         logger.error("Error checking for moonlight update", e);
         return null;
       }
@@ -65,7 +67,7 @@ export default function getNatives(): MoonbaseNatives {
       // entirely when running in browser.
       async function downloadStable(): Promise<[ArrayBuffer, string]> {
         const json = await getStableRelease();
-        const asset = json.assets.find((a) => a.name === artifactName);
+        const asset = json.assets.find(a => a.name === artifactName);
         if (!asset) throw new Error("Artifact not found");
 
         logger.debug(`Downloading ${asset.browser_download_url}`);
@@ -99,8 +101,8 @@ export default function getNatives(): MoonbaseNatives {
         return [await zipReq.arrayBuffer(), ref];
       }
 
-      const [tar, ref] =
-        branch === MoonlightBranch.STABLE
+      const [tar, ref]
+        = branch === MoonlightBranch.STABLE
           ? await downloadStable()
           : branch === MoonlightBranch.NIGHTLY
             ? await downloadNightly()
@@ -116,7 +118,7 @@ export default function getNatives(): MoonbaseNatives {
       const files = await parseTarGzip(tar);
       for (const file of files) {
         if (!file.data) continue;
-        // @ts-expect-error What do you mean their own types are wrong
+        // @ts-expect-error: What do you mean their own types are wrong
         if (file.type !== "file") continue;
 
         const fullFile = moonlightNodeSandboxed.fs.join(dist, file.name);
@@ -145,7 +147,8 @@ export default function getNatives(): MoonbaseNatives {
           });
           const json = await req.json();
           ret[repo] = json;
-        } catch (e) {
+        }
+        catch (e) {
           logger.error(`Error fetching repository ${repo}`, e);
         }
       }

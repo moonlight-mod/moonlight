@@ -1,5 +1,5 @@
-import { ExtensionWebExports } from "@moonlight-mod/types";
-import { Patch, PatchReplaceType } from "@moonlight-mod/types";
+import type { ExtensionWebExports, Patch } from "@moonlight-mod/types";
+import { PatchReplaceType } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
@@ -7,7 +7,7 @@ export const patches: Patch[] = [
     replace: {
       type: PatchReplaceType.Normal,
       match: /Z:\(\)=>\i/,
-      replacement: 'Z:()=>require("disableSentry_stub").proxy()'
+      replacement: "Z:()=>require(\"disableSentry_stub\").proxy()"
     }
   },
   {

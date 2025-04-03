@@ -1,26 +1,27 @@
-import React, { ReactElement } from "react";
 import type { Store } from "@moonlight-mod/mappings/discord/packages/flux/Store";
+import type { ReactElement } from "react";
+import type React from "react";
 
-export type NoticeProps = {
-  stores: Store<any>[];
+export interface NoticeProps {
+  stores: Array<Store<any>>;
   element: React.FunctionComponent;
-};
+}
 
 export type SettingsSection =
   | { section: "DIVIDER"; pos: number | ((sections: SettingsSection[]) => number) }
   | { section: "HEADER"; label: string; pos: number | ((sections: SettingsSection[]) => number) }
   | {
-      section: string;
-      label: string;
-      color: string | null;
-      element: React.FunctionComponent;
-      pos: number | ((sections: SettingsSection[]) => number);
-      notice?: NoticeProps;
-      onClick?: () => void;
-      _moonlight_submenu?: () => ReactElement | ReactElement[];
-    };
+    section: string;
+    label: string;
+    color: string | null;
+    element: React.FunctionComponent;
+    pos: number | ((sections: SettingsSection[]) => number);
+    notice?: NoticeProps;
+    onClick?: () => void;
+    _moonlight_submenu?: () => ReactElement | ReactElement[];
+  };
 
-export type Settings = {
+export interface Settings {
   ourSections: SettingsSection[];
   sectionNames: string[];
   sectionMenuItems: Record<string, ReactElement[]>;
@@ -68,4 +69,4 @@ export type Settings = {
    * @private
    */
   _mutateSections: (sections: SettingsSection[]) => SettingsSection[];
-};
+}

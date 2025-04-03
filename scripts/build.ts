@@ -1,11 +1,11 @@
-/* eslint-disable no-console -- buildscript */
-import * as esbuild from "esbuild";
-import path from "node:path";
-import fs from "node:fs";
 import crypto from "node:crypto";
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+import * as esbuild from "esbuild";
 
 const config: Record<string, string> = {
-  injector: "packages/injector/src/index.ts",
+  "injector": "packages/injector/src/index.ts",
   "node-preload": "packages/node-preload/src/index.ts",
   "web-preload": "packages/web-preload/src/index.ts"
 };
@@ -30,7 +30,7 @@ const external = [
   "./node-preload.js"
 ];
 
-let lastMessages = new Set();
+const lastMessages = new Set();
 const deduplicatedLogging: esbuild.Plugin = {
   name: "deduplicated-logging",
   setup(build) {
@@ -42,7 +42,7 @@ const deduplicatedLogging: esbuild.Plugin = {
           color: true
         }),
         esbuild.formatMessages(result.errors, { kind: "error", color: true })
-      ]).then((a) => a.flat());
+      ]).then(a => a.flat());
 
       // console.log(formatted);
       for (const message of formatted) {
@@ -60,17 +60,18 @@ const timeFormatter = new Intl.DateTimeFormat(undefined, {
   second: "numeric",
   hour12: false
 });
-const taggedBuildLog: (tag: string) => esbuild.Plugin = (tag) => ({
+const taggedBuildLog: (tag: string) => esbuild.Plugin = tag => ({
   name: "build-log",
   setup: build => build.onEnd(() => console.log(`[${timeFormatter.format(new Date())}] [${tag}] build finished`))
 });
 
-const digest = (path: string): string => crypto.createHash('md5')
-  .update(fs.readFileSync(path, 'utf-8'), 'utf-8').digest('hex');
+const digest = (path: string): string => crypto.createHash("md5")
+  .update(fs.readFileSync(path, "utf-8"), "utf-8")
+  .digest("hex");
 
-const copyStaticFiles: (options: { src: string; dest: string; }) => esbuild.Plugin = (options) => ({
-  name: 'copy-static-files',
-  setup: (build) => build.onEnd(() => fs.cpSync(options.src, options.dest, {
+const copyStaticFiles: (options: { src: string; dest: string }) => esbuild.Plugin = options => ({
+  name: "copy-static-files",
+  setup: build => build.onEnd(() => fs.cpSync(options.src, options.dest, {
     dereference: true,
     errorOnExist: false,
     force: true,
@@ -80,12 +81,12 @@ const copyStaticFiles: (options: { src: string; dest: string; }) => esbuild.Plug
       if (!fs.existsSync(dest)) return true;
       if (fs.statSync(dest).isDirectory()) return true;
       return digest(src) !== digest(dest);
-    },
-  })),
+    }
+  }))
 });
 
 async function build(name: string, entry: string) {
-  let outfile = path.join("./dist", name + ".js");
+  let outfile = path.join("./dist", `${name}.js`);
   const browserDir = mv2 ? "browser-mv2" : "browser";
   if (name === "browser") outfile = path.join("./dist", browserDir, "index.js");
 
@@ -159,7 +160,7 @@ async function build(name: string, entry: string) {
     format: "iife",
     globalName: "module.exports",
 
-    platform: ["web-preload", "browser"].includes(name) ? "browser" : "node",
+    platform: ["browser", "web-preload"].includes(name) ? "browser" : "node",
 
     treeShaking: true,
     bundle: true,
@@ -189,11 +190,12 @@ async function build(name: string, entry: string) {
     function readDir(dir: string) {
       const files = fs.readdirSync(dir);
       for (const file of files) {
-        const filePath = dir + "/" + file;
+        const filePath = `${dir}/${file}`;
         const normalizedPath = filePath.replace("./dist/core-extensions/", "");
         if (fs.statSync(filePath).isDirectory()) {
           readDir(filePath);
-        } else {
+        }
+        else {
           coreExtensionsJson[normalizedPath] = fs.readFileSync(filePath, "utf8");
         }
       }
@@ -209,7 +211,8 @@ async function build(name: string, entry: string) {
   if (watch) {
     const ctx = await esbuild.context(esbuildConfig);
     await ctx.watch();
-  } else {
+  }
+  else {
     await esbuild.build(esbuildConfig);
   }
 }
@@ -220,8 +223,8 @@ async function buildExt(ext: string, side: string, fileExt: string) {
     fs.mkdirSync(outdir, { recursive: true });
   }
 
-  const entryPoints: Array<string | { in: string; out: string; }> =
-    [`packages/core-extensions/src/${ext}/${side}.${fileExt}`];
+  const entryPoints: Array<string | { in: string; out: string }>
+    = [`packages/core-extensions/src/${ext}/${side}.${fileExt}`];
 
   const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
   if (fs.existsSync(wpModulesDir) && side === "index") {
@@ -229,7 +232,8 @@ async function buildExt(ext: string, side: string, fileExt: string) {
     for await (const wpModule of wpModules) {
       if (wpModule.isFile()) {
         entryPoints.push(`packages/core-extensions/src/${ext}/webpackModules/${wpModule.name}`);
-      } else {
+      }
+      else {
         for (const fileExt of ["ts", "tsx"]) {
           const path = `packages/core-extensions/src/${ext}/webpackModules/${wpModule.name}/index.${fileExt}`;
           if (fs.existsSync(path)) {
@@ -260,7 +264,7 @@ async function buildExt(ext: string, side: string, fileExt: string) {
   const styleOutput = `dist/core-extensions/${ext}/style.css`;
 
   const esbuildConfig: esbuild.BuildOptions = {
-    entryPoints: entryPoints as esbuild.BuildOptions['entryPoints'],
+    entryPoints: entryPoints as esbuild.BuildOptions["entryPoints"],
     outdir,
 
     format: "iife",
@@ -299,7 +303,8 @@ async function buildExt(ext: string, side: string, fileExt: string) {
   if (watch) {
     const ctx = await esbuild.context(esbuildConfig);
     await ctx.watch();
-  } else {
+  }
+  else {
     await esbuild.build(esbuildConfig);
   }
 }
@@ -308,9 +313,11 @@ const promises = [];
 
 if (clean) {
   fs.rmSync("./dist", { recursive: true, force: true });
-} else if (browser) {
+}
+else if (browser) {
   build("browser", "packages/browser/src/index.ts");
-} else {
+}
+else {
   for (const [name, entry] of Object.entries(config)) {
     promises.push(build(name, entry));
   }
@@ -327,4 +334,4 @@ if (clean) {
   }
 }
 
-await Promise.all(promises);
+void Promise.all(promises);

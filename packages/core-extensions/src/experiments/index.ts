@@ -1,4 +1,4 @@
-import { Patch } from "@moonlight-mod/types";
+import type { Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
@@ -9,7 +9,7 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: '"scientist:triggered"', // Scientist? Triggered.
+    find: "\"scientist:triggered\"", // Scientist? Triggered.
     replace: {
       match: ".personal_connection_id",
       replacement: ".personal_connection_id || true"
@@ -27,7 +27,7 @@ export const patches: Patch[] = [
   },
   // staff help menu - visual refresh
   {
-    find: '("AppTitleBar")',
+    find: "(\"AppTitleBar\")",
     replace: {
       match: /{hasBugReporterAccess:(\i)}=\i\.\i\.useExperiment\({location:"HeaderBar"},{autoTrackExposure:!1}\);/,
       replacement: (orig, isStaff) =>
@@ -35,7 +35,7 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: 'navId:"staff-help-popout",',
+    find: "navId:\"staff-help-popout\",",
     replace: {
       match: /isDiscordDeveloper:(\i)}\),/,
       replacement: (_, isStaff) =>

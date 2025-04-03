@@ -1,17 +1,17 @@
-export type Config = {
+export interface Config {
   extensions: ConfigExtensions;
   repositories: string[];
   devSearchPaths?: string[];
   loggerLevel?: string;
   patchAll?: boolean;
-};
+}
 
-export type ConfigExtensions = { [key: string]: boolean } | { [key: string]: ConfigExtension };
+export type ConfigExtensions = Record<string, boolean> | Record<string, ConfigExtension>;
 
-export type ConfigExtension = {
+export interface ConfigExtension {
   enabled: boolean;
   config?: Record<string, any>;
-};
+}
 
 export enum ExtensionSettingType {
   Boolean = "boolean",
@@ -28,19 +28,19 @@ export enum ExtensionSettingType {
 export type SelectOption =
   | string
   | {
-      value: string;
-      label: string;
-    };
+    value: string;
+    label: string;
+  };
 
-export type BooleanSettingType = {
+export interface BooleanSettingType {
   /**
    * Displays as a simple switch.
    */
   type: ExtensionSettingType.Boolean;
   default?: boolean;
-};
+}
 
-export type NumberSettingType = {
+export interface NumberSettingType {
   /**
    * Displays as a simple slider.
    */
@@ -48,66 +48,66 @@ export type NumberSettingType = {
   default?: number;
   min?: number;
   max?: number;
-};
+}
 
-export type StringSettingType = {
+export interface StringSettingType {
   /**
    * Displays as a single line string input.
    */
   type: ExtensionSettingType.String;
   default?: string;
-};
+}
 
-export type MultilineTextInputSettingType = {
+export interface MultilineTextInputSettingType {
   /**
    * Displays as a multiple line string input.
    */
   type: ExtensionSettingType.MultilineString;
   default?: string;
-};
+}
 
-export type SelectSettingType = {
+export interface SelectSettingType {
   /**
    * A dropdown to pick between one of many values.
    */
   type: ExtensionSettingType.Select;
   options: SelectOption[];
   default?: string;
-};
+}
 
-export type MultiSelectSettingType = {
+export interface MultiSelectSettingType {
   /**
    * A dropdown to pick multiple values.
    */
   type: ExtensionSettingType.MultiSelect;
   options: string[];
   default?: string[];
-};
+}
 
-export type ListSettingType = {
+export interface ListSettingType {
   /**
    * A list of strings that the user can add or remove from.
    */
   type: ExtensionSettingType.List;
   default?: string[];
-};
+}
 
-export type DictionarySettingType = {
+export interface DictionarySettingType {
   /**
    * A dictionary (key-value pair) that the user can add or remove from.
    */
   type: ExtensionSettingType.Dictionary;
   default?: Record<string, string>;
-};
+}
 
-export type CustomSettingType = {
+export interface CustomSettingType {
   /**
    * A custom component.
    * You can use the registerConfigComponent function in the Moonbase API to register a React component to render here.
    */
   type: ExtensionSettingType.Custom;
   default?: any;
-};
+}
 
 export enum ExtensionSettingsAdvice {
   None = "none",

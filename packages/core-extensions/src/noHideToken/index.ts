@@ -1,4 +1,4 @@
-import { Patch } from "@moonlight-mod/types";
+import type { Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {

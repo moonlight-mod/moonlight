@@ -4,8 +4,8 @@ export type ErrorBoundaryProps = React.PropsWithChildren<{
   message?: string;
 }>;
 
-export type ErrorBoundaryState = {
+export interface ErrorBoundaryState {
   errored: boolean;
   error?: Error;
   componentStack?: string;
-};
+}

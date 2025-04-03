@@ -1,6 +1,6 @@
-import { Config } from "@moonlight-mod/types";
-import { getConfigPath } from "./util/data";
+import type { Config } from "@moonlight-mod/types";
 import * as constants from "@moonlight-mod/types/constants";
+import { getConfigPath } from "./util/data";
 import Logger from "./util/logger";
 
 const logger = new Logger("core/config");
@@ -20,7 +20,8 @@ export async function writeConfig(config: Config) {
   try {
     const configPath = await getConfigPath();
     await moonlightNodeSandboxed.fs.writeFileString(configPath, JSON.stringify(config, null, 2));
-  } catch (e) {
+  }
+  catch (e) {
     logger.error("Failed to write config", e);
   }
 }
@@ -34,7 +35,8 @@ export async function readConfig(): Promise<Config> {
   if (!(await moonlightNodeSandboxed.fs.exists(configPath))) {
     await writeConfig(defaultConfig);
     return defaultConfig;
-  } else {
+  }
+  else {
     try {
       let config: Config = JSON.parse(await moonlightNodeSandboxed.fs.readFileString(configPath));
       // Assign the default values if they don't exist (newly added)
@@ -42,7 +44,8 @@ export async function readConfig(): Promise<Config> {
       await writeConfig(config);
 
       return config;
-    } catch (e) {
+    }
+    catch (e) {
       logger.error("Failed to read config, falling back to defaults", e);
       // We don't want to write the default config here - if a user is manually
       // editing their config and messes it up, we'll delete it all instead of

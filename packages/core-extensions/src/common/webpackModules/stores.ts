@@ -3,7 +3,7 @@ import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 module.exports = new Proxy(
   {},
   {
-    get: function (target, key, receiver) {
+    get(_target, key, _receiver) {
       const allStores = Store.getAll();
 
       let targetStore;

@@ -8,6 +8,6 @@ export function installStyles() {
   for (const style of styles) {
     const el = document.createElement("style");
     el.textContent = style;
-    document.documentElement.appendChild(el);
+    document.documentElement.append(el);
   }
 }

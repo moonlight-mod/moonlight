@@ -1,8 +1,10 @@
-import {
-  APPLICATION_ID,
+import type {
   Commands,
   LegacyCommand,
   RegisteredCommand
+} from "@moonlight-mod/types/coreExtensions/commands";
+import {
+  APPLICATION_ID
 } from "@moonlight-mod/types/coreExtensions/commands";
 
 type LegacyCommands = Record<string, LegacyCommand>;
@@ -30,7 +32,7 @@ export const commands: Commands = {
       applicationId: APPLICATION_ID,
       untranslatedDescription: command.description,
       displayDescription: command.description,
-      options: command.options?.map((o) => ({
+      options: command.options?.map(o => ({
         ...o,
         displayName: o.name,
         displayDescription: o.description
@@ -43,14 +45,16 @@ export const commands: Commands = {
     if (command.match) {
       if (command.match instanceof RegExp) {
         command.match = this.anyScopeRegex(command.match);
-      } else if (command.match.regex && typeof command.match !== "function") {
+      }
+      else if (command.match.regex && typeof command.match !== "function") {
         command.match = this.anyScopeRegex(command.match.regex);
       }
     }
 
     if (!legacyCommands) {
       queuedLegacyCommands![id] = command;
-    } else {
+    }
+    else {
       legacyCommands[id] = command;
     }
   },

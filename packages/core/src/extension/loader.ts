@@ -1,19 +1,22 @@
-import {
-  ExtensionWebExports,
+import type {
   DetectedExtension,
-  ProcessedExtensions,
-  WebpackModuleFunc,
-  constants,
   ExtensionManifest,
+  ExtensionWebExports,
+  ProcessedExtensions,
+  WebpackModuleFunc
+} from "@moonlight-mod/types";
+import type { WebEventPayloads } from "@moonlight-mod/types/core/event";
+import {
+  constants,
   ExtensionEnvironment
 } from "@moonlight-mod/types";
+import { WebEventType } from "@moonlight-mod/types/core/event";
 import { readConfig } from "../config";
-import Logger from "../util/logger";
 import { registerPatch, registerWebpackModule } from "../patch";
+import { registerStyles } from "../styles";
 import calculateDependencies from "../util/dependency";
 import { createEventEmitter } from "../util/event";
-import { registerStyles } from "../styles";
-import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
+import Logger from "../util/logger";
 
 const logger = new Logger("core/extension/loader");
 
@@ -45,13 +48,14 @@ async function evalEsm(source: string): Promise<ExtensionWebExports> {
 
 async function loadExtWeb(ext: DetectedExtension) {
   if (ext.scripts.web != null) {
-    const source = ext.scripts.web + `\n//# sourceURL=${ext.id}/web.js`;
+    const source = `${ext.scripts.web}\n//# sourceURL=${ext.id}/web.js`;
 
     let exports: ExtensionWebExports;
 
     try {
       exports = evalIIFE(ext.id, source);
-    } catch {
+    }
+    catch {
       logger.trace(`Failed to load IIFE for extension ${ext.id}, trying ESM loading`);
       exports = await evalEsm(source);
     }
@@ -61,7 +65,8 @@ async function loadExtWeb(ext: DetectedExtension) {
       for (const patch of exports.patches) {
         if (Array.isArray(patch.replace)) {
           registerPatch({ ...patch, ext: ext.id, id: idx });
-        } else {
+        }
+        else {
           registerPatch({ ...patch, replace: [patch.replace], ext: ext.id, id: idx });
         }
         idx++;
@@ -71,7 +76,7 @@ async function loadExtWeb(ext: DetectedExtension) {
     if (exports.webpackModules != null) {
       for (const [name, wp] of Object.entries(exports.webpackModules)) {
         if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
-          const source = ext.scripts.webpackModules[name]! + `\n//# sourceURL=${ext.id}/webpackModules/${name}.js`;
+          const source = `${ext.scripts.webpackModules[name]!}\n//# sourceURL=${ext.id}/webpackModules/${name}.js`;
           const func = new Function("module", "exports", "require", source) as WebpackModuleFunc;
           registerWebpackModule({
             ...wp,
@@ -79,7 +84,8 @@ async function loadExtWeb(ext: DetectedExtension) {
             id: name,
             run: func
           });
-        } else {
+        }
+        else {
           registerWebpackModule({ ...wp, ext: ext.id, id: name });
         }
       }
@@ -98,7 +104,8 @@ async function loadExt(ext: DetectedExtension) {
   webTarget: {
     try {
       await loadExtWeb(ext);
-    } catch (e) {
+    }
+    catch (e) {
       logger.error(`Failed to load extension "${ext.id}"`, e);
     }
   }
@@ -108,7 +115,8 @@ async function loadExt(ext: DetectedExtension) {
       try {
         const module = require(ext.scripts.nodePath);
         moonlightNode.nativesCache[ext.id] = module;
-      } catch (e) {
+      }
+      catch (e) {
         logger.error(`Failed to load extension "${ext.id}"`, e);
       }
     }
@@ -118,7 +126,8 @@ async function loadExt(ext: DetectedExtension) {
     if (ext.scripts.hostPath != null) {
       try {
         require(ext.scripts.hostPath);
-      } catch (e) {
+      }
+      catch (e) {
         logger.error(`Failed to load extension "${ext.id}"`, e);
       }
     }
@@ -161,7 +170,7 @@ export function checkExtensionCompat(manifest: ExtensionManifest): ExtensionComp
   of another extension, resolving dependencies & load order effectively.
 */
 export async function loadExtensions(exts: DetectedExtension[]): Promise<ProcessedExtensions> {
-  exts = exts.filter((ext) => checkExtensionCompat(ext.manifest) === ExtensionCompat.Compatible);
+  exts = exts.filter(ext => checkExtensionCompat(ext.manifest) === ExtensionCompat.Compatible);
 
   const config = await readConfig();
   const items = exts
@@ -175,7 +184,7 @@ export async function loadExtensions(exts: DetectedExtension[]): Promise<Process
 
   const [sorted, dependencyGraph] = calculateDependencies(items, {
     fetchDep: (id) => {
-      return exts.find((x) => x.id === id) ?? null;
+      return exts.find(x => x.id === id) ?? null;
     },
 
     getDeps: (item) => {
@@ -196,7 +205,7 @@ export async function loadExtensions(exts: DetectedExtension[]): Promise<Process
   });
 
   return {
-    extensions: sorted.map((x) => x.data),
+    extensions: sorted.map(x => x.data),
     dependencyGraph
   };
 }
@@ -207,7 +216,7 @@ export async function loadProcessedExtensions({ extensions, dependencyGraph }: P
 
   logger.trace(
     "Load stage - extension list:",
-    extensions.map((x) => x.id)
+    extensions.map(x => x.id)
   );
 
   async function loadExtWithDependencies(ext: DetectedExtension) {

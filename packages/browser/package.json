@@ -7,5 +7,8 @@
     "@moonlight-mod/web-preload": "workspace:*",
     "@zenfs/core": "catalog:prod",
     "@zenfs/dom": "catalog:prod"
+  },
+  "devDependencies": {
+    "@types/chrome": "catalog:dev"
   }
 }

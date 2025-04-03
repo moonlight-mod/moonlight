@@ -1,4 +1,4 @@
-import { Patch, ExtensionWebpackModule } from "@moonlight-mod/types";
+import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 import { APPLICATION_ID } from "@moonlight-mod/types/coreExtensions/commands";
 
 export const patches: Patch[] = [
@@ -23,7 +23,7 @@ export const patches: Patch[] = [
 
   // index our section
   {
-    find: '"ApplicationCommandIndexStore"',
+    find: `"ApplicationCommandIndexStore"`,
     replace: {
       match: /(?<=let \i=(\i)\((\i\.\i)\[\i\.\i\.BUILT_IN\],(\i),!0,!0,(\i)\);)null!=(\i)&&(\i)\.push\(\i\)/,
       replacement: (_, createSection, sections, deny, props, section, commands) =>

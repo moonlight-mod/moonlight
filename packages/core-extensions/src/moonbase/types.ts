@@ -1,14 +1,14 @@
-import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
-import { DetectedExtension, ExtensionManifest, MoonlightBranch } from "@moonlight-mod/types";
+import type { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import type { DetectedExtension, ExtensionManifest, MoonlightBranch } from "@moonlight-mod/types";
 
-export type MoonbaseNatives = {
-  checkForMoonlightUpdate(): Promise<string | null>;
-  updateMoonlight(overrideBranch?: MoonlightBranch): Promise<void>;
+export interface MoonbaseNatives {
+  checkForMoonlightUpdate: () => Promise<string | null>;
+  updateMoonlight: (overrideBranch?: MoonlightBranch) => Promise<void>;
 
-  fetchRepositories(repos: string[]): Promise<Record<string, RepositoryManifest[]>>;
-  installExtension(manifest: RepositoryManifest, url: string, repo: string): Promise<void>;
-  deleteExtension(id: string): Promise<void>;
-};
+  fetchRepositories: (repos: string[]) => Promise<Record<string, RepositoryManifest[]>>;
+  installExtension: (manifest: RepositoryManifest, url: string, repo: string) => Promise<void>;
+  deleteExtension: (id: string) => Promise<void>;
+}
 
 export type RepositoryManifest = ExtensionManifest & {
   download: string;
@@ -20,7 +20,7 @@ export enum ExtensionState {
   Enabled
 }
 
-export type MoonbaseExtension = {
+export interface MoonbaseExtension {
   id: string;
   uniqueId: number;
   manifest: ExtensionManifest | RepositoryManifest;
@@ -30,7 +30,7 @@ export type MoonbaseExtension = {
   hasUpdate: boolean;
   changelog?: string;
   settingsOverride?: ExtensionManifest["settings"];
-};
+}
 
 export enum UpdateState {
   Ready,

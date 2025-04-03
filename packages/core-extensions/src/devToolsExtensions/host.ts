@@ -1,6 +1,6 @@
-import { app, session } from "electron";
 import { resolve } from "node:path";
 import Logger from "@moonlight-mod/core/util/logger";
+import { app, session } from "electron";
 
 const logger = new Logger("DevTools Extensions");
 
@@ -12,7 +12,8 @@ app.whenReady().then(async () => {
 
     try {
       await session.defaultSession.loadExtension(resolved);
-    } catch (err) {
+    }
+    catch (err) {
       logger.error(`Failed to load an extension in "${resolved}":`, err);
     }
   }

@@ -1,11 +1,11 @@
+import type { MoonbaseExtension } from "core-extensions/src/moonbase/types";
+import { ExtensionLoadSource } from "@moonlight-mod/types";
+import { SingleSelect, Text } from "@moonlight-mod/wp/discord/components/common/index";
+import { closeModal, openModalLazy, useModalsStore } from "@moonlight-mod/wp/discord/modules/modals/Modals";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 // TODO: clean up the styling here
 import React from "@moonlight-mod/wp/react";
-import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
-import { openModalLazy, useModalsStore, closeModal } from "@moonlight-mod/wp/discord/modules/modals/Modals";
-import { SingleSelect, Text } from "@moonlight-mod/wp/discord/components/common/index";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import { ExtensionLoadSource } from "@moonlight-mod/types";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").default;
@@ -41,9 +41,11 @@ function ExtensionSelect({
 }) {
   return (
     <SingleSelect
-      key={id}
       autofocus={false}
-      value={option}
+      key={id}
+      onChange={(value: string) => {
+        setOption(value);
+      }}
       options={candidates.map((candidate) => {
         return {
           value: candidate.uniqueId.toString(),
@@ -51,10 +53,8 @@ function ExtensionSelect({
             candidate.source.url ?? presentableLoadSources[candidate.source.type] ?? candidate.manifest.version ?? ""
         };
       })}
-      onChange={(value: string) => {
-        setOption(value);
-      }}
       placeholder="Missing extension"
+      value={option}
     />
   );
 }
@@ -67,7 +67,7 @@ function MissingExtensionPopup({
   transitionState: number | null;
 }) {
   lazyLoad();
-  const amountNotAvailable = Object.values(deps).filter((candidates) => candidates.length === 0).length;
+  const amountNotAvailable = Object.values(deps).filter(candidates => candidates.length === 0).length;
 
   const [options, setOptions] = React.useState<Record<string, string | undefined>>(
     Object.fromEntries(
@@ -80,12 +80,12 @@ function MissingExtensionPopup({
 
   return (
     <ConfirmModal
-      body={
+      body={(
         <Flex
+          direction={Flex.Direction.VERTICAL}
           style={{
             gap: "20px"
           }}
-          direction={Flex.Direction.VERTICAL}
         >
           <Text variant="text-md/normal">
             This extension depends on other extensions which are not downloaded. Choose which extensions to download.
@@ -93,8 +93,12 @@ function MissingExtensionPopup({
 
           {amountNotAvailable > 0 && (
             <Text variant="text-md/normal">
-              {amountNotAvailable} extension
-              {amountNotAvailable > 1 ? "s" : ""} could not be found, and must be installed manually.
+              {amountNotAvailable}
+              {" "}
+              extension
+              {amountNotAvailable > 1 ? "s" : ""}
+              {" "}
+              could not be found, and must be installed manually.
             </Text>
           )}
 
@@ -105,34 +109,33 @@ function MissingExtensionPopup({
               gap: "10px"
             }}
           >
-            {Object.entries(deps).map(([id, candidates], i) => (
+            {Object.entries(deps).map(([id, candidates]) => (
               <>
                 <Text
-                  variant="text-md/normal"
                   style={{
                     alignSelf: "center",
                     wordBreak: "break-word"
                   }}
+                  variant="text-md/normal"
                 >
                   {MoonbaseSettingsStore.tryGetExtensionName(id)}
                 </Text>
 
                 <ExtensionSelect
-                  id={id}
                   candidates={candidates}
+                  id={id}
                   option={options[id]}
-                  setOption={(pick) =>
-                    setOptions((prev) => ({
+                  setOption={pick =>
+                    setOptions(prev => ({
                       ...prev,
                       [id]: pick
-                    }))
-                  }
+                    }))}
                 />
               </>
             ))}
           </div>
         </Flex>
-      }
+      )}
       cancelText="Cancel"
       confirmText="Install"
       onCancel={close}
@@ -141,7 +144,7 @@ function MissingExtensionPopup({
 
         for (const pick of Object.values(options)) {
           if (pick != null) {
-            MoonbaseSettingsStore.installExtension(parseInt(pick));
+            MoonbaseSettingsStore.installExtension(Number.parseInt(pick));
           }
         }
       }}
@@ -154,7 +157,7 @@ function MissingExtensionPopup({
 export async function doMissingExtensionPopup(deps: Record<string, MoonbaseExtension[]>) {
   await openModalLazy(async () => {
     return ({ transitionState }: { transitionState: number | null }) => {
-      return <MissingExtensionPopup transitionState={transitionState} deps={deps} />;
+      return <MissingExtensionPopup deps={deps} transitionState={transitionState} />;
     };
   });
 }
@@ -163,7 +166,7 @@ function GenericExtensionPopup({
   title,
   content,
   transitionState,
-  uniqueId,
+  uniqueId: _uniqueId,
   cb
 }: {
   title: string;
@@ -176,19 +179,19 @@ function GenericExtensionPopup({
 
   return (
     <ConfirmModal
-      title={title}
-      body={
+      body={(
         <Flex>
           <Text variant="text-md/normal">{content}</Text>
         </Flex>
-      }
-      confirmText="Yes"
+      )}
       cancelText="No"
+      confirmText="Yes"
       onCancel={close}
       onConfirm={() => {
         close();
         cb();
       }}
+      title={title}
       transitionState={transitionState}
     />
   );
@@ -199,11 +202,11 @@ export async function doGenericExtensionPopup(title: string, content: string, un
     return ({ transitionState }: { transitionState: number | null }) => {
       return (
         <GenericExtensionPopup
-          title={title}
+          cb={cb}
           content={content}
+          title={title}
           transitionState={transitionState}
           uniqueId={uniqueId}
-          cb={cb}
         />
       );
     };

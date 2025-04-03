@@ -1,6 +1,6 @@
 type Patcher<T> = (elements: React.ReactNode[], props: T) => React.ReactNode[];
 
-//#region DM List
+// #region DM List
 export type DMListAnchors =
   | "content"
   | "favorite-server-indicator"
@@ -11,7 +11,7 @@ export type DMListAnchors =
 export type DMListDecoratorAnchors = "system-tag" | undefined;
 
 export enum DMListAnchorIndicies {
-  content = 0,
+  "content" = 0,
   "favorite-server-indicator",
   "ignored-indicator",
   "blocked-indicator",
@@ -21,21 +21,21 @@ export enum DMListDecoratorAnchorIndicies {
   "system-tag" = 0
 }
 
-export type DMListItem = {
+export interface DMListItem {
   component: React.FC<any>;
   anchor: DMListAnchors;
   before: boolean;
-};
-export type DMListDecorator = {
+}
+export interface DMListDecorator {
   component: React.FC<any>;
   anchor: DMListDecoratorAnchors;
   before: boolean;
-};
+}
 
-export type DMList = {
+export interface DMList {
   addItem: (id: string, component: React.FC<any>, anchor?: DMListAnchors, before?: boolean) => void;
   addDecorator: (id: string, component: React.FC<any>, anchor?: DMListDecoratorAnchors, before?: boolean) => void;
-  //TODO: fix props type
+  // TODO: fix props type
   /**
    * @private
    */
@@ -44,10 +44,10 @@ export type DMList = {
    * @private
    */
   _patchDecorators: Patcher<any>;
-};
-//#endregion
+}
+// #endregion
 
-//#region Member List
+// #region Member List
 export type MemberListDecoratorAnchors = "bot-tag" | "owner-crown" | "boost-icon" | undefined;
 
 export enum MemberListDecoratorAnchorIndicies {
@@ -56,16 +56,16 @@ export enum MemberListDecoratorAnchorIndicies {
   "boost-icon"
 }
 
-export type MemberListDecorator = {
+export interface MemberListDecorator {
   component: React.FC<any>;
   anchor: MemberListDecoratorAnchors;
   before: boolean;
-};
+}
 
-export type MemberList = {
+export interface MemberList {
   addItem: (id: string, component: React.FC<any>) => void;
   addDecorator: (id: string, component: React.FC<any>, anchor?: MemberListDecoratorAnchors, before?: boolean) => void;
-  //TODO: fix props type
+  // TODO: fix props type
   /**
    * @private
    */
@@ -74,10 +74,10 @@ export type MemberList = {
    * @private
    */
   _patchDecorators: Patcher<any>;
-};
-//#endregion
+}
+// #endregion
 
-//#region Messages
+// #region Messages
 export type MessageUsernameAnchors = "communication-disabled" | "username" | undefined;
 export type MessageUsernameBadgeAnchors =
   | "nitro-author"
@@ -88,39 +88,39 @@ export type MessageUsernameBadgeAnchors =
   | undefined;
 export type MessageBadgeAnchors = "silent" | "potion" | undefined;
 
-export type MessageUsername = {
+export interface MessageUsername {
   component: React.FC<any>;
   anchor: MessageUsernameAnchors;
   before: boolean;
-};
-export type MessageUsernameBadge = {
+}
+export interface MessageUsernameBadge {
   component: React.FC<any>;
   anchor: MessageUsernameBadgeAnchors;
   before: boolean;
-};
-export type MessageBadge = {
+}
+export interface MessageBadge {
   component: React.FC<any>;
   anchor: MessageBadgeAnchors;
   before: boolean;
-};
+}
 
 export enum MessageUsernameIndicies {
   "communication-disabled" = 0,
-  username
+  "username"
 }
 export enum MessageUsernameBadgeIndicies {
   "nitro-author" = 0,
   "role-icon",
   "new-member",
   "leaderboard-champion",
-  connections
+  "connections"
 }
 export enum MessageBadgeIndicies {
   silent = 0,
   potion
 }
 
-export type Messages = {
+export interface Messages {
   /**
    * Adds a component to the username of a message
    */
@@ -158,5 +158,5 @@ export type Messages = {
    * @private
    */
   _patchAccessories: Patcher<any>;
-};
-//#endregion
+}
+// #endregion

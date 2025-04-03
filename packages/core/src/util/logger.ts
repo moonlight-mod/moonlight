@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console -- literally a logging utility :sob: */
+import type { Config } from "@moonlight-mod/types";
 import { LogLevel } from "@moonlight-mod/types/logger";
-import { Config } from "@moonlight-mod/types";
 
 const colors = {
   [LogLevel.SILLY]: "#EDD3E9",
@@ -51,7 +51,8 @@ export default class Logger {
 
     if (MOONLIGHT_WEB_PRELOAD || MOONLIGHT_BROWSER) {
       args = [`%c[${logLevel}]`, `background-color: ${colors[level]}; color: #FFFFFF;`, `[${this.name}]`, ...obj];
-    } else {
+    }
+    else {
       args = [`[${logLevel}]`, `[${this.name}]`, ...obj];
     }
 

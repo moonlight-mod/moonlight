@@ -1,4 +1,5 @@
-import { ExtensionManifest, DetectedExtension, ExtensionLoadSource, constants } from "@moonlight-mod/types";
+import type { DetectedExtension, ExtensionManifest } from "@moonlight-mod/types";
+import { constants, ExtensionLoadSource } from "@moonlight-mod/types";
 import { readConfig } from "./config";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 import Logger from "./util/logger";
@@ -50,9 +51,9 @@ async function loadDetectedExtensions(
 
       // if none exist (empty manifest) don't give a shit
       if (
-        !moonlightNodeSandboxed.fs.exists(webPath) &&
-        !moonlightNodeSandboxed.fs.exists(nodePath) &&
-        !moonlightNodeSandboxed.fs.exists(hostPath)
+        !moonlightNodeSandboxed.fs.exists(webPath)
+        && !moonlightNodeSandboxed.fs.exists(nodePath)
+        && !moonlightNodeSandboxed.fs.exists(hostPath)
       ) {
         continue;
       }
@@ -61,7 +62,7 @@ async function loadDetectedExtensions(
         ? await moonlightNodeSandboxed.fs.readFileString(webPath)
         : undefined;
 
-      let url: string | undefined = undefined;
+      let url: string | undefined;
       const urlPath = moonlightNodeSandboxed.fs.join(dir, constants.repoUrlFile);
       if (type === ExtensionLoadSource.Normal && (await moonlightNodeSandboxed.fs.exists(urlPath))) {
         url = await moonlightNodeSandboxed.fs.readFileString(urlPath);
@@ -101,7 +102,8 @@ async function loadDetectedExtensions(
             : undefined
         }
       });
-    } catch (err) {
+    }
+    catch (err) {
       logger.error(`Failed to load extension from "${manifestPath}":`, err);
     }
   }
@@ -112,7 +114,7 @@ async function loadDetectedExtensions(
 async function getExtensionsNative(): Promise<DetectedExtension[]> {
   const config = await readConfig();
   const res = [];
-  const seen = new Set<string>();
+  const seen: Set<string> = new Set();
 
   res.push(...(await loadDetectedExtensions(getCoreExtensionsPath(), ExtensionLoadSource.Core, seen)));
 
@@ -127,13 +129,13 @@ async function getExtensionsNative(): Promise<DetectedExtension[]> {
 
 async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
   const ret: DetectedExtension[] = [];
-  const seen = new Set<string>();
+  const seen: Set<string> = new Set();
 
   const coreExtensionsFs: Record<string, string> = JSON.parse(
-    // @ts-expect-error shut up
+    // @ts-expect-error: shut up
     _moonlight_coreExtensionsStr
   );
-  const coreExtensions = Array.from(new Set(Object.keys(coreExtensionsFs).map((x) => x.split("/")[0])));
+  const coreExtensions = Array.from(new Set(Object.keys(coreExtensionsFs).map(x => x.split("/")[0])));
 
   for (const ext of coreExtensions) {
     if (!coreExtensionsFs[`${ext}/index.js`]) continue;
@@ -144,7 +146,7 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
     const wpModulesPath = `${ext}/webpackModules`;
     for (const wpModuleFile of Object.keys(coreExtensionsFs)) {
       if (wpModuleFile.startsWith(wpModulesPath)) {
-        wpModules[wpModuleFile.replace(wpModulesPath + "/", "").replace(".js", "")] = coreExtensionsFs[wpModuleFile];
+        wpModules[wpModuleFile.replace(`${wpModulesPath}/`, "").replace(".js", "")] = coreExtensionsFs[wpModuleFile];
       }
     }
 

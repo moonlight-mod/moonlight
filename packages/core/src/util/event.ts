@@ -1,4 +1,4 @@
-import { MoonlightEventEmitter } from "@moonlight-mod/types/core/event";
+import type { MoonlightEventEmitter } from "@moonlight-mod/types/core/event";
 
 export function createEventEmitter<
   EventId extends string = string,
@@ -6,7 +6,7 @@ export function createEventEmitter<
 >(): MoonlightEventEmitter<EventId, EventData> {
   webTarget: {
     const eventEmitter = new EventTarget();
-    const listeners = new Map<(data: EventData) => void, (e: Event) => void>();
+    const listeners: Map<(data: EventData) => void, (e: Event) => void> = new Map();
 
     return {
       dispatchEvent: <Id extends keyof EventData>(id: Id, data: EventData[Id]) => {
@@ -37,9 +37,9 @@ export function createEventEmitter<
   }
 
   nodeTarget: {
-    const EventEmitter = require("events");
+    const EventEmitter = require("node:events");
     const eventEmitter = new EventEmitter();
-    const listeners = new Map<(data: EventData) => void, (e: Event) => void>();
+    const listeners: Map<(data: EventData) => void, (e: Event) => void> = new Map();
 
     return {
       dispatchEvent: <Id extends keyof EventData>(id: Id, data: EventData[Id]) => {

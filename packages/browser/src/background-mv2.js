@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
+/* eslint-disable no-console -- debugging */
 
 const starterUrls = ["web.", "sentry."];
 let blockLoading = true;
 let doing = false;
-let collectedUrls = new Set();
+const collectedUrls = new Set();
 
 chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   const url = new URL(details.url);
@@ -28,18 +27,19 @@ async function doTheThing(urls, tabId) {
       func: async (urls) => {
         try {
           await window._moonlightBrowserInit();
-        } catch (e) {
+        }
+        catch (e) {
           console.log(e);
         }
 
         const scripts = [...document.querySelectorAll("script")].filter(
-          (script) => script.src && urls.some((url) => url.includes(script.src))
+          script => script.src && urls.some(url => url.includes(script.src))
         );
 
         // backwards
         urls.reverse();
         for (const url of urls) {
-          const script = scripts.find((script) => url.includes(script.src));
+          const script = scripts.find(script => url.includes(script.src));
           console.log("adding new script", script);
 
           const newScript = document.createElement("script");
@@ -48,11 +48,12 @@ async function doTheThing(urls, tabId) {
           }
 
           script.remove();
-          document.documentElement.appendChild(newScript);
+          document.documentElement.append(newScript);
         }
       }
     });
-  } catch (e) {
+  }
+  catch (e) {
     console.log(e);
   }
 
@@ -62,7 +63,7 @@ async function doTheThing(urls, tabId) {
 
 chrome.webRequest.onBeforeRequest.addListener(
   async (details) => {
-    if (starterUrls.some((url) => details.url.includes(url))) {
+    if (starterUrls.some(url => details.url.includes(url))) {
       console.log("Adding", details.url);
       collectedUrls.add(details.url);
     }
@@ -90,7 +91,7 @@ chrome.webRequest.onHeadersReceived.addListener(
   (details) => {
     return {
       responseHeaders: details.responseHeaders.filter(
-        (header) => header.name.toLowerCase() !== "content-security-policy"
+        header => header.name.toLowerCase() !== "content-security-policy"
       )
     };
   },

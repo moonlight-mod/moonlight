@@ -1,6 +1,6 @@
-import { Store } from "@moonlight-mod/wp/discord/packages/flux";
-import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import type { Notice, Notices } from "@moonlight-mod/types/coreExtensions/notices";
+import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
+import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 
 // very lazy way of doing this, FIXME
 let open = false;

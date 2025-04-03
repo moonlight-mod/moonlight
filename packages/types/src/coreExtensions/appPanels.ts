@@ -1,4 +1,4 @@
-export type AppPanels = {
+export interface AppPanels {
   /**
    * Registers a new panel to be displayed around the user/voice controls.
    * @param section A unique name for your section
@@ -10,4 +10,4 @@ export type AppPanels = {
    * @private
    */
   getPanels: (el: React.FC<any>) => React.ReactNode;
-};
+}

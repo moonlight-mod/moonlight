@@ -1,7 +1,7 @@
 import type { Config, DetectedExtension, ExtensionManifest } from "@moonlight-mod/types";
 
 export function getManifest(extensions: DetectedExtension[], ext: string) {
-  return extensions.find((x) => x.id === ext)?.manifest;
+  return extensions.find(x => x.id === ext)?.manifest;
 }
 
 export function getConfig(ext: string, config: Config) {
@@ -24,8 +24,8 @@ export function getConfigOption<T>(
 
 export function setConfigOption<T>(config: Config, ext: string, key: string, value: T) {
   const oldConfig = config.extensions[ext];
-  const newConfig =
-    typeof oldConfig === "boolean"
+  const newConfig
+    = typeof oldConfig === "boolean"
       ? {
           enabled: oldConfig,
           config: { [key]: value }

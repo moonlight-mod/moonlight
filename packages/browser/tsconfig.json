@@ -1,6 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "lib": ["DOM", "ESNext", "ESNext.AsyncIterable"],
     "module": "ES2022"
   }
 }
