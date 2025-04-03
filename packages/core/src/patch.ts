@@ -162,7 +162,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
             }
 
             if (replaced === moduleString) {
-              logger.warn("Patch replacement failed", id, patch);
+              logger.warn("Patch replacement failed", id, patchId, patch);
               isPatched = false;
               if (patch.hardFail) {
                 hardFailed = true;
