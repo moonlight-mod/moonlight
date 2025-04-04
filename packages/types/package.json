@@ -8,7 +8,7 @@
   },
   "main": "./src/index.ts",
   "types": "./src/index.ts",
-  "engineStrict": true,
+  "engineStrict": false,
   "engines": {
     "node": ">=22",
     "pnpm": ">=10",
@@ -16,11 +16,11 @@
     "yarn": "pnpm"
   },
   "dependencies": {
-    "@moonlight-mod/lunast": "catalog:prod",
-    "@moonlight-mod/mappings": "catalog:prod",
-    "@moonlight-mod/moonmap": "catalog:prod",
-    "@types/react": "catalog:prod",
-    "csstype": "catalog:prod",
-    "standalone-electron-types": "catalog:prod"
+    "@moonlight-mod/lunast": "^1.0.1",
+    "@moonlight-mod/mappings": "^1.1.22",
+    "@moonlight-mod/moonmap": "^1.0.5",
+    "@types/react": "^18.3.10",
+    "csstype": "^3.1.3",
+    "standalone-electron-types": "^1.0.0"
   }
 }

@@ -17,9 +17,6 @@ catalogs:
     "@moonlight-mod/lunast": ^1.0.1
     "@moonlight-mod/mappings": ^1.1.22
     "@moonlight-mod/moonmap": ^1.0.5
-    "@types/react": ^18.3.10
-    csstype: ^3.1.2
-    standalone-electron-types: ^1.0.0
     microdiff: ^1.5.0
     nanotar: ^0.1.1
     "@zenfs/core": ^2.0.0
