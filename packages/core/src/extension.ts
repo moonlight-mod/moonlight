@@ -1,5 +1,4 @@
-import type { DetectedExtension, ExtensionManifest } from "@moonlight-mod/types";
-import { constants, ExtensionLoadSource } from "@moonlight-mod/types";
+import { ExtensionManifest, DetectedExtension, ExtensionLoadSource, constants } from "@moonlight-mod/types";
 import { readConfig } from "./config";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 import Logger from "./util/logger";
@@ -62,7 +61,7 @@ async function loadDetectedExtensions(
         ? await moonlightNodeSandboxed.fs.readFileString(webPath)
         : undefined;
 
-      let url: string | undefined;
+      let url: string | undefined = undefined;
       const urlPath = moonlightNodeSandboxed.fs.join(dir, constants.repoUrlFile);
       if (type === ExtensionLoadSource.Normal && (await moonlightNodeSandboxed.fs.exists(urlPath))) {
         url = await moonlightNodeSandboxed.fs.readFileString(urlPath);
@@ -113,7 +112,7 @@ async function loadDetectedExtensions(
 async function getExtensionsNative(): Promise<DetectedExtension[]> {
   const config = await readConfig();
   const res = [];
-  const seen: Set<string> = new Set();
+  const seen = new Set<string>();
 
   res.push(...(await loadDetectedExtensions(getCoreExtensionsPath(), ExtensionLoadSource.Core, seen)));
 
@@ -128,7 +127,7 @@ async function getExtensionsNative(): Promise<DetectedExtension[]> {
 
 async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
   const ret: DetectedExtension[] = [];
-  const seen: Set<string> = new Set();
+  const seen = new Set<string>();
 
   const coreExtensionsFs: Record<string, string> = JSON.parse(_moonlight_coreExtensionsStr);
   const coreExtensions = Array.from(new Set(Object.keys(coreExtensionsFs).map((x) => x.split("/")[0])));
@@ -142,7 +141,7 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
     const wpModulesPath = `${ext}/webpackModules`;
     for (const wpModuleFile of Object.keys(coreExtensionsFs)) {
       if (wpModuleFile.startsWith(wpModulesPath)) {
-        wpModules[wpModuleFile.replace(`${wpModulesPath}/`, "").replace(".js", "")] = coreExtensionsFs[wpModuleFile];
+        wpModules[wpModuleFile.replace(wpModulesPath + "/", "").replace(".js", "")] = coreExtensionsFs[wpModuleFile];
       }
     }
 
