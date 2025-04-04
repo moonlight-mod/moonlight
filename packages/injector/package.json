@@ -2,7 +2,7 @@
   "name": "@moonlight-mod/injector",
   "private": true,
   "engines": {
-    "node": ">=20",
+    "node": ">=22",
     "pnpm": ">=10",
     "npm": "pnpm",
     "yarn": "pnpm"

@@ -10,7 +10,7 @@
   "types": "./src/index.ts",
   "engineStrict": true,
   "engines": {
-    "node": ">=20",
+    "node": ">=22",
     "pnpm": ">=10",
     "npm": "pnpm",
     "yarn": "pnpm"
