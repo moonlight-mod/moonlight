@@ -1,6 +1,6 @@
-import type { InternalItem, Menu, MenuElement } from "@moonlight-mod/types/coreExtensions/contextMenu";
-import parser from "@moonlight-mod/wp/contextMenu_evilMenu";
+import { InternalItem, Menu, MenuElement } from "@moonlight-mod/types/coreExtensions/contextMenu";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import parser from "@moonlight-mod/wp/contextMenu_evilMenu";
 
 // NOTE: We originally had item as a function that returned this, but it didn't
 // quite know how to work out the type and thought it was a JSX element (it
@@ -8,12 +8,12 @@ import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 // zero, so it's better than nothing.
 type ReturnType = MenuElement | MenuElement[];
 
-interface Patch {
+type Patch = {
   navId: string;
   item: React.FC<any>;
   anchor: string | RegExp;
   before: boolean;
-}
+};
 
 function addItem<T = any>(navId: string, item: React.FC<T>, anchor: string | RegExp, before = false) {
   if (anchor instanceof RegExp && anchor.flags.includes("g"))
@@ -23,11 +23,11 @@ function addItem<T = any>(navId: string, item: React.FC<T>, anchor: string | Reg
 
 const patches: Patch[] = [];
 function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
-  const matches = patches.filter(p => p.navId === props.navId);
+  const matches = patches.filter((p) => p.navId === props.navId);
   if (!matches.length) return items;
 
   for (const patch of matches) {
-    const idx = items.findIndex(i =>
+    const idx = items.findIndex((i) =>
       typeof patch.anchor === "string" ? i.key === patch.anchor : patch.anchor.test(i.key!)
     );
     if (idx === -1) continue;
@@ -59,8 +59,8 @@ module.exports = {
 
 // Unmangle Menu elements
 // spacepack.require.m[moonlight.moonmap.modules["discord/modules/menus/web/Menu"]].toString();
-const code
-  = spacepack.require.m[
+const code =
+  spacepack.require.m[
     spacepack.findByCode("Menu API only allows Items and groups of Items as children.")[0].id
   ].toString();
 

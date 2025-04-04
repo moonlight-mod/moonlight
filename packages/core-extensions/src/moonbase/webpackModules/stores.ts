@@ -1,23 +1,20 @@
-import type { Config } from "@moonlight-mod/types";
-import type { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
-import type {
-  MoonbaseExtension,
-  MoonbaseNatives,
-  RepositoryManifest
-} from "../types";
-import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
-import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
-import { ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
-import { mainRepo } from "@moonlight-mod/types/constants";
-import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
-import { Store } from "@moonlight-mod/wp/discord/packages/flux";
-import diff from "microdiff";
-import getNatives from "../native";
+import { Config, ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
 import {
   ExtensionState,
+  MoonbaseExtension,
+  MoonbaseNatives,
+  RepositoryManifest,
   RestartAdvice,
   UpdateState
 } from "../types";
+import { Store } from "@moonlight-mod/wp/discord/packages/flux";
+import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
+import getNatives from "../native";
+import { mainRepo } from "@moonlight-mod/types/constants";
+import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
+import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
+import diff from "microdiff";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -39,18 +36,19 @@ class MoonbaseSettingsStore extends Store<any> {
   get updateState() {
     return this.#updateState;
   }
-
   newVersion: string | null;
   shouldShowNotice: boolean;
 
   restartAdvice = RestartAdvice.NotNeeded;
 
-  extensions: Record<number, MoonbaseExtension>;
-  updates: Record<number, {
-    version: string;
-    download: string;
-    updateManifest: RepositoryManifest;
-  }>;
+  extensions: { [id: number]: MoonbaseExtension };
+  updates: {
+    [id: number]: {
+      version: string;
+      download: string;
+      updateManifest: RepositoryManifest;
+    };
+  };
 
   constructor() {
     super(Dispatcher);
@@ -133,8 +131,7 @@ class MoonbaseSettingsStore extends Store<any> {
             existing.hasUpdate = true;
             existing.changelog = ext.meta?.changelog;
           }
-        }
-        else {
+        } else {
           this.extensions[uniqueId] = extensionData;
         }
       }
@@ -148,11 +145,11 @@ class MoonbaseSettingsStore extends Store<any> {
   }
 
   private getExisting(ext: MoonbaseExtension) {
-    return Object.values(this.extensions).find(e => e.id === ext.id && e.source.url === ext.source.url);
+    return Object.values(this.extensions).find((e) => e.id === ext.id && e.source.url === ext.source.url);
   }
 
   private hasUpdate(ext: MoonbaseExtension) {
-    const existing = Object.values(this.extensions).find(e => e.id === ext.id && e.source.url === ext.source.url);
+    const existing = Object.values(this.extensions).find((e) => e.id === ext.id && e.source.url === ext.source.url);
     if (existing == null) return false;
 
     return existing.manifest.version !== ext.manifest.version && existing.state !== ExtensionState.NotDownloaded;
@@ -179,14 +176,14 @@ class MoonbaseSettingsStore extends Store<any> {
   }
 
   getExtensionUniqueId(id: string) {
-    return Object.values(this.extensions).find(ext => ext.id === id)?.uniqueId;
+    return Object.values(this.extensions).find((ext) => ext.id === id)?.uniqueId;
   }
 
   getExtensionConflicting(uniqueId: number) {
     const ext = this.getExtension(uniqueId);
     if (ext.state !== ExtensionState.NotDownloaded) return false;
     return Object.values(this.extensions).some(
-      e => e.id === ext.id && e.uniqueId !== uniqueId && e.state !== ExtensionState.NotDownloaded
+      (e) => e.id === ext.id && e.uniqueId !== uniqueId && e.state !== ExtensionState.NotDownloaded
     );
   }
 
@@ -250,8 +247,7 @@ class MoonbaseSettingsStore extends Store<any> {
 
     if (typeof val === "boolean") {
       val = enabled;
-    }
-    else {
+    } else {
       val.enabled = enabled;
     }
 
@@ -270,9 +266,8 @@ class MoonbaseSettingsStore extends Store<any> {
   async updateAllExtensions() {
     for (const id of Object.keys(this.updates)) {
       try {
-        await this.installExtension(Number.parseInt(id));
-      }
-      catch (e) {
+        await this.installExtension(parseInt(id));
+      } catch (e) {
         logger.error("Error bulk updating extension", id, e);
       }
     }
@@ -302,8 +297,7 @@ class MoonbaseSettingsStore extends Store<any> {
       }
 
       delete this.updates[uniqueId];
-    }
-    catch (e) {
+    } catch (e) {
       logger.error("Error installing extension:", e);
     }
 
@@ -325,7 +319,7 @@ class MoonbaseSettingsStore extends Store<any> {
     const missingDeps = [];
     for (const dep of ext.manifest.dependencies ?? []) {
       const anyInstalled = Object.values(this.extensions).some(
-        e => e.id === dep && e.state !== ExtensionState.NotDownloaded
+        (e) => e.id === dep && e.state !== ExtensionState.NotDownloaded
       );
       if (!anyInstalled) missingDeps.push(dep);
     }
@@ -334,7 +328,7 @@ class MoonbaseSettingsStore extends Store<any> {
 
     const deps: Record<string, MoonbaseExtension[]> = {};
     for (const dep of missingDeps) {
-      const candidates = Object.values(this.extensions).filter(e => e.id === dep);
+      const candidates = Object.values(this.extensions).filter((e) => e.id === dep);
 
       deps[dep] = candidates.sort((a, b) => {
         const aRank = this.getRank(a);
@@ -343,8 +337,7 @@ class MoonbaseSettingsStore extends Store<any> {
           const repoIndex = this.savedConfig.repositories.indexOf(a.source.url!);
           const otherRepoIndex = this.savedConfig.repositories.indexOf(b.source.url!);
           return repoIndex - otherRepoIndex;
-        }
-        else {
+        } else {
           return bRank - aRank;
         }
       });
@@ -361,8 +354,7 @@ class MoonbaseSettingsStore extends Store<any> {
     try {
       await natives!.deleteExtension(ext.id);
       this.extensions[uniqueId].state = ExtensionState.NotDownloaded;
-    }
-    catch (e) {
+    } catch (e) {
       logger.error("Error deleting extension:", e);
     }
 
@@ -429,9 +421,9 @@ class MoonbaseSettingsStore extends Store<any> {
     // Extension specific logic
     for (const id in n.extensions) {
       // Installed extension (might not be detected yet)
-      const ext = Object.values(this.extensions).find(e => e.id === id && e.state !== ExtensionState.NotDownloaded);
+      const ext = Object.values(this.extensions).find((e) => e.id === id && e.state !== ExtensionState.NotDownloaded);
       // Installed and detected extension
-      const detected = moonlightNode.extensions.find(e => e.id === id);
+      const detected = moonlightNode.extensions.find((e) => e.id === id);
 
       // If it's not installed at all, we don't care
       if (!ext) continue;
@@ -483,7 +475,7 @@ class MoonbaseSettingsStore extends Store<any> {
         newConfig[key] ??= defaultValue;
       }
 
-      const changedKeys = diff(initConfig, newConfig, { cyclesFix: false }).map(c => c.path[0]);
+      const changedKeys = diff(initConfig, newConfig, { cyclesFix: false }).map((c) => c.path[0]);
       for (const key in def) {
         if (!changedKeys.includes(key)) continue;
 
@@ -532,9 +524,8 @@ class MoonbaseSettingsStore extends Store<any> {
   restartDiscord() {
     if (moonlightNode.isBrowser) {
       window.location.reload();
-    }
-    else {
-      // @ts-expect-error: TODO: DiscordNative
+    } else {
+      // @ts-expect-error TODO: DiscordNative
       window.DiscordNative.app.relaunch();
     }
   }

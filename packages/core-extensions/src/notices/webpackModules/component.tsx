@@ -1,9 +1,9 @@
-import type { Notice as NoticeType } from "@moonlight-mod/types/coreExtensions/notices";
-import { Notice, NoticeCloseButton, PrimaryCTANoticeButton } from "@moonlight-mod/wp/discord/components/common/index";
+import React from "@moonlight-mod/wp/react";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
+import { Notice, NoticeCloseButton, PrimaryCTANoticeButton } from "@moonlight-mod/wp/discord/components/common/index";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import NoticesStore from "@moonlight-mod/wp/notices_notices";
-import React from "@moonlight-mod/wp/react";
+import type { Notice as NoticeType } from "@moonlight-mod/types/coreExtensions/notices";
 
 function popAndDismiss(notice: NoticeType) {
   NoticesStore.popNotice();
@@ -29,18 +29,18 @@ export default function UpdateNotice() {
       {notice.element}
 
       {(notice.showClose ?? true) && (
-        <NoticeCloseButton noticeType="__moonlight_notice" onClick={() => popAndDismiss(notice)} />
+        <NoticeCloseButton onClick={() => popAndDismiss(notice)} noticeType="__moonlight_notice" />
       )}
 
-      {(notice.buttons ?? []).map(button => (
+      {(notice.buttons ?? []).map((button) => (
         <PrimaryCTANoticeButton
           key={button.name}
-          noticeType="__moonlight_notice"
           onClick={() => {
             if (button.onClick()) {
               popAndDismiss(notice);
             }
           }}
+          noticeType="__moonlight_notice"
         >
           {button.name}
         </PrimaryCTANoticeButton>

@@ -1,4 +1,4 @@
-import type { ExtensionWebExports } from "@moonlight-mod/types";
+import { ExtensionWebExports } from "@moonlight-mod/types";
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
   stores: {

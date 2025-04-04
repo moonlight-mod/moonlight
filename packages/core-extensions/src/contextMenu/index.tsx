@@ -1,4 +1,4 @@
-import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
+import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
@@ -15,7 +15,7 @@ export const patches: Patch[] = [
     replace: [
       {
         match: /(?<=let\{[^}]+?\}=.;return ).\({[^}]+?}\)/,
-        replacement: render => `require("contextMenu_contextMenu")._saveProps(this,${render})`
+        replacement: (render) => `require("contextMenu_contextMenu")._saveProps(this,${render})`
       }
     ]
   }

@@ -34,12 +34,10 @@
     "updates": "pnpm taze -r"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "catalog:dev",
-    "@flowr/eslint": "catalog:dev",
+    "@moonlight-mod/eslint-config": "catalog:dev",
     "@types/node": "catalog:dev",
     "esbuild": "catalog:dev",
     "eslint": "catalog:dev",
-    "eslint-plugin-react-hooks": "catalog:dev",
     "husky": "catalog:dev",
     "prettier": "catalog:dev",
     "taze": "catalog:dev",

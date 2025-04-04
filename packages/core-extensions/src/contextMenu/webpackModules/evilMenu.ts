@@ -1,8 +1,8 @@
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 // spacepack.require.m[moonlight.moonmap.modules["discord/modules/menus/web/Menu"]].toString();
-let code
-  = spacepack.require.m[
+let code =
+  spacepack.require.m[
     spacepack.findByCode("Menu API only allows Items and groups of Items as children.")[0].id
   ].toString();
 

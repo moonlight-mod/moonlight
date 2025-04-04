@@ -1,15 +1,15 @@
-import type {
+import {
   Menu,
   MenuCheckboxItem,
   MenuControlItem,
-  MenuElement,
   MenuGroup,
-  MenuItem,
   MenuRadioItem,
-  MenuSeparator
+  MenuSeparator,
+  MenuItem,
+  MenuElement
 } from "@moonlight-mod/mappings/discord/components/common/index";
 
-export interface ContextMenu {
+export type ContextMenu = {
   /**
    * Registers a new context menu item for a given context menu type.
    * @param navId The navigation ID for the target context menu (e.g. "user-context", "message")
@@ -25,39 +25,39 @@ export interface ContextMenu {
   MenuItem: MenuItem;
   MenuRadioItem: MenuRadioItem;
   MenuSeparator: MenuSeparator;
-}
+};
 
-export interface InternalItem {
+export type InternalItem = {
   type: string;
   key?: string;
-}
+};
 
-export interface InternalSeparator {
+export type InternalSeparator = {
   type: "separator";
   navigable: false;
-}
-export interface InternalGroupStart {
+};
+export type InternalGroupStart = {
   type: "groupstart";
   length: number;
   navigable: false;
   props: React.ComponentProps<MenuGroup>;
-}
+};
 export type InternalGroupEnd = {
   type: "groupend";
 } & Omit<InternalGroupStart, "type">;
-export interface InternalCustomItem {
+export type InternalCustomItem = {
   type: "customitem";
   key: any;
   navigable?: boolean;
   render: any;
   props: Extract<React.ComponentProps<MenuItem>, { render: any }>;
-}
-export interface InternalItem_ {
+};
+export type InternalItem_ = {
   type: "item";
   key: any;
   navigable: true;
   label: string;
-}
+};
 
 export type EvilItemParser = (el: MenuElement | MenuElement[]) => InternalItem[];
 

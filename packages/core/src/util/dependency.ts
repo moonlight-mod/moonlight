@@ -2,11 +2,11 @@ import Logger from "./logger";
 
 const logger = new Logger("core/util/dependency");
 
-export interface Dependency<T, D> {
+export type Dependency<T, D> = {
   id: T;
   data: D;
-}
-type Dependencies<T, D> = Array<Dependency<T, D>>;
+};
+type Dependencies<T, D> = Dependency<T, D>[];
 type DependencyGraph<T> = Map<T, Set<T> | null>;
 
 type FetchDep<T, D> = (id: T) => D | null;
@@ -19,8 +19,8 @@ function buildDependencyGraph<T, D>(
   {
     fetchDep,
     getDeps,
-    getIncompatible: _getIncompatible,
-    getEnabled: _getEnabled
+    getIncompatible,
+    getEnabled
   }: {
     fetchDep: FetchDep<T, D>;
     getDeps: GetDeps<T, D>;
@@ -76,10 +76,10 @@ function buildDependencyGraph<T, D>(
     return false;
   }
 
-  const failed = items.filter(item => isFailed(item.id));
+  const failed = items.filter((item) => isFailed(item.id));
   if (failed.length > 0) {
     logger.warn("Skipping failed items", failed);
-    items = items.filter(item => !failed.includes(item));
+    items = items.filter((item) => !failed.includes(item));
   }
 
   return [items, dependencyGraph];
@@ -100,7 +100,7 @@ export default function calculateDependencies<T, D>(
   }
 ): [Dependencies<T, D>, DependencyGraph<T>] {
   logger.trace("sortDependencies begin", origItems);
-
+  // eslint-disable-next-line prefer-const
   let [itemsOrig, dependencyGraphOrig] = buildDependencyGraph(origItems, {
     fetchDep,
     getDeps,
@@ -119,8 +119,7 @@ export default function calculateDependencies<T, D>(
           const data = fetchDep(id)!;
           validateDeps({ id, data });
         }
-      }
-      else {
+      } else {
         const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(([, v]) => v?.has(dep.id));
 
         if (dependsOnMe.length > 0) {
@@ -131,7 +130,7 @@ export default function calculateDependencies<T, D>(
     }
 
     for (const dep of itemsOrig) validateDeps(dep);
-    itemsOrig = itemsOrig.filter(x => getEnabled(x) || implicitlyEnabled.includes(x.id));
+    itemsOrig = itemsOrig.filter((x) => getEnabled(x) || implicitlyEnabled.includes(x.id));
   }
 
   if (getIncompatible != null) {
@@ -143,12 +142,12 @@ export default function calculateDependencies<T, D>(
 
       const incompatibleItems = getIncompatible(item);
       for (const incompatibleItem of incompatibleItems) {
-        if (itemsOrig.find(x => x.id === incompatibleItem) != null) {
+        if (itemsOrig.find((x) => x.id === incompatibleItem) != null) {
           logger.warn(
             `Incompatible dependency detected: "${item.id}" and "${incompatibleItem}" - removing "${incompatibleItem}"`
           );
 
-          itemsOrig = itemsOrig.filter(x => x.id !== incompatibleItem);
+          itemsOrig = itemsOrig.filter((x) => x.id !== incompatibleItem);
         }
       }
     }
@@ -163,7 +162,7 @@ export default function calculateDependencies<T, D>(
   });
 
   logger.trace("Sorting stage", items);
-  const sorted: Array<Dependency<T, D>> = [];
+  const sorted: Dependency<T, D>[] = [];
 
   // Clone the dependency graph to return it later
   const backupDependencyGraph = new Map(dependencyGraph);
@@ -171,8 +170,8 @@ export default function calculateDependencies<T, D>(
     dependencyGraph.set(item.id, new Set(dependencyGraph.get(item.id)));
   }
 
-  while (Array.from(dependencyGraph.values()).filter(x => x != null).length > 0) {
-    const noDependents = items.filter(e => dependencyGraph.get(e.id)?.size === 0);
+  while (Array.from(dependencyGraph.values()).filter((x) => x != null).length > 0) {
+    const noDependents = items.filter((e) => dependencyGraph.get(e.id)?.size === 0);
 
     if (noDependents.length === 0) {
       logger.warn("Stuck dependency graph detected", dependencyGraph);

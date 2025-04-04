@@ -1,4 +1,4 @@
-import type { Patch } from "@moonlight-mod/types";
+import { Patch } from "@moonlight-mod/types";
 
 const notXssDefensesOnly = () =>
   (moonlight.getConfigOption<boolean>("quietLoggers", "xssDefensesOnly") ?? false) === false;
@@ -9,14 +9,14 @@ const silenceDiscordLogger = moonlight.getConfigOption<boolean>("quietLoggers", 
 // that end up causing syntax errors by the normal patch
 const loggerFixes: Patch[] = [
   {
-    find: "\"./gg-sans/ggsans-800-extrabolditalic.woff2\":",
+    find: '"./gg-sans/ggsans-800-extrabolditalic.woff2":',
     replace: {
       match: /var .=Error.+?;throw .+?,./,
       replacement: ""
     }
   },
   {
-    find: "(\"GatewaySocket\")",
+    find: '("GatewaySocket")',
     replace: {
       match: /.\.(info|log)(\(.+?\))(;|,)/g,
       replacement: (_, type, body, trail) => `(()=>{})${body}${trail}`
@@ -31,26 +31,26 @@ loggerFixes.forEach((patch) => {
 const stubPatches = [
   // "sh" is not a valid locale.
   ["is not a valid locale", /(.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g],
-  ["\"[BUILD INFO] Release Channel: \"", /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?\)\),/],
-  [".APP_NATIVE_CRASH,\"Storage\"", /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/],
-  [".APP_NATIVE_CRASH,\"Storage\"", "console.log(\"AppCrashedFatalReport: getLastCrash not supported.\");"],
-  ["\"[NATIVE INFO] ", /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
-  ["\"Spellchecker\"", /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
-  ["throw Error(\"Messages are still loading.\");", /console\.warn\("Unsupported Locale",.\),/],
+  ['"[BUILD INFO] Release Channel: "', /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?\)\),/],
+  ['.APP_NATIVE_CRASH,"Storage"', /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/],
+  ['.APP_NATIVE_CRASH,"Storage"', 'console.log("AppCrashedFatalReport: getLastCrash not supported.");'],
+  ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
+  ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
+  ['throw Error("Messages are still loading.");', /console\.warn\("Unsupported Locale",.\),/],
   ["}_dispatchWithDevtools(", /.\.totalTime>.{1,2}&&.\.verbose\(.+?\);/],
-  ["\"NativeDispatchUtils\"", /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/],
-  ["(\"DatabaseManager\")", /.\.log\("removing database \(user: ".+?\)\),/],
+  ['"NativeDispatchUtils"', /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/],
+  ['("DatabaseManager")', /.\.log\("removing database \(user: ".+?\)\),/],
   [
-    "\"Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch. Action: \"",
+    '"Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch. Action: "',
     /.\.has\(.\.type\)&&.\.log\(.+?\.type\)\),/
   ],
-  ["console.warn(\"Window state not initialized\"", /console\.warn\("Window state not initialized",.\),/]
+  ['console.warn("Window state not initialized"', /console\.warn\("Window state not initialized",.\),/]
 ];
 
 const simplePatches = [
   // Moment.js deprecation warnings
   ["suppressDeprecationWarnings=!1", "suppressDeprecationWarnings=!0"]
-] as Array<{ [0]: string | RegExp; [1]: string }>;
+] as { [0]: string | RegExp; [1]: string }[];
 
 export const patches: Patch[] = [
   {
@@ -79,7 +79,7 @@ export const patches: Patch[] = [
     prerequisite: () => silenceDiscordLogger && notXssDefensesOnly()
   },
   ...loggerFixes,
-  ...stubPatches.map(patch => ({
+  ...stubPatches.map((patch) => ({
     find: patch[0],
     replace: {
       match: patch[1],
@@ -87,7 +87,7 @@ export const patches: Patch[] = [
     },
     prerequisite: notXssDefensesOnly
   })),
-  ...simplePatches.map(patch => ({
+  ...simplePatches.map((patch) => ({
     find: patch[0],
     replace: {
       match: patch[0],

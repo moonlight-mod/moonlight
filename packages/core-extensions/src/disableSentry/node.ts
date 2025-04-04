@@ -1,7 +1,7 @@
-import Module from "node:module";
-import { resolve } from "node:path";
-import { constants } from "@moonlight-mod/types";
+import Module from "module";
 import { ipcRenderer } from "electron";
+import { resolve } from "path";
+import { constants } from "@moonlight-mod/types";
 
 const logger = moonlightNode.getLogger("disableSentry");
 
@@ -16,7 +16,6 @@ try {
     captureMessage: () => {}
   };
   logger.debug("Stubbed Sentry node side!");
-}
-catch (err) {
+} catch (err) {
   logger.error("Failed to stub Sentry:", err);
 }

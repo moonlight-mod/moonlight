@@ -1,17 +1,17 @@
 import type { Store } from "@moonlight-mod/mappings/discord/packages/flux/Store";
 
-export interface NoticeButton {
+export type NoticeButton = {
   name: string;
   onClick: () => boolean; // return true to dismiss the notice after the button is clicked
-}
+};
 
-export interface Notice {
+export type Notice = {
   element: React.ReactNode;
   color?: string;
   showClose?: boolean;
   buttons?: NoticeButton[];
   onDismiss?: () => void;
-}
+};
 
 export type Notices = Store<any> & {
   /**

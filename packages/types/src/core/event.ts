@@ -1,5 +1,5 @@
-import type { Config } from "../config";
-import type { WebpackModuleFunc, WebpackRequireType } from "../discord";
+import { Config } from "../config";
+import { WebpackModuleFunc, WebpackRequireType } from "../discord";
 
 export interface MoonlightEventEmitter<EventId extends string = string, EventData = Record<EventId, any>> {
   dispatchEvent: <Id extends keyof EventData>(id: Id, data: EventData[Id]) => void;
@@ -12,19 +12,19 @@ export enum WebEventType {
   ExtensionLoad = "extensionLoad"
 }
 
-export interface WebEventPayloads {
+export type WebEventPayloads = {
   [WebEventType.ChunkLoad]: {
     chunkId?: number[];
-    modules: Record<string, WebpackModuleFunc>;
+    modules: { [id: string]: WebpackModuleFunc };
     require?: (require: WebpackRequireType) => any;
   };
   [WebEventType.ExtensionLoad]: string;
-}
+};
 
 export enum NodeEventType {
   ConfigSaved = "configSaved"
 }
 
-export interface NodeEventPayloads {
+export type NodeEventPayloads = {
   [NodeEventType.ConfigSaved]: Config;
-}
+};

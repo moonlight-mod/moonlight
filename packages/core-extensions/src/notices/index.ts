@@ -10,7 +10,7 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: "\"NoticeStore\"",
+    find: '"NoticeStore"',
     replace: [
       {
         match: /\[.{1,2}\..{1,3}\.CONNECT_SPOTIFY\]:{/,

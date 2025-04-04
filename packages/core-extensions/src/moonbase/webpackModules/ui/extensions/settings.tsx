@@ -1,42 +1,39 @@
-import type {
+import {
+  ExtensionSettingType,
   ExtensionSettingsManifest,
   MultiSelectSettingType,
   NumberSettingType,
   SelectOption,
   SelectSettingType
 } from "@moonlight-mod/types/config";
-import type { MoonbaseExtension } from "../../../types";
 
-import {
-  ExtensionSettingType
-} from "@moonlight-mod/types/config";
-import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
+import { ExtensionState, MoonbaseExtension } from "../../../types";
 
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import React from "@moonlight-mod/wp/react";
 import {
-  Button,
-  CircleXIcon,
-  Clickable,
-  Select as DiscordSelect,
-  FormItem,
   FormSwitch,
+  FormItem,
   FormText,
-  multiSelect,
-  NumberInputStepper,
-  SingleSelect,
-  Slider,
-  Text,
-  TextArea,
   TextInput,
+  Slider,
+  TextArea,
   Tooltip,
-  useVariableSelect
+  Clickable,
+  CircleXIcon,
+  Text,
+  SingleSelect,
+  Button,
+  useVariableSelect,
+  multiSelect,
+  Select as DiscordSelect,
+  NumberInputStepper
 } from "@moonlight-mod/wp/discord/components/common/index";
-import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import React from "@moonlight-mod/wp/react";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { ExtensionState } from "../../../types";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack
@@ -52,12 +49,12 @@ spacepack
       ))
   );
 
-interface SettingsProps {
+type SettingsProps = {
   ext: MoonbaseExtension;
   name: string;
   setting: ExtensionSettingsManifest;
   disabled: boolean;
-}
+};
 type SettingsComponent = React.ComponentType<SettingsProps>;
 
 const Margins = spacepack.require("discord/styles/shared/Margins.css");
@@ -83,19 +80,19 @@ function useConfigEntry<T>(uniqueId: number, name: string) {
   );
 }
 
-function Boolean({ ext, name, setting: _setting, disabled }: SettingsProps) {
+function Boolean({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<boolean>(ext.uniqueId, name);
 
   return (
     <FormSwitch
-      className={`${Margins.marginReset} ${Margins.marginTop20}`}
-      disabled={disabled}
+      value={value ?? false}
       hideBorder={true}
-      note={description != null ? markdownify(description) : undefined}
+      disabled={disabled}
       onChange={(value: boolean) => {
         MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
       }}
-      value={value ?? false}
+      note={description != null ? markdownify(description) : undefined}
+      className={`${Margins.marginReset} ${Margins.marginTop20}`}
     >
       {displayName}
     </FormSwitch>
@@ -116,57 +113,55 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
-      {min == null || max == null
-        ? (
-            <Flex direction={Flex.Direction.HORIZONTAL} justify={Flex.Justify.BETWEEN}>
-              {description && <FormText>{markdownify(description)}</FormText>}
-              <NumberInputStepper onChange={onChange} value={value ?? 0} />
-            </Flex>
-          )
-        : (
-            <>
-              {description && <FormText>{markdownify(description)}</FormText>}
-              <Slider
-                disabled={disabled}
-                initialValue={value ?? 0}
-                maxValue={max}
-                minValue={min}
-                onValueChange={onChange}
-                onValueRender={(value: number) => `${Math.round(value)}`}
-              />
-            </>
-          )}
+      {min == null || max == null ? (
+        <Flex justify={Flex.Justify.BETWEEN} direction={Flex.Direction.HORIZONTAL}>
+          {description && <FormText>{markdownify(description)}</FormText>}
+          <NumberInputStepper value={value ?? 0} onChange={onChange} />
+        </Flex>
+      ) : (
+        <>
+          {description && <FormText>{markdownify(description)}</FormText>}
+          <Slider
+            initialValue={value ?? 0}
+            disabled={disabled}
+            minValue={min}
+            maxValue={max}
+            onValueChange={onChange}
+            onValueRender={(value: number) => `${Math.round(value)}`}
+          />
+        </>
+      )}
     </FormItem>
   );
 }
 
-function String({ ext, name, setting: _setting, disabled }: SettingsProps) {
+function String({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
       {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
       <TextInput
+        value={value ?? ""}
         disabled={disabled}
         onChange={(value: string) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)}
-        value={value ?? ""}
       />
     </FormItem>
   );
 }
 
-function MultilineString({ ext, name, setting: _setting, disabled }: SettingsProps) {
+function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
       {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
       <TextArea
-        className="moonbase-resizeable"
-        disabled={disabled}
-        onChange={(value: string) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)}
         rows={5}
         value={value ?? ""}
+        disabled={disabled}
+        className={"moonbase-resizeable"}
+        onChange={(value: string) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)}
       />
     </FormItem>
   );
@@ -184,12 +179,12 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
       <SingleSelect
         autofocus={false}
         clearable={false}
+        value={value ?? ""}
+        options={options.map((o: SelectOption) => (typeof o === "string" ? { value: o, label: o } : o))}
         onChange={(value: string) => {
           if (disabled) return;
           MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
         }}
-        options={options.map((o: SelectOption) => (typeof o === "string" ? { value: o, label: o } : o))}
-        value={value ?? ""}
       />
     </FormItem>
   );
@@ -222,13 +217,13 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function RemoveEntryButton({ onClick, disabled: _disabled }: { onClick: () => void; disabled: boolean }) {
+function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disabled: boolean }) {
   return (
     <div className={GuildSettingsRoleEditClasses.removeButtonContainer}>
-      <Tooltip position="top" text="Remove entry">
+      <Tooltip text="Remove entry" position="top">
         {(props: any) => (
           <Clickable {...props} className={GuildSettingsRoleEditClasses.removeButton} onClick={onClick}>
-            <CircleXIcon height={16} width={16} />
+            <CircleXIcon width={16} height={16} />
           </Clickable>
         )}
       </Tooltip>
@@ -236,7 +231,7 @@ function RemoveEntryButton({ onClick, disabled: _disabled }: { onClick: () => vo
   );
 }
 
-function List({ ext, name, setting: _setting, disabled }: SettingsProps) {
+function List({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string[]>(ext.uniqueId, name);
 
   const entries = value ?? [];
@@ -259,13 +254,13 @@ function List({ ext, name, setting: _setting, disabled }: SettingsProps) {
             }}
           >
             <TextInput
+              size={TextInput.Sizes.MINI}
+              value={val}
               disabled={disabled}
               onChange={(newVal: string) => {
                 entries[i] = newVal;
                 updateConfig();
               }}
-              size={TextInput.Sizes.MINI}
-              value={val}
             />
             <RemoveEntryButton
               disabled={disabled}
@@ -278,15 +273,15 @@ function List({ ext, name, setting: _setting, disabled }: SettingsProps) {
         ))}
 
         <Button
-          className={Margins.marginTop8}
-          color={Button.Colors.GREEN}
-          disabled={disabled}
           look={Button.Looks.FILLED}
+          color={Button.Colors.GREEN}
+          size={Button.Sizes.SMALL}
+          disabled={disabled}
+          className={Margins.marginTop8}
           onClick={() => {
             entries.push("");
             updateConfig();
           }}
-          size={Button.Sizes.SMALL}
         >
           Add new entry
         </Button>
@@ -295,7 +290,7 @@ function List({ ext, name, setting: _setting, disabled }: SettingsProps) {
   );
 }
 
-function Dictionary({ ext, name, setting: _setting, disabled }: SettingsProps) {
+function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<Record<string, string>>(ext.uniqueId, name);
 
   const entries = Object.entries(value ?? {});
@@ -318,22 +313,22 @@ function Dictionary({ ext, name, setting: _setting, disabled }: SettingsProps) {
             }}
           >
             <TextInput
+              size={TextInput.Sizes.MINI}
+              value={key}
               disabled={disabled}
               onChange={(newKey: string) => {
                 entries[i][0] = newKey;
                 updateConfig();
               }}
-              size={TextInput.Sizes.MINI}
-              value={key}
             />
             <TextInput
+              size={TextInput.Sizes.MINI}
+              value={val}
               disabled={disabled}
               onChange={(newValue: string) => {
                 entries[i][1] = newValue;
                 updateConfig();
               }}
-              size={TextInput.Sizes.MINI}
-              value={val}
             />
             <RemoveEntryButton
               disabled={disabled}
@@ -346,15 +341,15 @@ function Dictionary({ ext, name, setting: _setting, disabled }: SettingsProps) {
         ))}
 
         <Button
-          className={Margins.marginTop8}
-          color={Button.Colors.GREEN}
-          disabled={disabled}
           look={Button.Looks.FILLED}
+          color={Button.Colors.GREEN}
+          size={Button.Sizes.SMALL}
+          className={Margins.marginTop8}
+          disabled={disabled}
           onClick={() => {
             entries.push([`entry-${entries.length}`, ""]);
             updateConfig();
           }}
-          size={Button.Sizes.SMALL}
         >
           Add new entry
         </Button>
@@ -363,7 +358,7 @@ function Dictionary({ ext, name, setting: _setting, disabled }: SettingsProps) {
   );
 }
 
-function Custom({ ext, name, setting: _setting, disabled: _disabled }: SettingsProps) {
+function Custom({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName } = useConfigEntry<any>(ext.uniqueId, name);
 
   const { component: Component } = useStateFromStores(
@@ -384,7 +379,7 @@ function Custom({ ext, name, setting: _setting, disabled: _disabled }: SettingsP
 
   return (
     <ErrorBoundary>
-      <Component setValue={value => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)} value={value} />
+      <Component value={value} setValue={(value) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)} />
     </ErrorBoundary>
   );
 }
@@ -411,11 +406,11 @@ export default function Settings({ ext }: { ext: MoonbaseExtension }) {
     <Flex className="moonbase-settings" direction={Flex.Direction.VERTICAL}>
       {Object.entries(ext.settingsOverride ?? ext.manifest.settings!).map(([name, setting]) => (
         <Setting
-          disabled={ext.state === ExtensionState.NotDownloaded}
           ext={ext}
           key={name}
           name={name}
           setting={setting}
+          disabled={ext.state === ExtensionState.NotDownloaded}
         />
       ))}
     </Flex>

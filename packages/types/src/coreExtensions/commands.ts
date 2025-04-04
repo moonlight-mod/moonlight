@@ -53,12 +53,12 @@ export type RegisteredCommandOption = MoonlightCommandOption & {
   displayDescription: string;
 };
 
-export interface CommandOptionChoice<T> {
+export type CommandOptionChoice<T> = {
   name: string;
   value: T;
-}
+};
 
-interface CommandOptionBase<T> {
+type CommandOptionBase<T> = {
   type: T;
   name: string;
   description: string;
@@ -68,11 +68,11 @@ interface CommandOptionBase<T> {
       ? never
       : boolean | undefined;
   choices?: T extends OptionType.STRING
-    ? Array<CommandOptionChoice<string>>
+    ? CommandOptionChoice<string>[]
     : T extends OptionType.INTEGER
-      ? Array<CommandOptionChoice<number>>
+      ? CommandOptionChoice<number>[]
       : T extends OptionType.NUMBER
-        ? Array<CommandOptionChoice<number>>
+        ? CommandOptionChoice<number>[]
         : never;
   options?: T extends OptionType.SUB_COMMAND
     ? MoonlightCommandOption[]
@@ -84,7 +84,7 @@ interface CommandOptionBase<T> {
   maxValue?: T extends OptionType.INTEGER ? number : T extends OptionType.NUMBER ? number : never;
   minLength?: T extends OptionType.STRING ? number : never;
   maxLength?: T extends OptionType.STRING ? number : never;
-}
+};
 
 // This is bad lol
 export type MoonlightCommandOption =
@@ -101,12 +101,12 @@ export type MoonlightCommandOption =
   | CommandOptionBase<OptionType.ATTACHMENT>;
 
 // TODO: types
-export interface CommandPredicateState {
+export type CommandPredicateState = {
   channel: any;
   guild: any;
-}
+};
 
-export interface RegisteredCommand {
+export type RegisteredCommand = {
   id: string;
   untranslatedName: string;
   displayName: string;
@@ -118,9 +118,9 @@ export interface RegisteredCommand {
   options?: RegisteredCommandOption[];
   predicate?: (state: CommandPredicateState) => boolean;
   execute: (options: CommandOption[]) => void;
-}
+};
 
-export interface MoonlightCommand {
+export type MoonlightCommand = {
   id: string;
   description: string;
 
@@ -136,38 +136,38 @@ export interface MoonlightCommand {
   options?: MoonlightCommandOption[];
   predicate?: (state: CommandPredicateState) => boolean;
   execute: (options: CommandOption[]) => void;
-}
+};
 
 export type CommandOption = {
   name: string;
 } & ( // TODO: more of these
   | {
-    type: Exclude<OptionType, OptionType.STRING>;
-    value: any;
-  }
+      type: Exclude<OptionType, OptionType.STRING>;
+      value: any;
+    }
   | {
-    type: OptionType.STRING;
-    value: string;
-  }
+      type: OptionType.STRING;
+      value: string;
+    }
   | {
-    type: OptionType.NUMBER | OptionType.INTEGER;
-    value: number;
-  }
+      type: OptionType.NUMBER | OptionType.INTEGER;
+      value: number;
+    }
   | {
-    type: OptionType.BOOLEAN;
-    value: boolean;
-  }
+      type: OptionType.BOOLEAN;
+      value: boolean;
+    }
   | {
-    type: OptionType.SUB_COMMAND | OptionType.SUB_COMMAND_GROUP;
-    options: CommandOption[];
-  }
+      type: OptionType.SUB_COMMAND | OptionType.SUB_COMMAND_GROUP;
+      options: CommandOption[];
+    }
 );
 
 export type AnyScopeRegex = RegExp["exec"] & {
   regex: RegExp;
 };
 
-export interface Commands {
+export type Commands = {
   /**
    * Register a command in the internal slash command system
    */
@@ -187,18 +187,18 @@ export interface Commands {
    * @private
    */
   _getCommands: () => RegisteredCommand[];
-}
+};
 
-export interface LegacyContext {
+export type LegacyContext = {
   channel: any;
   isEdit: boolean;
-}
+};
 
-export interface LegacyReturn {
+export type LegacyReturn = {
   content: string;
-}
+};
 
-export interface LegacyCommand {
+export type LegacyCommand = {
   match?: RegExp | { regex: RegExp } | AnyScopeRegex;
   action: (content: string, context: LegacyContext) => LegacyReturn;
-}
+};

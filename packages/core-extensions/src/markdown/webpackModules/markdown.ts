@@ -1,4 +1,4 @@
-import type { MarkdownRule, Ruleset, SlateRule } from "@moonlight-mod/types/coreExtensions/markdown";
+import { MarkdownRule, Ruleset, SlateRule } from "@moonlight-mod/types/coreExtensions/markdown";
 
 export const rules: Record<string, (rules: Record<string, MarkdownRule>) => MarkdownRule> = {};
 export const slateRules: Record<string, (rules: Record<string, SlateRule>) => SlateRule> = {};
@@ -34,7 +34,7 @@ export function blacklistFromRuleset(ruleset: Ruleset, name: string) {
 
 export function _addRules(originalRules: Record<string, MarkdownRule>) {
   for (const name in rules) {
-    originalRules[`__moonlight_${name}`] = rules[name](originalRules);
+    originalRules["__moonlight_" + name] = rules[name](originalRules);
   }
 
   return originalRules;
@@ -42,7 +42,7 @@ export function _addRules(originalRules: Record<string, MarkdownRule>) {
 
 export function _addSlateRules(originalRules: Record<string, SlateRule>) {
   for (const name in slateRules) {
-    originalRules[`__moonlight_${name}`] = slateRules[name](originalRules);
+    originalRules["__moonlight_" + name] = slateRules[name](originalRules);
   }
 
   return originalRules;
@@ -50,7 +50,7 @@ export function _addSlateRules(originalRules: Record<string, SlateRule>) {
 
 export function _addSlateDecorators(originalRules: Record<string, string>) {
   for (const name in slateDecorators) {
-    originalRules[`__moonlight_${name}`] = slateDecorators[name];
+    originalRules["__moonlight_" + name] = slateDecorators[name];
   }
 
   return originalRules;
@@ -62,7 +62,7 @@ export function _applyRulesetBlacklist(rulesets: Record<Ruleset, Record<string, 
 
     const rules = rulesets[ruleset];
     for (const rule in ruleBlacklists[ruleset] || {}) {
-      delete rules[`__moonlight_${rule}`];
+      delete rules["__moonlight_" + rule];
     }
   }
 }

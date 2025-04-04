@@ -1,8 +1,6 @@
-import type {
-  MemberList,
-  MemberListDecorator
-} from "@moonlight-mod/types/coreExtensions/componentEditor";
 import {
+  MemberList,
+  MemberListDecorator,
   MemberListDecoratorAnchorIndicies
 } from "@moonlight-mod/types/coreExtensions/componentEditor";
 import React from "@moonlight-mod/wp/react";
@@ -36,12 +34,10 @@ export const memberList: MemberList = {
       if (entry.anchor === undefined) {
         if (entry.before) {
           elements.splice(0, 0, component);
-        }
-        else {
+        } else {
           elements.push(component);
         }
-      }
-      else {
+      } else {
         const index = elements.indexOf(originalElements[MemberListDecoratorAnchorIndicies[entry.anchor]!]);
         elements.splice(index! + (entry.before ? 0 : 1), 0, component);
       }

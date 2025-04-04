@@ -15,19 +15,16 @@ export const proxy = () =>
   new Proxy(
     {},
     {
-      get(_target, prop, _receiver) {
+      get(target, prop, receiver) {
         if (prop === "profiledRootComponent") {
           return (arg: any) => arg;
-        }
-        else if (prop === "crash") {
+        } else if (prop === "crash") {
           return () => {
-            throw new Error("crash");
+            throw Error("crash");
           };
-        }
-        else if (keys.includes(prop.toString())) {
+        } else if (keys.includes(prop.toString())) {
           return (...args: any[]) => logger.debug(`Sentry calling "${prop.toString()}":`, ...args);
-        }
-        else {
+        } else {
           return undefined;
         }
       }

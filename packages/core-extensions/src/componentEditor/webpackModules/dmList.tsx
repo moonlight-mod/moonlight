@@ -1,9 +1,7 @@
-import type {
-  DMList,
-  DMListDecorator,
-  DMListItem
-} from "@moonlight-mod/types/coreExtensions/componentEditor";
 import {
+  DMList,
+  DMListItem,
+  DMListDecorator,
   DMListAnchorIndicies,
   DMListDecoratorAnchorIndicies
 } from "@moonlight-mod/types/coreExtensions/componentEditor";
@@ -25,12 +23,10 @@ function addEntries(
     if (entry.anchor === undefined) {
       if (entry.before) {
         elements.splice(0, 0, component);
-      }
-      else {
+      } else {
         elements.push(component);
       }
-    }
-    else {
+    } else {
       const index = elements.indexOf(originalElements[indicies[entry.anchor]!]);
       elements.splice(index! + (entry.before ? 0 : 1), 0, component);
     }

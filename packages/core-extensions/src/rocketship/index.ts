@@ -1,4 +1,4 @@
-import type { Patch } from "@moonlight-mod/types";
+import { Patch } from "@moonlight-mod/types";
 
 const logger = moonlight.getLogger("rocketship");
 const getDisplayMediaOrig = navigator.mediaDevices.getDisplayMedia;
@@ -9,7 +9,7 @@ async function getVenmicStream() {
     logger.debug("Devices:", devices);
 
     // This isn't vencord :(
-    const id = devices.find(device => device.label === "vencord-screen-share")?.deviceId;
+    const id = devices.find((device) => device.label === "vencord-screen-share")?.deviceId;
     if (!id) return null;
     logger.debug("Got venmic device ID:", id);
 
@@ -25,8 +25,7 @@ async function getVenmicStream() {
     });
 
     return stream.getAudioTracks();
-  }
-  catch (error) {
+  } catch (error) {
     logger.warn("Failed to get venmic stream:", error);
     return null;
   }
@@ -69,7 +68,7 @@ export const patches: Patch[] = [
   },
   // Remove Native media engine from list of choices
   {
-    find: ".CAMERA_BACKGROUND_LIVE=\"cameraBackgroundLive\"",
+    find: '.CAMERA_BACKGROUND_LIVE="cameraBackgroundLive"',
     replace: {
       match: /.\..{1,2}\.NATIVE,/,
       replacement: ""
@@ -84,7 +83,7 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: "\"UnifiedConnection(\"",
+    find: '"UnifiedConnection("',
     replace: {
       match: /this\.videoSupported=.\..{1,2};/,
       replacement: "this.videoSupported=true;"
@@ -95,7 +94,7 @@ export const patches: Patch[] = [
     replace: [
       {
         match: /"Firefox"===(.)\(\)\.name/g,
-        replacement: (orig, _info) => `true||${orig}`
+        replacement: (orig, info) => `true||${orig}`
       }
     ]
   },
@@ -108,17 +107,17 @@ export const patches: Patch[] = [
   },
   {
     // Matching MediaEngineStore
-    find: "\"displayName\",\"MediaEngineStore\")",
+    find: '"displayName","MediaEngineStore")',
     replace: [
       // Prevent loading of krisp native module by stubbing out desktop checks
       {
         match: /\(\(0,.\.isWindows\)\(\)\|\|\(0,.\.isLinux\)\(\)\|\|.+?&&!__OVERLAY__/,
-        replacement: (_orig, _macosPlatformCheck) => `false&&!__OVERLAY__`
+        replacement: (orig, macosPlatformCheck) => `false&&!__OVERLAY__`
       },
       // Enable loading of web krisp equivelant by replacing isWeb with true
       {
         match: /\(0,.\.isWeb\)\(\)&&(.{1,2}\.supports\(.{1,2}\..{1,2}.NOISE_CANCELLATION)/,
-        replacement: (_orig, supportsNoiseCancellation) => `true&&${supportsNoiseCancellation}`
+        replacement: (orig, supportsNoiseCancellation) => `true&&${supportsNoiseCancellation}`
       }
     ]
   }

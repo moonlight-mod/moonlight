@@ -1,5 +1,5 @@
-import type { ErrorBoundaryProps, ErrorBoundaryState } from "@moonlight-mod/types/coreExtensions/common";
 import React from "@moonlight-mod/wp/react";
+import { ErrorBoundaryProps, ErrorBoundaryState } from "@moonlight-mod/types/coreExtensions/common";
 
 const logger = moonlight.getLogger("ErrorBoundary");
 
@@ -32,14 +32,12 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     if (FallbackComponent) return <FallbackComponent children={children} {...this.state} />;
 
     if (errored) {
-      return noop
-        ? null
-        : (
-            <div className="moonlight-error-boundary">
-              <h3>{message ?? "An error occurred rendering this component:"}</h3>
-              <code className="hljs">{`${error}\n\nComponent stack:\n${componentStack}`}</code>
-            </div>
-          );
+      return noop ? null : (
+        <div className={`moonlight-error-boundary`}>
+          <h3>{message ?? "An error occurred rendering this component:"}</h3>
+          <code className="hljs">{`${error}\n\nComponent stack:\n${componentStack}`}</code>
+        </div>
+      );
     }
 
     return children;

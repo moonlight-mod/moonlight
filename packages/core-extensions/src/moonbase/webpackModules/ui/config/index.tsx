@@ -1,26 +1,26 @@
 import { LogLevel } from "@moonlight-mod/types";
 
-import FormSwitchClasses from "@moonlight-mod/wp/discord/components/common/FormSwitch.css";
+const logLevels = Object.values(LogLevel).filter((v) => typeof v === "string") as string[];
+
+import React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import {
-  Button,
-  CircleXIcon,
-  Clickable,
   FormDivider,
   FormItem,
-  FormSwitch,
   FormText,
-  SingleSelect,
+  FormSwitch,
   TextInput,
-  Tooltip
+  Button,
+  SingleSelect,
+  Tooltip,
+  Clickable
 } from "@moonlight-mod/wp/discord/components/common/index";
-import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { CircleXIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
+import FormSwitchClasses from "@moonlight-mod/wp/discord/components/common/FormSwitch.css";
+
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import React from "@moonlight-mod/wp/react";
-
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-
-const logLevels = Object.values(LogLevel).filter(v => typeof v === "string") as string[];
 
 let GuildSettingsRoleEditClasses: any;
 spacepack
@@ -39,10 +39,10 @@ spacepack
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (
     <div className={GuildSettingsRoleEditClasses.removeButtonContainer}>
-      <Tooltip position="top" text="Remove entry">
+      <Tooltip text="Remove entry" position="top">
         {(props: any) => (
           <Clickable {...props} className={GuildSettingsRoleEditClasses.removeButton} onClick={onClick}>
-            <CircleXIcon height={24} width={24} />
+            <CircleXIcon width={24} height={24} />
           </Clickable>
         )}
       </Tooltip>
@@ -54,10 +54,10 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
   const items = MoonbaseSettingsStore.getConfigOption(config) ?? [];
   return (
     <Flex
-      direction={Flex.Direction.VERTICAL}
       style={{
         gap: "20px"
       }}
+      direction={Flex.Direction.VERTICAL}
     >
       {items.map((val, i) => (
         <div
@@ -71,12 +71,12 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
           }}
         >
           <TextInput
+            size={TextInput.Sizes.DEFAULT}
+            value={val}
             onChange={(newVal: string) => {
               items[i] = newVal;
               MoonbaseSettingsStore.setConfigOption(config, items);
             }}
-            size={TextInput.Sizes.DEFAULT}
-            value={val}
           />
           <RemoveEntryButton
             onClick={() => {
@@ -88,15 +88,15 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
       ))}
 
       <Button
-        color={Button.Colors.GREEN}
         look={Button.Looks.FILLED}
-        onClick={() => {
-          items.push("");
-          MoonbaseSettingsStore.setConfigOption(config, items);
-        }}
+        color={Button.Colors.GREEN}
         size={Button.Sizes.SMALL}
         style={{
           marginTop: "10px"
+        }}
+        onClick={() => {
+          items.push("");
+          MoonbaseSettingsStore.setConfigOption(config, items);
         }}
       >
         Add new entry
@@ -110,11 +110,11 @@ export default function ConfigPage() {
     <>
       <FormSwitch
         className={Margins.marginTop20}
-        note="Checks for updates to moonlight"
+        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true) ?? true}
         onChange={(value: boolean) => {
           MoonbaseSettingsStore.setExtensionConfig("moonbase", "updateChecking", value);
         }}
-        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true) ?? true}
+        note="Checks for updates to moonlight"
       >
         Automatic update checking
       </FormSwitch>
@@ -123,7 +123,7 @@ export default function ConfigPage() {
         <ArrayFormItem config="repositories" />
       </FormItem>
       <FormDivider className={FormSwitchClasses.dividerDefault} />
-      <FormItem className={Margins.marginTop20} title="Extension search paths">
+      <FormItem title="Extension search paths" className={Margins.marginTop20}>
         <FormText className={Margins.marginBottom4}>
           A list of local directories to search for built extensions
         </FormText>
@@ -132,11 +132,11 @@ export default function ConfigPage() {
       <FormDivider className={FormSwitchClasses.dividerDefault} />
       <FormSwitch
         className={Margins.marginTop20}
-        note="Wraps every webpack module in a function, separating them in DevTools"
+        value={MoonbaseSettingsStore.getConfigOption("patchAll") ?? false}
         onChange={(value: boolean) => {
           MoonbaseSettingsStore.setConfigOption("patchAll", value);
         }}
-        value={MoonbaseSettingsStore.getConfigOption("patchAll") ?? false}
+        note="Wraps every webpack module in a function, separating them in DevTools"
       >
         Patch all
       </FormSwitch>
@@ -144,12 +144,12 @@ export default function ConfigPage() {
         <SingleSelect
           autofocus={false}
           clearable={false}
-          onChange={v => MoonbaseSettingsStore.setConfigOption("loggerLevel", v)}
-          options={logLevels.map(o => ({
+          value={MoonbaseSettingsStore.getConfigOption("loggerLevel")}
+          options={logLevels.map((o) => ({
             value: o.toLowerCase(),
             label: o[0] + o.slice(1).toLowerCase()
           }))}
-          value={MoonbaseSettingsStore.getConfigOption("loggerLevel")}
+          onChange={(v) => MoonbaseSettingsStore.setConfigOption("loggerLevel", v)}
         />
       </FormItem>
     </>

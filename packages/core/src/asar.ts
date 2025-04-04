@@ -12,12 +12,12 @@ import { BinaryReader } from "./util/binary";
   so pretend this is a union.
 */
 
-interface AsarEntry {
+type AsarEntry = {
   size: number;
   offset: `${number}`; // who designed this
 
   files?: Record<string, AsarEntry>;
-}
+};
 
 export default function extractAsar(file: ArrayBuffer) {
   const array = new Uint8Array(file);
@@ -40,12 +40,11 @@ export default function extractAsar(file: ArrayBuffer) {
   const ret: Record<string, Uint8Array> = {};
   function addDirectory(dir: AsarEntry, path: string) {
     for (const [name, data] of Object.entries(dir.files!)) {
-      const fullName = `${path}/${name}`;
+      const fullName = path + "/" + name;
       if (data.files != null) {
         addDirectory(data, fullName);
-      }
-      else {
-        br.position = base + Number.parseInt(data.offset);
+      } else {
+        br.position = base + parseInt(data.offset);
         const file = br.read(data.size);
         ret[fullName] = file;
       }

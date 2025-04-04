@@ -22,10 +22,10 @@ export async function getMoonlightDir() {
   return dir;
 }
 
-interface BuildInfo {
+type BuildInfo = {
   releaseChannel: string;
   version: string;
-}
+};
 
 export async function getConfigPath() {
   browser: {
@@ -39,10 +39,9 @@ export async function getConfigPath() {
   const buildInfoPath = moonlightNodeSandboxed.fs.join(process.resourcesPath, "build_info.json");
   if (!(await moonlightNodeSandboxed.fs.exists(buildInfoPath))) {
     configPath = moonlightNodeSandboxed.fs.join(dir, "desktop.json");
-  }
-  else {
+  } else {
     const buildInfo: BuildInfo = JSON.parse(await moonlightNodeSandboxed.fs.readFileString(buildInfoPath));
-    configPath = moonlightNodeSandboxed.fs.join(dir, `${buildInfo.releaseChannel}.json`);
+    configPath = moonlightNodeSandboxed.fs.join(dir, buildInfo.releaseChannel + ".json");
   }
 
   return configPath;

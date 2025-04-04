@@ -1,17 +1,15 @@
-/* eslint-disable perfectionist/sort-imports -- import order matters in this case */
 import "@moonlight-mod/web-preload";
-import type { MoonlightBranch, MoonlightNode } from "@moonlight-mod/types";
-import type { NodeEventPayloads } from "@moonlight-mod/types/core/event";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { loadExtensions } from "@moonlight-mod/core/extension/loader";
+import { MoonlightBranch, MoonlightNode } from "@moonlight-mod/types";
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
-import { createEventEmitter } from "@moonlight-mod/core/util/event";
-import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
-import { NodeEventType } from "@moonlight-mod/types/core/event";
+import { IndexedDB } from "@zenfs/dom";
 import { configureSingle } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
-import { IndexedDB } from "@zenfs/dom";
+import { NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
+import { createEventEmitter } from "@moonlight-mod/core/util/event";
 
 function getParts(path: string) {
   if (path.startsWith("/")) path = path.substring(1);
@@ -66,8 +64,7 @@ window._moonlightBrowserInit = async () => {
           const isFile = await this.isFile(fullPath);
           if (isFile) {
             await this.unlink(fullPath);
-          }
-          else {
+          } else {
             await this.rmdir(fullPath);
           }
         }
@@ -87,17 +84,17 @@ window._moonlightBrowserInit = async () => {
 
       join(...parts) {
         let str = parts.join("/");
-        if (!str.startsWith("/")) str = `/${str}`;
+        if (!str.startsWith("/")) str = "/" + str;
         return str;
       },
       dirname(path) {
         const parts = getParts(path);
-        return `/${parts.slice(0, parts.length - 1).join("/")}`;
+        return "/" + parts.slice(0, parts.length - 1).join("/");
       }
     },
     // TODO
-    addCors(_url) {},
-    addBlocked(_url) {}
+    addCors(url) {},
+    addBlocked(url) {}
   };
 
   // Actual loading begins here

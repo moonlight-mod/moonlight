@@ -1,7 +1,7 @@
 import type { BrowserWindow } from "electron";
-import type { PatchBay } from "./types";
-import path from "node:path";
 import { app, desktopCapturer } from "electron";
+import path from "node:path";
+import { type PatchBay } from "./types";
 
 const logger = moonlightHost.getLogger("rocketship");
 
@@ -12,8 +12,7 @@ function getPatchbay() {
     };
     const patchbay = new venmic.PatchBay();
     return patchbay;
-  }
-  catch (error) {
+  } catch (error) {
     logger.error("Failed to load venmic.node:", error);
     return null;
   }
@@ -26,12 +25,11 @@ function linkVenmic() {
   if (patchbay == null) return false;
 
   try {
-    const pid
-      = app
+    const pid =
+      app
         .getAppMetrics()
-        .find(proc => proc.name === "Audio Service")
-        ?.pid
-        ?.toString() ?? "";
+        .find((proc) => proc.name === "Audio Service")
+        ?.pid?.toString() ?? "";
 
     logger.info("Audio Service PID:", pid);
 
@@ -42,8 +40,7 @@ function linkVenmic() {
       only_speakers: true,
       only_default_speakers: true
     });
-  }
-  catch (error) {
+  } catch (error) {
     logger.error("Failed to link venmic:", error);
     return false;
   }
@@ -53,12 +50,12 @@ moonlightHost.events.on("window-created", (window: BrowserWindow, isMainWindow: 
   if (!isMainWindow) return;
   const windowSession = window.webContents.session;
 
-  // @ts-expect-error: these types ancient
+  // @ts-expect-error these types ancient
   windowSession.setDisplayMediaRequestHandler(
     (request: any, callback: any) => {
       const linked = linkVenmic();
       desktopCapturer.getSources({ types: ["screen", "window"] }).then((sources) => {
-        // logger.debug("desktopCapturer.getSources", sources);
+        //logger.debug("desktopCapturer.getSources", sources);
         logger.debug("Linked to venmic:", linked);
 
         callback({

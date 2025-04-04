@@ -1,8 +1,8 @@
-import HelpMessageClasses from "@moonlight-mod/wp/discord/components/common/HelpMessage.css";
-import { Text } from "@moonlight-mod/wp/discord/components/common/index";
-import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import React from "@moonlight-mod/wp/react";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { Text } from "@moonlight-mod/wp/discord/components/common/index";
+import HelpMessageClasses from "@moonlight-mod/wp/discord/components/common/HelpMessage.css";
+import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 
 // reimpl of HelpMessage but with a custom icon
 export default function HelpMessage({
@@ -36,7 +36,7 @@ export default function HelpMessage({
           })}
         </div>
 
-        <Text className={HelpMessageClasses.text} color="currentColor" variant="text-sm/medium">
+        <Text variant="text-sm/medium" color="currentColor" className={HelpMessageClasses.text}>
           {text}
         </Text>
 

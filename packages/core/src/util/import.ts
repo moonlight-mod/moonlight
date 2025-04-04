@@ -12,10 +12,10 @@
 const _canRequire = ["path", "fs"] as const;
 type CanRequire = (typeof _canRequire)[number];
 
-interface ImportTypes {
+type ImportTypes = {
   path: typeof import("path");
   fs: typeof import("fs");
-}
+};
 
 export default function requireImport<T extends CanRequire>(type: T): Awaited<ImportTypes[T]> {
   return require(type);

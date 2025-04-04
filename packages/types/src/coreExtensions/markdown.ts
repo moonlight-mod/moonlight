@@ -1,31 +1,33 @@
 // {{{ simple-markdown
 
-export interface SingleASTNode {
+export type SingleASTNode = {
   type: string;
   [key: string]: any;
-}
+};
 
-export type UntypedASTNode = Record<string, any>;
+export type UntypedASTNode = {
+  [key: string]: any;
+};
 
-export type ASTNode = SingleASTNode | SingleASTNode[];
+export type ASTNode = SingleASTNode | Array<SingleASTNode>;
 
-export type Parser = (source: string, state?: State | null | undefined) => SingleASTNode[];
+export type Parser = (source: string, state?: State | null | undefined) => Array<SingleASTNode>;
 
 export type ParseFunction = (capture: Capture, nestedParse: Parser, state: State) => UntypedASTNode | ASTNode;
 
 export type Capture =
-  | (string[] & {
-    index: number;
-  })
-  | (string[] & {
-    index?: number;
-  });
+  | (Array<string> & {
+      index: number;
+    })
+  | (Array<string> & {
+      index?: number;
+    });
 
-export interface State {
+export type State = {
   key?: string | number | undefined;
   inline?: boolean | null | undefined;
   [key: string]: any;
-}
+};
 
 export type MatchFunction = {
   regex?: RegExp;
@@ -39,28 +41,28 @@ export type SingleNodeOutput<Result> = (node: SingleASTNode, nestedOutput: Outpu
 
 export type ValidFlags = "g" | "i" | "m" | "s" | "u" | "y" | undefined;
 
-export interface MarkdownRule {
+export type MarkdownRule = {
   order: number;
   match: MatchFunction;
   parse: ParseFunction;
   react?: SingleNodeOutput<React.ReactNode>;
-}
+};
 
 export type SlateRule =
   | {
-    type: "skip";
-  }
+      type: "skip";
+    }
   | {
-    type: "verbatim";
-  }
+      type: "verbatim";
+    }
   | {
-    type: "inlineObject";
-  }
+      type: "inlineObject";
+    }
   | {
-    type: "inlineStyle";
-    before: string;
-    after: string;
-  };
+      type: "inlineStyle";
+      before: string;
+      after: string;
+    };
 
 export type Ruleset =
   | "RULES"
@@ -74,7 +76,7 @@ export type Ruleset =
   | "AUTO_MODERATION_SYSTEM_MESSAGE_RULES"
   | "NATIVE_SEARCH_RESULT_LINK_RULES";
 
-export interface Markdown {
+export type Markdown = {
   rules: Record<string, MarkdownRule>;
   slateRules: Record<string, SlateRule>;
   slateDecorators: Record<string, string>;
@@ -102,4 +104,4 @@ export interface Markdown {
    * @param name The rule name
    */
   blacklistFromRuleset: (ruleset: Ruleset, name: string) => void;
-}
+};

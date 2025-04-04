@@ -9,7 +9,7 @@ export enum LogLevel {
 
 type LogFunc = (...args: any[]) => void;
 
-export interface Logger {
+export type Logger = {
   silly: LogFunc;
   trace: LogFunc;
   debug: LogFunc;
@@ -17,4 +17,4 @@ export interface Logger {
   warn: LogFunc;
   error: LogFunc;
   log: (level: LogLevel, args: any[]) => void;
-}
+};

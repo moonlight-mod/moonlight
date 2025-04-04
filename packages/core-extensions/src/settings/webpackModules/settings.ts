@@ -1,4 +1,4 @@
-import type { SettingsSection, Settings as SettingsType } from "@moonlight-mod/types/coreExtensions/settings";
+import { SettingsSection, Settings as SettingsType } from "@moonlight-mod/types/coreExtensions/settings";
 import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 
 export const Settings: SettingsType = {
@@ -13,7 +13,7 @@ export const Settings: SettingsType = {
       color,
       element,
       pos: pos ?? -4,
-      notice,
+      notice: notice,
       onClick: onClick ?? (() => UserSettingsModalActionCreators.open(section))
     };
 
@@ -22,7 +22,7 @@ export const Settings: SettingsType = {
     return data;
   },
   addSectionMenuItems(section, ...newItems) {
-    const data = Settings.ourSections.find(x => x.section === section);
+    const data = Settings.ourSections.find((x) => x.section === section);
     if (!data || !("element" in data)) throw new Error(`Could not find section "${section}"`);
     (Settings.sectionMenuItems[section] ??= []).push(...newItems);
     data._moonlight_submenu ??= () => Settings.sectionMenuItems[section];
@@ -35,10 +35,10 @@ export const Settings: SettingsType = {
     });
   },
 
-  addHeader(label, pos = null) {
+  addHeader: function (label, pos = null) {
     Settings.ourSections.push({
       section: "HEADER",
-      label,
+      label: label,
       pos: pos === null ? -4 : pos
     });
   },

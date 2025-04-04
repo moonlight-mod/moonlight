@@ -1,37 +1,36 @@
-import type { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
-import type { RepositoryManifest } from "../types";
+import React from "@moonlight-mod/wp/react";
 import { Button, TabBar } from "@moonlight-mod/wp/discord/components/common/index";
-import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
 import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import React from "@moonlight-mod/wp/react";
-import { UpdateState } from "../types";
+import { RepositoryManifest, UpdateState } from "../types";
+import { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
+import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
 
 const MODULE_REGEX = /Webpack-Module\/(\d+)\/(\d+)/g;
 
 const logger = moonlight.getLogger("moonbase/crashScreen");
 
-interface ErrorState {
+type ErrorState = {
   error: Error;
   info: {
     componentStack: string;
   };
   __moonlight_update?: UpdateState;
-}
+};
 
-interface WrapperProps {
+type WrapperProps = {
   action: React.ReactNode;
   state: ErrorState;
-}
+};
 
-interface UpdateCardProps {
+type UpdateCardProps = {
   id: number;
   ext: {
     version: string;
     download: string;
     updateManifest: RepositoryManifest;
   };
-}
+};
 
 const updateStrings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",
@@ -62,11 +61,9 @@ function ExtensionUpdateCard({ id, ext }: UpdateCardProps) {
         <div className="moonbase-crash-extensionCard-title">
           {ext.updateManifest.meta?.name ?? ext.updateManifest.id}
         </div>
-        <div className="moonbase-crash-extensionCard-version">
-          {`v${installed?.manifest?.version ?? "???"} -> v${
-            ext.version
-          }`}
-        </div>
+        <div className="moonbase-crash-extensionCard-version">{`v${installed?.manifest?.version ?? "???"} -> v${
+          ext.version
+        }`}</div>
       </div>
       <div className="moonbase-crash-extensionCard-button">
         <Button
@@ -88,7 +85,7 @@ function ExtensionUpdateCard({ id, ext }: UpdateCardProps) {
 
 function ExtensionDisableCard({ ext }: { ext: DetectedExtension }) {
   function disableWithDependents() {
-    const disable: Set<string> = new Set();
+    const disable = new Set<string>();
     disable.add(ext.id);
     for (const [id, dependencies] of moonlightNode.processedExtensions.dependencyGraph) {
       if (dependencies?.has(ext.id)) disable.add(id);
@@ -107,7 +104,6 @@ function ExtensionDisableCard({ ext }: { ext: DetectedExtension }) {
     }
     msg += "?";
 
-    // eslint-disable-next-line no-alert -- TODO: use ui for this
     if (confirm(msg)) {
       moonlightNode.writeConfig(config);
       window.location.reload();
@@ -141,7 +137,7 @@ export function wrapAction({ action, state }: WrapperProps) {
   });
 
   const causes = React.useMemo(() => {
-    const causes: Set<string> = new Set();
+    const causes = new Set<string>();
     if (state.error.stack) {
       for (const [, , id] of state.error.stack.matchAll(MODULE_REGEX))
         for (const ext of moonlight.patched.get(id) ?? []) causes.add(ext);
@@ -151,7 +147,7 @@ export function wrapAction({ action, state }: WrapperProps) {
 
     for (const [path, id] of Object.entries(moonlight.moonmap.modules)) {
       const MAPPING_REGEX = new RegExp(
-        // @ts-expect-error: Only Firefox has RegExp.escape
+        // @ts-expect-error Only Firefox has RegExp.escape
         `(${RegExp.escape ? RegExp.escape(path) : path.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`,
         "g"
       );
@@ -172,53 +168,47 @@ export function wrapAction({ action, state }: WrapperProps) {
       {action}
       <TabBar
         className={`${DiscoveryClasses.tabBar} moonbase-crash-tabs`}
-        onItemSelect={v => setTab(v)}
-        selectedItem={tab}
         type="top"
+        selectedItem={tab}
+        onItemSelect={(v) => setTab(v)}
       >
         <TabBar.Item className={DiscoveryClasses.tabBarItem} id="crash">
           Crash details
         </TabBar.Item>
-        <TabBar.Item className={DiscoveryClasses.tabBarItem} disabled={updateCount === 0} id="extensions">
+        <TabBar.Item className={DiscoveryClasses.tabBarItem} id="extensions" disabled={updateCount === 0}>
           {`Extension updates (${updateCount})`}
         </TabBar.Item>
-        <TabBar.Item className={DiscoveryClasses.tabBarItem} disabled={causes.length === 0} id="causes">
+        <TabBar.Item className={DiscoveryClasses.tabBarItem} id="causes" disabled={causes.length === 0}>
           {`Possible causes (${causes.length})`}
         </TabBar.Item>
       </TabBar>
-      {tab === "crash"
-        ? (
-            <div className="moonbase-crash-details-wrapper">
-              <pre className="moonbase-crash-details">
-                <code>
-                  {state.error.stack}
-                  {"\n\nComponent stack:"}
-                  {state.info.componentStack}
-                </code>
-              </pre>
-            </div>
-          )
-        : null}
-      {tab === "extensions"
-        ? (
-            <div className="moonbase-crash-extensions">
-              {updates.map(([id, ext]) => (
-                <ExtensionUpdateCard ext={ext} id={Number(id)} />
-              ))}
-            </div>
-          )
-        : null}
-      {tab === "causes"
-        ? (
-            <div className="moonbase-crash-extensions">
-              {causes
-                .map(ext => moonlightNode.extensions.find(e => e.id === ext)!)
-                .map(ext => (
-                  <ExtensionDisableCard ext={ext} />
-                ))}
-            </div>
-          )
-        : null}
+      {tab === "crash" ? (
+        <div className="moonbase-crash-details-wrapper">
+          <pre className="moonbase-crash-details">
+            <code>
+              {state.error.stack}
+              {"\n\nComponent stack:"}
+              {state.info.componentStack}
+            </code>
+          </pre>
+        </div>
+      ) : null}
+      {tab === "extensions" ? (
+        <div className="moonbase-crash-extensions">
+          {updates.map(([id, ext]) => (
+            <ExtensionUpdateCard id={Number(id)} ext={ext} />
+          ))}
+        </div>
+      ) : null}
+      {tab === "causes" ? (
+        <div className="moonbase-crash-extensions">
+          {causes
+            .map((ext) => moonlightNode.extensions.find((e) => e.id === ext)!)
+            .map((ext) => (
+              <ExtensionDisableCard ext={ext} />
+            ))}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -232,46 +222,42 @@ export function UpdateText({ state, setState }: { state: ErrorState; setState: (
   }
   const newVersion = useStateFromStores([MoonbaseSettingsStore], () => MoonbaseSettingsStore.newVersion);
 
-  return newVersion == null
-    ? null
-    : (
-        <p>{state.__moonlight_update !== undefined ? updateStrings[state.__moonlight_update] : ""}</p>
-      );
+  return newVersion == null ? null : (
+    <p>{state.__moonlight_update !== undefined ? updateStrings[state.__moonlight_update] : ""}</p>
+  );
 }
 
 export function UpdateButton({ state, setState }: { state: ErrorState; setState: (state: ErrorState) => void }) {
   const newVersion = useStateFromStores([MoonbaseSettingsStore], () => MoonbaseSettingsStore.newVersion);
-  return newVersion == null
-    || state.__moonlight_update === UpdateState.Installed
-    || state.__moonlight_update === undefined
-    ? null
-    : (
-        <Button
-          disabled={state.__moonlight_update !== UpdateState.Ready}
-          onClick={() => {
+  return newVersion == null ||
+    state.__moonlight_update === UpdateState.Installed ||
+    state.__moonlight_update === undefined ? null : (
+    <Button
+      size={Button.Sizes.LARGE}
+      disabled={state.__moonlight_update !== UpdateState.Ready}
+      onClick={() => {
+        setState({
+          ...state,
+          __moonlight_update: UpdateState.Working
+        });
+
+        MoonbaseSettingsStore.updateMoonlight()
+          .then(() => {
             setState({
               ...state,
-              __moonlight_update: UpdateState.Working
+              __moonlight_update: UpdateState.Installed
             });
-
-            MoonbaseSettingsStore.updateMoonlight()
-              .then(() => {
-                setState({
-                  ...state,
-                  __moonlight_update: UpdateState.Installed
-                });
-              })
-              .catch((e) => {
-                logger.error(e);
-                setState({
-                  ...state,
-                  __moonlight_update: UpdateState.Failed
-                });
-              });
-          }}
-          size={Button.Sizes.LARGE}
-        >
-          {state.__moonlight_update !== undefined ? buttonStrings[state.__moonlight_update] : ""}
-        </Button>
-      );
+          })
+          .catch((e) => {
+            logger.error(e);
+            setState({
+              ...state,
+              __moonlight_update: UpdateState.Failed
+            });
+          });
+      }}
+    >
+      {state.__moonlight_update !== undefined ? buttonStrings[state.__moonlight_update] : ""}
+    </Button>
+  );
 }

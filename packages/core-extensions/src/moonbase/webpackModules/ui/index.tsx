@@ -1,24 +1,24 @@
+import React from "@moonlight-mod/wp/react";
+import { Text, TabBar } from "@moonlight-mod/wp/discord/components/common/index";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
-import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
+
+import ExtensionsPage from "./extensions";
+import ConfigPage from "./config";
+import AboutPage from "./about";
+import Update from "./update";
+import RestartAdviceMessage from "./RestartAdvice";
 import { Divider } from "@moonlight-mod/wp/discord/components/common/BaseHeaderBar";
 import HeaderBarClasses from "@moonlight-mod/wp/discord/components/common/HeaderBar.css";
-
-import { TabBar, Text } from "@moonlight-mod/wp/discord/components/common/index";
 import PeoplePageClasses from "@moonlight-mod/wp/discord/modules/people/web/PeoplePage.css";
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
-import React from "@moonlight-mod/wp/react";
-import AboutPage from "./about";
-import ConfigPage from "./config";
-import ExtensionsPage from "./extensions";
-import RestartAdviceMessage from "./RestartAdvice";
-import Update from "./update";
 
-export const pages: Array<{
+export const pages: {
   id: string;
   name: string;
   element: React.FunctionComponent;
-}> = [
+}[] = [
   {
     id: "extensions",
     name: "Extensions",
@@ -36,7 +36,7 @@ export const pages: Array<{
   }
 ];
 
-export function Moonbase(_props: { initialTab?: number } = {}) {
+export function Moonbase(props: { initialTab?: number } = {}) {
   const subsection = useStateFromStores([UserSettingsModalStore], () => UserSettingsModalStore.getSubsection() ?? 0);
   const setSubsection = React.useCallback(
     (to: string) => {
@@ -56,18 +56,18 @@ export function Moonbase(_props: { initialTab?: number } = {}) {
   return (
     <>
       <div className={`${HeaderBarClasses.children} ${Margins.marginBottom20}`}>
-        <Text className={HeaderBarClasses.titleWrapper} tag="h2" variant="heading-lg/semibold">
+        <Text className={HeaderBarClasses.titleWrapper} variant="heading-lg/semibold" tag="h2">
           Moonbase
         </Text>
         <Divider />
         <TabBar
-          className={PeoplePageClasses.tabBar}
-          onItemSelect={setSubsection}
           selectedItem={subsection}
+          onItemSelect={setSubsection}
           type="top-pill"
+          className={PeoplePageClasses.tabBar}
         >
           {pages.map((page, i) => (
-            <TabBar.Item className={PeoplePageClasses.item} id={i} key={page.id}>
+            <TabBar.Item key={page.id} id={i} className={PeoplePageClasses.item}>
               {page.name}
             </TabBar.Item>
           ))}
