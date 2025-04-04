@@ -1,3 +1,5 @@
+/* eslint-disable perfectionist/sort-imports -- import order matters in this case */
+import "@moonlight-mod/web-preload";
 import type { MoonlightBranch, MoonlightNode } from "@moonlight-mod/types";
 import type { NodeEventPayloads } from "@moonlight-mod/types/core/event";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
@@ -10,7 +12,6 @@ import { NodeEventType } from "@moonlight-mod/types/core/event";
 import { configureSingle } from "@zenfs/core";
 import * as fs from "@zenfs/core/promises";
 import { IndexedDB } from "@zenfs/dom";
-import "@moonlight-mod/web-preload";
 
 function getParts(path: string) {
   if (path.startsWith("/")) path = path.substring(1);
