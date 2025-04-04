@@ -8,6 +8,13 @@
   },
   "main": "./src/index.ts",
   "types": "./src/index.ts",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
   "dependencies": {
     "@moonlight-mod/lunast": "catalog:prod",
     "@moonlight-mod/mappings": "catalog:prod",

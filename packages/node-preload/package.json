@@ -1,8 +1,15 @@
 {
   "name": "@moonlight-mod/node-preload",
   "private": true,
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*"
-  }
+  },
+  "engineStrict": true
 }

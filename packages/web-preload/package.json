@@ -2,6 +2,13 @@
   "name": "@moonlight-mod/web-preload",
   "private": true,
   "main": "src/index.ts",
+  "engineStrict": true,
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/lunast": "catalog:prod",

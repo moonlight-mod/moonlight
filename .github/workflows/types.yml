@@ -11,17 +11,12 @@ jobs:
     name: Publish types on npm
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
         with:
-          version: 9
-          run_install: false
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
+          node-version: 20
           cache: pnpm
-          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -31,8 +26,6 @@ jobs:
         run: pnpm run build
 
       - name: Publish types
-        run: |
-          cd packages/types
-          pnpm publish --access public --no-git-checks
+        run: pnpm publish --filter=./packages/types --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

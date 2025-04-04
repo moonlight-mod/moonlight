@@ -34,3 +34,4 @@ engineStrict: true
 strictSsl: true
 strictDepBuilds: true
 packageManagerStrict: true
+registry: https://registry.npmjs.org/
