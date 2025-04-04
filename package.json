@@ -25,7 +25,7 @@
     "clean": "pnpm build --clean",
     "browser": "pnpm build --browser",
     "browser:mv2": "pnpm build --browser --mv2",
-    "lint": "eslint --cache",
+    "lint": "eslint packages",
     "lint:fix": "pnpm lint --fix",
     "lint:report": "pnpm lint --output-file eslint_report.json --format json packages",
     "typecheck": "tsc --noEmit",

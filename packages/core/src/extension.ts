@@ -51,9 +51,9 @@ async function loadDetectedExtensions(
 
       // if none exist (empty manifest) don't give a shit
       if (
-        !moonlightNodeSandboxed.fs.exists(webPath)
-        && !moonlightNodeSandboxed.fs.exists(nodePath)
-        && !moonlightNodeSandboxed.fs.exists(hostPath)
+        !moonlightNodeSandboxed.fs.exists(webPath) &&
+        !moonlightNodeSandboxed.fs.exists(nodePath) &&
+        !moonlightNodeSandboxed.fs.exists(hostPath)
       ) {
         continue;
       }
@@ -102,8 +102,7 @@ async function loadDetectedExtensions(
             : undefined
         }
       });
-    }
-    catch (err) {
+    } catch (err) {
       logger.error(`Failed to load extension from "${manifestPath}":`, err);
     }
   }
@@ -132,7 +131,7 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
   const seen: Set<string> = new Set();
 
   const coreExtensionsFs: Record<string, string> = JSON.parse(_moonlight_coreExtensionsStr);
-  const coreExtensions = Array.from(new Set(Object.keys(coreExtensionsFs).map(x => x.split("/")[0])));
+  const coreExtensions = Array.from(new Set(Object.keys(coreExtensionsFs).map((x) => x.split("/")[0])));
 
   for (const ext of coreExtensions) {
     if (!coreExtensionsFs[`${ext}/index.js`]) continue;
