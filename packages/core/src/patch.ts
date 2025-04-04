@@ -162,7 +162,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
             }
 
             if (replaced === moduleString) {
-              logger.warn("Patch replacement failed", id, patch);
+              logger.warn("Patch replacement failed", id, patchId, patch);
               isPatched = false;
               if (patch.hardFail) {
                 hardFailed = true;
@@ -193,8 +193,9 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     }
 
     if (modified) {
-      if (!swappedModule) patchModule(id, patchedStr.join(", "), moduleString, entry);
-      moduleCache[id] = moduleString;
+      let shouldCache = true;
+      if (!swappedModule) shouldCache = patchModule(id, patchedStr.join(", "), moduleString, entry);
+      if (shouldCache) moduleCache[id] = moduleString;
       moonlight.patched.set(id, exts);
     }
 

@@ -44,9 +44,9 @@ export const patches: Patch[] = [
     find: '},"new-member")),',
     replace: [
       {
-        match: /(?<=\.BADGES]=)(\i);/,
-        replacement: (_, badges) =>
-          `require("componentEditor_messages").default._patchUsernameBadges(${badges},arguments[0]);`
+        match: /(?<=\.BADGES](=|:))(\i)(;|})/,
+        replacement: (_, leading, badges, trailing) =>
+          `require("componentEditor_messages").default._patchUsernameBadges(${badges},arguments[0])${trailing}`
       },
       {
         match: /(?<=className:\i,)badges:(\i)/,
@@ -54,9 +54,9 @@ export const patches: Patch[] = [
           `badges:require("componentEditor_messages").default._patchBadges(${badges},arguments[0])`
       },
       {
-        match: /(?<=username:\(0,\i\.jsxs\)\(\i\.Fragment,{)children:(\[.+?,\i])/,
+        match: /(?<=username:\(0,\i\.jsxs\)\(\i\.Fragment,{)children:(\[.+?])}\),usernameSpanId:/,
         replacement: (_, elements) =>
-          `children:require("componentEditor_messages").default._patchUsername(${elements},arguments[0])`
+          `children:require("componentEditor_messages").default._patchUsername(${elements},arguments[0])}),usernameSpanId:`
       }
     ]
   },

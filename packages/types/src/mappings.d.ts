@@ -75,6 +75,13 @@ declare module "@moonlight-mod/wp/discord/components/common/BaseHeaderBar" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/components/common/Card" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/components/common/Card"]["default"];
+  export default _default;
+  export const Types: MappedModules["discord/components/common/Card"]["Types"];
+}
+
 declare module "@moonlight-mod/wp/discord/components/common/FileUpload" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/components/common/FileUpload"]["default"];
@@ -129,6 +136,8 @@ declare module "@moonlight-mod/wp/discord/components/common/HelpMessage.css" {
   export const info: MappedModules["discord/components/common/HelpMessage.css"]["info"];
   export const error: MappedModules["discord/components/common/HelpMessage.css"]["error"];
 }
+
+declare module "@moonlight-mod/wp/discord/components/common/Image" {}
 
 declare module "@moonlight-mod/wp/discord/components/common/PanelButton" {
   import { MappedModules } from "@moonlight-mod/mappings";
@@ -186,10 +195,7 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const Image: MappedModules["discord/components/common/index"]["Image"];
   export const tokens: MappedModules["discord/components/common/index"]["tokens"];
   export const useVariableSelect: MappedModules["discord/components/common/index"]["useVariableSelect"];
-  export const useMultiSelectState: MappedModules["discord/components/common/index"]["useMultiSelectState"];
-  export const useSingleSelectState: MappedModules["discord/components/common/index"]["useSingleSelectState"];
   export const useMultiSelect: MappedModules["discord/components/common/index"]["useMultiSelect"];
-  export const useSingleSelect: MappedModules["discord/components/common/index"]["useSingleSelect"];
   export const multiSelect: MappedModules["discord/components/common/index"]["multiSelect"];
   export const openModal: MappedModules["discord/components/common/index"]["openModal"];
   export const openModalLazy: MappedModules["discord/components/common/index"]["openModalLazy"];
@@ -612,13 +618,11 @@ declare module "@moonlight-mod/wp/discord/modules/modals/Modals" {
   export const closeAllModals: MappedModules["discord/modules/modals/Modals"]["closeAllModals"];
   export const closeAllModalsForContext: MappedModules["discord/modules/modals/Modals"]["closeAllModalsForContext"];
   export const closeModal: MappedModules["discord/modules/modals/Modals"]["closeModal"];
-  export const closeModalInAllContexts: MappedModules["discord/modules/modals/Modals"]["closeModalInAllContexts"];
   export const getInteractingModalContext: MappedModules["discord/modules/modals/Modals"]["getInteractingModalContext"];
   export const hasAnyModalOpen: MappedModules["discord/modules/modals/Modals"]["hasAnyModalOpen"];
   export const hasAnyModalOpenSelector: MappedModules["discord/modules/modals/Modals"]["hasAnyModalOpenSelector"];
   export const hasModalOpen: MappedModules["discord/modules/modals/Modals"]["hasModalOpen"];
   export const hasModalOpenSelector: MappedModules["discord/modules/modals/Modals"]["hasModalOpenSelector"];
-  export const modalContextFromAppContext: MappedModules["discord/modules/modals/Modals"]["modalContextFromAppContext"];
   export const openModal: MappedModules["discord/modules/modals/Modals"]["openModal"];
   export const openModalLazy: MappedModules["discord/modules/modals/Modals"]["openModalLazy"];
   export const updateModal: MappedModules["discord/modules/modals/Modals"]["updateModal"];

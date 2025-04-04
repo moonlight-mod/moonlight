@@ -234,7 +234,7 @@ export default function FilterBar({
             {...props}
             size={Button.Sizes.MIN}
             color={Button.Colors.CUSTOM}
-            className={`${ForumsClasses.sortDropdown} moonbase-retry-button ${checkingUpdates ? "moonbase-speen" : ""}`}
+            className={`${ForumsClasses.sortDropdown} moonbase-retry-button`}
             innerClassName={ForumsClasses.sortDropdownInner}
             onClick={() => {
               (async () => {
@@ -249,7 +249,7 @@ export default function FilterBar({
               })();
             }}
           >
-            <RetryIcon size={"custom"} width={16} />
+            <RetryIcon size={"custom"} width={16} className={checkingUpdates ? "moonbase-speen" : ""} />
           </Button>
         )}
       </Tooltip>
