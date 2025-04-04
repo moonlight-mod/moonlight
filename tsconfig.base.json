@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  "display": "Base",
+  "_version": "1.0.0",
+  "compilerOptions": {
+    "incremental": true,
+    "target": "ES2022",
+    "jsx": "react",
+    "lib": ["ESNext", "ESNext.Disposable", "DOM", "DOM.Iterable"],
+    "module": "ES2020",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "allowArbitraryExtensions": false,
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "strict": true,
+    "strictNullChecks": true,
+
+    // disable unreachable code detection because it breaks with esbuild labels
+    "allowUnreachableCode": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "stripInternal": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noErrorTruncation": true,
+    "verbatimModuleSyntax": false,
+    // meriyah has a broken import lol
+    "skipLibCheck": true
+  }
+}

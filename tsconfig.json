@@ -1,21 +1,12 @@
 {
+  "extends": ["./tsconfig.base.json"],
   "compilerOptions": {
-    "target": "es2022",
-    "module": "es2020",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "moduleResolution": "bundler",
     "baseUrl": "./packages/",
-    "jsx": "react",
-    "noEmit": true,
-
-    // meriyah has a broken import lol
-    "skipLibCheck": true,
-
-    // disable unreachable code detection because it breaks with esbuild labels
-    "allowUnreachableCode": true
+    "noEmit": true
   },
-  "include": ["./packages/**/*", "./env.d.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/build/**"
+  ]
 }

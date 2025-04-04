@@ -1,10 +1,17 @@
 {
   "name": "@moonlight-mod/core-extensions",
   "private": true,
+  "engineStrict": true,
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*",
-    "microdiff": "^1.5.0",
-    "nanotar": "^0.1.1"
+    "microdiff": "catalog:prod",
+    "nanotar": "catalog:prod"
   }
 }

@@ -1,8 +1,15 @@
 {
   "name": "@moonlight-mod/injector",
   "private": true,
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
   "dependencies": {
-    "@moonlight-mod/types": "workspace:*",
-    "@moonlight-mod/core": "workspace:*"
-  }
+    "@moonlight-mod/core": "workspace:*",
+    "@moonlight-mod/types": "workspace:*"
+  },
+  "engineStrict": true
 }

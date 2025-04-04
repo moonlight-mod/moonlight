@@ -129,10 +129,7 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
   const ret: DetectedExtension[] = [];
   const seen = new Set<string>();
 
-  const coreExtensionsFs: Record<string, string> = JSON.parse(
-    // @ts-expect-error shut up
-    _moonlight_coreExtensionsStr
-  );
+  const coreExtensionsFs: Record<string, string> = JSON.parse(_moonlight_coreExtensionsStr);
   const coreExtensions = Array.from(new Set(Object.keys(coreExtensionsFs).map((x) => x.split("/")[0])));
 
   for (const ext of coreExtensions) {

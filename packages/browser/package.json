@@ -1,11 +1,21 @@
 {
   "name": "@moonlight-mod/browser",
   "private": true,
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*",
     "@moonlight-mod/web-preload": "workspace:*",
-    "@zenfs/core": "^1.8.8",
-    "@zenfs/dom": "^1.1.3"
+    "@zenfs/core": "catalog:prod",
+    "@zenfs/dom": "catalog:prod"
+  },
+  "engineStrict": true,
+  "devDependencies": {
+    "@types/chrome": "catalog:dev"
   }
 }
