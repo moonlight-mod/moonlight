@@ -20,11 +20,11 @@
     "yarn": "pnpm"
   },
   "scripts": {
-    "build": "tsx ./scripts/build.ts",
-    "dev": "pnpm build --watch",
-    "clean": "pnpm build --clean",
-    "browser": "pnpm build --browser",
-    "browser:mv2": "pnpm build --browser --mv2",
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "clean": "node build.mjs --clean",
+    "browser": "node build.mjs --browser",
+    "browser-mv2": "node build.mjs --browser --mv2",
     "lint": "eslint packages",
     "lint:fix": "pnpm lint --fix",
     "lint:report": "pnpm lint --output-file eslint_report.json --format json packages",

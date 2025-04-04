@@ -28,7 +28,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noErrorTruncation": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     // meriyah has a broken import lol
     "skipLibCheck": true
   }
