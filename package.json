@@ -27,7 +27,7 @@
     "browser-mv2": "node build.mjs --browser --mv2",
     "lint": "eslint packages",
     "lint:fix": "pnpm lint --fix",
-    "lint:report": "pnpm lint --output-file eslint_report.json --format json packages",
+    "lint:report": "pnpm lint --output-file eslint_report.json --format json",
     "typecheck": "tsc --noEmit",
     "check": "pnpm run lint && pnpm run typecheck",
     "prepare": "husky install",
