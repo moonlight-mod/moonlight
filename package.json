@@ -35,6 +35,7 @@
   },
   "devDependencies": {
     "@moonlight-mod/eslint-config": "catalog:dev",
+    "esbuild-copy-static-files": "catalog:dev",
     "@types/node": "catalog:dev",
     "esbuild": "catalog:dev",
     "eslint": "catalog:dev",
