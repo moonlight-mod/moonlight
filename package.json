@@ -1,7 +1,7 @@
 {
   "name": "moonlight",
   "version": "1.3.11",
-  "packageManager": "pnpm@10.7.0",
+  "packageManager": "pnpm@10.7.1",
   "description": "Yet another Discord mod",
   "license": "LGPL-3.0-or-later",
   "homepage": "https://moonlight-mod.github.io/",
@@ -35,9 +35,9 @@
   },
   "devDependencies": {
     "@moonlight-mod/eslint-config": "catalog:dev",
-    "esbuild-copy-static-files": "catalog:dev",
     "@types/node": "catalog:dev",
     "esbuild": "catalog:dev",
+    "esbuild-copy-static-files": "catalog:dev",
     "eslint": "catalog:dev",
     "husky": "catalog:dev",
     "prettier": "catalog:dev",
