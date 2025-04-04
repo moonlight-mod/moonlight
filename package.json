@@ -42,7 +42,6 @@
     "husky": "catalog:dev",
     "prettier": "catalog:dev",
     "taze": "catalog:dev",
-    "tsx": "catalog:dev",
     "typescript": "catalog:dev"
   }
 }
