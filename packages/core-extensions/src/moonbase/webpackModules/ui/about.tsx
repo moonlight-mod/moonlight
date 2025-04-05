@@ -82,7 +82,7 @@ function IconButton({
 }
 
 export default function AboutPage() {
-  const darkTheme = useThemeContext()?.theme === "dark";
+  const darkTheme = useThemeContext()?.theme !== "light";
 
   return (
     <div>
