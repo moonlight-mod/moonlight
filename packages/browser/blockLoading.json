@@ -6,7 +6,8 @@
       "type": "block"
     },
     "condition": {
-      "urlFilter": "*://discord.com/assets/*.js",
+      "requestDomains": ["discord.com", "discordapp.com"],
+      "urlFilter": "*/assets/*.js",
       "resourceTypes": ["script"]
     }
   }

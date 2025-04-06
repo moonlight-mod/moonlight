@@ -1,36 +1,40 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 
-const starterUrls = ["web.", "sentry."];
-let blockLoading = true;
-let doing = false;
-let collectedUrls = new Set();
+const scriptUrls = ["web.", "sentry."];
+let blockedScripts = new Set();
 
 chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   const url = new URL(details.url);
-  if (!blockLoading && url.hostname.endsWith("discord.com")) {
+  if (
+    !url.searchParams.has("inj") &&
+    (url.hostname.endsWith("discord.com") || url.hostname.endsWith("discordapp.com"))
+  ) {
+    console.log("Enabling block ruleset");
     await chrome.declarativeNetRequest.updateEnabledRulesets({
       enableRulesetIds: ["modifyResponseHeaders", "blockLoading"]
     });
-    blockLoading = true;
-    collectedUrls.clear();
   }
 });
 
 chrome.webRequest.onBeforeRequest.addListener(
   async (details) => {
     if (details.tabId === -1) return;
-    if (starterUrls.some((url) => details.url.includes(url))) {
-      console.log("Adding", details.url);
-      collectedUrls.add(details.url);
-    }
 
-    if (collectedUrls.size === starterUrls.length) {
-      if (doing) return;
-      if (!blockLoading) return;
-      doing = true;
-      const urls = [...collectedUrls];
-      console.log("Doing", urls);
+    const url = new URL(details.url);
+    const hasUrl = scriptUrls.some((scriptUrl) => {
+      return (
+        details.url.includes(scriptUrl) &&
+        !url.searchParams.has("inj") &&
+        (url.hostname.endsWith("discord.com") || url.hostname.endsWith("discordapp.com"))
+      );
+    });
+
+    if (hasUrl) blockedScripts.add(details.url);
+
+    if (blockedScripts.size === scriptUrls.length) {
+      const blockedScriptsCopy = Array.from(blockedScripts);
+      blockedScripts.clear();
 
       console.log("Running moonlight script");
       try {
@@ -40,7 +44,7 @@ chrome.webRequest.onBeforeRequest.addListener(
           files: ["index.js"]
         });
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
 
       console.log("Initializing moonlight");
@@ -52,7 +56,7 @@ chrome.webRequest.onBeforeRequest.addListener(
             try {
               await window._moonlightBrowserInit();
             } catch (e) {
-              console.log(e);
+              console.error(e);
             }
           }
         });
@@ -60,15 +64,14 @@ chrome.webRequest.onBeforeRequest.addListener(
         console.log(e);
       }
 
-      console.log("Updating rulesets");
+      console.log("Disabling block ruleset");
       try {
-        blockLoading = false;
         await chrome.declarativeNetRequest.updateEnabledRulesets({
           disableRulesetIds: ["blockLoading"],
           enableRulesetIds: ["modifyResponseHeaders"]
         });
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
 
       console.log("Readding scripts");
@@ -76,38 +79,33 @@ chrome.webRequest.onBeforeRequest.addListener(
         await chrome.scripting.executeScript({
           target: { tabId: details.tabId },
           world: "MAIN",
-          args: [urls],
-          func: async (urls) => {
+          args: [blockedScriptsCopy],
+          func: async (blockedScripts) => {
             const scripts = [...document.querySelectorAll("script")].filter(
-              (script) => script.src && urls.some((url) => url.includes(script.src))
+              (script) => script.src && blockedScripts.some((url) => url.includes(script.src))
             );
 
-            // backwards
-            urls.reverse();
-            for (const url of urls) {
+            blockedScripts.reverse();
+            for (const url of blockedScripts) {
+              if (url.includes("/sentry.")) continue;
+
               const script = scripts.find((script) => url.includes(script.src));
-              console.log("adding new script", script);
-
               const newScript = document.createElement("script");
-              for (const { name, value } of script.attributes) {
-                newScript.setAttribute(name, value);
+              for (const attr of script.attributes) {
+                if (attr.name === "src") attr.value += "?inj";
+                newScript.setAttribute(attr.name, attr.value);
               }
-
               script.remove();
               document.documentElement.appendChild(newScript);
             }
           }
         });
       } catch (e) {
-        console.log(e);
+        console.error(e);
       }
-
-      console.log("Done");
-      doing = false;
-      collectedUrls.clear();
     }
   },
   {
-    urls: ["*://*.discord.com/assets/*.js"]
+    urls: ["*://*.discord.com/assets/*.js", "*://*.discordapp.com/assets/*.js"]
   }
 );

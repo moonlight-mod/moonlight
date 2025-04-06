@@ -15,6 +15,11 @@ const nightlyZipUrl = "https://moonlight-mod.github.io/moonlight/dist.tar.gz";
 
 export const userAgent = `moonlight/${moonlightGlobal.version} (https://github.com/moonlight-mod/moonlight)`;
 
+// User-Agent header causes trouble on Firefox
+const isBrowser = globalThis.moonlightNode != null && globalThis.moonlightNode.isBrowser;
+const sharedHeaders: Record<string, string> = {};
+if (!isBrowser) sharedHeaders["User-Agent"] = userAgent;
+
 async function getStableRelease(): Promise<{
   name: string;
   assets: {
@@ -24,9 +29,7 @@ async function getStableRelease(): Promise<{
 }> {
   const req = await fetch(githubApiUrl, {
     cache: "no-store",
-    headers: {
-      "User-Agent": userAgent
-    }
+    headers: sharedHeaders
   });
   return await req.json();
 }
@@ -43,9 +46,7 @@ export default function getNatives(): MoonbaseNatives {
         } else if (moonlightGlobal.branch === MoonlightBranch.NIGHTLY) {
           const req = await fetch(nightlyRefUrl, {
             cache: "no-store",
-            headers: {
-              "User-Agent": userAgent
-            }
+            headers: sharedHeaders
           });
           const ref = (await req.text()).split("\n")[0];
           return ref !== moonlightGlobal.version ? ref : null;
@@ -71,9 +72,7 @@ export default function getNatives(): MoonbaseNatives {
         logger.debug(`Downloading ${asset.browser_download_url}`);
         const req = await fetch(asset.browser_download_url, {
           cache: "no-store",
-          headers: {
-            "User-Agent": userAgent
-          }
+          headers: sharedHeaders
         });
 
         return [await req.arrayBuffer(), json.name];
@@ -83,16 +82,12 @@ export default function getNatives(): MoonbaseNatives {
         logger.debug(`Downloading ${nightlyZipUrl}`);
         const zipReq = await fetch(nightlyZipUrl, {
           cache: "no-store",
-          headers: {
-            "User-Agent": userAgent
-          }
+          headers: sharedHeaders
         });
 
         const refReq = await fetch(nightlyRefUrl, {
           cache: "no-store",
-          headers: {
-            "User-Agent": userAgent
-          }
+          headers: sharedHeaders
         });
         const ref = (await refReq.text()).split("\n")[0];
 
@@ -139,9 +134,7 @@ export default function getNatives(): MoonbaseNatives {
         try {
           const req = await fetch(repo, {
             cache: "no-store",
-            headers: {
-              "User-Agent": userAgent
-            }
+            headers: sharedHeaders
           });
           const json = await req.json();
           ret[repo] = json;
@@ -156,9 +149,7 @@ export default function getNatives(): MoonbaseNatives {
     async installExtension(manifest, url, repo) {
       const req = await fetch(url, {
         cache: "no-store",
-        headers: {
-          "User-Agent": userAgent
-        }
+        headers: sharedHeaders
       });
 
       const dir = moonlightGlobal.getExtensionDir(manifest.id);

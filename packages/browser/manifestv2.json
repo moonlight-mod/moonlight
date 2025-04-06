@@ -9,10 +9,10 @@
     "webRequestBlocking",
     "scripting",
     "webNavigation",
-    "https://*.discord.com/assets/*.js",
+    "https://*.discord.com/*",
+    "https://*.discordapp.com/*",
     "https://moonlight-mod.github.io/*",
-    "https://api.github.com/*",
-    "https://*.discord.com/*"
+    "https://api.github.com/*"
   ],
   "background": {
     "scripts": ["background.js"]
@@ -20,7 +20,7 @@
   "content_scripts": [
     {
       "js": ["index.js"],
-      "matches": ["https://*.discord.com/*"],
+      "matches": ["https://*.discord.com/*", "https://*.discordapp.com/*"],
       "run_at": "document_start",
       "world": "MAIN"
     }
