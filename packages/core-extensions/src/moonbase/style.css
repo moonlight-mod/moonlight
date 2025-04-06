@@ -251,6 +251,10 @@ textarea.moonbase-resizeable {
   padding-top: 0.5rem;
 }
 
+.moonbase-dev {
+  height: 4rem;
+}
+
 .moonbase-dev-avatar {
   width: 2rem;
   border-radius: 50%;
@@ -260,6 +264,6 @@ textarea.moonbase-resizeable {
   gap: 0.5rem;
 }
 
-.moonbase-about-text {
-  padding-top: 0.5rem;
+.moonbase-about-page {
+  gap: 1rem;
 }
