@@ -2,13 +2,12 @@
   description = "Yet another Discord mod";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    pnpm2nix.url = "github:NotNite/pnpm2nix-nzbr";
   };
 
-  outputs = { self, nixpkgs, flake-utils, pnpm2nix }:
-    let overlay = import ./nix/overlay.nix { inherit pnpm2nix; };
+  outputs = { self, nixpkgs, flake-utils }:
+    let overlay = import ./nix/overlay.nix { };
     in flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
