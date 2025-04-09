@@ -12,7 +12,7 @@ export const patches: Patch[] = [
   {
     find: 'navId:"user-settings-cog",',
     replace: {
-      match: /children:\[(.)\.map\(.+?\),children:.\((.)\)/,
+      match: /children:\[(\i)\.map\(.+?\),.*?children:\i\((\i)\)/,
       replacement: (orig, sections, section) =>
         `${orig.replace(
           /Object\.values\(.\..+?\)/,
