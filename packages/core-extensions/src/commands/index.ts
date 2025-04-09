@@ -53,10 +53,10 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: ".icon,bot:null===",
+    find: ".icon,bot:null==",
     replace: {
-      match: /(\.useMemo\(\(\)=>{)(if\((\i)\.type)/,
-      replacement: (_, before, after, section) => `${before}
+      match: /(\.useMemo\(\(\)=>{(var \i;)?)((return |if\()(\i)\.type)/,
+      replacement: (_, before, beforeVar, after, afterIf, section) => `${before}
       if (${section}.id==="${APPLICATION_ID}") return "https://moonlight-mod.github.io/favicon.png";
       ${after}`
     }
