@@ -1,4 +1,4 @@
-{ pnpm2nix }:
+{ ... }:
 
 let
   nameTable = {
@@ -49,10 +49,7 @@ let
       '';
     });
 in final: prev: rec {
-  moonlight-mod = final.callPackage ./default.nix {
-    pkgs = final;
-    mkPnpmPackage = pnpm2nix.packages.${final.system}.mkPnpmPackage;
-  };
+  moonlight-mod = final.callPackage ./default.nix { };
   discord = mkOverride prev moonlight-mod "discord";
   discord-ptb = mkOverride prev moonlight-mod "discord-ptb";
   discord-canary = mkOverride prev moonlight-mod "discord-canary";
