@@ -29,7 +29,7 @@ let
         '';
 
         packageJson = ''
-          {"name":"discord","main":"./injector.js","private":true}
+          {"name":"${name}","main":"./injector.js","private":true}
         '';
 
       in old.installPhase + "\n" + ''
