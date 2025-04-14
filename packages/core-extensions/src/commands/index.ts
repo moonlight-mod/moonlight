@@ -68,6 +68,15 @@ export const patches: Patch[] = [
       match: /(\i)\.type===\i\.\i\.BUILT_IN/,
       replacement: (orig, section) => `${section}.id!=="${APPLICATION_ID}"&&${orig}`
     }
+  },
+
+  // tell it this app id is authorized
+  {
+    find: /let{customInstallUrl:\i,installParams:\i,integrationTypesConfig:\i}/,
+    replace: {
+      match: /\|\|(\i)===\i\.\i\.BUILT_IN/,
+      replacement: (orig, id) => `${orig}||${id}==="${APPLICATION_ID}"`
+    }
   }
 ];
 
