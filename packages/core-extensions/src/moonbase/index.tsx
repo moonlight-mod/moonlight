@@ -42,6 +42,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { id: "react" },
       { id: "discord/components/common/index" },
       { ext: "moonbase", id: "stores" },
+      { ext: "moonbase", id: "ThemeDarkIcon" },
       { id: "discord/modules/guild_settings/web/AppCard.css" },
       { ext: "contextMenu", id: "contextMenu" },
       { id: "discord/modules/modals/Modals" },
@@ -49,6 +50,10 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       '"Missing channel in Channel.openChannelContextMenu"',
       ".forumOrHome]:"
     ]
+  },
+
+  ThemeDarkIcon: {
+    dependencies: [{ ext: "common", id: "icons" }, { id: "react" }]
   },
 
   settings: {
@@ -67,6 +72,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
     dependencies: [
       { id: "react" },
       { ext: "moonbase", id: "stores" },
+      { ext: "moonbase", id: "ThemeDarkIcon" },
       { ext: "notices", id: "notices" },
       {
         ext: "spacepack",
