@@ -7,7 +7,6 @@ import { MoonlightBranch } from "@moonlight-mod/types";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import {
-  ThemeDarkIcon,
   Button,
   Text,
   ModalRoot,
@@ -19,6 +18,7 @@ import {
   openModal
 } from "@moonlight-mod/wp/discord/components/common/index";
 import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
+import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
 
 const strings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",

@@ -10,7 +10,16 @@ declare module "@moonlight-mod/wp/commands_commands" {
   export default commands;
 }
 
-declare module "@moonlight-mod/wp/common_ErrorBoundary";
+declare module "@moonlight-mod/wp/common_ErrorBoundary" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  const ErrorBoundary: CoreExtensions.Common.ErrorBoundary;
+  export = ErrorBoundary;
+}
+declare module "@moonlight-mod/wp/common_icons" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+  export const icons: CoreExtensions.Common.Icons;
+  export default icons;
+}
 declare module "@moonlight-mod/wp/common_stores";
 
 declare module "@moonlight-mod/wp/componentEditor_dmList" {

@@ -4,7 +4,7 @@
   "apiLevel": 2,
   "meta": {
     "name": "Common",
-    "tagline": "A *lot* of common clientmodding utilities from the Discord client",
+    "tagline": "Common client modding utilities for the Discord client",
     "authors": ["Cynosphere", "NotNite"],
     "tags": ["library"]
   },

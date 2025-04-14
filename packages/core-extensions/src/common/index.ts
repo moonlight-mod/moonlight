@@ -6,5 +6,8 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
   },
   ErrorBoundary: {
     dependencies: [{ id: "react" }]
+  },
+  icons: {
+    dependencies: [{ id: "react" }, { id: "discord/components/common/index" }]
   }
 };

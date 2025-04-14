@@ -1,5 +1,6 @@
 import { AppPanels } from "../coreExtensions/appPanels";
 import { Commands } from "../coreExtensions/commands";
+import { ErrorBoundary, Icons } from "../coreExtensions/common";
 import { DMList, MemberList, Messages } from "../coreExtensions/componentEditor";
 import { ContextMenu, EvilItemParser } from "../coreExtensions/contextMenu";
 import { Markdown } from "../coreExtensions/markdown";
@@ -13,6 +14,9 @@ declare function WebpackRequire(id: string): any;
 declare function WebpackRequire(id: "appPanels_appPanels"): AppPanels;
 
 declare function WebpackRequire(id: "commands_commands"): Commands;
+
+declare function WebpackRequire(id: "common_ErrorBoundary"): ErrorBoundary;
+declare function WebpackRequire(id: "common_icons"): Icons;
 
 declare function WebpackRequire(id: "componentEditor_dmList"): DMList;
 declare function WebpackRequire(id: "componentEditor_memberList"): MemberList;
