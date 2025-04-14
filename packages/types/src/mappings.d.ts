@@ -229,7 +229,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const ScienceIcon: MappedModules["discord/components/common/index"]["ScienceIcon"];
   export const ScreenIcon: MappedModules["discord/components/common/index"]["ScreenIcon"];
   export const StarIcon: MappedModules["discord/components/common/index"]["StarIcon"];
-  export const ThemeDarkIcon: MappedModules["discord/components/common/index"]["ThemeDarkIcon"];
   export const TrashIcon: MappedModules["discord/components/common/index"]["TrashIcon"];
   export const WarningIcon: MappedModules["discord/components/common/index"]["WarningIcon"];
   export const WindowLaunchIcon: MappedModules["discord/components/common/index"]["WindowLaunchIcon"];
