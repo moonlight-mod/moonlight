@@ -116,7 +116,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     const origModuleString = moduleCache[id];
     let moduleString = origModuleString;
     const patchedStr = [];
-    const mappedName = moonlight.moonmap.modules[id];
+    const mappedName = Object.entries(moonlight.moonmap.modules).find((m) => m[1] === id)?.[0];
     let modified = false;
     let swappedModule = false;
 
