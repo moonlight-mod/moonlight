@@ -41,8 +41,8 @@ catalogs:
       specifier: ^1.0.1
       version: 1.0.1
     '@moonlight-mod/mappings':
-      specifier: ^1.1.24
-      version: 1.1.24
+      specifier: ^1.1.25
+      version: 1.1.25
     '@moonlight-mod/moonmap':
       specifier: ^1.0.5
       version: 1.0.5
@@ -158,8 +158,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       '@moonlight-mod/mappings':
-        specifier: ^1.1.24
-        version: 1.1.24(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.5)
+        specifier: ^1.1.25
+        version: 1.1.25(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.5)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.5
         version: 1.0.5
@@ -183,7 +183,7 @@ importers:
         version: 1.0.1
       '@moonlight-mod/mappings':
         specifier: catalog:prod
-        version: 1.1.24(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.5)
+        version: 1.1.25(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.5)
       '@moonlight-mod/moonmap':
         specifier: catalog:prod
         version: 1.0.5
@@ -405,8 +405,8 @@ packages:
   '@moonlight-mod/lunast@1.0.1':
     resolution: {integrity: sha512-K3vxzDlfFuYKjciIW2FMlcZ1qrrkAGDGpSBlNqYGtJ0sMt9bRCd2lpSpg6AX/giSljDtmAUXa/5mOfUoDQxjBA==}
 
-  '@moonlight-mod/mappings@1.1.24':
-    resolution: {integrity: sha512-tcZSD8S+twjNq1Wp4wnHbc38BfLeHB/9MMLhk8YNqTGMMr5swaKcMOmvGjqd50vRPBRgAi/ss180cIX2uYWrOg==}
+  '@moonlight-mod/mappings@1.1.25':
+    resolution: {integrity: sha512-bgnSN9H/IBdMGxGev6RQKXuzhQxwo1090NhIDHnflguZnjiu2pg/usPfh76bqyhxRuX4SS7tiZSNTwBoSflCLg==}
     engines: {node: '>=22', npm: pnpm, pnpm: '>=10', yarn: pnpm}
     peerDependencies:
       '@moonlight-mod/lunast': ^1.0.1
@@ -449,6 +449,9 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@types/estree@1.0.7':
+    resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
 
   '@types/fbemitter@2.0.35':
     resolution: {integrity: sha512-Xem6d7qUfmouCHntCrRYgDBwbf+WWRd6G+7WEFlEZFZ67LZXiYRvT2LV8wcZa6mIaAil95+ABQdKgB6hPIsnng==}
@@ -1737,7 +1740,7 @@ snapshots:
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
 
-  '@moonlight-mod/mappings@1.1.24(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.5)':
+  '@moonlight-mod/mappings@1.1.25(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.5)':
     dependencies:
       '@moonlight-mod/lunast': 1.0.1
       '@moonlight-mod/moonmap': 1.0.5
@@ -1783,7 +1786,7 @@ snapshots:
 
   '@types/eslint@9.6.1':
     dependencies:
-      '@types/estree': 1.0.6
+      '@types/estree': 1.0.7
       '@types/json-schema': 7.0.15
     optional: true
 
@@ -1792,6 +1795,9 @@ snapshots:
       '@types/estree': 1.0.6
 
   '@types/estree@1.0.6': {}
+
+  '@types/estree@1.0.7':
+    optional: true
 
   '@types/fbemitter@2.0.35': {}
 
