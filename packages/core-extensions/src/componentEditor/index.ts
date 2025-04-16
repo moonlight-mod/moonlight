@@ -27,7 +27,8 @@ export const patches: Patch[] = [
     find: ".lostPermission",
     replace: [
       {
-        match: /(?<=\(0,\i\.jsxs\)\(\i\.Fragment,{)children:(\[\i\(\),.+?\i\(\)])/,
+        match:
+          /(?<=\(0,\i\.jsxs\)\(\i\.Fragment,{)children:(\[\(0,\i\.jsx\)\(\i,{user:\i}\),.+?onClickPremiumGuildIcon:\i}\)])/,
         replacement: (_, decorators) =>
           `children:require("componentEditor_memberList").default._patchDecorators(${decorators},arguments[0])`
       },
