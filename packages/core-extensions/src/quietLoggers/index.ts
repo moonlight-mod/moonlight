@@ -18,8 +18,15 @@ const loggerFixes: Patch[] = [
   {
     find: '("GatewaySocket")',
     replace: {
-      match: /.\.(info|log)(\(.+?\))(;|,)/g,
-      replacement: (_, type, body, trail) => `(()=>{})${body}${trail}`
+      match: /\i\.(log|info)\(/g,
+      replacement: "(()=>{})("
+    }
+  },
+  {
+    find: '"_connect called with already existing websocket"',
+    replace: {
+      match: /\i\.(log|info|verbose)\(/g,
+      replacement: "(()=>{})("
     }
   }
 ];
@@ -30,21 +37,65 @@ loggerFixes.forEach((patch) => {
 // Patches to simply remove a logger call
 const stubPatches = [
   // "sh" is not a valid locale.
-  ["is not a valid locale", /void (.)\.error\(""\.concat\((.)," is not a valid locale\."\)\)/g],
-  ['"[BUILD INFO] Release Channel: "', /new .{1,2}\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?\)\),/],
-  ['.APP_NATIVE_CRASH,"Storage"', /console\.log\("AppCrashedFatalReport lastCrash:",.,.\);/],
+  ["is not a valid locale", /void \i\.error\(""\.concat\(\i," is not a valid locale\."\)\)/g],
+  ['"[BUILD INFO] Release Channel: "', /new \i\.Z\(\)\.log\("\[BUILD INFO\] Release Channel: ".+?\)\),/],
+  ['.APP_NATIVE_CRASH,"Storage"', /console\.log\("AppCrashedFatalReport lastCrash:",\i,\i\);/],
   ['.APP_NATIVE_CRASH,"Storage"', 'void console.log("AppCrashedFatalReport: getLastCrash not supported.")'],
-  ['"[NATIVE INFO] ', /new .{1,2}\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
-  ['"Spellchecker"', /.\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
-  ['throw Error("Messages are still loading.");', /console\.warn\("Unsupported Locale",.\),/],
-  ["}_dispatchWithDevtools(", /.\.totalTime>.{1,2}&&.\.verbose\(.+?\);/],
-  ['"NativeDispatchUtils"', /null==.&&.\.warn\("Tried getting Dispatch instance before instantiated"\),/],
-  ['("DatabaseManager")', /.\.log\("removing database \(user: ".+?\)\),/],
+  ['"[NATIVE INFO] ', /new \i\.Z\(\)\.log\("\[NATIVE INFO] .+?\)\);/],
+  ['"Spellchecker"', /\i\.info\("Switching to ".+?"\(unavailable\)"\);?/g],
+  ['throw Error("Messages are still loading.");', /console\.warn\("Unsupported Locale",\i\),/],
+  ["}_dispatchWithDevtools(", /\i\.totalTime>\i&&\i\.verbose\(.+?\);/],
+  ['"NativeDispatchUtils"', /null==\i&&\i\.warn\("Tried getting Dispatch instance before instantiated"\),/],
   [
     '"Dispatch.dispatch(...): Cannot dispatch in the middle of a dispatch. Action: "',
-    /.\.has\(.\.type\)&&.\.log\(.+?\.type\)\),/
+    /\i\.has\(\i\.type\)&&\i\.log\(.+?\.type\)\),/
   ],
-  ['console.warn("Window state not initialized"', /console\.warn\("Window state not initialized",.\),/]
+  ['console.warn("Window state not initialized"', /console\.warn\("Window state not initialized",\i\),/],
+  ['.name="MaxListenersExceededWarning",', /(?<=\.length),\i\(\i\)/],
+  [
+    '"The answer for life the universe and everything is:"',
+    /\i\.info\("The answer for life the universe and everything is:",\i\),/
+  ],
+  [
+    '"isLibdiscoreBlockedDomainsEnabled called but libdiscore is not loaded"',
+    /,\i\.verbose\("isLibdiscoreBlockedDomainsEnabledThisSession: ".concat\(\i\)\)/
+  ],
+  [
+    '"Unable to determine render window for element"',
+    /console\.warn\("Unable to determine render window for element",\i\),/
+  ],
+  [
+    '"Unable to determine render window for element"',
+    /console\.warn\('Unable to find element constructor "'\.concat\(\i,'" in'\),\i\),/
+  ],
+  [
+    '"[PostMessageTransport] Protocol error: event data should be an Array!"',
+    /void console\.warn\("\[PostMessageTransport] Protocol error: event data should be an Array!"\)/
+  ],
+  [
+    '("ComponentDispatchUtils")',
+    /new \i\.Z\("ComponentDispatchUtils"\)\.warn\("ComponentDispatch\.resubscribe: Resubscribe without existing subscription",\i\),/
+  ]
+];
+
+const stripLoggers = [
+  '("OverlayRenderStore")',
+  '("FetchBlockedDomain")',
+  '="UserSettingsProtoLastWriteTimes",',
+  '("MessageActionCreators")',
+  '("Routing/Utils")',
+  '("DatabaseManager")',
+  '("KeyboardLayoutMapUtils")',
+  '("ChannelMessages")',
+  '("MessageQueue")',
+  '("RTCLatencyTestManager")',
+  '("OverlayStoreV3")',
+  '("OverlayBridgeStore")',
+  '("AuthenticationStore")',
+  '("ConnectionStore")',
+  '"Dispatched INITIAL_GUILD "',
+  '"handleIdentify called"',
+  '("Spotify")'
 ];
 
 const simplePatches = [
@@ -56,9 +107,18 @@ export const patches: Patch[] = [
   {
     find: ".Messages.SELF_XSS_HEADER",
     replace: {
-      match: /\(null!=.{1,2}&&"0\.0\.0"===.{1,2}\.remoteApp\.getVersion\(\)\)/,
+      match: /\(null!=\i&&"0\.0\.0"===\i\.remoteApp\.getVersion\(\)\)/,
       replacement: "(true)"
     }
+  },
+  {
+    find: '("ComponentDispatchUtils")',
+    replace: {
+      match:
+        /new \i\.Z\("ComponentDispatchUtils"\)\.warn\("ComponentDispatch\.subscribe: Attempting to add a duplicate listener",\i\)/,
+      replacement: "void 0"
+    },
+    prerequisite: notXssDefensesOnly
   },
   // Highlight.js deprecation warnings
   {
@@ -92,6 +152,14 @@ export const patches: Patch[] = [
     replace: {
       match: patch[0],
       replacement: patch[1]
+    },
+    prerequisite: notXssDefensesOnly
+  })),
+  ...stripLoggers.map((find) => ({
+    find,
+    replace: {
+      match: /(\i|this\.logger)\.(log|warn|error|info|verbose)\(/g,
+      replacement: "(()=>{})("
     },
     prerequisite: notXssDefensesOnly
   }))
