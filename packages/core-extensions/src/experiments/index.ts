@@ -20,7 +20,7 @@ export const patches: Patch[] = [
   {
     find: ".HEADER_BAR)",
     replace: {
-      match: /&&\((.)\?\(0,/,
+      match: /&&\((\i)\?\(0,/,
       replacement: (_, isStaff) =>
         `&&(((moonlight.getConfigOption("experiments","devtools")??false)?true:${isStaff})?(0,`
     }
@@ -47,9 +47,9 @@ export const patches: Patch[] = [
   {
     find: "shouldShowLurkerModeUpsellPopout:",
     replace: {
-      match: /\.useReducedMotion,isStaff:(.),/,
-      replacement: (_, isStaff) =>
-        `.useReducedMotion,isStaff:(moonlight.getConfigOption("experiments","staffSettings")??false)?true:${isStaff},`
+      match: /\.useReducedMotion,isStaff:(\i)(,|})/,
+      replacement: (_, isStaff, trail) =>
+        `.useReducedMotion,isStaff:(moonlight.getConfigOption("experiments","staffSettings")??false)?true:${isStaff}${trail}`
     }
   }
 ];
