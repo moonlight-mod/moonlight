@@ -48,6 +48,9 @@ export default function createFS(): MoonlightFS {
     },
     dirname(dir) {
       return path.dirname(dir);
+    },
+    basename(dir) {
+      return path.basename(dir);
     }
   };
 }

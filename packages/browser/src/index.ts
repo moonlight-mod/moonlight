@@ -90,6 +90,10 @@ window._moonlightBrowserInit = async () => {
       dirname(path) {
         const parts = getParts(path);
         return "/" + parts.slice(0, parts.length - 1).join("/");
+      },
+      basename(path) {
+        const parts = getParts(path);
+        return parts[parts.length - 1];
       }
     },
     // TODO
