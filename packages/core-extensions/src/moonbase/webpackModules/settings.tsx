@@ -19,8 +19,8 @@ const notice = {
         onReset={() => {
           MoonbaseSettingsStore.reset();
         }}
-        onSave={() => {
-          MoonbaseSettingsStore.writeConfig();
+        onSave={async () => {
+          await MoonbaseSettingsStore.writeConfig();
         }}
       />
     );

@@ -84,7 +84,7 @@ function ExtensionUpdateCard({ id, ext }: UpdateCardProps) {
 }
 
 function ExtensionDisableCard({ ext }: { ext: DetectedExtension }) {
-  function disableWithDependents() {
+  async function disableWithDependents() {
     const disable = new Set<string>();
     disable.add(ext.id);
     for (const [id, dependencies] of moonlightNode.processedExtensions.dependencyGraph) {
@@ -105,7 +105,7 @@ function ExtensionDisableCard({ ext }: { ext: DetectedExtension }) {
     msg += "?";
 
     if (confirm(msg)) {
-      moonlightNode.writeConfig(config);
+      await moonlightNode.writeConfig(config);
       window.location.reload();
     }
   }

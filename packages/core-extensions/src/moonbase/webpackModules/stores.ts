@@ -13,6 +13,7 @@ import getNatives from "../native";
 import { mainRepo } from "@moonlight-mod/types/constants";
 import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
+import { NodeEventType } from "@moonlight-mod/types/core/event";
 import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
 import diff from "microdiff";
 
@@ -78,7 +79,17 @@ class MoonbaseSettingsStore extends Store<any> {
       };
     }
 
+    // This is async but we're calling it without
     this.checkUpdates();
+
+    // Update our state if another extension edited the config programatically
+    moonlightNode.events.addEventListener(NodeEventType.ConfigSaved, (config) => {
+      if (!this.submitting) {
+        this.config = this.clone(config);
+        // NOTE: This is also async but we're calling it without
+        this.processConfigChanged();
+      }
+    });
   }
 
   async checkUpdates() {
@@ -239,7 +250,7 @@ class MoonbaseSettingsStore extends Store<any> {
     let val = this.config.extensions[ext.id];
 
     if (val == null) {
-      this.config.extensions[ext.id] = { enabled };
+      this.config.extensions[ext.id] = enabled;
       this.modified = this.isModified();
       this.emitChange();
       return;
@@ -499,19 +510,28 @@ class MoonbaseSettingsStore extends Store<any> {
     return returnedAdvice;
   }
 
-  writeConfig() {
-    this.submitting = true;
-    this.restartAdvice = this.#computeRestartAdvice();
-    const modifiedRepos = diff(this.savedConfig.repositories, this.config.repositories);
+  async writeConfig() {
+    try {
+      this.submitting = true;
+      this.emitChange();
 
-    moonlightNode.writeConfig(this.config);
+      await moonlightNode.writeConfig(this.config);
+      await this.processConfigChanged();
+    } finally {
+      this.submitting = false;
+      this.emitChange();
+    }
+  }
+
+  private async processConfigChanged() {
     this.savedConfig = this.clone(this.config);
-
-    this.submitting = false;
+    this.restartAdvice = this.#computeRestartAdvice();
     this.modified = false;
-    this.emitChange();
 
-    if (modifiedRepos.length !== 0) this.checkUpdates();
+    const modifiedRepos = diff(this.savedConfig.repositories, this.config.repositories);
+    if (modifiedRepos.length !== 0) await this.checkUpdates();
+
+    this.emitChange();
   }
 
   reset() {
