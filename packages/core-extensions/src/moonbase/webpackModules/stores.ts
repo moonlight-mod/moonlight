@@ -239,7 +239,7 @@ class MoonbaseSettingsStore extends Store<any> {
     let val = this.config.extensions[ext.id];
 
     if (val == null) {
-      this.config.extensions[ext.id] = { enabled };
+      this.config.extensions[ext.id] = enabled;
       this.modified = this.isModified();
       this.emitChange();
       return;
