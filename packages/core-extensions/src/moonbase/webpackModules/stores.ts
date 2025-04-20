@@ -83,11 +83,11 @@ class MoonbaseSettingsStore extends Store<any> {
     this.checkUpdates();
 
     // Update our state if another extension edited the config programatically
-    moonlightNode.events.addEventListener(NodeEventType.ConfigSaved, async (config) => {
+    moonlightNode.events.addEventListener(NodeEventType.ConfigSaved, (config) => {
       if (!this.submitting) {
         this.config = this.clone(config);
-        await this.processConfigChanged();
-        this.emitChange();
+        // NOTE: This is also async but we're calling it without
+        this.processConfigChanged();
       }
     });
   }
@@ -513,6 +513,8 @@ class MoonbaseSettingsStore extends Store<any> {
   async writeConfig() {
     try {
       this.submitting = true;
+      this.emitChange();
+
       await moonlightNode.writeConfig(this.config);
       await this.processConfigChanged();
     } finally {
@@ -528,6 +530,8 @@ class MoonbaseSettingsStore extends Store<any> {
 
     const modifiedRepos = diff(this.savedConfig.repositories, this.config.repositories);
     if (modifiedRepos.length !== 0) await this.checkUpdates();
+
+    this.emitChange();
   }
 
   reset() {
