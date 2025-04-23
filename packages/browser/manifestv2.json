@@ -24,5 +24,10 @@
       "run_at": "document_start",
       "world": "MAIN"
     }
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{0fb6d66f-f22d-4555-a87b-34ef4bea5e2a}"
+    }
+  }
 }
