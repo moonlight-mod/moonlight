@@ -11,6 +11,8 @@ stdenv.mkDerivation (finalAttrs: {
 
   src = ./..;
 
+  outputs = [ "out" "firefox" ];
+
   nativeBuildInputs = [
     nodejs_22
     pnpm_10.configHook
@@ -30,6 +32,7 @@ stdenv.mkDerivation (finalAttrs: {
     runHook preBuild
 
     pnpm run build
+    pnpm run browser-mv2
 
     runHook postBuild
   '';
@@ -38,6 +41,9 @@ stdenv.mkDerivation (finalAttrs: {
     runHook preInstall
 
     cp -r dist $out
+
+    mkdir -p $firefox/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/
+    mv $out/browser-mv2 $firefox/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/{0fb6d66f-f22d-4555-a87b-34ef4bea5e2a}
 
     runHook postInstall
   '';
