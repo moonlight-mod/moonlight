@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 
-const scriptUrls = ["web.", "sentry."];
+const scriptUrls = ["web.", "sentry.", "libdiscoreWasmFetch."];
 let blockedScripts = new Set();
 
 chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
@@ -87,7 +87,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
             blockedScripts.reverse();
             for (const url of blockedScripts) {
-              if (url.includes("/sentry.")) continue;
+              if (!url.includes("/web.")) continue;
 
               const script = scripts.find((script) => url.includes(script.src));
               const newScript = document.createElement("script");

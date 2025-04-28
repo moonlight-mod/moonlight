@@ -164,7 +164,7 @@ if (isOverlay) {
 
           blockedScripts.reverse();
           for (const url of blockedScripts) {
-            if (url.includes("/sentry.")) continue;
+            if (!url.includes("/web.")) continue;
 
             const script = scripts.find((script) => url.includes(script.src))!;
             const newScript = document.createElement("script");
