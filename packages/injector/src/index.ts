@@ -24,7 +24,7 @@ let corsAllow: string[] = [];
 let blockedUrls: RegExp[] = [];
 let injectorConfig: InjectorConfig | undefined;
 
-const scriptUrls = ["web.", "sentry.", "libdiscoreWasmFetch."];
+const scriptUrls = ["web.", "sentry."];
 const blockedScripts = new Set<string>();
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
