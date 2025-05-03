@@ -101,6 +101,7 @@ textarea.moonbase-resizeable {
   margin: 32px 0;
 }
 
+/* Extension Cards */
 .moonlight-card-info-header {
   margin-bottom: 0.25rem;
 }
@@ -110,6 +111,25 @@ textarea.moonbase-resizeable {
   padding: 0 0.275rem;
   margin-right: 0.4em;
   background-color: var(--badge-color, var(--bg-mod-strong));
+}
+
+.moonbase-settings-list,
+.moonbase-settings-dictionary {
+  gap: 8px;
+}
+.moonbase-settings-list-entry {
+  display: grid;
+  height: 44px;
+  gap: 8px;
+  grid-template-columns: 1fr 40px;
+  align-items: center;
+}
+.moonbase-settings-dictionary-entry {
+  display: grid;
+  height: 44px;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr 40px;
+  align-items: center;
 }
 
 /* Crash screen */

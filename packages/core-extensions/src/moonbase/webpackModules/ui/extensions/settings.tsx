@@ -240,19 +240,9 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
       {description && <FormText className={Margins.marginBottom4}>{markdownify(description)}</FormText>}
-      <Flex direction={Flex.Direction.VERTICAL}>
+      <Flex direction={Flex.Direction.VERTICAL} className="moonbase-settings-list">
         {entries.map((val, i) => (
-          // FIXME: stylesheets
-          <div
-            key={i}
-            style={{
-              display: "grid",
-              height: "32px",
-              gap: "8px",
-              gridTemplateColumns: "1fr 32px",
-              alignItems: "center"
-            }}
-          >
+          <div key={i} className="moonbase-settings-list-entry">
             <TextInput
               size={TextInput.Sizes.MINI}
               value={val}
@@ -277,7 +267,6 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
           color={Button.Colors.GREEN}
           size={Button.Sizes.SMALL}
           disabled={disabled}
-          className={Margins.marginTop8}
           onClick={() => {
             entries.push("");
             updateConfig();
@@ -299,19 +288,9 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
       {description && <FormText className={Margins.marginBottom4}>{markdownify(description)}</FormText>}
-      <Flex direction={Flex.Direction.VERTICAL}>
+      <Flex direction={Flex.Direction.VERTICAL} className="moonbase-settings-dictionary">
         {entries.map(([key, val], i) => (
-          // FIXME: stylesheets
-          <div
-            key={i}
-            style={{
-              display: "grid",
-              height: "32px",
-              gap: "8px",
-              gridTemplateColumns: "1fr 1fr 32px",
-              alignItems: "center"
-            }}
-          >
+          <div key={i} className="moonbase-settings-dictionary-entry">
             <TextInput
               size={TextInput.Sizes.MINI}
               value={key}
@@ -344,7 +323,6 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
           look={Button.Looks.FILLED}
           color={Button.Colors.GREEN}
           size={Button.Sizes.SMALL}
-          className={Margins.marginTop8}
           disabled={disabled}
           onClick={() => {
             entries.push([`entry-${entries.length}`, ""]);
