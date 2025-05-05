@@ -113,6 +113,11 @@ textarea.moonbase-resizeable {
   background-color: var(--badge-color, var(--bg-mod-strong));
 }
 
+.moonbase-extension-card-header {
+  border-top-left-radius: var(--radius-xs);
+  border-top-right-radius: var(--radius-xs);
+}
+
 .moonbase-settings-list,
 .moonbase-settings-dictionary {
   gap: 8px;

@@ -113,7 +113,7 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
     <></>
   ) : (
     <Card editable={true} className={AppCardClasses.card}>
-      <div className={AppCardClasses.cardHeader}>
+      <div className={`${AppCardClasses.cardHeader} moonbase-extension-card-header`}>
         <Flex direction={Flex.Direction.VERTICAL}>
           <Flex direction={Flex.Direction.HORIZONTAL} align={Flex.Align.CENTER}>
             <Text variant="text-md/semibold">{ext.manifest?.meta?.name ?? ext.id}</Text>
