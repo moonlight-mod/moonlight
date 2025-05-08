@@ -59,6 +59,8 @@ export type InternalItem_ = {
   label: string;
 };
 
-export type EvilItemParser = (el: MenuElement | MenuElement[]) => InternalItem[];
+declare module "@moonlight-mod/wp/discord/modules/menus/web/Menu" {
+  export const __contextMenu_parse: (el: MenuElement | MenuElement[]) => InternalItem[];
+}
 
 export type { Menu, MenuElement };

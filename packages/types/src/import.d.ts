@@ -38,11 +38,6 @@ declare module "@moonlight-mod/wp/componentEditor_messages" {
   export default message;
 }
 
-declare module "@moonlight-mod/wp/contextMenu_evilMenu" {
-  import { CoreExtensions } from "@moonlight-mod/types";
-  const EvilParser: CoreExtensions.ContextMenu.EvilItemParser;
-  export = EvilParser;
-}
 declare module "@moonlight-mod/wp/contextMenu_contextMenu" {
   import { CoreExtensions } from "@moonlight-mod/types";
   const ContextMenu: CoreExtensions.ContextMenu.ContextMenu;

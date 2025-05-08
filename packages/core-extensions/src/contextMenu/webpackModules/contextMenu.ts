@@ -1,6 +1,8 @@
-import { InternalItem, Menu, MenuElement } from "@moonlight-mod/types/coreExtensions/contextMenu";
+import type { InternalItem, Menu, MenuElement } from "@moonlight-mod/types/coreExtensions/contextMenu";
+import { __contextMenu_parse } from "@moonlight-mod/wp/discord/modules/menus/web/Menu";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import parser from "@moonlight-mod/wp/contextMenu_evilMenu";
+
+const logger = moonlight.getLogger("contextMenu");
 
 // NOTE: We originally had item as a function that returned this, but it didn't
 // quite know how to work out the type and thought it was a JSX element (it
@@ -23,6 +25,12 @@ function addItem<T = any>(navId: string, item: React.FC<T>, anchor: string | Reg
 
 const patches: Patch[] = [];
 function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
+  const passedProps = menuProps ?? popoutProps;
+  if (!passedProps) {
+    logger.warn("No menu properties saved for context menu", props);
+    return items;
+  }
+
   const matches = patches.filter((p) => p.navId === props.navId);
   if (!matches.length) return items;
 
@@ -31,13 +39,14 @@ function _patchMenu(props: React.ComponentProps<Menu>, items: InternalItem[]) {
       typeof patch.anchor === "string" ? i.key === patch.anchor : patch.anchor.test(i.key!)
     );
     if (idx === -1) continue;
-    items.splice(idx + 1 - +patch.before, 0, ...parser(patch.item(menuProps) as ReturnType));
+    items.splice(idx + 1 - +patch.before, 0, ...__contextMenu_parse(patch.item(passedProps) as ReturnType));
   }
 
   return items;
 }
 
 let menuProps: any;
+let popoutProps: any;
 function _saveProps(self: any, el: any) {
   menuProps = el.props;
 
@@ -50,19 +59,20 @@ function _saveProps(self: any, el: any) {
   return el;
 }
 
+function _savePopoutProps(props: any) {
+  popoutProps = props;
+}
+
 module.exports = {
   patches,
   addItem,
   _patchMenu,
-  _saveProps
+  _saveProps,
+  _savePopoutProps
 };
 
 // Unmangle Menu elements
-// spacepack.require.m[moonlight.moonmap.modules["discord/modules/menus/web/Menu"]].toString();
-const code =
-  spacepack.require.m[
-    spacepack.findByCode("Menu API only allows Items and groups of Items as children.")[0].id
-  ].toString();
+const code = spacepack.require.m[moonlight.moonmap.modules["discord/modules/menus/web/Menu"]].toString();
 
 let MangledMenu;
 
