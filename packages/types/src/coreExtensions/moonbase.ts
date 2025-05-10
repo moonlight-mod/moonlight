@@ -15,3 +15,12 @@ export type Moonbase = {
    */
   registerConfigComponent: (ext: string, option: string, component: CustomComponent) => void;
 };
+
+export type Exports = {
+  default: Moonbase;
+
+  /**
+   * @deprecated Use the default export
+   */
+  moonbase: Moonbase;
+};

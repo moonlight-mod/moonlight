@@ -31,3 +31,16 @@ export interface Icons {
 
 // Re-export so extension developers don't need to depend on mappings
 export type { IconProps, IconSize };
+
+export type IconsExports = {
+  default: Icons;
+
+  /**
+   * @deprecated Use the default export
+   */
+  icons: Icons;
+};
+
+export type ErrorBoundaryExports = {
+  default: ErrorBoundary;
+};

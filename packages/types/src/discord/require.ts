@@ -1,14 +1,18 @@
-import { AppPanels } from "../coreExtensions/appPanels";
-import { Commands } from "../coreExtensions/commands";
-import { ErrorBoundary, Icons } from "../coreExtensions/common";
-import { DMList, MemberList, Messages } from "../coreExtensions/componentEditor";
-import { ContextMenu } from "../coreExtensions/contextMenu";
-import { LinkRedirect } from "../coreExtensions/linkRedirect";
-import { Markdown } from "../coreExtensions/markdown";
-import { Moonbase } from "../coreExtensions/moonbase";
-import { Notices } from "../coreExtensions/notices";
-import { Settings } from "../coreExtensions/settings";
-import { Spacepack } from "../coreExtensions/spacepack";
+import { Exports as AppPanels } from "../coreExtensions/appPanels";
+import { Exports as Commands } from "../coreExtensions/commands";
+import { ErrorBoundaryExports as ErrorBoundary, IconsExports as Icons } from "../coreExtensions/common";
+import {
+  DMListExports as DMList,
+  MemberListExports as MemberList,
+  MessagesExports as Messages
+} from "../coreExtensions/componentEditor";
+import { Exports as ContextMenu } from "../coreExtensions/contextMenu";
+import { Exports as LinkRedirect } from "../coreExtensions/linkRedirect";
+import { Exports as Markdown } from "../coreExtensions/markdown";
+import { Exports as Moonbase } from "../coreExtensions/moonbase";
+import { Exports as Notices } from "../coreExtensions/notices";
+import { Exports as Settings } from "../coreExtensions/settings";
+import { Exports as Spacepack } from "../coreExtensions/spacepack";
 
 declare function WebpackRequire(id: string): any;
 

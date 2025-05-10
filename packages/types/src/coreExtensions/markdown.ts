@@ -105,3 +105,5 @@ export type Markdown = {
    */
   blacklistFromRuleset: (ruleset: Ruleset, name: string) => void;
 };
+
+export type Exports = Markdown;

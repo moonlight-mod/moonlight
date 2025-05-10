@@ -202,3 +202,12 @@ export type LegacyCommand = {
   match?: RegExp | { regex: RegExp } | AnyScopeRegex;
   action: (content: string, context: LegacyContext) => LegacyReturn;
 };
+
+export type Exports = {
+  default: Commands;
+
+  /**
+   * @deprecated Use the default export
+   */
+  commands: Commands;
+};

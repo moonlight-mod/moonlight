@@ -64,3 +64,5 @@ declare module "@moonlight-mod/wp/discord/modules/menus/web/Menu" {
 }
 
 export type { Menu, MenuElement };
+
+export type Exports = ContextMenu;

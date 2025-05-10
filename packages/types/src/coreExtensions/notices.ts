@@ -34,3 +34,7 @@ export type Notices = Store<any> & {
    */
   shouldShowNotice: () => boolean;
 };
+
+export type Exports = {
+  default: Notices;
+};

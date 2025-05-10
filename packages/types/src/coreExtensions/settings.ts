@@ -69,3 +69,12 @@ export type Settings = {
    */
   _mutateSections: (sections: SettingsSection[]) => SettingsSection[];
 };
+
+export type Exports = {
+  default: Settings;
+
+  /**
+   * @deprecated Use the default export
+   */
+  Settings: Settings;
+};

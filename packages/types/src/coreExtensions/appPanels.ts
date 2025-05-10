@@ -11,3 +11,12 @@ export type AppPanels = {
    */
   getPanels: (el: React.FC<any>) => React.ReactNode;
 };
+
+export type Exports = {
+  default: AppPanels;
+
+  /**
+   * @deprecated Use the default export
+   */
+  AppPanels: AppPanels;
+};

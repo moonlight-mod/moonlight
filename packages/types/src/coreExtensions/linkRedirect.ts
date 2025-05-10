@@ -22,3 +22,7 @@ export type LinkRedirect = {
    */
   _runCallbacks: (href: string) => string;
 };
+
+export type Exports = {
+  default: LinkRedirect;
+};

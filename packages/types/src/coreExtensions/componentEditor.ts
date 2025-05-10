@@ -160,3 +160,30 @@ export type Messages = {
   _patchAccessories: Patcher<any>;
 };
 //#endregion
+
+export type DMListExports = {
+  default: DMList;
+
+  /**
+   * @deprecated Use the default export
+   */
+  dmList: DMList;
+};
+
+export type MemberListExports = {
+  default: MemberList;
+
+  /**
+   * @deprecated Use the default export
+   */
+  memberList: MemberList;
+};
+
+export type MessagesExports = {
+  default: Messages;
+
+  /**
+   * @deprecated Use the default export
+   */
+  messages: Messages;
+};

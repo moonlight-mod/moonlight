@@ -95,3 +95,12 @@ export type Spacepack = {
    */
   filterReal: (modules: WebpackModule[]) => WebpackModule[];
 };
+
+export type Exports = {
+  default: Spacepack;
+
+  /**
+   * @deprecated Use the default export
+   */
+  spacepack: Spacepack;
+};
