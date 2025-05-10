@@ -1,0 +1,11 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "linkRedirect",
+  "apiLevel": 2,
+  "meta": {
+    "name": "Link Redirect",
+    "tagline": "A library for redirecting links",
+    "authors": ["Cynosphere"],
+    "tags": ["library"]
+  }
+}
