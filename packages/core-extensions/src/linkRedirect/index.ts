@@ -5,7 +5,7 @@ export const patches: Patch[] = [
     find: "discord/utils/MaskedLinkUtils",
     replace: {
       match: /let \i=(\i);/,
-      replacement: (orig, href) => `${href}=require("linkRedirect_redirects").default._runCallbacks(${href});${orig}`
+      replacement: (orig, href) => `${href}=require("linkRedirect_linkRedirect").default._runCallbacks(${href});${orig}`
     }
   },
   {
@@ -13,11 +13,11 @@ export const patches: Patch[] = [
     replace: {
       match: /\((\i)\){var{href:/,
       replacement: (_, props) =>
-        `(${props}){${props}.href=require("linkRedirect_redirects").default._runCallbacks(${props}.href);var{href:`
+        `(${props}){${props}.href=require("linkRedirect_linkRedirect").default._runCallbacks(${props}.href);var{href:`
     }
   }
 ];
 
 export const webpackModules: Record<string, ExtensionWebpackModule> = {
-  redirects: {}
+  linkRedirect: {}
 };

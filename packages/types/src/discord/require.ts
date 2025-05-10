@@ -25,7 +25,7 @@ declare function WebpackRequire(id: "componentEditor_messages"): Messages;
 
 declare function WebpackRequire(id: "contextMenu_contextMenu"): ContextMenu;
 
-declare function WebpackRequire(id: "linkRedirect_redirects"): LinkRedirect;
+declare function WebpackRequire(id: "linkRedirect_linkRedirect"): LinkRedirect;
 
 declare function WebpackRequire(id: "markdown_markdown"): Markdown;
 

@@ -44,7 +44,7 @@ declare module "@moonlight-mod/wp/contextMenu_contextMenu" {
   export = ContextMenu;
 }
 
-declare module "@moonlight-mod/wp/linkRedirect_redirects" {
+declare module "@moonlight-mod/wp/linkRedirect_linkRedirect" {
   import { CoreExtensions } from "@moonlight-mod/types";
   const LinkRedirect: CoreExtensions.LinkRedirect.LinkRedirect;
   export = LinkRedirect;
