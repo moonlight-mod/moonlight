@@ -3,6 +3,7 @@ import { Commands } from "../coreExtensions/commands";
 import { ErrorBoundary, Icons } from "../coreExtensions/common";
 import { DMList, MemberList, Messages } from "../coreExtensions/componentEditor";
 import { ContextMenu } from "../coreExtensions/contextMenu";
+import { LinkRedirect } from "../coreExtensions/linkRedirect";
 import { Markdown } from "../coreExtensions/markdown";
 import { Moonbase } from "../coreExtensions/moonbase";
 import { Notices } from "../coreExtensions/notices";
@@ -23,6 +24,8 @@ declare function WebpackRequire(id: "componentEditor_memberList"): MemberList;
 declare function WebpackRequire(id: "componentEditor_messages"): Messages;
 
 declare function WebpackRequire(id: "contextMenu_contextMenu"): ContextMenu;
+
+declare function WebpackRequire(id: "linkRedirect_linkRedirect"): LinkRedirect;
 
 declare function WebpackRequire(id: "markdown_markdown"): Markdown;
 
