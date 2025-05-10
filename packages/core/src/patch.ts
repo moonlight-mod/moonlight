@@ -134,7 +134,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         patch.find.lastIndex = 0;
       }
 
-      const match = testFind(origModuleString, patch.find) || patch.find === mappedName;
+      const match = testFind(origModuleString, patch.find) || (mappedName != null && patch.find === mappedName);
 
       // Global regexes apply to all modules
       const shouldRemove = typeof patch.find === "string" ? true : !patch.find.global;
