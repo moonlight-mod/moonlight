@@ -8,3 +8,4 @@ export * as AppPanels from "./coreExtensions/appPanels";
 export * as Commands from "./coreExtensions/commands";
 export * as ComponentEditor from "./coreExtensions/componentEditor";
 export * as Common from "./coreExtensions/common";
+export * as LinkRedirect from "./coreExtensions/linkRedirect";
