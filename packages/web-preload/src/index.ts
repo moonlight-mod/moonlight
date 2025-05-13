@@ -55,10 +55,27 @@ async function load() {
   }
 
   if (document.readyState === "complete") {
-    installStyles();
+    installStyles(document);
   } else {
-    window.addEventListener("load", installStyles);
+    window.addEventListener("load", () => installStyles(document));
   }
+
+  // Install styles into popout/overlay
+  const oldWindowOpen = window.open;
+  window.open = function (...args) {
+    const proxy = oldWindowOpen.call(this, ...args);
+
+    if (proxy) {
+      proxy.addEventListener("load", () => {
+        const hostname = proxy.window.location.hostname;
+        if (hostname.endsWith("discord.com") || hostname.endsWith("discordapp.com")) {
+          installStyles(proxy.window.document);
+        }
+      });
+    }
+
+    return proxy;
+  };
 }
 
 window._moonlightWebLoad = load;
