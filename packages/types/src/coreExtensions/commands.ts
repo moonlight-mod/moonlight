@@ -58,7 +58,7 @@ export type CommandOptionChoice<T> = {
   value: T;
 };
 
-type CommandOptionBase<T> = {
+type MoonlightCommandOptionBase<T> = {
   type: T;
   name: string;
   description: string;
@@ -88,17 +88,17 @@ type CommandOptionBase<T> = {
 
 // This is bad lol
 export type MoonlightCommandOption =
-  | CommandOptionBase<OptionType.SUB_COMMAND>
-  | CommandOptionBase<OptionType.SUB_COMMAND_GROUP>
-  | CommandOptionBase<OptionType.STRING>
-  | CommandOptionBase<OptionType.INTEGER>
-  | CommandOptionBase<OptionType.BOOLEAN>
-  | CommandOptionBase<OptionType.USER>
-  | CommandOptionBase<OptionType.CHANNEL>
-  | CommandOptionBase<OptionType.ROLE>
-  | CommandOptionBase<OptionType.MENTIONABLE>
-  | CommandOptionBase<OptionType.NUMBER>
-  | CommandOptionBase<OptionType.ATTACHMENT>;
+  | MoonlightCommandOptionBase<OptionType.SUB_COMMAND>
+  | MoonlightCommandOptionBase<OptionType.SUB_COMMAND_GROUP>
+  | MoonlightCommandOptionBase<OptionType.STRING>
+  | MoonlightCommandOptionBase<OptionType.INTEGER>
+  | MoonlightCommandOptionBase<OptionType.BOOLEAN>
+  | MoonlightCommandOptionBase<OptionType.USER>
+  | MoonlightCommandOptionBase<OptionType.CHANNEL>
+  | MoonlightCommandOptionBase<OptionType.ROLE>
+  | MoonlightCommandOptionBase<OptionType.MENTIONABLE>
+  | MoonlightCommandOptionBase<OptionType.NUMBER>
+  | MoonlightCommandOptionBase<OptionType.ATTACHMENT>;
 
 // TODO: types
 export type CommandPredicateState = {
@@ -130,38 +130,37 @@ export type MoonlightCommand = {
   type: CommandType;
 
   /**
-   * You likely want BUILT_IN (or BUILT_IN_TEXT if usable with replies)
+   * You likely want BUILT_IN (or BUILT_IN_TEXT if you want to send a message)
    */
   inputType: InputType;
   options?: MoonlightCommandOption[];
   predicate?: (state: CommandPredicateState) => boolean;
-  execute: (options: CommandOption[]) => void;
+  execute: (options: CommandOption[]) => any;
 };
 
-export type CommandOption = {
+type CommandOptionBase<T, V> = {
   name: string;
-} & ( // TODO: more of these
-  | {
-      type: Exclude<OptionType, OptionType.STRING>;
-      value: any;
-    }
-  | {
-      type: OptionType.STRING;
-      value: string;
-    }
-  | {
-      type: OptionType.NUMBER | OptionType.INTEGER;
-      value: number;
-    }
-  | {
-      type: OptionType.BOOLEAN;
-      value: boolean;
-    }
-  | {
-      type: OptionType.SUB_COMMAND | OptionType.SUB_COMMAND_GROUP;
-      options: CommandOption[];
-    }
-);
+  type: T;
+  value: V;
+};
+
+// TODO
+export type SubCommandCommandOption = CommandOptionBase<OptionType.SUB_COMMAND, CommandOption[]>;
+export type SubCommandGroupCommandOption = CommandOptionBase<OptionType.SUB_COMMAND_GROUP, CommandOption[]>;
+export type StringCommandOption = CommandOptionBase<OptionType.STRING, string>;
+export type IntegerCommandOption = CommandOptionBase<OptionType.INTEGER, number>;
+export type BooleanCommandOption = CommandOptionBase<OptionType.BOOLEAN, boolean>;
+export type NumberCommandOption = CommandOptionBase<OptionType.NUMBER, number>;
+
+type TypedCommandOptions =
+  | SubCommandCommandOption
+  | SubCommandGroupCommandOption
+  | StringCommandOption
+  | IntegerCommandOption
+  | BooleanCommandOption
+  | NumberCommandOption;
+type UntypedCommandOption = CommandOptionBase<Exclude<OptionType, TypedCommandOptions["type"]>, any>;
+export type CommandOption = TypedCommandOptions | UntypedCommandOption;
 
 export type AnyScopeRegex = RegExp["exec"] & {
   regex: RegExp;

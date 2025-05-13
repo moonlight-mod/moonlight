@@ -18,7 +18,7 @@ declare module "@moonlight-mod/wp/commands_commands" {
    */
   export const commands: CoreExtensions.Commands.Commands;
 
-  const _default: CoreExtensions.AppPanels.AppPanels;
+  const _default: CoreExtensions.Commands.Commands;
   export default _default;
 }
 
