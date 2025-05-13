@@ -1,6 +1,6 @@
 {
   "name": "moonlight",
-  "version": "1.3.16",
+  "version": "1.3.17",
   "packageManager": "pnpm@10.7.1",
   "description": "Yet another Discord mod",
   "license": "LGPL-3.0-or-later",
