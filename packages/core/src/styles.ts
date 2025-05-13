@@ -4,10 +4,10 @@ export function registerStyles(style: string[]) {
   styles.push(...style);
 }
 
-export function installStyles() {
+export function installStyles(doc: Document) {
   for (const style of styles) {
-    const el = document.createElement("style");
+    const el = doc.createElement("style");
     el.textContent = style;
-    document.documentElement.appendChild(el);
+    doc.documentElement.appendChild(el);
   }
 }
