@@ -22,14 +22,10 @@ chrome.webRequest.onBeforeRequest.addListener(
     if (details.tabId === -1) return;
 
     const url = new URL(details.url);
-    const hasUrl = scriptUrls.some((scriptUrl) => {
-      return (
-        details.url.includes(scriptUrl) &&
-        !url.searchParams.has("inj") &&
-        (url.hostname.endsWith("discord.com") || url.hostname.endsWith("discordapp.com"))
-      );
-    });
-
+    const hasUrl =
+      url.pathname.match(/\/assets\/[a-zA-Z]+\./) &&
+      !url.searchParams.has("inj") &&
+      (url.hostname.endsWith("discord.com") || url.hostname.endsWith("discordapp.com"));
     if (hasUrl) blockedScripts.add(details.url);
 
     if (blockedScripts.size === scriptUrls.length) {
@@ -87,7 +83,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
             blockedScripts.reverse();
             for (const url of blockedScripts) {
-              if (url.includes("/sentry.")) continue;
+              if (!url.includes("/web.")) continue;
 
               const script = scripts.find((script) => url.includes(script.src));
               const newScript = document.createElement("script");
