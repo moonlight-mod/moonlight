@@ -408,10 +408,6 @@ export async function installWebpackPatcher() {
   let realWebpackJsonp: WebpackJsonp | null = null;
   Object.defineProperty(window, "webpackChunkdiscord_app", {
     set: (jsonp: WebpackJsonp) => {
-      // Don't let Sentry mess with Webpack
-      const stack = new Error().stack!;
-      if (stack.includes("sentry.")) return;
-
       realWebpackJsonp = jsonp;
       const realPush = jsonp.push;
       if (jsonp.push.__moonlight !== true) {
@@ -453,8 +449,6 @@ export async function installWebpackPatcher() {
     },
 
     get: () => {
-      const stack = new Error().stack!;
-      if (stack.includes("sentry.")) return [];
       return realWebpackJsonp;
     }
   });
