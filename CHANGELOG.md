@@ -1,3 +1,3 @@
 ## Core
 
-- Improved script blocking to account for more than two entrypoint scripts
+- Cleanup script blocking so popout windows aren't broken
