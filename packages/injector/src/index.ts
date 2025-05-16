@@ -24,9 +24,6 @@ let corsAllow: string[] = [];
 let blockedUrls: RegExp[] = [];
 let injectorConfig: InjectorConfig | undefined;
 
-const scriptUrls = ["web.", "sentry."];
-const blockedScripts = new Set<string>();
-
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
 });
@@ -181,17 +178,22 @@ class BrowserWindow extends ElectronBrowserWindow {
           url.pathname.match(/\/assets\/[a-zA-Z]+\./) &&
           !url.searchParams.has("inj") &&
           (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
-        if (hasUrl) blockedScripts.add(details.url);
 
-        if (blockedScripts.size === scriptUrls.length) {
+        const initScripts = ["web."];
+        const allowScripts = ["popout."];
+        const testScripts = (scripts: string[]) =>
+          scripts.some((script) => url.pathname.startsWith(`/assets/${script}`));
+        const shouldInit = hasUrl && testScripts(initScripts);
+        const shouldBlock = hasUrl && !testScripts(allowScripts);
+
+        if (shouldInit) {
           setTimeout(() => {
-            logger.debug("Kicking off node-preload");
-            this.webContents.send(constants.ipcNodePreloadKickoff, Array.from(blockedScripts));
-            blockedScripts.clear();
+            logger.debug("Kicking off node-preload", details.url);
+            this.webContents.send(constants.ipcNodePreloadKickoff, [details.url]);
           }, 0);
         }
 
-        if (hasUrl) return cb({ cancel: true });
+        if (shouldBlock) return cb({ cancel: true });
       }
 
       // Allow plugins to block some URLs,

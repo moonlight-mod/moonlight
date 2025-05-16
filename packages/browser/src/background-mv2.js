@@ -1,9 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 
-const scriptUrls = ["web.", "sentry."];
-let blockedScripts = new Set();
-
 chrome.webRequest.onBeforeRequest.addListener(
   async (details) => {
     if (details.tabId === -1) return;
@@ -13,18 +10,20 @@ chrome.webRequest.onBeforeRequest.addListener(
       url.pathname.match(/\/assets\/[a-zA-Z]+\./) &&
       !url.searchParams.has("inj") &&
       (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
-    if (hasUrl) blockedScripts.add(details.url);
 
-    if (blockedScripts.size === scriptUrls.length) {
-      const blockedScriptsCopy = Array.from(blockedScripts);
-      blockedScripts.clear();
+    const initScripts = ["web."];
+    const allowScripts = ["popout."];
+    const testScripts = (scripts) => scripts.some((script) => url.pathname.startsWith(`/assets/${script}`));
+    const shouldInit = hasUrl && testScripts(initScripts);
+    const shouldBlock = hasUrl && !testScripts(allowScripts);
 
+    if (shouldInit) {
       setTimeout(async () => {
-        console.log("Starting moonlight");
+        console.log("Starting moonlight", details.url);
         await chrome.scripting.executeScript({
           target: { tabId: details.tabId },
           world: "MAIN",
-          args: [blockedScriptsCopy],
+          args: [[details.url]],
           func: async (blockedScripts) => {
             console.log("Initializing moonlight");
             try {
@@ -60,7 +59,7 @@ chrome.webRequest.onBeforeRequest.addListener(
       }, 0);
     }
 
-    if (hasUrl) return { cancel: true };
+    if (shouldBlock) return { cancel: true };
   },
   {
     urls: ["https://*.discord.com/assets/*.js", "https://*.discordapp.com/assets/*.js"]

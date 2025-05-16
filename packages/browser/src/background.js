@@ -1,16 +1,15 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 
-const scriptUrls = ["web.", "sentry."];
-let blockedScripts = new Set();
-
 chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   const url = new URL(details.url);
+
   if (
     !url.searchParams.has("inj") &&
+    !url.pathname.startsWith("/popout") &&
     (url.hostname.endsWith("discord.com") || url.hostname.endsWith("discordapp.com"))
   ) {
-    console.log("Enabling block ruleset");
+    console.log("Enabling block ruleset", details.url);
     await chrome.declarativeNetRequest.updateEnabledRulesets({
       enableRulesetIds: ["modifyResponseHeaders", "blockLoading"]
     });
@@ -25,13 +24,13 @@ chrome.webRequest.onBeforeRequest.addListener(
     const hasUrl =
       url.pathname.match(/\/assets\/[a-zA-Z]+\./) &&
       !url.searchParams.has("inj") &&
-      (url.hostname.endsWith("discord.com") || url.hostname.endsWith("discordapp.com"));
-    if (hasUrl) blockedScripts.add(details.url);
+      (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
 
-    if (blockedScripts.size === scriptUrls.length) {
-      const blockedScriptsCopy = Array.from(blockedScripts);
-      blockedScripts.clear();
+    const initScripts = ["web."];
+    const testScripts = (scripts) => scripts.some((script) => url.pathname.startsWith(`/assets/${script}`));
+    const shouldInit = hasUrl && testScripts(initScripts);
 
+    if (shouldInit) {
       console.log("Running moonlight script");
       try {
         await chrome.scripting.executeScript({
@@ -75,7 +74,7 @@ chrome.webRequest.onBeforeRequest.addListener(
         await chrome.scripting.executeScript({
           target: { tabId: details.tabId },
           world: "MAIN",
-          args: [blockedScriptsCopy],
+          args: [[details.url]],
           func: async (blockedScripts) => {
             const scripts = [...document.querySelectorAll("script")].filter(
               (script) => script.src && blockedScripts.some((url) => url.includes(script.src))
