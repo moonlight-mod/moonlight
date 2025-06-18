@@ -47,8 +47,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { ext: "contextMenu", id: "contextMenu" },
       { id: "discord/modules/modals/Modals" },
       "Masks.PANEL_BUTTON",
-      '"Missing channel in Channel.openChannelContextMenu"',
-      ".forumOrHome]:"
+      '"Missing channel in Channel.openChannelContextMenu"'
     ]
   },
 

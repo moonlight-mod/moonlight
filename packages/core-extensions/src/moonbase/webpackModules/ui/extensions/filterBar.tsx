@@ -202,6 +202,8 @@ export default function FilterBar({
 
   const tagsContainer = React.useRef<HTMLDivElement>(null);
   const tagListInner = React.useRef<HTMLDivElement>(null);
+  const filterPopout = React.useRef<HTMLDivElement>(null);
+  const tagPopout = React.useRef<HTMLDivElement>(null);
   const [tagsButtonOffset, setTagsButtonOffset] = React.useState(0);
   const [checkingUpdates, setCheckingUpdates] = React.useState(false);
 
@@ -254,6 +256,8 @@ export default function FilterBar({
         )}
       </Tooltip>
       <Popout
+        // @ts-expect-error need to update type
+        targetElementRef={filterPopout}
         renderPopout={({ closePopout }: any) => (
           <FilterButtonPopout filter={filter} setFilter={setFilter} closePopout={closePopout} />
         )}
@@ -263,6 +267,7 @@ export default function FilterBar({
         {(props: any, { isShown }: { isShown: boolean }) => (
           <Button
             {...props}
+            buttonRef={filterPopout}
             size={Button.Sizes.MIN}
             color={Button.Colors.CUSTOM}
             className={ForumsClasses.sortDropdown}
@@ -295,6 +300,8 @@ export default function FilterBar({
         </div>
       </div>
       <Popout
+        // @ts-expect-error need to update type
+        targetElementRef={tagPopout}
         renderPopout={({ setPopoutRef, closePopout }: any) => (
           <TagButtonPopout
             selectedTags={selectedTags}
@@ -309,6 +316,7 @@ export default function FilterBar({
         {(props: any, { isShown }: { isShown: boolean }) => (
           <Button
             {...props}
+            buttonRef={tagPopout}
             size={Button.Sizes.MIN}
             color={Button.Colors.CUSTOM}
             style={{
