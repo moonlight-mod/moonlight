@@ -1,10 +1,4 @@
 ## Core
 
-- Updated mappings
+- Updated mappings to fix crashing when enabling extensions that have confimration modals
 
-## Core Extensions
-
-### Moonbase
-- Fixed padding on extension cards
-- Fixed filter bar popouts not working
-- Removed a Webpack module dependency that prevented loading
