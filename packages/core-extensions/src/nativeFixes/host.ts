@@ -6,6 +6,7 @@ import { parseTarGzip } from "nanotar";
 
 const logger = moonlightHost.getLogger("nativeFixes/host");
 const enabledFeatures = app.commandLine.getSwitchValue("enable-features").split(",");
+const disabledFeatures = app.commandLine.getSwitchValue("disable-features").split(",");
 
 moonlightHost.events.on("window-created", function (browserWindow) {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "devtoolsThemeFix") ?? true) {
@@ -45,6 +46,10 @@ if (process.platform === "linux") {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxHevcSupport") ?? true) {
     enabledFeatures.push("PlatformHEVCDecoderSupport");
   }
+
+  if (moonlightHost.getConfigOption<boolean>("nativeFixes", "disableFontations")) {
+    disabledFeatures.push("FontationsFontBackend");
+  }
 }
 
 // NOTE: Only tested if this appears on Windows, it should appear on all when
@@ -61,6 +66,31 @@ if ((moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapi") ?? true) && 
 }
 
 app.commandLine.appendSwitch("enable-features", [...new Set(enabledFeatures)].join(","));
+app.commandLine.appendSwitch("disable-features", [...new Set(disabledFeatures)].join(","));
+
+// Prevent Discord from overriding our features when they call it in the future
+const realAppendSwitch = app.commandLine.appendSwitch;
+app.commandLine.appendSwitch = function (theSwitch, value) {
+  function applyCustomFeatures(moddedFeatures: string[]) {
+    const existingFeatures = value?.split(",") ?? [];
+    const combinedFeatures = [...existingFeatures, ...moddedFeatures];
+    value = [...new Set(combinedFeatures)].join(",");
+  }
+
+  switch (theSwitch) {
+    case "enable-features": {
+      applyCustomFeatures(enabledFeatures);
+      break;
+    }
+
+    case "disable-features": {
+      applyCustomFeatures(disabledFeatures);
+      break;
+    }
+  }
+
+  return realAppendSwitch.call(this, theSwitch, value);
+};
 
 if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxUpdater")) {
   const exePath = app.getPath("exe");

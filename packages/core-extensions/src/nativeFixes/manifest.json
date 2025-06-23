@@ -71,6 +71,13 @@
       "description": "You might also need to enable Vulkan renderer. Has no effect on other operating systems",
       "type": "boolean",
       "default": true
+    },
+    "disableFontations": {
+      "advice": "restart",
+      "displayName": "Disable Fontations on Linux",
+      "description": "May improve blurry font rendering. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
     }
   },
   "apiLevel": 2
