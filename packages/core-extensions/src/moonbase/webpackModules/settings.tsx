@@ -53,7 +53,7 @@ if (!oldLocation) {
 }
 
 if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections", false)) {
-  if (oldLocation) settings.addHeader("Moonbase", position);
+  if (oldLocation) settings.addHeader("moonlight", position);
 
   const _pages = oldLocation ? pages : pages.reverse();
   for (const page of _pages) {
@@ -82,9 +82,9 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
     });
   }
 
-  if (!oldLocation) settings.addHeader("Moonbase", position);
+  if (!oldLocation) settings.addHeader("moonlight", position);
 } else {
-  settings.addSection("moonbase", "Moonbase", Moonbase, null, position, notice);
+  settings.addSection("moonbase", "moonlight", Moonbase, null, position, notice);
 
   settings.addSectionMenuItems(
     "moonbase",

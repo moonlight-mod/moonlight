@@ -270,6 +270,7 @@ textarea.moonbase-resizeable {
 /* About page */
 .moonbase-wordmark {
   width: 100%;
+  image-rendering: pixelated;
 }
 
 .moonbase-devs {
