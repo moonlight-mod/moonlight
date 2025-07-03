@@ -150,7 +150,7 @@ export default function ExtensionInfo({
         <InfoSection title="Tags">
           {tags.map((tag, i) => {
             const name = tagNames[tag];
-            let color = "var(--bg-mod-strong)";
+            let color = "var(--background-mod-strong)";
             let style;
             if (tag === ExtensionTag.DangerZone) {
               color = "var(--red-460)";
@@ -173,7 +173,7 @@ export default function ExtensionInfo({
 
             // TODO: figure out a decent way to distinguish suggested
             return (
-              <Badge color="var(--bg-mod-strong)" key={dep.id}>
+              <Badge color="var(--background-mod-strong)" key={dep.id}>
                 {name}
               </Badge>
             );
@@ -187,7 +187,7 @@ export default function ExtensionInfo({
             const name = MoonbaseSettingsStore.tryGetExtensionName(dep.id);
 
             return (
-              <Badge color="var(--bg-mod-strong)" key={dep.id}>
+              <Badge color="var(--background-mod-strong)" key={dep.id}>
                 {name}
               </Badge>
             );

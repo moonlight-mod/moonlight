@@ -110,7 +110,7 @@ textarea.moonbase-resizeable {
   border-radius: 0.1875rem;
   padding: 0 0.275rem;
   margin-right: 0.4em;
-  background-color: var(--badge-color, var(--bg-mod-strong));
+  background-color: var(--badge-color, var(--background-mod-strong));
 }
 
 .moonbase-extension-card {
