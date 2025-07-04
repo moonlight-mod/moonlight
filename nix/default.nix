@@ -11,7 +11,10 @@ stdenv.mkDerivation (finalAttrs: {
 
   src = ./..;
 
-  outputs = [ "out" "firefox" ];
+  outputs = [
+    "out"
+    "firefox"
+  ];
 
   nativeBuildInputs = [
     nodejs_22
