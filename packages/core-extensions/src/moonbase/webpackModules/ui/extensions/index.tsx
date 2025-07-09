@@ -6,12 +6,8 @@ import ExtensionCard from "./card";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
-import {
-  FormDivider,
-  CircleInformationIcon,
-  XSmallIcon,
-  Button
-} from "@moonlight-mod/wp/discord/components/common/index";
+import { FormDivider, CircleInformationIcon, XSmallIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";

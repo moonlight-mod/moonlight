@@ -4,7 +4,6 @@ import * as React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { WindowStore } from "@moonlight-mod/wp/common_stores";
 import {
-  Button,
   Text,
   Heading,
   Popout,
@@ -16,6 +15,7 @@ import {
   RetryIcon,
   Tooltip
 } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { MenuGroup, MenuCheckboxItem, MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";

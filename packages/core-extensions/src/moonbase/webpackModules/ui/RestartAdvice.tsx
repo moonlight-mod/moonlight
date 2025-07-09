@@ -1,6 +1,7 @@
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import { Button, CircleWarningIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import { CircleWarningIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import React from "@moonlight-mod/wp/react";
 import { RestartAdvice } from "../../types";
 import HelpMessage from "./HelpMessage";
@@ -34,7 +35,12 @@ export default function RestartAdviceMessage() {
   return (
     <div className="moonbase-help-message-sticky">
       <HelpMessage text={strings[restartAdvice]} icon={CircleWarningIcon} type="warning">
-        <Button color={Button.Colors.YELLOW} size={Button.Sizes.TINY} onClick={actions[restartAdvice]}>
+        <Button
+          color={Button.Colors.CUSTOM}
+          size={Button.Sizes.TINY}
+          style={{ backgroundColor: "var(--yellow-new-38)" }}
+          onClick={actions[restartAdvice]}
+        >
           {buttonStrings[restartAdvice]}
         </Button>
       </HelpMessage>

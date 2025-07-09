@@ -1,11 +1,11 @@
 import {
   Text,
   useThemeContext,
-  Button,
   AngleBracketsIcon,
   BookCheckIcon,
   ClydeIcon
 } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import React from "@moonlight-mod/wp/react";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";

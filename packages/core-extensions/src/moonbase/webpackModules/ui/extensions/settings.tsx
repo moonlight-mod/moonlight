@@ -23,12 +23,12 @@ import {
   CircleXIcon,
   Text,
   SingleSelect,
-  Button,
   useVariableSelect,
   multiSelect,
   Select as DiscordSelect,
   NumberInputStepper
 } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";

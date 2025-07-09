@@ -7,7 +7,6 @@ import { MoonlightBranch } from "@moonlight-mod/types";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import {
-  Button,
   Text,
   ModalRoot,
   ModalSize,
@@ -17,6 +16,7 @@ import {
   ModalCloseButton,
   openModal
 } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
 

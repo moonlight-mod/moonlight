@@ -174,7 +174,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const FormItem: MappedModules["discord/components/common/index"]["FormItem"];
   export const Slider: MappedModules["discord/components/common/index"]["Slider"];
   export const Switch: MappedModules["discord/components/common/index"]["Switch"];
-  export const Button: MappedModules["discord/components/common/index"]["Button"];
   export const Tooltip: MappedModules["discord/components/common/index"]["Tooltip"];
   export const Avatar: MappedModules["discord/components/common/index"]["Avatar"];
   export const AvatarSizes: MappedModules["discord/components/common/index"]["AvatarSizes"];
@@ -237,6 +236,7 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const WindowTopOutlineIcon: MappedModules["discord/components/common/index"]["WindowTopOutlineIcon"];
   export const XLargeIcon: MappedModules["discord/components/common/index"]["XLargeIcon"];
   export const XSmallIcon: MappedModules["discord/components/common/index"]["XSmallIcon"];
+  export const Button: MappedModules["discord/components/common/index"]["Button"];
   export const ConfirmModal: MappedModules["discord/components/common/index"]["ConfirmModal"];
   export const H: MappedModules["discord/components/common/index"]["H"];
   export const HelpMessage: MappedModules["discord/components/common/index"]["HelpMessage"];
@@ -827,10 +827,23 @@ declare module "@moonlight-mod/wp/discord/styles/shared/Margins.css" {
   export const marginLeft8: MappedModules["discord/styles/shared/Margins.css"]["marginLeft8"];
 }
 
+declare module "@moonlight-mod/wp/discord/uikit/Button" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const Button: MappedModules["discord/uikit/Button"]["Button"];
+}
+
 declare module "@moonlight-mod/wp/discord/uikit/Flex" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/uikit/Flex"]["default"];
   export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/uikit/legacy/Button" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const Button: MappedModules["discord/uikit/legacy/Button"]["Button"];
+  export const Looks: MappedModules["discord/uikit/legacy/Button"]["Looks"];
+  export const Colors: MappedModules["discord/uikit/legacy/Button"]["Colors"];
+  export const Sizes: MappedModules["discord/uikit/legacy/Button"]["Sizes"];
 }
 
 declare module "@moonlight-mod/wp/discord/utils/ClipboardUtils" {

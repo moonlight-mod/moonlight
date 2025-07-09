@@ -12,12 +12,12 @@ import {
   Text,
   FormSwitch,
   TabBar,
-  Button,
   ChannelListIcon,
   HeartIcon,
   WindowTopOutlineIcon,
   WarningIcon
 } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import React from "@moonlight-mod/wp/react";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";

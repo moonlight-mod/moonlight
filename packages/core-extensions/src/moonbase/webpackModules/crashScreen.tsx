@@ -1,5 +1,6 @@
 import React from "@moonlight-mod/wp/react";
-import { Button, TabBar } from "@moonlight-mod/wp/discord/components/common/index";
+import { TabBar } from "@moonlight-mod/wp/discord/components/common/index";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { RepositoryManifest, UpdateState } from "../types";
