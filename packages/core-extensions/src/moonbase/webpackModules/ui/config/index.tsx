@@ -71,7 +71,6 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
           }}
         >
           <TextInput
-            size={TextInput.Sizes.DEFAULT}
             value={val}
             onChange={(newVal: string) => {
               items[i] = newVal;

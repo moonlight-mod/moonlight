@@ -15,7 +15,8 @@ import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import HelpMessage from "../HelpMessage";
 
-const SearchBar = spacepack.require("discord/uikit/search/SearchBar").default;
+// FIXME: mappings goes to wrong export now
+const SearchBar = spacepack.findObjectFromKey(spacepack.require("discord/uikit/search/SearchBar"), "defaultProps");
 
 const validTags: string[] = Object.values(ExtensionTag);
 

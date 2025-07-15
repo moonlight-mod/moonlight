@@ -244,7 +244,6 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
         {entries.map((val, i) => (
           <div key={i} className="moonbase-settings-list-entry">
             <TextInput
-              size={TextInput.Sizes.MINI}
               value={val}
               disabled={disabled}
               onChange={(newVal: string) => {
@@ -292,7 +291,6 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
         {entries.map(([key, val], i) => (
           <div key={i} className="moonbase-settings-dictionary-entry">
             <TextInput
-              size={TextInput.Sizes.MINI}
               value={key}
               disabled={disabled}
               onChange={(newKey: string) => {
@@ -301,7 +299,6 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
               }}
             />
             <TextInput
-              size={TextInput.Sizes.MINI}
               value={val}
               disabled={disabled}
               onChange={(newValue: string) => {
