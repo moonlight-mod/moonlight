@@ -1,14 +1,8 @@
 ## Core
 
-- Updated mappings to fix Button
+- Refactored Nix flake (thanks @different-name!)
+- Updated mappings
 
-## Core Extensions
+## Core extensions
 
-### Moonbase
-
-- Change the settings entry label to "moonlight" to prevent confusion
-- Style fixes
-
-### Native Fixes
-
-- Add an option to disable Fontations on Linux in cases where text may appear blurry
+- Moonbase: Fixed a crash in the Config tab
