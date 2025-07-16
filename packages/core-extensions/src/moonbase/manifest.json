@@ -46,6 +46,7 @@
   },
   "cors": [
     "https://github.com/moonlight-mod/moonlight/releases/download/",
-    "https://objects.githubusercontent.com/github-production-release-asset-"
+    "https://objects.githubusercontent.com/github-production-release-asset-",
+    "https://release-assets.githubusercontent.com/github-production-release-asset"
   ]
 }
