@@ -5,7 +5,7 @@
 }:
 
 let
-  cfg = config.programs.moonlight-mod;
+  cfg = config.programs.moonlight;
 in
 {
   imports = [
