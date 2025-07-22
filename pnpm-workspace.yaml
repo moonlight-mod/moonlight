@@ -15,7 +15,7 @@ catalogs:
     taze: ^19.0.4
   prod:
     "@moonlight-mod/lunast": ^1.0.1
-    "@moonlight-mod/mappings": ^1.1.31
+    "@moonlight-mod/mappings": ^1.1.32
     "@moonlight-mod/moonmap": ^1.0.5
     microdiff: ^1.5.0
     nanotar: ^0.1.1

@@ -164,7 +164,6 @@ declare module "@moonlight-mod/wp/discord/components/common/Scroller.css" {
 declare module "@moonlight-mod/wp/discord/components/common/index" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const Clickable: MappedModules["discord/components/common/index"]["Clickable"];
-  export const TextInput: MappedModules["discord/components/common/index"]["TextInput"];
   export const TextArea: MappedModules["discord/components/common/index"]["TextArea"];
   export const FormDivider: MappedModules["discord/components/common/index"]["FormDivider"];
   export const FormSection: MappedModules["discord/components/common/index"]["FormSection"];
@@ -247,6 +246,7 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const ModalRoot: MappedModules["discord/components/common/index"]["ModalRoot"];
   export const NumberInputStepper: MappedModules["discord/components/common/index"]["NumberInputStepper"];
   export const SearchableSelect: MappedModules["discord/components/common/index"]["SearchableSelect"];
+  export const TextInput: MappedModules["discord/components/common/index"]["TextInput"];
   export const createToast: MappedModules["discord/components/common/index"]["createToast"];
   export const popToast: MappedModules["discord/components/common/index"]["popToast"];
   export const showToast: MappedModules["discord/components/common/index"]["showToast"];
@@ -655,18 +655,6 @@ declare module "@moonlight-mod/wp/discord/modules/people/web/PeoplePage.css" {
   export const tabBody: MappedModules["discord/modules/people/web/PeoplePage.css"]["tabBody"];
 }
 
-declare module "@moonlight-mod/wp/discord/modules/user_profile/web/BiteSizeActivity.css" {
-  import { MappedModules } from "@moonlight-mod/mappings";
-  export const header: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["header"];
-  export const headerTag: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["headerTag"];
-  export const body: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["body"];
-  export const footer: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["footer"];
-  export const backdrop: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["backdrop"];
-  export const toast: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["toast"];
-  export const activity: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["activity"];
-  export const upsell: MappedModules["discord/modules/user_profile/web/BiteSizeActivity.css"]["upsell"];
-}
-
 declare module "@moonlight-mod/wp/discord/modules/user_settings/UserSettings" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const NOTIFICATION_CENTER_ACKED_BEFORE_ID_UNSET: MappedModules["discord/modules/user_settings/UserSettings"]["NOTIFICATION_CENTER_ACKED_BEFORE_ID_UNSET"];
@@ -835,6 +823,12 @@ declare module "@moonlight-mod/wp/discord/uikit/Button" {
 declare module "@moonlight-mod/wp/discord/uikit/Flex" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/uikit/Flex"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/uikit/TextInput" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/uikit/TextInput"]["default"];
   export default _default;
 }
 
