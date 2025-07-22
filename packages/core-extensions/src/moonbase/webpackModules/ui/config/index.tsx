@@ -9,13 +9,13 @@ import {
   FormItem,
   FormText,
   FormSwitch,
-  TextInput,
   SingleSelect,
   Tooltip,
   Clickable
 } from "@moonlight-mod/wp/discord/components/common/index";
 import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
 import { CircleXIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import FormSwitchClasses from "@moonlight-mod/wp/discord/components/common/FormSwitch.css";
