@@ -16,7 +16,7 @@ catalogs:
   prod:
     "@moonlight-mod/lunast": ^1.0.1
     "@moonlight-mod/mappings": ^1.1.32
-    "@moonlight-mod/moonmap": ^1.0.5
+    "@moonlight-mod/moonmap": ^1.0.6
     microdiff: ^1.5.0
     nanotar: ^0.1.1
     "@zenfs/core": ^2.0.0
