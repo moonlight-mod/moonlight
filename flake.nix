@@ -14,6 +14,7 @@
     }:
     let
       overlay = import ./nix/overlay.nix { inherit self; };
+      inherit (nixpkgs) lib;
     in
     flake-utils.lib.eachDefaultSystem (
       system:
@@ -36,7 +37,7 @@
 
           # Deprecated alias
           moonlight-mod =
-            builtins.warn
+            lib.warn
               "The moonlight package 'moonlight-mod' is deprecated and will be removed in a future release. Use 'moonlight' instead"
               self.packages.${system}.moonlight;
 
@@ -55,6 +56,6 @@
     // {
       homeModules.default = ./nix/home-manager.nix;
       # Deprecated overlay
-      overlays.default = builtins.warn "The moonlight overlay is deprecated and will be removed in a future release." overlay;
+      overlays.default = lib.warn "The moonlight overlay is deprecated and will be removed in a future release." overlay;
     };
 }

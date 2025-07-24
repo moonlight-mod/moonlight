@@ -11,7 +11,7 @@ prev.lib.genAttrs
   (name: {
     inherit name;
     value =
-      builtins.warn
+      prev.lib.warn
         ''
           The moonlight package '${name}' is deprecated and will be removed in a future release.
           Please use 'discord.override {withMoonlight = true;}' instead.
