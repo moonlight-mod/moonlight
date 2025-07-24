@@ -123,14 +123,8 @@ async function build(name, entry) {
     if (!mv2) {
       plugins.push(
         copyStaticFiles({
-          src: "./packages/browser/modifyResponseHeaders.json",
-          dest: `./dist/${browserDir}/modifyResponseHeaders.json`
-        })
-      );
-      plugins.push(
-        copyStaticFiles({
-          src: "./packages/browser/blockLoading.json",
-          dest: `./dist/${browserDir}/blockLoading.json`
+          src: "./packages/browser/moonlight-filter.json",
+          dest: `./dist/${browserDir}/moonlight-filter.json`
         })
       );
     }

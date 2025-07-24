@@ -1,21 +1,6 @@
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 
-chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
-  const url = new URL(details.url);
-
-  if (
-    !url.searchParams.has("inj") &&
-    !url.pathname.startsWith("/popout") &&
-    (url.hostname.endsWith("discord.com") || url.hostname.endsWith("discordapp.com"))
-  ) {
-    console.log("Enabling block ruleset", details.url);
-    await chrome.declarativeNetRequest.updateEnabledRulesets({
-      enableRulesetIds: ["modifyResponseHeaders", "blockLoading"]
-    });
-  }
-});
-
 chrome.webRequest.onBeforeRequest.addListener(
   async (details) => {
     if (details.tabId === -1) return;
@@ -57,16 +42,6 @@ chrome.webRequest.onBeforeRequest.addListener(
         });
       } catch (e) {
         console.log(e);
-      }
-
-      console.log("Disabling block ruleset");
-      try {
-        await chrome.declarativeNetRequest.updateEnabledRulesets({
-          disableRulesetIds: ["blockLoading"],
-          enableRulesetIds: ["modifyResponseHeaders"]
-        });
-      } catch (e) {
-        console.error(e);
       }
 
       console.log("Readding scripts");
