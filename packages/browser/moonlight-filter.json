@@ -15,5 +15,17 @@
       "resourceTypes": ["main_frame"],
       "requestDomains": ["discord.com"]
     }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "requestDomains": ["discord.com", "discordapp.com"],
+      "regexFilter": "\/assets\/.+\\..+\\.js$",
+      "resourceTypes": ["script"]
+    }
   }
 ]

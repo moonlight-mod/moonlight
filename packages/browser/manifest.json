@@ -22,14 +22,9 @@
   "declarative_net_request": {
     "rule_resources": [
       {
-        "id": "modifyResponseHeaders",
+        "id": "moonlight",
         "enabled": true,
-        "path": "modifyResponseHeaders.json"
-      },
-      {
-        "id": "blockLoading",
-        "enabled": true,
-        "path": "blockLoading.json"
+        "path": "moonlight-filter.json"
       }
     ]
   },
