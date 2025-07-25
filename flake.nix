@@ -36,7 +36,7 @@
 
           # Deprecated alias
           moonlight-mod =
-            builtins.warn
+            nixpkgs.lib.warn
               "The moonlight package 'moonlight-mod' is deprecated and will be removed in a future release. Use 'moonlight' instead"
               self.packages.${system}.moonlight;
 
@@ -55,6 +55,6 @@
     // {
       homeModules.default = ./nix/home-manager.nix;
       # Deprecated overlay
-      overlays.default = builtins.warn "The moonlight overlay is deprecated and will be removed in a future release." overlay;
+      overlays.default = nixpkgs.lib.warn "The moonlight overlay is deprecated and will be removed in a future release." overlay;
     };
 }
