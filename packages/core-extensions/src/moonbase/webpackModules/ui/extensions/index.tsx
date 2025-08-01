@@ -98,7 +98,7 @@ export default function ExtensionsPage() {
   return (
     <>
       <SearchBar
-        size={SearchBar.Sizes.MEDIUM}
+        size="md"
         query={query}
         onChange={(v: string) => setQuery(v.toLowerCase())}
         onClear={() => setQuery("")}
