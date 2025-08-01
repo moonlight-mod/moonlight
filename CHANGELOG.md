@@ -1,11 +1,3 @@
-## Core
-
-- Nix: specify fetcher version for pnpm fetchDeps
-- Nix: Change config key for home manager from `config.programs.moonlight-mod` to `config.programs.moonlight`
-- Updated mappings
-- Updated moonmap
-
-## Core extensions
-
-- Moonbase: Update CORS allowlist
-- Moonbase: fix TextInput
+- Updated mappings to fix Moonbase
+- Improved how moonlight loads when using the Manifest V3 browser extension (thanks @InvoxiPlayGames!)
+- Switched the Nix flake to use `lib.warn` (thanks @keysmashes!)
