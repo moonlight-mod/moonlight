@@ -78,6 +78,13 @@
       "description": "May improve blurry font rendering. Has no effect on other operating systems",
       "type": "boolean",
       "default": false
+    },
+    "waylandExplicitSync": {
+      "advice": "restart",
+      "displayName": "Enable Wayland explicit sync",
+      "description": "Prevents flickering on Wayland in some scenarios. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
     }
   },
   "apiLevel": 2

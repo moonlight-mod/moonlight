@@ -50,6 +50,10 @@ if (process.platform === "linux") {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "disableFontations")) {
     disabledFeatures.push("FontationsFontBackend");
   }
+
+  if (moonlightHost.getConfigOption<boolean>("nativeFixes", "waylandExplicitSync")) {
+    enabledFeatures.push("WaylandLinuxDrmSyncobj");
+  }
 }
 
 // NOTE: Only tested if this appears on Windows, it should appear on all when
