@@ -2,6 +2,7 @@ import { Exports as AppPanels } from "../coreExtensions/appPanels";
 import { Exports as Commands } from "../coreExtensions/commands";
 import { ErrorBoundaryExports as ErrorBoundary, IconsExports as Icons } from "../coreExtensions/common";
 import {
+  ChatButtonListExports as ChatButtonList,
   DMListExports as DMList,
   MemberListExports as MemberList,
   MessagesExports as Messages
@@ -23,6 +24,7 @@ declare function WebpackRequire(id: "commands_commands"): Commands;
 declare function WebpackRequire(id: "common_ErrorBoundary"): ErrorBoundary;
 declare function WebpackRequire(id: "common_icons"): Icons;
 
+declare function WebpackRequire(id: "componentEditor_chatButtonList"): ChatButtonList;
 declare function WebpackRequire(id: "componentEditor_dmList"): DMList;
 declare function WebpackRequire(id: "componentEditor_memberList"): MemberList;
 declare function WebpackRequire(id: "componentEditor_messages"): Messages;
