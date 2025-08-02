@@ -1,6 +1,16 @@
 import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
+  // chat buttons
+  {
+    find: '"gift")),',
+    replace: [
+      {
+        match: /(?<=className:\i\.buttons,children:)(\i)/,
+        replacement: (_, original) => `require("componentEditor_chatButtonList").default._patchButtons(${original})`
+      }
+    ]
+  },
   // dm list
   {
     find: ".interactiveSystemDM]:",
@@ -72,6 +82,9 @@ export const patches: Patch[] = [
 ];
 
 export const webpackModules: Record<string, ExtensionWebpackModule> = {
+  chatButtonList: {
+    dependencies: [{ id: "react" }]
+  },
   dmList: {
     dependencies: [{ id: "react" }]
   },
