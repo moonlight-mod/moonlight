@@ -1,14 +1,7 @@
 type Patcher<T> = (elements: React.ReactNode[], props: T) => React.ReactNode[];
 
 //#region Chat Buttons
-// eslint-disable-next-line prettier/prettier
-export type ChatButtonListAnchors =
-  | "gift"
-  | "gif"
-  | "sticker"
-  | "emoji"
-  | "activity"
-  | undefined;
+export type ChatButtonListAnchors = "gift" | "gif" | "sticker" | "emoji" | "activity" | undefined;
 
 export enum ChatButtonListAnchorIndicies {
   gift = 0,
