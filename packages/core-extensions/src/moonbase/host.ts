@@ -29,7 +29,7 @@ async function updateAndRestart() {
     await natives.updateMoonlight();
     await electron.dialog.showMessageBox({ message: "Update successful, restarting Discord." });
     electron.app.relaunch();
-    electron.app.exit(0);
+    electron.app.quit();
   } catch {
     await electron.dialog.showMessageBox({
       message: "Failed to update moonlight. Please use the installer instead.",
@@ -48,7 +48,7 @@ async function resetConfig() {
 
   await electron.dialog.showMessageBox({ message: "Configuration reset, restarting Discord." });
   electron.app.relaunch();
-  electron.app.exit(0);
+  electron.app.quit();
 }
 
 async function changeBranch(branch: MoonlightBranch) {
