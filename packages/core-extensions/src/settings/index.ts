@@ -3,7 +3,7 @@ import { ExtensionWebExports } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: '"useGenerateUserSettingsSections"',
+    find: '{header:"Developer Only",',
     replace: {
       match: /(?<=\.push\(.+?\)}\)\)}\),)(.+?)}/,
       replacement: (_, sections: string) => `require("settings_settings").Settings._mutateSections(${sections})}`
