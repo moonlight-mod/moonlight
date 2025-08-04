@@ -1,5 +1,33 @@
 type Patcher<T> = (elements: React.ReactNode[], props: T) => React.ReactNode[];
 
+//#region Chat Buttons
+export type ChatButtonListAnchors = "gift" | "gif" | "sticker" | "emoji" | "activity" | undefined;
+
+export enum ChatButtonListAnchorIndicies {
+  gift = 0,
+  "gif",
+  "sticker",
+  "emoji",
+  "activity"
+}
+
+export type ChatButtonListItem = {
+  component: React.FC<any>;
+  anchor: ChatButtonListAnchors;
+  before: boolean;
+};
+
+export type ChatButtonList = {
+  addButton: (id: string, component: React.FC<any>, anchor?: ChatButtonListAnchors, before?: boolean) => void;
+  removeButton: (id: ChatButtonListAnchors) => void;
+  //TODO: fix props type
+  /**
+   * @private
+   */
+  _patchButtons: Patcher<any>;
+};
+//#endregion
+
 //#region DM List
 export type DMListAnchors =
   | "content"
@@ -160,6 +188,10 @@ export type Messages = {
   _patchAccessories: Patcher<any>;
 };
 //#endregion
+
+export type ChatButtonListExports = {
+  default: ChatButtonList;
+};
 
 export type DMListExports = {
   default: DMList;

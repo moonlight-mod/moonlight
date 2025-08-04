@@ -40,6 +40,12 @@ declare module "@moonlight-mod/wp/common_icons" {
 }
 declare module "@moonlight-mod/wp/common_stores";
 
+declare module "@moonlight-mod/wp/componentEditor_chatButtonList" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+
+  const _default: CoreExtensions.ComponentEditor.ChatButtonList;
+  export default _default;
+}
 declare module "@moonlight-mod/wp/componentEditor_dmList" {
   import { CoreExtensions } from "@moonlight-mod/types";
 
