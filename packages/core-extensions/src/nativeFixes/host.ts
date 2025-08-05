@@ -21,8 +21,7 @@ moonlightHost.events.on("window-created", function (browserWindow) {
 });
 
 if (moonlightHost.getConfigOption<boolean>("nativeFixes", "disableRendererBackgrounding") ?? true) {
-  // Discord already disables UseEcoQoSForBackgroundProcess and some other
-  // related features
+  // Discord already disables UseEcoQoSForBackgroundProcess and some other related features
   app.commandLine.appendSwitch("disable-renderer-backgrounding");
   app.commandLine.appendSwitch("disable-backgrounding-occluded-windows");
 
@@ -32,6 +31,7 @@ if (moonlightHost.getConfigOption<boolean>("nativeFixes", "disableRendererBackgr
 
 if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vulkan") ?? false) {
   enabledFeatures.push("Vulkan", "DefaultANGLEVulkan", "VulkanFromANGLE");
+  app.commandLine.appendSwitch("use-angle", "vulkan");
 }
 
 if (process.platform === "linux") {
@@ -56,16 +56,44 @@ if (process.platform === "linux") {
   }
 }
 
-// NOTE: Only tested if this appears on Windows, it should appear on all when
-//       hardware acceleration is disabled
+// NOTE: Only tested if this appears on Windows, it should appear on all when hardware acceleration is disabled
 const noAccel = app.commandLine.hasSwitch("disable-gpu-compositing");
-if ((moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapi") ?? true) && !noAccel) {
-  if (process.platform === "linux") {
-    // These will eventually be renamed https://source.chromium.org/chromium/chromium/src/+/5482210941a94d70406b8da962426e4faca7fce4
-    enabledFeatures.push("VaapiVideoEncoder", "VaapiVideoDecoder", "VaapiVideoDecodeLinuxGL");
+if (!noAccel) {
+  const vaapi = moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapi") ?? true;
+  if (vaapi) {
+    if (process.platform === "linux") {
+      enabledFeatures.push(
+        // old flag names, probably can be removed but shrug
+        "VaapiVideoEncoder",
+        "VaapiVideoDecoder",
+        "VaapiVideoDecodeLinuxGL",
 
-    if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapiIgnoreDriverChecks") ?? false)
-      enabledFeatures.push("VaapiIgnoreDriverChecks");
+        "AcceleratedVideoEncoder",
+        "AcceleratedVideoDecoder",
+        "AcceleratedVideoDecodeLinuxGL"
+      );
+
+      // maybe outdated
+      disabledFeatures.push("UseChromeOSDirectVideoDecoder");
+
+      if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapiIgnoreDriverChecks") ?? false) {
+        enabledFeatures.push("VaapiIgnoreDriverChecks");
+      }
+
+      if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vaapiNvidia") ?? false)
+        enabledFeatures.push("VaapiOnNvidiaGPUs");
+    }
+  }
+
+  if (moonlightHost.getConfigOption<boolean>("nativeFixes", "zeroCopy") ?? false) {
+    app.commandLine.appendSwitch("enable-zero-copy");
+    if (vaapi) enabledFeatures.push("AcceleratedVideoDecodeLinuxZeroCopyGL");
+  }
+
+  if (moonlightHost.getConfigOption<boolean>("nativeFixes", "ignoreGpuBlocklist")) {
+    app.commandLine.appendSwitch("ignore-gpu-blocklist");
+    app.commandLine.appendSwitch("disable-gpu-driver-bug-workaround");
+    app.commandLine.appendSwitch("enable-unsafe-webgpu");
   }
 }
 

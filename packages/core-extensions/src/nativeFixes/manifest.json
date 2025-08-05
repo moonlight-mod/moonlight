@@ -58,6 +58,13 @@
       "type": "boolean",
       "default": false
     },
+    "vaapiNvidia": {
+      "advice": "restart",
+      "displayName": "Enable VAAPI on Nvidia GPU",
+      "description": "\"This feature switch is provided for developers to test VAAPI drivers on NVIDIA GPUs\", your mileage may vary. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
+    },
     "linuxUpdater": {
       "advice": "restart",
       "displayName": "Linux Updater",
@@ -83,6 +90,20 @@
       "advice": "restart",
       "displayName": "Enable Wayland explicit sync",
       "description": "Prevents flickering on Wayland in some scenarios. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
+    },
+    "zeroCopy": {
+      "advice": "restart",
+      "displayName": "Enable Zero Copy Rasterization",
+      "description": "May increase performance. Enables VAAPI zero copy flag when VAAPI is enabled (improves Wayland performance).",
+      "type": "boolean",
+      "default": false
+    },
+    "ignoreGpuBlocklist": {
+      "advice": "restart",
+      "displayName": "Ignore GPU Blocklist",
+      "description": "May help with VAAPI and Zero Copy",
       "type": "boolean",
       "default": false
     }
