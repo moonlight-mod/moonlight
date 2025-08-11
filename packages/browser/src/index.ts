@@ -144,6 +144,9 @@ window._moonlightBrowserInit = async () => {
     getExtensionDir: (ext: string) => {
       return `/extensions/${ext}`;
     },
+    getDistDir() {
+      return "/dist";
+    },
 
     async writeConfig(newConfig) {
       await writeConfig(newConfig);
