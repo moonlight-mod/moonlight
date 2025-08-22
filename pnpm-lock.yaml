@@ -41,8 +41,8 @@ catalogs:
       specifier: ^1.0.1
       version: 1.0.1
     '@moonlight-mod/mappings':
-      specifier: ^1.1.34
-      version: 1.1.34
+      specifier: ^1.1.35
+      version: 1.1.35
     '@moonlight-mod/moonmap':
       specifier: ^1.0.6
       version: 1.0.6
@@ -158,8 +158,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       '@moonlight-mod/mappings':
-        specifier: ^1.1.34
-        version: 1.1.34(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
+        specifier: ^1.1.35
+        version: 1.1.35(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.6
         version: 1.0.6
@@ -183,7 +183,7 @@ importers:
         version: 1.0.1
       '@moonlight-mod/mappings':
         specifier: catalog:prod
-        version: 1.1.34(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
+        version: 1.1.35(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
       '@moonlight-mod/moonmap':
         specifier: catalog:prod
         version: 1.0.6
@@ -405,8 +405,8 @@ packages:
   '@moonlight-mod/lunast@1.0.1':
     resolution: {integrity: sha512-K3vxzDlfFuYKjciIW2FMlcZ1qrrkAGDGpSBlNqYGtJ0sMt9bRCd2lpSpg6AX/giSljDtmAUXa/5mOfUoDQxjBA==}
 
-  '@moonlight-mod/mappings@1.1.34':
-    resolution: {integrity: sha512-4/AkNuJOl4/cBDJrPm0FXbmwHtMBuuGwQDVG0Y8Qpjlm6dW4Oh7NAFX26wbatUrtZ9oOSIaeX+Hd603QDF/iDg==}
+  '@moonlight-mod/mappings@1.1.35':
+    resolution: {integrity: sha512-t7t+4hW+qjD9N4ZhCgEmtECX3w652RW8xTBKcrAFRVURqq3gDUr4SWlgh0GN9YVNc8m+TUkh8cgyGGyG4cVCRA==}
     engines: {node: '>=22', npm: pnpm, pnpm: '>=10', yarn: pnpm}
     peerDependencies:
       '@moonlight-mod/lunast': ^1.0.1
@@ -1737,7 +1737,7 @@ snapshots:
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
 
-  '@moonlight-mod/mappings@1.1.34(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)':
+  '@moonlight-mod/mappings@1.1.35(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)':
     dependencies:
       '@moonlight-mod/lunast': 1.0.1
       '@moonlight-mod/moonmap': 1.0.6

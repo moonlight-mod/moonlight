@@ -235,7 +235,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const WindowTopOutlineIcon: MappedModules["discord/components/common/index"]["WindowTopOutlineIcon"];
   export const XLargeIcon: MappedModules["discord/components/common/index"]["XLargeIcon"];
   export const XSmallIcon: MappedModules["discord/components/common/index"]["XSmallIcon"];
-  export const Button: MappedModules["discord/components/common/index"]["Button"];
   export const ConfirmModal: MappedModules["discord/components/common/index"]["ConfirmModal"];
   export const H: MappedModules["discord/components/common/index"]["H"];
   export const HelpMessage: MappedModules["discord/components/common/index"]["HelpMessage"];
@@ -246,7 +245,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const ModalRoot: MappedModules["discord/components/common/index"]["ModalRoot"];
   export const NumberInputStepper: MappedModules["discord/components/common/index"]["NumberInputStepper"];
   export const SearchableSelect: MappedModules["discord/components/common/index"]["SearchableSelect"];
-  export const TextInput: MappedModules["discord/components/common/index"]["TextInput"];
   export const createToast: MappedModules["discord/components/common/index"]["createToast"];
   export const popToast: MappedModules["discord/components/common/index"]["popToast"];
   export const showToast: MappedModules["discord/components/common/index"]["showToast"];
@@ -263,7 +261,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const HelpMessageTypes: MappedModules["discord/components/common/index"]["HelpMessageTypes"];
   export const ModalSize: MappedModules["discord/components/common/index"]["ModalSize"];
   export const ModalTransitionState: MappedModules["discord/components/common/index"]["ModalTransitionState"];
-  export const PRETTY_KEYS: MappedModules["discord/components/common/index"]["PRETTY_KEYS"];
   export const SelectLooks: MappedModules["discord/components/common/index"]["SelectLooks"];
   export const SpinnerTypes: MappedModules["discord/components/common/index"]["SpinnerTypes"];
   export const StatusTypes: MappedModules["discord/components/common/index"]["StatusTypes"];
