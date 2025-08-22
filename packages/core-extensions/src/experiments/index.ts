@@ -18,20 +18,11 @@ export const patches: Patch[] = [
 
   // Enable staff help menu
   {
-    find: ".HEADER_BAR)",
-    replace: {
-      match: /&&\((\i)\?\(0,/,
-      replacement: (_, isStaff) =>
-        `&&(((moonlight.getConfigOption("experiments","devtools")??false)?true:${isStaff})?(0,`
-    }
-  },
-  // staff help menu - visual refresh
-  {
     find: '("AppTitleBar")',
     replace: {
-      match: /{hasBugReporterAccess:(\i)}=\i\.\i\.useExperiment\({location:"HeaderBar"},{autoTrackExposure:!1}\);/,
-      replacement: (orig, isStaff) =>
-        `${orig}if(moonlight.getConfigOption("experiments","devtools")??false)${isStaff}=true;`
+      match: /({hasBugReporterAccess:(\i)}=\i\.\i\.useExperiment\({location:"HeaderBar"},{autoTrackExposure:!1}\)),/,
+      replacement: (_, orig, isStaff) =>
+        `${orig};if(moonlight.getConfigOption("experiments","devtools")??false)${isStaff}=true;let `
     }
   },
   {
