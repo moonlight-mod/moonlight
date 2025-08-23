@@ -12,12 +12,9 @@ export const patches: Patch[] = [
   {
     find: 'navId:"user-settings-cog",',
     replace: {
-      match: /children:\[(\i)\.map\(.+?\),.*?children:\i\((\i)\)/,
-      replacement: (orig, sections, section) =>
-        `${orig.replace(
-          /Object\.values\(.\..+?\)/,
-          (orig) => `[...require("settings_settings").Settings.sectionNames,...${orig}]`
-        )}??${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`
+      match: /(?<=children:\[(\i)\.map\(.+?children:\((\i)=>{switch\(\i\){.+?)default:return null/,
+      replacement: (_, sections, section) =>
+        `default:return ${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`
     }
   }
 ];
