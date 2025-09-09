@@ -18,7 +18,7 @@ export const patches: Patch[] = [
 
   // Enable staff help menu
   {
-    find: '("AppTitleBar")',
+    find: 'focusSectionProps:"HELP"===',
     replace: {
       match: /({hasBugReporterAccess:(\i)}=\i\.\i\.useExperiment\({location:"HeaderBar"},{autoTrackExposure:!1}\)),/,
       replacement: (_, orig, isStaff) =>
