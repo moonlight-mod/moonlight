@@ -1,6 +1,6 @@
 {
   "name": "@moonlight-mod/types",
-  "version": "1.3.27",
+  "version": "1.3.28",
   "exports": {
     ".": "./src/index.ts",
     "./import": "./src/import.d.ts",
