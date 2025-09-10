@@ -1,7 +1,7 @@
 import { MoonlightBranch } from "@moonlight-mod/types";
 import type { MoonbaseNatives, RepositoryManifest } from "./types";
 import extractAsar from "@moonlight-mod/core/asar";
-import { distDir, repoUrlFile, installedVersionFile } from "@moonlight-mod/types/constants";
+import { repoUrlFile, installedVersionFile } from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
 
 const moonlightGlobal = globalThis.moonlightHost ?? globalThis.moonlightNode;
@@ -103,9 +103,11 @@ export default function getNatives(): MoonbaseNatives {
 
       if (!tar || !ref) return;
 
-      const dist = moonlightNodeSandboxed.fs.join(moonlightGlobal.getMoonlightDir(), distDir);
-      if (await moonlightNodeSandboxed.fs.exists(dist)) await moonlightNodeSandboxed.fs.rmdir(dist);
-      await moonlightNodeSandboxed.fs.mkdir(dist);
+      const dist = moonlightNode.getDistDir();
+      if (!(await moonlightNodeSandboxed.fs.exists(dist))) await moonlightNodeSandboxed.fs.mkdir(dist);
+      for (const entry of await moonlightNodeSandboxed.fs.readdir(dist)) {
+        await moonlightNodeSandboxed.fs.rmdir(entry);
+      }
 
       logger.debug("Extracting update");
       const files = await parseTarGzip(tar);

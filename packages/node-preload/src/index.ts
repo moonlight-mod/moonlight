@@ -84,6 +84,9 @@ async function injectGlobals() {
     },
     getExtensionDir: (ext: string) => {
       return path.join(extensionsPath, ext);
+    },
+    getDistDir() {
+      return module.path;
     }
   };
 
