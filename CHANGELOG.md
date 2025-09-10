@@ -2,24 +2,16 @@
 
 - Updated mappings
 
+### Nix
+
+- Remove flake-utils (thanks @oliviafloof!)
+
 ## Core Extensions
-
-### Native Fixes
-
-- Added "Wayland Explicit Sync" option
-- Updated VAAPI feature names
-- Added Nvidia test flag for VAAPI option
-- Added "Zero Copy" option
-- Added "Ignore GPU Blocklist" option
-
-### Component Editor
-
-- Can now modify chat buttons (thanks @Enovale!)
 
 ### Settings
 
-- Fixed patch find
+- Fixed patch for submenus of custom settings items
 
-### Moonbase
+### Experiments
 
-- Update and restart now uses the proper Electron `app.quit` method, modified Discord settings should now be retained
+- Fixed staff help button patch again
