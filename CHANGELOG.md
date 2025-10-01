@@ -1,17 +1,5 @@
 ## Core
 
-- Updated mappings
-
-### Nix
-
-- Remove flake-utils (thanks @oliviafloof!)
-
-## Core Extensions
-
-### Settings
-
-- Fixed patch for submenus of custom settings items
-
-### Experiments
-
-- Fixed staff help button patch again
+- Updated mappings to fix Moonbase
+- Switched to nixfmt-tree (thanks @oliviafloof!)
+- Added browser related files to GitHub Releases (thanks @SpikeHD!)
