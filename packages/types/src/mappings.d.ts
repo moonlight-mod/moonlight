@@ -311,7 +311,6 @@ declare module "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverr
   export const barLoader: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["barLoader"];
   export const barTitle: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["barTitle"];
   export const buttonLoader: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["buttonLoader"];
-  export const disabledButtonOverride: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["disabledButtonOverride"];
 }
 
 declare module "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css" {
