@@ -199,12 +199,10 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
                 )}
 
                 <FormSwitch
-                  value={ext.compat === ExtensionCompat.Compatible && (enabled || implicitlyEnabled)}
+                  checked={ext.compat === ExtensionCompat.Compatible && (enabled || implicitlyEnabled)}
                   disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
-                  hideBorder={true}
-                  style={{ marginBottom: "0px" }}
-                  // @ts-expect-error fix type later
-                  tooltipNote={
+                  // FIXME this no longer works!!!
+                  /*tooltipNote={
                     ext.compat !== ExtensionCompat.Compatible ? (
                       COMPAT_TEXT_MAP[ext.compat]
                     ) : implicitlyEnabled ? (
@@ -217,7 +215,7 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
                         ))}
                       </div>
                     ) : undefined
-                  }
+                  }*/
                   onChange={() => {
                     const toggle = () => {
                       MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);

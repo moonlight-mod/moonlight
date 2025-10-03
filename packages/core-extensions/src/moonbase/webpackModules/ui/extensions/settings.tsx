@@ -84,18 +84,17 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<boolean>(ext.uniqueId, name);
 
   return (
-    <FormSwitch
-      value={value ?? false}
-      hideBorder={true}
-      disabled={disabled}
-      onChange={(value: boolean) => {
-        MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
-      }}
-      note={description != null ? markdownify(description) : undefined}
-      className={`${Margins.marginReset} ${Margins.marginTop20}`}
-    >
-      {displayName}
-    </FormSwitch>
+    <div className={`${Margins.marginReset} ${Margins.marginTop20}`}>
+      <FormSwitch
+        checked={value ?? false}
+        disabled={disabled}
+        onChange={(value: boolean) => {
+          MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value);
+        }}
+        label={displayName}
+        description={description != null ? (markdownify(description) as unknown as string) : undefined}
+      />
+    </div>
   );
 }
 

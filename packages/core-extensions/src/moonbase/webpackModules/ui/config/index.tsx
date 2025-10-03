@@ -18,7 +18,6 @@ import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
 import { CircleXIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
-import FormSwitchClasses from "@moonlight-mod/wp/discord/components/common/FormSwitch.css";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 
@@ -107,38 +106,38 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
 export default function ConfigPage() {
   return (
     <>
-      <FormSwitch
-        className={Margins.marginTop20}
-        value={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true) ?? true}
-        onChange={(value: boolean) => {
-          MoonbaseSettingsStore.setExtensionConfig("moonbase", "updateChecking", value);
-        }}
-        note="Checks for updates to moonlight"
-      >
-        Automatic update checking
-      </FormSwitch>
+      <div className={Margins.marginTop20}>
+        <FormSwitch
+          checked={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true) ?? true}
+          onChange={(value: boolean) => {
+            MoonbaseSettingsStore.setExtensionConfig("moonbase", "updateChecking", value);
+          }}
+          label="Automatic update checking"
+          description="Checks for updates to moonlight"
+        />
+      </div>
       <FormItem title="Repositories">
         <FormText className={Margins.marginBottom4}>A list of remote repositories to display extensions from</FormText>
         <ArrayFormItem config="repositories" />
       </FormItem>
-      <FormDivider className={FormSwitchClasses.dividerDefault} />
+      <FormDivider />
       <FormItem title="Extension search paths" className={Margins.marginTop20}>
         <FormText className={Margins.marginBottom4}>
           A list of local directories to search for built extensions
         </FormText>
         <ArrayFormItem config="devSearchPaths" />
       </FormItem>
-      <FormDivider className={FormSwitchClasses.dividerDefault} />
-      <FormSwitch
-        className={Margins.marginTop20}
-        value={MoonbaseSettingsStore.getConfigOption("patchAll") ?? false}
-        onChange={(value: boolean) => {
-          MoonbaseSettingsStore.setConfigOption("patchAll", value);
-        }}
-        note="Wraps every webpack module in a function, separating them in DevTools"
-      >
-        Patch all
-      </FormSwitch>
+      <FormDivider />
+      <div className={Margins.marginTop20}>
+        <FormSwitch
+          checked={MoonbaseSettingsStore.getConfigOption("patchAll") ?? false}
+          onChange={(value: boolean) => {
+            MoonbaseSettingsStore.setConfigOption("patchAll", value);
+          }}
+          label="Patch all"
+          description="Wraps every webpack module in a function, separating them in DevTools"
+        />
+      </div>
       <FormItem title="Log level">
         <SingleSelect
           autofocus={false}
