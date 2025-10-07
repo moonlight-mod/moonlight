@@ -1,3 +1,3 @@
 ## Core
 
-- Updated mappings to fix Moonbase (again)
+- Updated mappings to fix Moonbase (for the third time) (Discord please stop breaking things)
