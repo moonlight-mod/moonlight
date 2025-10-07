@@ -526,7 +526,6 @@ declare module "@moonlight-mod/wp/discord/modules/messages/web/Markup.css" {
   export const roleHeader: MappedModules["discord/modules/messages/web/Markup.css"]["roleHeader"];
   export const roleScroller: MappedModules["discord/modules/messages/web/Markup.css"]["roleScroller"];
   export const timestamp: MappedModules["discord/modules/messages/web/Markup.css"]["timestamp"];
-  export const timestampTooltip: MappedModules["discord/modules/messages/web/Markup.css"]["timestampTooltip"];
 }
 
 declare module "@moonlight-mod/wp/discord/modules/messages/web/Message.css" {
