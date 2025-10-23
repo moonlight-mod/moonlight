@@ -3,7 +3,7 @@ import { APPLICATION_ID } from "@moonlight-mod/types/coreExtensions/commands";
 
 export const patches: Patch[] = [
   {
-    find: ".fI5MTU)", // COMMAND_SECTION_BUILT_IN_NAME
+    find: '"shrug",',
     replace: [
       // inject commands
       {
