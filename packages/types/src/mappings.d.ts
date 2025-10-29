@@ -81,7 +81,6 @@ declare module "@moonlight-mod/wp/discord/components/common/Card" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/components/common/Card"]["default"];
   export default _default;
-  export const Types: MappedModules["discord/components/common/Card"]["Types"];
 }
 
 declare module "@moonlight-mod/wp/discord/components/common/FileUpload" {
@@ -252,7 +251,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const AccessibilityAnnouncer: MappedModules["discord/components/common/index"]["AccessibilityAnnouncer"];
   export const BackdropStyles: MappedModules["discord/components/common/index"]["BackdropStyles"];
   export const BadgeShapes: MappedModules["discord/components/common/index"]["BadgeShapes"];
-  export const CardTypes: MappedModules["discord/components/common/index"]["CardTypes"];
   export const CircleIconButtonColors: MappedModules["discord/components/common/index"]["CircleIconButtonColors"];
   export const CircleIconButtonSizes: MappedModules["discord/components/common/index"]["CircleIconButtonSizes"];
   export const FormErrorBlockColors: MappedModules["discord/components/common/index"]["FormErrorBlockColors"];
