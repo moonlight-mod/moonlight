@@ -16,6 +16,22 @@ export const patches: Patch[] = [
       replacement: (_, sections, section) =>
         `default:return ${sections}.find(x=>x.section==${section})?._moonlight_submenu?.()`
     }
+  },
+
+  // TEMP PATCH remove me when new settings support is implemented
+  {
+    find: ".LEGACY_SETTINGS_SIDEBAR_ITEM,{",
+    replace: {
+      match: /usePredicate:\(\)=>(.*?)\i\.\i\.isDeveloper,/,
+      replacement: ""
+    }
+  },
+  {
+    find: ".DEVELOPER_SECTION,{",
+    replace: {
+      match: /usePredicate:\(\)=>(.*?)\i\.\i\.isDeveloper/,
+      replacement: ""
+    }
   }
 ];
 
