@@ -45,7 +45,7 @@
             self.packages.${system}.moonlight;
 
         # Deprecated packages
-        inherit (overlay-pkgs)
+        inherit (overlay-pkgs.${system})
           discord
           discord-ptb
           discord-canary
