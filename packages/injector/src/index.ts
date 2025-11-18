@@ -11,6 +11,7 @@ import { getExtensions } from "@moonlight-mod/core/extension";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import EventEmitter from "node:events";
+import fs from "node:fs";
 import path from "node:path";
 import persist from "@moonlight-mod/core/persist";
 import createFS from "@moonlight-mod/core/fs";
@@ -295,10 +296,54 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
   }
 
   if (injectorConfig?.disableLoad !== true) {
-    // Need to do this instead of require() or it breaks require.main
+    try {
+      fixAppBranding(asarPath);
+    } catch (error) {
+      logger.error("Failed to fix app branding:", error);
+    }
+
     // @ts-expect-error Module internals
     Module._load(asarPath, Module, true);
   }
+}
+
+// Electron sets this metadata upon startup, but it uses our package.json instead of theirs
+// https://github.com/electron/electron/blob/13e84e686814ed6b35ace75f636e30be56e5ac1d/lib/browser/init.ts#L117
+function fixAppBranding(packagePath: string) {
+  const packageJson: {
+    name?: string;
+    main?: string;
+    productName?: string;
+    desktopName?: string;
+    version?: string;
+  } = JSON.parse(fs.readFileSync(path.join(packagePath, "package.json"), "utf8"));
+
+  // our Electron types are old enough to not have these
+  const typedApp = app as typeof app & {
+    setVersion(version: string): void;
+    setDesktopName(desktopName: string): void;
+    setAppPath(appPath: string): void;
+  };
+
+  // For some unknown reason, require.main is not properly updated with Module._load, which breaks updating host
+  // modules on Linux. We should really be replacing `require.main` entirely, but since we haven't loaded Discord's
+  // module yet, we can only set the filename. This is probably fine as that's all Discord uses.
+  if (packageJson.main) {
+    require.main!.filename = path.join(packagePath, packageJson.main);
+  }
+
+  if (packageJson.version) typedApp.setVersion(packageJson.version);
+
+  const name = packageJson.productName ?? packageJson.name;
+  if (name) app.setName(`${name}`.trim());
+
+  if (packageJson.desktopName) {
+    typedApp.setDesktopName(packageJson.desktopName);
+  } else {
+    typedApp.setDesktopName(`${app.name}.desktop`);
+  }
+
+  typedApp.setAppPath(packagePath);
 }
 
 function patchElectron() {
