@@ -334,15 +334,6 @@ function fixAppBranding(packagePath: string) {
 
   if (packageJson.version) typedApp.setVersion(packageJson.version);
 
-  const name = packageJson.productName ?? packageJson.name;
-  if (name) app.setName(`${name}`.trim());
-
-  if (packageJson.desktopName) {
-    typedApp.setDesktopName(packageJson.desktopName);
-  } else {
-    typedApp.setDesktopName(`${app.name}.desktop`);
-  }
-
   typedApp.setAppPath(packagePath);
 }
 
