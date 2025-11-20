@@ -1,8 +1,7 @@
 import {
   ChatButtonList,
   ChatButtonListItem,
-  ChatButtonListAnchors,
-  ChatButtonListAnchorIndicies
+  ChatButtonListAnchors
 } from "@moonlight-mod/types/coreExtensions/componentEditor";
 import React from "@moonlight-mod/wp/react";
 
@@ -12,14 +11,10 @@ const itemsToRemove: Set<ChatButtonListAnchors> = new Set();
 function addEntries(
   elements: React.ReactNode[],
   entries: Record<string, ChatButtonListItem>,
-  removedEntries: Iterable<ChatButtonListAnchors>,
-  indicies: Partial<typeof ChatButtonListAnchorIndicies>,
-  props: any
+  removedEntries: Iterable<ChatButtonListAnchors>
 ) {
-  const originalElements = [...elements];
-
   for (const [id, entry] of Object.entries(entries)) {
-    const component = <entry.component {...props} key={id} />;
+    const component = <entry.component key={id} />;
 
     if (entry.anchor === undefined) {
       if (entry.before) {
@@ -28,7 +23,7 @@ function addEntries(
         elements.push(component);
       }
     } else {
-      const index = elements.indexOf(originalElements[indicies[entry.anchor]!]);
+      const index = elements.findIndex((elem) => (elem as React.ReactElement).key === entry.anchor);
       elements.splice(index! + (entry.before ? 0 : 1), 0, component);
     }
   }
@@ -38,7 +33,7 @@ function addEntries(
       continue;
     }
 
-    const index = elements.indexOf(originalElements[indicies[id]!]);
+    const index = elements.findIndex((elem) => (elem as React.ReactElement).key === id);
     elements.splice(index, 1);
   }
 }
@@ -54,8 +49,9 @@ export const chatButtonList: ChatButtonList = {
   removeButton(id) {
     itemsToRemove.add(id);
   },
-  _patchButtons(elements, props) {
-    addEntries(elements, items, itemsToRemove, ChatButtonListAnchorIndicies, props);
+  _patchButtons(elements) {
+    addEntries(elements, items, itemsToRemove);
+
     return elements;
   }
 };
