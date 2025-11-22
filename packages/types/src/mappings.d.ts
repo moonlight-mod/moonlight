@@ -727,6 +727,23 @@ declare module "@moonlight-mod/wp/discord/modules/user_settings/UserSettings" {
   export const ViewNsfwGuilds: MappedModules["discord/modules/user_settings/UserSettings"]["ViewNsfwGuilds"];
 }
 
+declare module "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemConstants" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const ItemType: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["ItemType"];
+  export const TrailingType: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["TrailingType"];
+  export const NoticeType: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["NoticeType"];
+  export const hasLayout: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["hasLayout"];
+}
+
+declare module "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemCreators" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const createRoot: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createRoot"];
+  export const createSection: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSection"];
+  export const createSidebarItem: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSidebarItem"];
+  export const createPanel: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createPanel"];
+  export const createPane: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createPane"];
+}
+
 declare module "@moonlight-mod/wp/discord/packages/flux" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const BatchedStoreListener: MappedModules["discord/packages/flux"]["BatchedStoreListener"];

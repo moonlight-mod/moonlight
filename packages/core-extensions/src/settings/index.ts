@@ -6,7 +6,7 @@ export const patches: Patch[] = [
     find: '{header:"Developer Only",',
     replace: {
       match: /(?<=\.push\(.+?\)}\)\)}\),)(.+?)}/,
-      replacement: (_, sections: string) => `require("settings_settings").Settings._mutateSections(${sections})}`
+      replacement: (_, sections: string) => `require("settings_settings").default._mutateSections(${sections})}`
     }
   },
   {
@@ -18,23 +18,16 @@ export const patches: Patch[] = [
     }
   },
 
-  // TEMP PATCH remove me when new settings support is implemented
   {
-    find: ".LEGACY_SETTINGS_SIDEBAR_ITEM,{",
+    find: ".getUserSettingsSectionsByWebUserSettings)().get",
     replace: {
-      match: /usePredicate:\(\)=>(.*?)\i\.\i\.isDeveloper,/,
-      replacement: ""
-    }
-  },
-  {
-    find: ".DEVELOPER_SECTION,{",
-    replace: {
-      match: /usePredicate:\(\)=>(.*?)\i\.\i\.isDeveloper/,
-      replacement: ""
+      match: /({node:\i,directory:\i}=\(0,\i\.\i\)\()(\i\.\i),/,
+      replacement: (_, orig, sections) => `${orig}require("settings_redesign").default._mutateSections(${sections}),`
     }
   }
 ];
 
 export const webpackModules: ExtensionWebExports["webpackModules"] = {
-  settings: {}
+  settings: {},
+  redesign: {}
 };

@@ -128,6 +128,13 @@ declare module "@moonlight-mod/wp/settings_settings" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/settings_redesign" {
+  import { CoreExtensions } from "@moonlight-mod/types";
+
+  const _default: CoreExtensions.Settings.SettingsRedesign;
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/spacepack_spacepack" {
   import { CoreExtensions } from "@moonlight-mod/types";
 

@@ -1,4 +1,5 @@
 import settings from "@moonlight-mod/wp/settings_settings";
+import redesign from "@moonlight-mod/wp/settings_redesign";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { Moonbase, pages, RestartAdviceMessage, Update } from "@moonlight-mod/wp/moonbase_ui";
@@ -7,6 +8,13 @@ import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { Text, Breadcrumbs } from "@moonlight-mod/wp/discord/components/common/index";
 import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
+import {
+  createSection,
+  createSidebarItem,
+  createPane,
+  createPanel
+} from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemCreators";
+import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
 
 const notice = {
   stores: [MoonbaseSettingsStore],
@@ -98,3 +106,24 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
     ))
   );
 }
+
+const redesignTitle = () => "moonlight";
+const redesignPane = createPane("moonbase_pane", {
+  useTitle: redesignTitle,
+  buildLayout: () => [],
+  render: Moonbase
+});
+const redesignPanel = createPanel("moonbase_panel", {
+  useTitle: redesignTitle,
+  buildLayout: () => [redesignPane]
+});
+const redesignSidebarItem = createSidebarItem("moonbase_item", {
+  icon: ThemeDarkIcon,
+  useTitle: redesignTitle,
+  useSearchTerms: () => ["moonlight", "moonbase", "plugins", "extensions"],
+  buildLayout: () => [redesignPanel]
+});
+const redesignSection = createSection("moonbase_section", {
+  buildLayout: () => [redesignSidebarItem]
+});
+redesign.addSection(redesignSection, oldLocation ? "logout" : "profile_panel", oldLocation!);

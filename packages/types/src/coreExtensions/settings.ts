@@ -1,5 +1,11 @@
 import React, { ReactElement } from "react";
 import type { Store } from "@moonlight-mod/mappings/discord/packages/flux/Store";
+import { ItemType } from "@moonlight-mod/mappings/discord/modules/user_settings/redesign/SettingsItemConstants";
+import type {
+  FinalizedItem,
+  GenericProps,
+  SectionProps
+} from "@moonlight-mod/mappings/discord/modules/user_settings/redesign/SettingsItemCreators";
 
 export type NoticeProps = {
   stores: Store<any>[];
@@ -77,4 +83,21 @@ export type Exports = {
    * @deprecated Use the default export
    */
   Settings: Settings;
+};
+
+export const SettingsRedesignItemType = ItemType;
+export type SectionAnchor = "profile_panel" | "user" | "billing" | "app" | "activity" | "developer" | "logout";
+export type RedesignSection = {
+  item: FinalizedItem<SectionProps, ItemType.SECTION>;
+  section: SectionAnchor | null;
+  before: boolean;
+};
+export type SettingsRedesign = {
+  ourSections: RedesignSection[];
+  addSection: (
+    item: FinalizedItem<SectionProps, ItemType.SECTION>,
+    section: SectionAnchor | null,
+    before: boolean
+  ) => void;
+  _mutateSections: (root: FinalizedItem<GenericProps, ItemType.ROOT>) => FinalizedItem<GenericProps, ItemType.ROOT>;
 };
