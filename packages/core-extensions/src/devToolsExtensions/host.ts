@@ -1,8 +1,7 @@
 import { app, session } from "electron";
 import { resolve } from "node:path";
-import Logger from "@moonlight-mod/core/util/logger";
 
-const logger = new Logger("DevTools Extensions");
+const logger = moonlightHost.getLogger("devToolsExtensions");
 
 app.whenReady().then(async () => {
   const paths = moonlightHost.getConfigOption<string[]>("devToolsExtensions", "paths") ?? [];
