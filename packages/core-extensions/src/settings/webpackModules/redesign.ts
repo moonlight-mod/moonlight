@@ -15,6 +15,9 @@ const Settings: SettingsRedesign = {
     });
   },
   _mutateSections: function (root) {
+    // @ts-expect-error injecting fields
+    if (root._moonlight) return root;
+
     const oldBuildLayout = root.buildLayout;
     root.buildLayout = () => {
       const sections = oldBuildLayout();
@@ -38,6 +41,8 @@ const Settings: SettingsRedesign = {
 
       return sections;
     };
+    // @ts-expect-error injecting fields
+    root._moonlight = true;
 
     return root;
   }
