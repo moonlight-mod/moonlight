@@ -1,5 +1,4 @@
 export const extensionsDir = "extensions";
-export const distDir = "dist";
 export const coreExtensionsDir = "core-extensions";
 export const repoUrlFile = ".moonlight-repo-url";
 export const installedVersionFile = ".moonlight-installed-version";
