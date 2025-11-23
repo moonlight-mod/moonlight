@@ -1,13 +1,8 @@
 ## Core
 
-- Injector now properly sets Electron metadata
-  - Fixes issues with uninjection between updates on Linux
+- Updated mappings to fix Notices
 
 ## Core extensions
 
-- Component Editor: Patch fix for new chat text area experiment (thanks @arHSM)
-- Settings and Moonbase: Support for redesigned settings
-
-## Nix Flake
-
-- Fix eval of deprecated packages to make `nix flake show` work again (thanks @keysmashes)
+- Moonbase: Improved update logic (thanks @slonkazoid!)
+- Moonbase: Fixed saving changes in redesigned settings
