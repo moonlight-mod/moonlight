@@ -106,7 +106,7 @@ export default function getNatives(): MoonbaseNatives {
       const dist = moonlightNode.getDistDir();
       if (!(await moonlightNodeSandboxed.fs.exists(dist))) await moonlightNodeSandboxed.fs.mkdir(dist);
       for (const entry of await moonlightNodeSandboxed.fs.readdir(dist)) {
-        await moonlightNodeSandboxed.fs.rmdir(entry);
+        await moonlightNodeSandboxed.fs.rmdir(moonlightNodeSandboxed.fs.join(dist, entry));
       }
 
       logger.debug("Extracting update");
