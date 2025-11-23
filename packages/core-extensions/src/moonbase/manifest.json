@@ -12,7 +12,7 @@
     "sections": {
       "advice": "reload",
       "displayName": "Split into sections",
-      "description": "Show the Moonbase tabs as separate sections",
+      "description": "Show the Moonbase tabs as separate sections (legacy settings only)",
       "type": "boolean",
       "default": false
     },

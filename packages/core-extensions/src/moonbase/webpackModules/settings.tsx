@@ -115,12 +115,13 @@ const redesignPane = createPane("moonbase_pane", {
 });
 const redesignPanel = createPanel("moonbase_panel", {
   useTitle: redesignTitle,
-  buildLayout: () => [redesignPane]
+  buildLayout: () => [redesignPane],
+  notice
 });
 const redesignSidebarItem = createSidebarItem("moonbase_item", {
   icon: ThemeDarkIcon,
   useTitle: redesignTitle,
-  useSearchTerms: () => ["moonlight", "moonbase", "plugins", "extensions"],
+  useSearchTerms: () => ["moonlight", "moonbase", "plugins", "extensions", "config"],
   buildLayout: () => [redesignPanel]
 });
 const redesignSection = createSection("moonbase_section", {
