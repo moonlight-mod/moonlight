@@ -55,7 +55,9 @@ async function injectGlobals() {
     isBrowser: false,
     events: createEventEmitter<NodeEventType, NodeEventPayloads>(),
 
+    // @ts-expect-error Set by esbuild
     version: MOONLIGHT_VERSION,
+    // @ts-expect-error Set by esbuild
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
     getConfig(ext) {

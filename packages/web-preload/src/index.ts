@@ -28,7 +28,9 @@ async function load() {
     },
     localStorage: window.localStorage,
 
+    // @ts-expect-error Set by esbuild
     version: MOONLIGHT_VERSION,
+    // @ts-expect-error Set by esbuild
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
     apiLevel: constants.apiLevel,
 

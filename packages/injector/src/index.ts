@@ -255,7 +255,9 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
       asarPath,
       events: new EventEmitter(),
 
+      // @ts-expect-error Set by esbuild
       version: MOONLIGHT_VERSION,
+      // @ts-expect-error Set by esbuild
       branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
       getConfig,

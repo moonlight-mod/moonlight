@@ -17,8 +17,10 @@ const browser = process.argv.includes("--browser");
 const mv2 = process.argv.includes("--mv2");
 const clean = process.argv.includes("--clean");
 
-const buildBranch = process.env.MOONLIGHT_BRANCH ?? "dev";
-const buildVersion = process.env.MOONLIGHT_VERSION ?? "dev";
+const define = {
+  MOONLIGHT_BRANCH: JSON.stringify(process.env.MOONLIGHT_BRANCH ?? "dev"),
+  MOONLIGHT_VERSION: JSON.stringify(process.env.MOONLIGHT_VERSION ?? "dev")
+};
 
 const external = [
   "electron",
@@ -96,21 +98,6 @@ async function build(name, entry) {
     }
   }
 
-  const define = {
-    MOONLIGHT_ENV: `"${name}"`,
-    MOONLIGHT_PROD: prod.toString(),
-    MOONLIGHT_BRANCH: `"${buildBranch}"`,
-    MOONLIGHT_VERSION: `"${buildVersion}"`
-  };
-
-  for (const iterName of ["injector", "node-preload", "web-preload", "browser"]) {
-    const snake = iterName.replace(/-/g, "_").toUpperCase();
-    define[`MOONLIGHT_${snake}`] = (name === iterName).toString();
-  }
-
-  const nodeDependencies = ["glob"];
-  const ignoredExternal = name === "web-preload" ? nodeDependencies : [];
-
   const plugins = [deduplicatedLogging, taggedBuildLog(name)];
   if (name === "browser") {
     plugins.push(
@@ -142,9 +129,7 @@ async function build(name, entry) {
     entryPoints: [entry],
     outfile,
 
-    format: "iife",
-    globalName: "module.exports",
-
+    format: ["web-preload", "browser"].includes(name) ? "iife" : "cjs",
     platform: ["web-preload", "browser"].includes(name) ? "browser" : "node",
 
     treeShaking: true,
@@ -152,8 +137,7 @@ async function build(name, entry) {
     minify: prod,
     sourcemap: "inline",
 
-    external: [...ignoredExternal, ...external],
-
+    external,
     define,
     dropLabels,
 
@@ -206,8 +190,22 @@ async function buildExt(ext, side, fileExt) {
     fs.mkdirSync(outdir, { recursive: true });
   }
 
-  const entryPoints = [`packages/core-extensions/src/${ext}/${side}.${fileExt}`];
+  const dropLabels = ["browser"];
+  const labels = {
+    injector: ["host"],
+    nodePreload: ["node"],
+    webPreload: ["index"],
 
+    webTarget: ["index"],
+    nodeTarget: ["node", "host"]
+  };
+  for (const [label, targets] of Object.entries(labels)) {
+    if (!targets.includes(side)) {
+      dropLabels.push(label);
+    }
+  }
+
+  const entryPoints = [`packages/core-extensions/src/${ext}/${side}.${fileExt}`];
   const wpModulesDir = `packages/core-extensions/src/${ext}/webpackModules`;
   if (fs.existsSync(wpModulesDir) && side === "index") {
     const wpModules = fs.opendirSync(wpModulesDir);
@@ -248,19 +246,18 @@ async function buildExt(ext, side, fileExt) {
     entryPoints,
     outdir,
 
-    format: "iife",
-    globalName: "module.exports",
-    platform: "node",
+    format: "cjs",
+    platform: side === "index" ? "browser" : "node",
 
     treeShaking: true,
     bundle: true,
-    sourcemap: prod ? false : "inline",
+    minify: prod,
+    sourcemap: "inline",
 
     external,
+    define,
+    dropLabels,
 
-    logOverride: {
-      "commonjs-variable-in-esm": "verbose"
-    },
     logLevel: "silent",
     plugins: [
       copyStaticFiles({

@@ -45,14 +45,12 @@ export default class Logger {
   }
 
   log(level: LogLevel, obj: any[]) {
-    let args = [];
     const logLevel = LogLevel[level].toUpperCase();
     if (maxLevel > level) return;
 
-    if (MOONLIGHT_WEB_PRELOAD || MOONLIGHT_BROWSER) {
+    let args = [`[${logLevel}]`, `[${this.name}]`, ...obj];
+    webTarget: {
       args = [`%c[${logLevel}]`, `background-color: ${colors[level]}; color: #FFFFFF;`, `[${this.name}]`, ...obj];
-    } else {
-      args = [`[${logLevel}]`, `[${this.name}]`, ...obj];
     }
 
     switch (level) {
