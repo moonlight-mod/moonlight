@@ -133,7 +133,6 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
   const coreExtensions = Array.from(new Set(Object.keys(coreExtensionsFs).map((x) => x.split("/")[0])));
 
   for (const ext of coreExtensions) {
-    if (!coreExtensionsFs[`${ext}/index.js`]) continue;
     const manifest = JSON.parse(coreExtensionsFs[`${ext}/manifest.json`]);
     const web = coreExtensionsFs[`${ext}/index.js`];
 

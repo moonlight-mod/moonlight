@@ -6,9 +6,8 @@ import {
   SelectOption,
   SelectSettingType
 } from "@moonlight-mod/types/config";
-
 import { ExtensionState, MoonbaseExtension } from "../../../types";
-
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import React from "@moonlight-mod/wp/react";
 import {
@@ -384,7 +383,7 @@ export default function Settings({ ext }: { ext: MoonbaseExtension }) {
           key={name}
           name={name}
           setting={setting}
-          disabled={ext.state === ExtensionState.NotDownloaded}
+          disabled={ext.state === ExtensionState.NotDownloaded || ext.compat === ExtensionCompat.InvalidEnvironment}
         />
       ))}
     </Flex>

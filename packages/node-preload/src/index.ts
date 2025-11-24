@@ -41,7 +41,7 @@ async function injectGlobals() {
   logger = new Logger("node-preload");
 
   const extensions = await getExtensions();
-  const processedExtensions = await loadExtensions(extensions);
+  const processedExtensions = await loadExtensions([...extensions]);
   const moonlightDir = await getMoonlightDir();
   const extensionsPath = await getExtensionsPath();
 

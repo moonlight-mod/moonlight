@@ -132,13 +132,8 @@ export enum ExtensionCompat {
 }
 
 export function checkExtensionCompat(manifest: ExtensionManifest): ExtensionCompat {
-  let environment;
-  webTarget: {
-    environment = ExtensionEnvironment.Web;
-  }
-  nodeTarget: {
-    environment = ExtensionEnvironment.Desktop;
-  }
+  const environment =
+    globalThis.moonlightNode && moonlightNode.isBrowser ? ExtensionEnvironment.Web : ExtensionEnvironment.Desktop;
 
   if (manifest.apiLevel !== constants.apiLevel) return ExtensionCompat.InvalidApiLevel;
   if ((manifest.environment ?? "both") !== "both" && manifest.environment !== environment)
