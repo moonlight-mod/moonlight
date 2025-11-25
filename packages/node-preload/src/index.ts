@@ -163,15 +163,30 @@ if (isOverlay) {
         process.emit("loaded");
 
         function replayScripts() {
-          const scripts = [...document.querySelectorAll("script")].filter(
-            (script) => script.src && blockedScripts.some((url) => url.includes(script.src))
-          );
+          const ignoreScripts = [
+            // We never blocked this in the first place
+            "popout.",
+            // We don't want this to load at all
+            "sentry."
+          ];
 
-          blockedScripts.reverse();
-          for (const url of blockedScripts) {
-            if (!url.includes("/web.")) continue;
+          const scripts = [...document.querySelectorAll("script")].filter((script) => {
+            if (!script.src) return false;
 
-            const script = scripts.find((script) => url.includes(script.src))!;
+            try {
+              const url = new URL(script.src);
+              const hasUrl =
+                url.pathname.match(/\/assets\/[a-zA-Z]+\./) &&
+                !url.searchParams.has("inj") &&
+                (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
+              const shouldIgnore = ignoreScripts.some((other) => url.pathname.startsWith(`/assets/${other}`));
+              return hasUrl && !shouldIgnore;
+            } catch {
+              return false;
+            }
+          });
+
+          for (const script of scripts) {
             const newScript = document.createElement("script");
             for (const attr of script.attributes) {
               if (attr.name === "src") attr.value += "?inj";
