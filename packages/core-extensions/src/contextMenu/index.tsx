@@ -9,7 +9,7 @@ export const patches: Patch[] = [
         replacement: (items, props) => `require("contextMenu_contextMenu")._patchMenu(${props},${items})`
       },
       {
-        match: /(?<=})(?=function (\i)\((\i)\){return \i\(\2\)\.)/,
+        match: /(?<=})(?=function (\i)\((\i),\i\){return \i\(\2\)\.)/,
         replacement: (_, name) => `exports.__contextMenu_parse=${name};`
       }
     ]
