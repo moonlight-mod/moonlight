@@ -6,6 +6,7 @@ export type WebpackRequireType = typeof MappingsWebpackRequire &
     c: Record<string, WebpackModule>;
     m: Record<string, WebpackModuleFunc>;
     e: (module: number | string) => Promise<void>;
+    __moonlight?: boolean;
   };
 
 export type WebpackModule = {
