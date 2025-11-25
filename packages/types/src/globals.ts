@@ -32,6 +32,7 @@ export type MoonlightHost = {
   getLogger: (id: string) => Logger;
   getMoonlightDir: () => string;
   getExtensionDir: (ext: string) => string;
+  getDistDir: () => string;
 };
 
 export type MoonlightNode = {

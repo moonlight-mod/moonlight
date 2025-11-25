@@ -283,6 +283,9 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
       },
       getExtensionDir: (ext: string) => {
         return path.join(extensionsPath, ext);
+      },
+      getDistDir() {
+        return module.path;
       }
     };
 
