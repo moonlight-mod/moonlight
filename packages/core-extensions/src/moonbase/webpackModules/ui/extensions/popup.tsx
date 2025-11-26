@@ -8,7 +8,7 @@ import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
-let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").default;
+let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").ConfirmModal;
 
 function close() {
   const ModalStore = useModalsStore.getState();
@@ -18,7 +18,7 @@ function close() {
 // do this to avoid a hard dependency
 function lazyLoad() {
   if (!ConfirmModal) {
-    ConfirmModal = spacepack.require("discord/components/modals/ConfirmModal").default;
+    ConfirmModal = spacepack.require("discord/components/modals/ConfirmModal").ConfirmModal;
   }
 }
 
@@ -80,59 +80,6 @@ function MissingExtensionPopup({
 
   return (
     <ConfirmModal
-      body={
-        <Flex
-          style={{
-            gap: "20px"
-          }}
-          direction={Flex.Direction.VERTICAL}
-        >
-          <Text variant="text-md/normal">
-            This extension depends on other extensions which are not downloaded. Choose which extensions to download.
-          </Text>
-
-          {amountNotAvailable > 0 && (
-            <Text variant="text-md/normal">
-              {amountNotAvailable} extension
-              {amountNotAvailable > 1 ? "s" : ""} could not be found, and must be installed manually.
-            </Text>
-          )}
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 2fr",
-              gap: "10px"
-            }}
-          >
-            {Object.entries(deps).map(([id, candidates], i) => (
-              <>
-                <Text
-                  variant="text-md/normal"
-                  style={{
-                    alignSelf: "center",
-                    wordBreak: "break-word"
-                  }}
-                >
-                  {MoonbaseSettingsStore.tryGetExtensionName(id)}
-                </Text>
-
-                <ExtensionSelect
-                  id={id}
-                  candidates={candidates}
-                  option={options[id]}
-                  setOption={(pick) =>
-                    setOptions((prev) => ({
-                      ...prev,
-                      [id]: pick
-                    }))
-                  }
-                />
-              </>
-            ))}
-          </div>
-        </Flex>
-      }
       cancelText="Cancel"
       confirmText="Install"
       onCancel={close}
@@ -145,9 +92,61 @@ function MissingExtensionPopup({
           }
         }
       }}
-      title="Extension dependencies"
+      header="Extension dependencies"
       transitionState={transitionState}
-    />
+    >
+      <Flex
+        style={{
+          gap: "20px"
+        }}
+        direction={Flex.Direction.VERTICAL}
+      >
+        <Text variant="text-md/normal">
+          This extension depends on other extensions which are not downloaded. Choose which extensions to download.
+        </Text>
+
+        {amountNotAvailable > 0 && (
+          <Text variant="text-md/normal">
+            {amountNotAvailable} extension
+            {amountNotAvailable > 1 ? "s" : ""} could not be found, and must be installed manually.
+          </Text>
+        )}
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 2fr",
+            gap: "10px"
+          }}
+        >
+          {Object.entries(deps).map(([id, candidates], i) => (
+            <>
+              <Text
+                variant="text-md/normal"
+                style={{
+                  alignSelf: "center",
+                  wordBreak: "break-word"
+                }}
+              >
+                {MoonbaseSettingsStore.tryGetExtensionName(id)}
+              </Text>
+
+              <ExtensionSelect
+                id={id}
+                candidates={candidates}
+                option={options[id]}
+                setOption={(pick) =>
+                  setOptions((prev) => ({
+                    ...prev,
+                    [id]: pick
+                  }))
+                }
+              />
+            </>
+          ))}
+        </div>
+      </Flex>
+    </ConfirmModal>
   );
 }
 
@@ -176,12 +175,7 @@ function GenericExtensionPopup({
 
   return (
     <ConfirmModal
-      title={title}
-      body={
-        <Flex>
-          <Text variant="text-md/normal">{content}</Text>
-        </Flex>
-      }
+      header={title}
       confirmText="Yes"
       cancelText="No"
       onCancel={close}
@@ -190,7 +184,11 @@ function GenericExtensionPopup({
         cb();
       }}
       transitionState={transitionState}
-    />
+    >
+      <Flex>
+        <Text variant="text-md/normal">{content}</Text>
+      </Flex>
+    </ConfirmModal>
   );
 }
 

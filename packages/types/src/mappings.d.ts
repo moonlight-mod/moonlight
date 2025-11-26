@@ -273,8 +273,7 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
 
 declare module "@moonlight-mod/wp/discord/components/modals/ConfirmModal" {
   import { MappedModules } from "@moonlight-mod/mappings";
-  const _default: MappedModules["discord/components/modals/ConfirmModal"]["default"];
-  export default _default;
+  export const ConfirmModal: MappedModules["discord/components/modals/ConfirmModal"]["ConfirmModal"];
 }
 
 declare module "@moonlight-mod/wp/discord/lib/BaseRecord" {

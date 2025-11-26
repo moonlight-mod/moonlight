@@ -41,8 +41,8 @@ catalogs:
       specifier: ^1.0.1
       version: 1.0.1
     '@moonlight-mod/mappings':
-      specifier: ^1.1.44
-      version: 1.1.44
+      specifier: ^1.1.45
+      version: 1.1.45
     '@moonlight-mod/moonmap':
       specifier: ^1.0.6
       version: 1.0.6
@@ -158,8 +158,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       '@moonlight-mod/mappings':
-        specifier: ^1.1.44
-        version: 1.1.44(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
+        specifier: ^1.1.45
+        version: 1.1.45(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
       '@moonlight-mod/moonmap':
         specifier: ^1.0.6
         version: 1.0.6
@@ -183,7 +183,7 @@ importers:
         version: 1.0.1
       '@moonlight-mod/mappings':
         specifier: catalog:prod
-        version: 1.1.44(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
+        version: 1.1.45(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)
       '@moonlight-mod/moonmap':
         specifier: catalog:prod
         version: 1.0.6
@@ -405,8 +405,8 @@ packages:
   '@moonlight-mod/lunast@1.0.1':
     resolution: {integrity: sha512-K3vxzDlfFuYKjciIW2FMlcZ1qrrkAGDGpSBlNqYGtJ0sMt9bRCd2lpSpg6AX/giSljDtmAUXa/5mOfUoDQxjBA==}
 
-  '@moonlight-mod/mappings@1.1.44':
-    resolution: {integrity: sha512-Ku/YbY0PSuu7G3sRivPecAXIIH8pJejJSWZV5mWMAZHD/HWU1End5JR76WSAtthm6PRVkUAfM9cQxSVC08IyJg==}
+  '@moonlight-mod/mappings@1.1.45':
+    resolution: {integrity: sha512-jOlYachyHSRIjNh2yKQ5Iv27SB4zwXzDGPBdDnKdTFnr/kWpzwkSKOVMRLgGlQqzY06fkzHJ8/LkxCqAOamvMA==}
     engines: {node: '>=22', npm: pnpm, pnpm: '>=10', yarn: pnpm}
     peerDependencies:
       '@moonlight-mod/lunast': ^1.0.1
@@ -435,8 +435,8 @@ packages:
     resolution: {integrity: sha512-ezIadUb1aFhwJLd++WVqVpi9rnlX8vnd4ju7saPhwLHJN1mJgOv0puePTGV+FbtSnWtwoHDT8lAm4kagDZmpCg==}
     engines: {node: '>=20.0.0'}
 
-  '@types/chroma-js@3.1.1':
-    resolution: {integrity: sha512-SFCr4edNkZ1bGaLzGz7rgR1bRzVX4MmMxwsIa3/Bh6ose8v+hRpneoizHv0KChdjxaXyjRtaMq7sCuZSzPomQA==}
+  '@types/chroma-js@3.1.2':
+    resolution: {integrity: sha512-YBTQqArPN8A0niHXCwrO1z5x++a+6l0mLBykncUpr23oIPW7L4h39s6gokdK/bDrPmSh8+TjMmrhBPnyiaWPmQ==}
 
   '@types/chrome@0.0.313':
     resolution: {integrity: sha512-9R5T7gTaYZhkxlu+Ho4wk9FL+y/werWQY2yjGWSqCuiTsqS7nL/BE5UMTP6rU7J+oIG2FRKqrEycHhJATeltVA==}
@@ -462,8 +462,8 @@ packages:
   '@types/filewriter@0.0.33':
     resolution: {integrity: sha512-xFU8ZXTw4gd358lb2jw25nxY9QAgqn2+bKKjKOYfNCzN4DKCFetK7sPtrlpg66Ywe3vWY9FNxprZawAh9wfJ3g==}
 
-  '@types/flux@3.1.14':
-    resolution: {integrity: sha512-WRXN0kQPCnqxN0/PgNgc7WBF6c8rbSHsEep3/qBLpsQ824RONdOmTs0TV7XhIW2GDNRAHO2CqCgAFLR5PChosw==}
+  '@types/flux@3.1.15':
+    resolution: {integrity: sha512-CfmpQUUh7y0hFhrekHoBGZiVX7V5UCNvxUsTqBMA/JOyO72Vh2pGIID/i0YEfLAVx4yAzAhlmTUlgFNVjZF5UQ==}
 
   '@types/har-format@1.2.16':
     resolution: {integrity: sha512-fluxdy7ryD3MV6h8pTfTYpy/xQzCFC7m89nOH9y94cNqJ1mDIDPut7MnRHI3F6qRmh/cT2fUjG1MLdCNb4hE9A==}
@@ -474,8 +474,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/lodash@4.17.20':
-    resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
+  '@types/lodash@4.17.21':
+    resolution: {integrity: sha512-FOvQ0YPD5NOfPgMzJihoT+Za5pdkDJWcbpuj1DjaKZIr/gxodQjY/uWEFlTNqW2ugXHUiL8lRQgw63dzKHZdeQ==}
 
   '@types/node@18.17.17':
     resolution: {integrity: sha512-cOxcXsQ2sxiwkykdJqvyFS+MLQPLvIdwh5l6gNg8qF6s+C7XSkEWOZjK+XhUZd+mYvHV/180g2cnCcIl4l06Pw==}
@@ -1737,14 +1737,14 @@ snapshots:
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
 
-  '@moonlight-mod/mappings@1.1.44(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)':
+  '@moonlight-mod/mappings@1.1.45(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.6)':
     dependencies:
       '@moonlight-mod/lunast': 1.0.1
       '@moonlight-mod/moonmap': 1.0.6
-      '@types/chroma-js': 3.1.1
-      '@types/flux': 3.1.14
+      '@types/chroma-js': 3.1.2
+      '@types/flux': 3.1.15
       '@types/highlightjs': 9.12.6
-      '@types/lodash': 4.17.20
+      '@types/lodash': 4.17.21
       '@types/platform': 1.3.6
       '@types/react': 19.1.2
       csstype: 3.1.3
@@ -1774,7 +1774,7 @@ snapshots:
     dependencies:
       quansync: 0.2.10
 
-  '@types/chroma-js@3.1.1': {}
+  '@types/chroma-js@3.1.2': {}
 
   '@types/chrome@0.0.313':
     dependencies:
@@ -1803,7 +1803,7 @@ snapshots:
 
   '@types/filewriter@0.0.33': {}
 
-  '@types/flux@3.1.14':
+  '@types/flux@3.1.15':
     dependencies:
       '@types/fbemitter': 2.0.35
       '@types/react': 19.1.2
@@ -1814,7 +1814,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/lodash@4.17.20': {}
+  '@types/lodash@4.17.21': {}
 
   '@types/node@18.17.17': {}
 
