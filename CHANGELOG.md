@@ -1,8 +1,9 @@
 ## Core
 
-- Updated mappings to fix Notices
+- Updated mappings to fix Moonbase
 
 ## Core extensions
 
-- Moonbase: Improved update logic (thanks @slonkazoid!)
-- Moonbase: Fixed saving changes in redesigned settings
+- Context Menu: Fixed for latest Discord (thanks @arHSM!)
+- Moonbase: Fixed updating moonlight via the system tray
+- Moonbase: Fixed the extension compatibility check
