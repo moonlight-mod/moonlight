@@ -13,7 +13,7 @@ export const patches: Patch[] = [
   },
   // dm list
   {
-    find: ".interactiveSystemDM]:",
+    find: ".ImpressionNames.DM_LIST_RIGHT_CLICK_MENU_SHOWN",
     replace: [
       {
         match: /decorators:(\i\.isSystemDM\(\)\?\(0,\i\.jsx\)\(.+?verified:!0}\):null)/,
