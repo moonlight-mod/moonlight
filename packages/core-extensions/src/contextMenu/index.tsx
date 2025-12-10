@@ -9,7 +9,7 @@ export const patches: Patch[] = [
         replacement: (items, props) => `require("contextMenu_contextMenu")._patchMenu(${props},${items})`
       },
       {
-        match: /(?<=})(?=function (\i)\((\i),\i\){return \i\(\2\)\.)/,
+        match: /(?<=})(?=function (\i)\(\i\){return \i\(\i\)\.reduce\()/,
         replacement: (_, name) => `exports.__contextMenu_parse=${name};`
       }
     ]
@@ -25,7 +25,7 @@ export const patches: Patch[] = [
   },
   {
     // Special handling for message action popouts
-    find: "MESSAGE_POPOUT_MENU_OPENED_DESKTOP,{",
+    find: 'location:"expanding_buttons"',
     replace: [
       {
         match: /(?<=function \i\((\i)\){)(?=let{channel:\i,message:\i,canCopy:\i)/,
