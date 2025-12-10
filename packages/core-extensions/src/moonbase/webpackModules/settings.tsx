@@ -111,7 +111,8 @@ const redesignTitle = () => "moonlight";
 const redesignPane = createPane("moonbase_pane", {
   useTitle: redesignTitle,
   buildLayout: () => [],
-  render: Moonbase
+  // @ts-expect-error discord :(
+  StronglyDiscouragedCustomComponent: Moonbase
 });
 const redesignPanel = createPanel("moonbase_panel", {
   useTitle: redesignTitle,

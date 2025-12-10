@@ -19,9 +19,9 @@ export const patches: Patch[] = [
   },
 
   {
-    find: ".getUserSettingsSectionsByWebUserSettings)().get",
+    find: '.useField("currentPanelKey")',
     replace: {
-      match: /({node:\i,directory:\i}=\(0,\i\.\i\)\()(\i\.\i),/,
+      match: /({node:\i,visibleDirectory:\i,accessibleDirectory:\i}=\(0,\i\.\i\)\()(\i),/,
       replacement: (_, orig, sections) => `${orig}require("settings_redesign").default._mutateSections(${sections}),`
     }
   }
