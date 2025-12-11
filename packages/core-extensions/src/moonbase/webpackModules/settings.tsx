@@ -11,7 +11,6 @@ import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 import {
   createSection,
   createSidebarItem,
-  createPane,
   createPanel
 } from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemCreators";
 import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
@@ -108,15 +107,11 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
 }
 
 const redesignTitle = () => "moonlight";
-const redesignPane = createPane("moonbase_pane", {
+const redesignPanel = createPanel("moonbase_panel", {
   useTitle: redesignTitle,
   buildLayout: () => [],
   // @ts-expect-error discord :(
-  StronglyDiscouragedCustomComponent: Moonbase
-});
-const redesignPanel = createPanel("moonbase_panel", {
-  useTitle: redesignTitle,
-  buildLayout: () => [redesignPane],
+  StronglyDiscouragedCustomComponent: Moonbase,
   notice
 });
 const redesignSidebarItem = createSidebarItem("moonbase_item", {
