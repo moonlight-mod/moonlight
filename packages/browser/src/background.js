@@ -7,7 +7,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 
     const url = new URL(details.url);
     const hasUrl =
-      url.pathname.match(/\/assets\/[a-zA-Z]+\./) &&
+      url.pathname.match(/\/assets\/[a-zA-Z\-]+\./) &&
       !url.searchParams.has("inj") &&
       (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
 
