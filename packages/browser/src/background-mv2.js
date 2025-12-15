@@ -5,6 +5,13 @@ chrome.webRequest.onBeforeRequest.addListener(
   async (details) => {
     if (details.tabId === -1) return;
 
+    const origin = new URL(details.originUrl);
+    if (
+      (origin.host.endsWith("discord.com") || origin.host.endsWith("discordapp.com")) &&
+      url.pathname.match(/^\/developers\//)
+    )
+      return;
+
     const url = new URL(details.url);
     const hasUrl =
       url.pathname.match(/\/assets\/[a-zA-Z\-]+\./) &&
