@@ -8,7 +8,7 @@ chrome.webRequest.onBeforeRequest.addListener(
     const origin = new URL(details.originUrl);
     if (
       (origin.host.endsWith("discord.com") || origin.host.endsWith("discordapp.com")) &&
-      url.pathname.match(/^\/developers\//)
+      origin.pathname.match(/^\/developers\//)
     )
       return;
 
