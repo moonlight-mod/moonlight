@@ -6,9 +6,9 @@ export const patches: Patch[] = [
     replace: [
       // replace reporting line with update status
       {
-        // CvQlAA mapped to ERRORS_ACTION_TO_TAKE
+        // CvQlAH mapped to ERRORS_ACTION_TO_TAKE
         // FIXME: Better patch find?
-        match: /,(\(0,(\i)\.jsx\))\("p",{children:\i\.\i\.string\(\i\.\i\.CvQlAA\)}\)/,
+        match: /,(\(0,(\i)\.jsx\))\("p",{children:\i\.intl\.string\(\i\.t\.CvQlAH\)}\)/,
         replacement: (_, createElement, ReactJSX) =>
           `,${createElement}(require("moonbase_crashScreen")?.UpdateText??${ReactJSX}.Fragment,{state:this.state,setState:this.setState.bind(this)})`
       },
@@ -21,9 +21,8 @@ export const patches: Patch[] = [
       },
 
       // add update button
-      // +hivLS -> ERRORS_RELOAD
       {
-        match: /(?<=\["\+hivLS"\]\)}\),(\(0,(\i)\.jsx\))\(\i,{}\))/,
+        match: /(?<=,onClick:this\._handleSubmitReport}\),(\(0,(\i)\.jsx\))\(\i,{}\))/,
         replacement: (_, createElement, ReactJSX) =>
           `,${createElement}(require("moonbase_crashScreen")?.UpdateButton??${ReactJSX}.Fragment,{state:this.state,setState:this.setState.bind(this)})`
       }
@@ -94,7 +93,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { ext: "moonbase", id: "stores" },
       { id: "discord/packages/flux" },
       { id: "discord/components/common/index" },
-      /tabBar:"tabBar_[a-z0-9]+",tabBarItem:"tabBarItem_[a-z0-9]+"/
+      { id: "discord/modules/discovery/web/Discovery.css" }
     ]
   }
 };
