@@ -3,11 +3,11 @@ import redesign from "@moonlight-mod/wp/settings_redesign";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { Moonbase, pages, RestartAdviceMessage, Update } from "@moonlight-mod/wp/moonbase_ui";
-import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
+//import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { Text, Breadcrumbs } from "@moonlight-mod/wp/discord/components/common/index";
-import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
+//import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 import {
   createSection,
   createSidebarItem,
@@ -64,10 +64,11 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
 
   const _pages = oldLocation ? pages : pages.reverse();
   for (const page of _pages) {
-    addSection(page.id, page.name, () => {
+    const id = `moonbase-${page.id}`;
+    addSection(id, page.name, () => {
       const breadcrumbs = [
         { id: "moonbase", label: "Moonbase" },
-        { id: page.id, label: page.name }
+        { id, label: page.name }
       ];
       return (
         <>
@@ -75,7 +76,7 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
             className={Margins.marginBottom20}
             renderCustomBreadcrumb={renderBreadcrumb}
             breadcrumbs={breadcrumbs}
-            activeId={page.id}
+            activeId={id}
           >
             {page.name}
           </Breadcrumbs>
@@ -93,7 +94,7 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
 } else {
   settings.addSection("moonbase", "moonlight", Moonbase, null, position, notice);
 
-  settings.addSectionMenuItems(
+  /*settings.addSectionMenuItems(
     "moonbase",
     ...pages.map((page, i) => (
       <MenuItem
@@ -103,7 +104,7 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
         action={() => UserSettingsModalActionCreators.open("moonbase", i.toString())}
       />
     ))
-  );
+  );*/
 }
 
 const redesignTitle = () => "moonlight";
@@ -124,3 +125,8 @@ const redesignSection = createSection("moonbase_section", {
   buildLayout: () => [redesignSidebarItem]
 });
 redesign.addSection(redesignSection, oldLocation ? "logout" : "profile_panel", oldLocation!);
+
+redesign.addAlias("moonbase", "moonbase_panel");
+for (const page of pages) {
+  redesign.addAlias(`moonbase-${page.id}`, "moonbase_panel");
+}

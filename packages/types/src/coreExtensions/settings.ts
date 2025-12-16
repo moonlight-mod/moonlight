@@ -94,10 +94,12 @@ export type RedesignSection = {
 };
 export type SettingsRedesign = {
   ourSections: RedesignSection[];
+  aliases: Record<string, string>;
   addSection: (
     item: FinalizedItem<SectionProps, ItemType.SECTION>,
     section: SectionAnchor | null,
     before: boolean
   ) => void;
+  addAlias: (oldName: string, newName: string) => void;
   _mutateSections: (root: FinalizedItem<GenericProps, ItemType.ROOT>) => FinalizedItem<GenericProps, ItemType.ROOT>;
 };

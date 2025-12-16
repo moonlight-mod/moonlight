@@ -4,6 +4,7 @@ const SectionAnchorIndicies = ["profile_panel", "user", "billing", "app", "activ
 
 const Settings: SettingsRedesign = {
   ourSections: [],
+  aliases: {},
   addSection: function (item, section = null, before = false) {
     // for normal javascript just in case
     if (item.type !== ItemType.SECTION) throw "Tried to call addSection with a non-section item.";
@@ -13,6 +14,9 @@ const Settings: SettingsRedesign = {
       section,
       before
     });
+  },
+  addAlias: function (oldName, newName) {
+    Settings.aliases[oldName] = newName;
   },
   _mutateSections: function (root) {
     // @ts-expect-error injecting fields
