@@ -19,6 +19,9 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Build moonlight
@@ -27,6 +30,4 @@ jobs:
         run: pnpm run build
 
       - name: Publish types
-        run: pnpm publish --filter=./packages/types --access public --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: pnpm publish --filter=./packages/types --access public --no-git-checks --provenance
