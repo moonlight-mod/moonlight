@@ -20,10 +20,6 @@ import {
   Clickable,
   CircleXIcon,
   Text,
-  SingleSelect,
-  useVariableSelect,
-  multiSelect,
-  Select as DiscordSelect,
   NumberInputStepper
 } from "@moonlight-mod/wp/discord/components/common/index";
 import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
@@ -33,6 +29,12 @@ import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
+import {
+  SingleSelect,
+  useVariableSelect,
+  multiSelect,
+  Select as DiscordSelect
+} from "@moonlight-mod/wp/discord/components/common/Select";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack

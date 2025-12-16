@@ -160,6 +160,15 @@ declare module "@moonlight-mod/wp/discord/components/common/Scroller.css" {
   export const thin: MappedModules["discord/components/common/Scroller.css"]["thin"];
 }
 
+declare module "@moonlight-mod/wp/discord/components/common/Select" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const SingleSelect: MappedModules["discord/components/common/Select"]["SingleSelect"];
+  export const Select: MappedModules["discord/components/common/Select"]["Select"];
+  export const useVariableSelect: MappedModules["discord/components/common/Select"]["useVariableSelect"];
+  export const useMultiSelect: MappedModules["discord/components/common/Select"]["useMultiSelect"];
+  export const multiSelect: MappedModules["discord/components/common/Select"]["multiSelect"];
+}
+
 declare module "@moonlight-mod/wp/discord/components/common/index" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const Clickable: MappedModules["discord/components/common/index"]["Clickable"];
@@ -184,8 +193,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const Dialog: MappedModules["discord/components/common/index"]["Dialog"];
   export const Menu: MappedModules["discord/components/common/index"]["Menu"];
   export const TabBar: MappedModules["discord/components/common/index"]["TabBar"];
-  export const SingleSelect: MappedModules["discord/components/common/index"]["SingleSelect"];
-  export const Select: MappedModules["discord/components/common/index"]["Select"];
   export const NoticeColors: MappedModules["discord/components/common/index"]["NoticeColors"];
   export const Notice: MappedModules["discord/components/common/index"]["Notice"];
   export const NoticeCloseButton: MappedModules["discord/components/common/index"]["NoticeCloseButton"];
@@ -193,9 +200,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const Breadcrumbs: MappedModules["discord/components/common/index"]["Breadcrumbs"];
   export const Image: MappedModules["discord/components/common/index"]["Image"];
   export const tokens: MappedModules["discord/components/common/index"]["tokens"];
-  export const useVariableSelect: MappedModules["discord/components/common/index"]["useVariableSelect"];
-  export const useMultiSelect: MappedModules["discord/components/common/index"]["useMultiSelect"];
-  export const multiSelect: MappedModules["discord/components/common/index"]["multiSelect"];
   export const openModal: MappedModules["discord/components/common/index"]["openModal"];
   export const openModalLazy: MappedModules["discord/components/common/index"]["openModalLazy"];
   export const closeModal: MappedModules["discord/components/common/index"]["closeModal"];
@@ -259,7 +263,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const HelpMessageTypes: MappedModules["discord/components/common/index"]["HelpMessageTypes"];
   export const ModalSize: MappedModules["discord/components/common/index"]["ModalSize"];
   export const ModalTransitionState: MappedModules["discord/components/common/index"]["ModalTransitionState"];
-  export const SelectLooks: MappedModules["discord/components/common/index"]["SelectLooks"];
   export const SpinnerTypes: MappedModules["discord/components/common/index"]["SpinnerTypes"];
   export const StatusTypes: MappedModules["discord/components/common/index"]["StatusTypes"];
   export const ToastPosition: MappedModules["discord/components/common/index"]["ToastPosition"];

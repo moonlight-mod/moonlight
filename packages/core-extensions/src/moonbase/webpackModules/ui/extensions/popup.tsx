@@ -1,24 +1,20 @@
 // TODO: clean up the styling here
 import React from "@moonlight-mod/wp/react";
 import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
-import { openModalLazy, useModalsStore, closeModal } from "@moonlight-mod/wp/discord/modules/modals/Modals";
-import { SingleSelect, Text } from "@moonlight-mod/wp/discord/components/common/index";
+import { openModalLazy } from "@moonlight-mod/wp/discord/modules/modals/Modals";
+import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { ExtensionLoadSource } from "@moonlight-mod/types";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { SingleSelect } from "@moonlight-mod/wp/discord/components/common/Select";
 
 let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").ConfirmModal;
-
-function close() {
-  const ModalStore = useModalsStore.getState();
-  closeModal(ModalStore.default[0].key);
-}
 
 // do this to avoid a hard dependency
 function lazyLoad() {
   if (!ConfirmModal) {
-    ConfirmModal = spacepack.require("discord/components/modals/ConfirmModal").ConfirmModal;
+    ConfirmModal = (spacepack.require("discord/components/modals/ConfirmModal") as any).VoidConfirmModal;
   }
 }
 
@@ -61,10 +57,12 @@ function ExtensionSelect({
 
 function MissingExtensionPopup({
   deps,
-  transitionState
+  transitionState,
+  onClose
 }: {
   deps: Record<string, MoonbaseExtension[]>;
   transitionState: number | null;
+  onClose: () => void;
 }) {
   lazyLoad();
   const amountNotAvailable = Object.values(deps).filter((candidates) => candidates.length === 0).length;
@@ -82,18 +80,16 @@ function MissingExtensionPopup({
     <ConfirmModal
       cancelText="Cancel"
       confirmText="Install"
-      onCancel={close}
       onConfirm={() => {
-        close();
-
         for (const pick of Object.values(options)) {
           if (pick != null) {
-            MoonbaseSettingsStore.installExtension(parseInt(pick));
+            MoonbaseSettingsStore.installExtension(parseInt(pick as string));
           }
         }
       }}
       header="Extension dependencies"
       transitionState={transitionState}
+      onClose={onClose}
     >
       <Flex
         style={{
@@ -136,7 +132,7 @@ function MissingExtensionPopup({
                 candidates={candidates}
                 option={options[id]}
                 setOption={(pick) =>
-                  setOptions((prev) => ({
+                  setOptions((prev: any) => ({
                     ...prev,
                     [id]: pick
                   }))
@@ -152,8 +148,8 @@ function MissingExtensionPopup({
 
 export async function doMissingExtensionPopup(deps: Record<string, MoonbaseExtension[]>) {
   await openModalLazy(async () => {
-    return ({ transitionState }: { transitionState: number | null }) => {
-      return <MissingExtensionPopup transitionState={transitionState} deps={deps} />;
+    return ({ transitionState, onClose }: { transitionState: number | null; onClose: () => void }) => {
+      return <MissingExtensionPopup transitionState={transitionState} onClose={onClose} deps={deps} />;
     };
   });
 }
@@ -162,12 +158,14 @@ function GenericExtensionPopup({
   title,
   content,
   transitionState,
+  onClose,
   uniqueId,
   cb
 }: {
   title: string;
   content: string;
   transitionState: number | null;
+  onClose: () => void;
   uniqueId: number;
   cb: () => void;
 }) {
@@ -178,11 +176,8 @@ function GenericExtensionPopup({
       header={title}
       confirmText="Yes"
       cancelText="No"
-      onCancel={close}
-      onConfirm={() => {
-        close();
-        cb();
-      }}
+      onClose={onClose}
+      onConfirm={cb}
       transitionState={transitionState}
     >
       <Flex>
@@ -194,7 +189,7 @@ function GenericExtensionPopup({
 
 export async function doGenericExtensionPopup(title: string, content: string, uniqueId: number, cb: () => void) {
   await openModalLazy(async () => {
-    return ({ transitionState }: { transitionState: number | null }) => {
+    return ({ transitionState, onClose }: { transitionState: number | null; onClose: () => void }) => {
       return (
         <GenericExtensionPopup
           title={title}
@@ -202,6 +197,7 @@ export async function doGenericExtensionPopup(title: string, content: string, un
           transitionState={transitionState}
           uniqueId={uniqueId}
           cb={cb}
+          onClose={onClose}
         />
       );
     };
