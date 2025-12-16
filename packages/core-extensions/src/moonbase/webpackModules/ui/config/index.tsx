@@ -20,6 +20,7 @@ import { CircleXIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack
@@ -105,7 +106,7 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
 
 export default function ConfigPage() {
   return (
-    <>
+    <ErrorBoundary>
       <div className={Margins.marginTop20}>
         <FormSwitch
           checked={MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "updateChecking", true) ?? true}
@@ -150,6 +151,6 @@ export default function ConfigPage() {
           onChange={(v) => MoonbaseSettingsStore.setConfigOption("loggerLevel", v)}
         />
       </FormItem>
-    </>
+    </ErrorBoundary>
   );
 }
