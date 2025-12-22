@@ -3,6 +3,8 @@
   stdenv,
   nodejs_22,
   pnpm_10,
+  pnpmConfigHook,
+  fetchPnpmDeps
 }:
 
 stdenv.mkDerivation (finalAttrs: {
@@ -18,10 +20,11 @@ stdenv.mkDerivation (finalAttrs: {
 
   nativeBuildInputs = [
     nodejs_22
-    pnpm_10.configHook
+    pnpm_10
+    pnpmConfigHook
   ];
 
-  pnpmDeps = pnpm_10.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
     fetcherVersion = 1;
     hash = "sha256-N17I77VMs8zkB4LZaIJDWQXx7gxFx0xbZAUgbtHMAX0=";
