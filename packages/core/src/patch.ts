@@ -113,8 +113,18 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     if (func.__moonlight === true) continue;
 
     // Clone the module string so finds don't get messed up by other extensions
-    const origModuleString = moduleCache[id];
+    let origModuleString = moduleCache[id];
+    if (!origModuleString.startsWith("function")) {
+      const start = origModuleString.indexOf("(");
+      if (start > -1) {
+        origModuleString = "function" + origModuleString.substring(start);
+        moduleCache[id] = origModuleString;
+      } else {
+        throw new Error(`Failed to find start of module "${id}"!`);
+      }
+    }
     let moduleString = origModuleString;
+
     const patchedStr = [];
     const mappedName = Object.entries(moonlight.moonmap.modules).find((m) => m[1] === id)?.[0];
     let modified = false;
