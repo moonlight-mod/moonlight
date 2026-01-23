@@ -162,9 +162,9 @@ textarea.moonbase-resizeable {
 
 .moonbase-crash-details-wrapper {
   overflow-y: scroll;
-  color: var(--text-normal);
-  background: var(--background-secondary);
-  border: 1px solid var(--background-tertiary);
+  color: var(--text-default);
+  background: var(--background-code);
+  border: 1px solid var(--border-normal);
   border-radius: 4px;
   padding: 0.5em;
 
@@ -236,9 +236,9 @@ textarea.moonbase-resizeable {
 }
 
 .moonbase-crash-extensionCard {
-  color: var(--text-normal);
-  background: var(--background-secondary);
-  border: 1px solid var(--background-tertiary);
+  color: var(--text-default);
+  background: var(--background-base-low);
+  border: 1px solid var(--border-normal);
   border-radius: 4px;
   padding: 0.5em;
   display: flex;
