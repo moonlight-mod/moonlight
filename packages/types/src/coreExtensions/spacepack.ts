@@ -80,6 +80,14 @@ export type Spacepack = {
   ) => Function | null;
 
   /**
+   * Finds an object from a module's exports by a substring of string values
+   * @param exports Exports from a Webpack module
+   * @param find The substring to find with
+   * returns The object, if found
+   */
+  findObjectFromValueSubstring: (exports: Record<string, any>, find: string) => any | null;
+
+  /**
    * Lazy load a Webpack module.
    * @param find A list of finds to discover a target module with
    * @param chunk A RegExp to match chunks to load

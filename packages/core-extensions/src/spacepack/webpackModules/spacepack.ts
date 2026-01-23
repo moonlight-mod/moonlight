@@ -166,7 +166,7 @@ export const spacepack: Spacepack = {
       );
     }
 
-    return null;
+    return ret;
   },
 
   findFunctionByStrings: (exports: Record<string, any>, ...strings: (string | RegExp)[]) => {
@@ -178,6 +178,23 @@ export const spacepack: Spacepack = {
 
     if (ret == null) {
       logger.warn("Failed to find function by strings", strings, "in", exports, new Error().stack!.substring(5));
+    }
+
+    return ret;
+  },
+
+  findObjectFromValueSubstring: (exports: Record<string, any>, find: string) => {
+    let ret = null;
+    for (const exportKey in exports) {
+      const obj = exports[exportKey];
+      if (typeof obj !== "string") continue;
+      if (obj.indexOf(find) > -1) {
+        ret = obj;
+      }
+    }
+
+    if (ret == null) {
+      logger.warn("Failed to find object by value substring", find, "in", exports, new Error().stack!.substring(5));
     }
 
     return ret;
