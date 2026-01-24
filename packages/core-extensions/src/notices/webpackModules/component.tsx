@@ -4,6 +4,7 @@ import { Notice, NoticeCloseButton, PrimaryCTANoticeButton } from "@moonlight-mo
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import NoticesStore from "@moonlight-mod/wp/notices_notices";
 import type { Notice as NoticeType } from "@moonlight-mod/types/coreExtensions/notices";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 
 function popAndDismiss(notice: NoticeType) {
   NoticesStore.popNotice();
@@ -25,26 +26,28 @@ export default function UpdateNotice() {
   if (notice == null) return <></>;
 
   return (
-    <Notice color={notice.color}>
-      {notice.element}
+    <ErrorBoundary noop={true}>
+      <Notice color={notice.color}>
+        {notice.element}
 
-      {(notice.showClose ?? true) && (
-        <NoticeCloseButton onClick={() => popAndDismiss(notice)} noticeType="__moonlight_notice" />
-      )}
+        {(notice.showClose ?? true) && (
+          <NoticeCloseButton onClick={() => popAndDismiss(notice)} noticeType="__moonlight_notice" />
+        )}
 
-      {(notice.buttons ?? []).map((button) => (
-        <PrimaryCTANoticeButton
-          key={button.name}
-          onClick={() => {
-            if (button.onClick()) {
-              popAndDismiss(notice);
-            }
-          }}
-          noticeType="__moonlight_notice"
-        >
-          {button.name}
-        </PrimaryCTANoticeButton>
-      ))}
-    </Notice>
+        {(notice.buttons ?? []).map((button) => (
+          <PrimaryCTANoticeButton
+            key={button.name}
+            onClick={() => {
+              if (button.onClick()) {
+                popAndDismiss(notice);
+              }
+            }}
+            noticeType="__moonlight_notice"
+          >
+            {button.name}
+          </PrimaryCTANoticeButton>
+        ))}
+      </Notice>
+    </ErrorBoundary>
   );
 }
