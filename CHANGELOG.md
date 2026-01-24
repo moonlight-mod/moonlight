@@ -1,35 +1,20 @@
 ## Core
 
-- Discord changed from camelCase to kebab-case on script names, script blocking regex needed to be updated to include `-`.
-- Updated mappings
+Discord updated rspack. Most extensions will be broken until they are updated.
 
-## Core extensions
+- Patching needed a workaround now that rspack optimizes module definitions to exclude `:function`
+- Update mappings
 
-### Component Editor
+## Core Extensions
 
-- Fix DM list
+- Fix patches where needed
 
-### Context Menu
+### Moonbase
 
-- Fix patches _again_
+- Crash screen "possible causes" now properly detects when an extension's modules are in the stack
 
-### moonbase
+### spacepack
 
-- Fix crash screen not loading
-- Fix crash screen patches that were broken for a while
-- Added error boundaries to config and about tabs so they don't fallthrough to crash screen when broken
-- Fixed jankiness with the confirmation modals (e.g. danger zone extensions) when confirming
-- Update notice now goes to redesigned settings
-
-### Settings
-
-- Fixed context menu for redesigned settings
-
-## Browser
-
-- Developer Portal now loads with the browser extension enabled
-
-## Other
-
-- Discord changed how their CSS modules have unique classnames again, as such almost every theme is broken in some way
-  - This also extends to some extensions that modify Discord's styles
+- Fixed `findObjectFromKeyValuePair` always retuning `null`
+- Added `findObjectFromValueSubstring`
+  - Useful for CSS modules as their export names are mangled now
