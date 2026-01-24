@@ -38,8 +38,8 @@ export const patches: Patch[] = [
   {
     find: 'type:"USER_SETTINGS_MODAL_OPEN",subsection:',
     replace: {
-      match: ".DEVELOPER_OPTIONS_PANEL]]",
-      replacement: '.DEVELOPER_OPTIONS_PANEL], ...Object.entries(require("settings_redesign").default.aliases)]'
+      match: ".DEVELOPER_OPTIONS_PANEL],",
+      replacement: '.DEVELOPER_OPTIONS_PANEL], ...Object.entries(require("settings_redesign").default.aliases),'
     }
   }
 ];

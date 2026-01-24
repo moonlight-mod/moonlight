@@ -6,7 +6,7 @@ export const patches: Patch[] = [
     find: '"gift")}),',
     replace: [
       {
-        match: /(?<=className:\i\(\)\(\i\.buttons,\{\[\i\.reducedGap\]:\i\}\),children:)(\i)/,
+        match: /(?<=className:\i\(\)\(\i\.\i,\{\[\i\.\i\]:\i\}\),children:)(\i)/,
         replacement: (_, original) => `require("componentEditor_chatButtonList").default._patchButtons(${original})`
       }
     ]
@@ -34,7 +34,7 @@ export const patches: Patch[] = [
 
   // member list
   {
-    find: ".lostPermission",
+    find: ",nudgeAlignIntoViewport:!1,useRawTargetDimensions:!0,animation:",
     replace: [
       {
         match:
@@ -74,7 +74,7 @@ export const patches: Patch[] = [
   {
     find: '.provider&&"Discord"===',
     replace: {
-      match: /(?<=\.container\),)children:(\[.+?this\.renderSuppressConfirmModal\(\),.+?\])}\)/,
+      match: /(?<=className:\i\(\)\(\i,\i\.\i\),)children:(\[.+?this\.renderSuppressConfirmModal\(\),.+?\])}\)/,
       replacement: (_, elements) =>
         `children:require("componentEditor_messages").default._patchAccessories(${elements},this.props)})`
     }
