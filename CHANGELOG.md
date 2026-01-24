@@ -1,20 +1,9 @@
 ## Core
 
-Discord updated rspack. Most extensions will be broken until they are updated.
-
-- Patching needed a workaround now that rspack optimizes module definitions to exclude `:function`
-- Update mappings
+- Update mappings to fix Notice
 
 ## Core Extensions
 
-- Fix patches where needed
+### Notice
 
-### Moonbase
-
-- Crash screen "possible causes" now properly detects when an extension's modules are in the stack
-
-### spacepack
-
-- Fixed `findObjectFromKeyValuePair` always retuning `null`
-- Added `findObjectFromValueSubstring`
-  - Useful for CSS modules as their export names are mangled now
+- Wrap notices in error boundary
