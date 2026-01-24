@@ -43,5 +43,8 @@
     "prettier": "catalog:dev",
     "taze": "catalog:dev",
     "typescript": "catalog:dev"
+  },
+  "dependencies": {
+    "@moonlight-mod/mappings": "link:../mappings"
   }
 }

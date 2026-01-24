@@ -29,9 +29,9 @@ export const patches: Patch[] = [
 
   // redesign
   {
-    find: '.useField("currentPanelKey")',
+    find: ".parentCategoryKey,disableSidebarCategoryAutoSelect:!0,navTransition:",
     replace: {
-      match: /({node:\i,visibleDirectory:\i,accessibleDirectory:\i}=\(0,\i\.\i\)\()(\i),/,
+      match: /({node:\i,visibleDirectory:\i,accessibleDirectory:\i}=\(0,\i\.\i\)\()(\i),null!=/,
       replacement: (_, orig, sections) => `${orig}require("settings_redesign").default._mutateSections(${sections}),`
     }
   },

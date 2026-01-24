@@ -63,7 +63,7 @@ export const patches: Patch[] = [
   },
   // fix icon sizing because they expect built in to be 24 and others to be 32
   {
-    find: ".builtInSeparator}):null]",
+    find: '.name,position:"right",asContainer:!0,children:',
     replace: {
       match: /(\i)\.type===\i\.\i\.BUILT_IN/,
       replacement: (orig, section) => `${section}.id!=="${APPLICATION_ID}"&&${orig}`

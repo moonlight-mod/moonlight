@@ -3,30 +3,34 @@ packages:
 
 catalogs:
   dev:
+    '@moonlight-mod/eslint-config': github:moonlight-mod/eslint-config
+    '@types/chrome': ^0.0.313
+    '@types/node': ^22.14.0
     esbuild: ^0.19.3
     esbuild-copy-static-files: ^0.1.0
-    "@types/node": ^22.14.0
-    "@moonlight-mod/eslint-config": "github:moonlight-mod/eslint-config"
     eslint: ^9.12.0
-    "@types/chrome": ^0.0.313
     husky: ^8.0.3
     prettier: ^3.1.0
-    typescript: ^5.3.3
     taze: ^19.0.4
+    typescript: ^5.3.3
   prod:
-    "@moonlight-mod/lunast": ^1.0.1
-    "@moonlight-mod/mappings": ^1.1.46
-    "@moonlight-mod/moonmap": ^1.0.6
+    '@moonlight-mod/lunast': ^1.0.1
+    '@moonlight-mod/mappings': ^1.1.47
+    '@moonlight-mod/moonmap': ^1.0.7
+    '@zenfs/core': ^2.0.0
+    '@zenfs/dom': ^1.1.3
     microdiff: ^1.5.0
     nanotar: ^0.1.1
-    "@zenfs/core": ^2.0.0
-    "@zenfs/dom": ^1.1.3
+
+engineStrict: true
 
 onlyBuiltDependencies:
   - esbuild
 
-engineStrict: true
-strictSsl: true
-strictDepBuilds: true
 packageManagerStrict: true
+
 registry: https://registry.npmjs.org/
+
+strictDepBuilds: true
+
+strictSsl: true

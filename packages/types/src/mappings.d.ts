@@ -104,22 +104,25 @@ declare module "@moonlight-mod/wp/discord/components/common/FormSwitch.css" {
 declare module "@moonlight-mod/wp/discord/components/common/HeaderBar.css" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const caret: MappedModules["discord/components/common/HeaderBar.css"]["caret"];
+  export const channelIcon: MappedModules["discord/components/common/HeaderBar.css"]["channelIcon"];
   export const children: MappedModules["discord/components/common/HeaderBar.css"]["children"];
   export const clickable: MappedModules["discord/components/common/HeaderBar.css"]["clickable"];
   export const container: MappedModules["discord/components/common/HeaderBar.css"]["container"];
   export const divider: MappedModules["discord/components/common/HeaderBar.css"]["divider"];
-  export const dot: MappedModules["discord/components/common/HeaderBar.css"]["dot"];
   export const hamburger: MappedModules["discord/components/common/HeaderBar.css"]["hamburger"];
+  export const hidden: MappedModules["discord/components/common/HeaderBar.css"]["hidden"];
   export const icon: MappedModules["discord/components/common/HeaderBar.css"]["icon"];
   export const iconBadge: MappedModules["discord/components/common/HeaderBar.css"]["iconBadge"];
   export const iconBadgeBottom: MappedModules["discord/components/common/HeaderBar.css"]["iconBadgeBottom"];
   export const iconBadgeTop: MappedModules["discord/components/common/HeaderBar.css"]["iconBadgeTop"];
+  export const iconDisabled: MappedModules["discord/components/common/HeaderBar.css"]["iconDisabled"];
   export const iconWrapper: MappedModules["discord/components/common/HeaderBar.css"]["iconWrapper"];
   export const scrollable: MappedModules["discord/components/common/HeaderBar.css"]["scrollable"];
   export const selected: MappedModules["discord/components/common/HeaderBar.css"]["selected"];
   export const themed: MappedModules["discord/components/common/HeaderBar.css"]["themed"];
   export const themedMobile: MappedModules["discord/components/common/HeaderBar.css"]["themedMobile"];
   export const title: MappedModules["discord/components/common/HeaderBar.css"]["title"];
+  export const titleClickable: MappedModules["discord/components/common/HeaderBar.css"]["titleClickable"];
   export const titleWrapper: MappedModules["discord/components/common/HeaderBar.css"]["titleWrapper"];
   export const toolbar: MappedModules["discord/components/common/HeaderBar.css"]["toolbar"];
   export const transparent: MappedModules["discord/components/common/HeaderBar.css"]["transparent"];
@@ -303,8 +306,6 @@ declare module "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverr
   export const content: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["content"];
   export const infoLink: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["infoLink"];
   export const buildInfo: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["buildInfo"];
-  export const button: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["button"];
-  export const buttonSize: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["buttonSize"];
   export const subHead: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["subHead"];
   export const icon: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["icon"];
   export const buildDetails: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["buildDetails"];
@@ -317,17 +318,12 @@ declare module "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const header: MappedModules["discord/modules/discovery/web/Discovery.css"]["header"];
   export const headerImage: MappedModules["discord/modules/discovery/web/Discovery.css"]["headerImage"];
-  export const headerImageSimple: MappedModules["discord/modules/discovery/web/Discovery.css"]["headerImageSimple"];
-  export const headerImageBG: MappedModules["discord/modules/discovery/web/Discovery.css"]["headerImageBG"];
   export const searchTitle: MappedModules["discord/modules/discovery/web/Discovery.css"]["searchTitle"];
   export const searchSubtitle: MappedModules["discord/modules/discovery/web/Discovery.css"]["searchSubtitle"];
   export const headerContentWrapper: MappedModules["discord/modules/discovery/web/Discovery.css"]["headerContentWrapper"];
   export const headerContent: MappedModules["discord/modules/discovery/web/Discovery.css"]["headerContent"];
   export const headerContentSmall: MappedModules["discord/modules/discovery/web/Discovery.css"]["headerContentSmall"];
-  export const searchBox: MappedModules["discord/modules/discovery/web/Discovery.css"]["searchBox"];
-  export const searchBoxInput: MappedModules["discord/modules/discovery/web/Discovery.css"]["searchBoxInput"];
-  export const closeIcon: MappedModules["discord/modules/discovery/web/Discovery.css"]["closeIcon"];
-  export const searchIcon: MappedModules["discord/modules/discovery/web/Discovery.css"]["searchIcon"];
+  export const searchContainer: MappedModules["discord/modules/discovery/web/Discovery.css"]["searchContainer"];
   export const tabBar: MappedModules["discord/modules/discovery/web/Discovery.css"]["tabBar"];
   export const tabBarItem: MappedModules["discord/modules/discovery/web/Discovery.css"]["tabBarItem"];
   export const sectionHeader: MappedModules["discord/modules/discovery/web/Discovery.css"]["sectionHeader"];
@@ -401,7 +397,6 @@ declare module "@moonlight-mod/wp/discord/modules/forums/web/Header.css" {
   export const countText: MappedModules["discord/modules/forums/web/Header.css"]["countText"];
   export const tagContainer: MappedModules["discord/modules/forums/web/Header.css"]["tagContainer"];
   export const tag: MappedModules["discord/modules/forums/web/Header.css"]["tag"];
-  export const clear: MappedModules["discord/modules/forums/web/Header.css"]["clear"];
   export const row: MappedModules["discord/modules/forums/web/Header.css"]["row"];
   export const separator: MappedModules["discord/modules/forums/web/Header.css"]["separator"];
 }
@@ -421,7 +416,6 @@ declare module "@moonlight-mod/wp/discord/modules/forums/web/Tag" {
 
 declare module "@moonlight-mod/wp/discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css" {
   import { MappedModules } from "@moonlight-mod/mappings";
-  export const addButton: MappedModules["discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"]["addButton"];
   export const container: MappedModules["discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"]["container"];
   export const emptyRowContainer: MappedModules["discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"]["emptyRowContainer"];
   export const emptyRowText: MappedModules["discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"]["emptyRowText"];
@@ -732,8 +726,6 @@ declare module "@moonlight-mod/wp/discord/modules/user_settings/UserSettings" {
 declare module "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemConstants" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const ItemType: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["ItemType"];
-  export const TrailingType: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["TrailingType"];
-  export const NoticeType: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["NoticeType"];
   export const hasLayout: MappedModules["discord/modules/user_settings/redesign/SettingsItemConstants"]["hasLayout"];
 }
 
@@ -743,7 +735,6 @@ declare module "@moonlight-mod/wp/discord/modules/user_settings/redesign/Setting
   export const createSection: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSection"];
   export const createSidebarItem: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSidebarItem"];
   export const createPanel: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createPanel"];
-  export const createPane: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createPane"];
 }
 
 declare module "@moonlight-mod/wp/discord/packages/flux" {
