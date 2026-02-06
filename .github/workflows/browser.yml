@@ -3,7 +3,7 @@ name: Browser extension builds
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   browser:
@@ -24,16 +24,12 @@ jobs:
           NODE_ENV: production
         run: pnpm run build
 
-      - name: Build MV3
-        run: pnpm run browser
-      - name: Build MV2
-        run: pnpm run browser-mv2
-
       - name: Upload MV3
         uses: actions/upload-artifact@v4
         with:
           name: browser
           path: ./dist/browser
+
       - name: Upload MV2
         uses: actions/upload-artifact@v4
         with:
