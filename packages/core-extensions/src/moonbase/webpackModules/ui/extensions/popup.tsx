@@ -1,6 +1,6 @@
 // TODO: clean up the styling here
 import React from "@moonlight-mod/wp/react";
-import { MoonbaseExtension } from "core-extensions/src/moonbase/types";
+import { MoonbaseExtension } from "../../../types";
 import { openModalLazy } from "@moonlight-mod/wp/discord/modules/modals/Modals";
 import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";

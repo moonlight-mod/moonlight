@@ -1,19 +1,23 @@
 {
   "name": "@moonlight-mod/web-preload",
   "private": true,
-  "main": "src/index.ts",
-  "engineStrict": true,
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10",
-    "npm": "pnpm",
-    "yarn": "pnpm"
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "clean": "node build.mjs --clean",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
-    "@moonlight-mod/lunast": "catalog:prod",
-    "@moonlight-mod/mappings": "catalog:prod",
-    "@moonlight-mod/moonmap": "catalog:prod",
+    "@moonlight-mod/lunast": "catalog:",
+    "@moonlight-mod/mappings": "catalog:",
+    "@moonlight-mod/moonmap": "catalog:",
     "@moonlight-mod/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@moonlight-mod/esbuild-config": "workspace:*",
+    "esbuild": "catalog:build",
+    "typescript": "catalog:build"
   }
 }

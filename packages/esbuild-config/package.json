@@ -1,0 +1,47 @@
+{
+  "name": "@moonlight-mod/esbuild-config",
+  "version": "1.1.0",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "homepage": "https://moonlight-mod.github.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moonlight-mod/moonlight.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moonlight-mod/moonlight/issues"
+  },
+  "engineStrict": false,
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./internal": "./dist/internal.js"
+  },
+  "files": [
+    "dist",
+    "!dist/*.tsbuildinfo"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "pnpm run build --watch --preserveWatchOutput",
+    "clean": "pnpm run build --clean",
+    "typecheck": "pnpm run build --noEmit",
+    "prepare": "pnpm run build"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:types",
+    "esbuild": "catalog:build",
+    "typescript": "catalog:build"
+  },
+  "peerDependencies": {
+    "esbuild": ">= 0.19"
+  }
+}

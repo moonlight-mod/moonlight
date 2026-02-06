@@ -1,6 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "lib": ["ESNext", "DOM"]
-  }
+    "jsx": "react"
+  },
+  "include": ["src"]
 }

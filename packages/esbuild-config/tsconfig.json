@@ -3,14 +3,14 @@
   "compilerOptions": {
     "lib": ["ES2024"],
     "target": "es2022",
-    "module": "es2022",
-    "moduleResolution": "bundler",
+    "module": "nodenext",
+    "moduleResolution": "node16",
 
     "strict": true,
     "skipLibCheck": true,
     "declaration": true,
 
-    "noEmit": true
+    "outDir": "dist"
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
