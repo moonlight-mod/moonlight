@@ -16,9 +16,6 @@ catalogs:
     '@moonlight-mod/lunast':
       specifier: ^1.0.1
       version: 1.0.1
-    '@moonlight-mod/mappings':
-      specifier: ^1.1.49
-      version: 1.1.49
     '@moonlight-mod/moonmap':
       specifier: ^1.0.7
       version: 1.0.7
@@ -51,12 +48,27 @@ catalogs:
       specifier: ^19.9.2
       version: 19.9.2
   types:
+    '@types/chroma-js':
+      specifier: ^3.1.0
+      version: 3.1.2
     '@types/chrome':
       specifier: ^0.0.313
       version: 0.0.313
+    '@types/flux':
+      specifier: ^3.1.14
+      version: 3.1.15
+    '@types/highlightjs':
+      specifier: ^9.12.6
+      version: 9.12.6
+    '@types/lodash':
+      specifier: ^4.17.14
+      version: 4.17.23
     '@types/node':
       specifier: 22.14.0
       version: 22.14.0
+    '@types/platform':
+      specifier: ^1.3.6
+      version: 1.3.6
     '@types/react':
       specifier: ^19.0.0
       version: 19.1.2
@@ -66,6 +78,9 @@ catalogs:
     standalone-electron-types:
       specifier: ^1.0.0
       version: 1.0.0
+    zustand:
+      specifier: ^5.0.3
+      version: 5.0.10
 
 importers:
 
@@ -187,6 +202,43 @@ importers:
         specifier: catalog:build
         version: 5.8.2
 
+  packages/mappings:
+    dependencies:
+      '@moonlight-mod/lunast':
+        specifier: 'catalog:'
+        version: 1.0.1
+      '@moonlight-mod/moonmap':
+        specifier: 'catalog:'
+        version: 1.0.7
+      '@types/chroma-js':
+        specifier: catalog:types
+        version: 3.1.2
+      '@types/flux':
+        specifier: catalog:types
+        version: 3.1.15
+      '@types/highlightjs':
+        specifier: catalog:types
+        version: 9.12.6
+      '@types/lodash':
+        specifier: catalog:types
+        version: 4.17.23
+      '@types/platform':
+        specifier: catalog:types
+        version: 1.3.6
+      '@types/react':
+        specifier: catalog:types
+        version: 19.1.2
+      csstype:
+        specifier: catalog:types
+        version: 3.1.3
+      zustand:
+        specifier: catalog:types
+        version: 5.0.10(@types/react@19.1.2)
+    devDependencies:
+      typescript:
+        specifier: catalog:build
+        version: 5.8.2
+
   packages/node-preload:
     dependencies:
       '@moonlight-mod/core':
@@ -212,8 +264,8 @@ importers:
         specifier: 'catalog:'
         version: 1.0.1
       '@moonlight-mod/mappings':
-        specifier: 'catalog:'
-        version: 1.1.49(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.7)
+        specifier: workspace:*
+        version: link:../mappings
       '@moonlight-mod/moonmap':
         specifier: 'catalog:'
         version: 1.0.7
@@ -243,8 +295,8 @@ importers:
         specifier: 'catalog:'
         version: 1.0.1
       '@moonlight-mod/mappings':
-        specifier: 'catalog:'
-        version: 1.1.49(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.7)
+        specifier: workspace:*
+        version: link:../mappings
       '@moonlight-mod/moonmap':
         specifier: 'catalog:'
         version: 1.0.7
@@ -482,13 +534,6 @@ packages:
 
   '@moonlight-mod/lunast@1.0.1':
     resolution: {integrity: sha512-K3vxzDlfFuYKjciIW2FMlcZ1qrrkAGDGpSBlNqYGtJ0sMt9bRCd2lpSpg6AX/giSljDtmAUXa/5mOfUoDQxjBA==}
-
-  '@moonlight-mod/mappings@1.1.49':
-    resolution: {integrity: sha512-RYbUMKUb6tmPo1QOuCNaJ3alC1qeBOIblEX0r8IwNImO1QjCT9XoPRIJTY1xydSEBjyRsfGKT5iAzFjIeb+J8w==}
-    engines: {node: '>=22', npm: pnpm, pnpm: '>=10', yarn: pnpm}
-    peerDependencies:
-      '@moonlight-mod/lunast': ^1.0.1
-      '@moonlight-mod/moonmap': ^1.0.7
 
   '@moonlight-mod/moonmap@1.0.7':
     resolution: {integrity: sha512-K4TXEHYPgAtPjWSPWtO9+jzs7+/OYAF1GGkh1BtXrkeVT8vEFlNMztbZYy+N0bJLWzwytS4mrheMdSaBfJw6fw==}
@@ -1823,23 +1868,6 @@ snapshots:
       astring: 1.9.0
       estree-toolkit: 1.7.8
       meriyah: 6.0.1
-
-  '@moonlight-mod/mappings@1.1.49(@moonlight-mod/lunast@1.0.1)(@moonlight-mod/moonmap@1.0.7)':
-    dependencies:
-      '@moonlight-mod/lunast': 1.0.1
-      '@moonlight-mod/moonmap': 1.0.7
-      '@types/chroma-js': 3.1.2
-      '@types/flux': 3.1.15
-      '@types/highlightjs': 9.12.6
-      '@types/lodash': 4.17.23
-      '@types/platform': 1.3.6
-      '@types/react': 19.1.2
-      csstype: 3.1.3
-      zustand: 5.0.10(@types/react@19.1.2)
-    transitivePeerDependencies:
-      - immer
-      - react
-      - use-sync-external-store
 
   '@moonlight-mod/moonmap@1.0.7': {}
 

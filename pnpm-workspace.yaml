@@ -3,7 +3,6 @@ packages:
 
 catalog:
   "@moonlight-mod/lunast": ^1.0.1
-  "@moonlight-mod/mappings": ^1.1.49
   "@moonlight-mod/moonmap": ^1.0.7
   "@zenfs/core": ^2.0.0
   "@zenfs/dom": ^1.1.3
@@ -24,7 +23,13 @@ catalogs:
     "@types/chrome": ^0.0.313
     "@types/node": 22.14.0
     "@types/react": ^19.0.0
+    "@types/chroma-js": ^3.1.0
+    "@types/flux": ^3.1.14
+    "@types/highlightjs": ^9.12.6
+    "@types/lodash": ^4.17.14
+    "@types/platform": ^1.3.6
     csstype: ^3.1.3
+    zustand: ^5.0.3
     standalone-electron-types: ^1.0.0
 
 engineStrict: true
