@@ -141,7 +141,10 @@ declare module "@moonlight-mod/wp/discord/components/common/HelpMessage.css" {
   export const error: MappedModules["discord/components/common/HelpMessage.css"]["error"];
 }
 
-declare module "@moonlight-mod/wp/discord/components/common/Image" {}
+declare module "@moonlight-mod/wp/discord/components/common/Image" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const Image: MappedModules["discord/components/common/Image"]["Image"];
+}
 
 declare module "@moonlight-mod/wp/discord/components/common/PanelButton" {
   import { MappedModules } from "@moonlight-mod/mappings";

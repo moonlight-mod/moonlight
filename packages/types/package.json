@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@moonlight-mod/lunast": "catalog:",
-    "@moonlight-mod/mappings": "catalog:",
+    "@moonlight-mod/mappings": "workspace:*",
     "@moonlight-mod/moonmap": "catalog:",
     "@types/react": "catalog:types",
     "@types/node": "catalog:types",

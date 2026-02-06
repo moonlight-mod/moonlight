@@ -4,12 +4,8 @@
   "meta": {
     "name": "DevTools Extensions",
     "tagline": "Loads Chrome extensions into Electron DevTools",
-    "authors": [
-      "Cynosphere"
-    ],
-    "tags": [
-      "development"
-    ]
+    "authors": ["Cynosphere"],
+    "tags": ["development"]
   },
   "settings": {
     "paths": {

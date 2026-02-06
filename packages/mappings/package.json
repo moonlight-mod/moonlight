@@ -1,0 +1,57 @@
+{
+  "name": "@moonlight-mod/mappings",
+  "version": "1.1.49",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "homepage": "https://moonlight-mod.github.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moonlight-mod/moonlight.git"
+  },
+  "bugs": {
+    "url": "https://github.com/moonlight-mod/moonlight/issues"
+  },
+  "engineStrict": false,
+  "engines": {
+    "node": ">=22",
+    "pnpm": ">=10",
+    "npm": "pnpm",
+    "yarn": "pnpm"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/mappings/*.js",
+    "./types/*": "./dist/mappings/*.d.ts"
+  },
+  "files": [
+    "dist",
+    "!dist/*.tsbuildinfo"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "pnpm run build --watch --preserveWatchOutput",
+    "clean": "pnpm run build --clean",
+    "typecheck": "pnpm run build --noEmit",
+    "prepare": "pnpm run build"
+  },
+  "dependencies": {
+    "@types/chroma-js": "catalog:types",
+    "@types/flux": "catalog:types",
+    "@types/highlightjs": "catalog:types",
+    "@types/lodash": "catalog:types",
+    "@types/platform": "catalog:types",
+    "@types/react": "catalog:types",
+    "csstype": "catalog:types",
+    "zustand": "catalog:types"
+  },
+  "devDependencies": {
+    "typescript": "catalog:build"
+  },
+  "peerDependencies": {
+    "@moonlight-mod/lunast": "catalog:",
+    "@moonlight-mod/moonmap": "catalog:"
+  }
+}
