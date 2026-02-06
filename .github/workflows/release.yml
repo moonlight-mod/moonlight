@@ -1,4 +1,4 @@
-name: Release builds to GitHub Releases
+name: Release builds
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   release:
@@ -28,20 +29,6 @@ jobs:
           MOONLIGHT_BRANCH: stable
           MOONLIGHT_VERSION: ${{ github.ref_name }}
         run: pnpm run build
-
-      - name: Build moonlight (mv3)
-        env:
-          NODE_ENV: production
-          MOONLIGHT_BRANCH: stable
-          MOONLIGHT_VERSION: ${{ github.ref_name }}
-        run: pnpm run browser
-
-      - name: Build moonlight (mv2)
-        env:
-          NODE_ENV: production
-          MOONLIGHT_BRANCH: stable
-          MOONLIGHT_VERSION: ${{ github.ref_name }}
-        run: pnpm run browser-mv2
 
       - name: Separate browser builds
         run: |
@@ -67,3 +54,23 @@ jobs:
         with:
           artifacts: "dist.tar.gz,browser.tar.gz,browser-mv2.tar.gz,browser.js"
           bodyFile: ./CHANGELOG.md
+
+  publish:
+    name: Publish packages on npm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Update npm
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Publish packages
+        run: pnpm publish --provenance --no-git-checks --access public --filter="./packages/{esbuild-config,mappings,types}"

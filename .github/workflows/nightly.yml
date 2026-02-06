@@ -3,7 +3,7 @@ name: Nightly builds on GitHub Pages
 on:
   push:
     branches:
-      - develop
+      - main
 
 permissions:
   contents: read
