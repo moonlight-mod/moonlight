@@ -29,10 +29,11 @@ export const patches: Patch[] = [
 
   // redesign
   {
-    find: ".parentCategoryKey,disableSidebarCategoryAutoSelect:!0,navTransition:",
+    find: ")?.parentAccordionKey",
     replace: {
-      match: /({node:\i,visibleDirectory:\i,accessibleDirectory:\i}=\(0,\i\.\i\)\()(\i),null!=/,
-      replacement: (_, orig, sections) => `${orig}require("settings_redesign").default._mutateSections(${sections}),`
+      match: /({node:\i,visibleDirectory:\i,accessibleDirectory:\i}=\(0,\i\.\i\)\()(\i),(\i\?\?"")/,
+      replacement: (_, orig, sections, query) =>
+        `${orig}require("settings_redesign").default._mutateSections(${sections}),${query}`
     }
   },
   {

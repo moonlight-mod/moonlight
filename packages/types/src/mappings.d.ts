@@ -404,7 +404,6 @@ declare module "@moonlight-mod/wp/discord/modules/forums/web/Header.css" {
 declare module "@moonlight-mod/wp/discord/modules/forums/web/SortMenu.css" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const container: MappedModules["discord/modules/forums/web/SortMenu.css"]["container"];
-  export const clearText: MappedModules["discord/modules/forums/web/SortMenu.css"]["clearText"];
 }
 
 declare module "@moonlight-mod/wp/discord/modules/forums/web/Tag" {
@@ -606,8 +605,10 @@ declare module "@moonlight-mod/wp/discord/modules/messages/web/Message.css" {
 declare module "@moonlight-mod/wp/discord/modules/modals/Modals" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const closeAllModals: MappedModules["discord/modules/modals/Modals"]["closeAllModals"];
-  export const closeAllModalsForContext: MappedModules["discord/modules/modals/Modals"]["closeAllModalsForContext"];
+  export const closeAllModalsInContext: MappedModules["discord/modules/modals/Modals"]["closeAllModalsInContext"];
   export const closeModal: MappedModules["discord/modules/modals/Modals"]["closeModal"];
+  export const closeModalInAllContexts: MappedModules["discord/modules/modals/Modals"]["closeModalInAllContexts"];
+  export const doesTopModalAllowNavigation: MappedModules["discord/modules/modals/Modals"]["doesTopModalAllowNavigation"];
   export const getInteractingModalContext: MappedModules["discord/modules/modals/Modals"]["getInteractingModalContext"];
   export const hasAnyModalOpen: MappedModules["discord/modules/modals/Modals"]["hasAnyModalOpen"];
   export const hasAnyModalOpenSelector: MappedModules["discord/modules/modals/Modals"]["hasAnyModalOpenSelector"];
@@ -617,6 +618,7 @@ declare module "@moonlight-mod/wp/discord/modules/modals/Modals" {
   export const openModalLazy: MappedModules["discord/modules/modals/Modals"]["openModalLazy"];
   export const updateModal: MappedModules["discord/modules/modals/Modals"]["updateModal"];
   export const useHasAnyModalOpen: MappedModules["discord/modules/modals/Modals"]["useHasAnyModalOpen"];
+  export const useHasModalOpen: MappedModules["discord/modules/modals/Modals"]["useHasModalOpen"];
   export const useIsModalAtTop: MappedModules["discord/modules/modals/Modals"]["useIsModalAtTop"];
   export const useModalsStore: MappedModules["discord/modules/modals/Modals"]["useModalsStore"];
 }
