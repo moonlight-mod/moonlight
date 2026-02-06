@@ -1,15 +1,19 @@
 {
   "name": "@moonlight-mod/injector",
   "private": true,
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10",
-    "npm": "pnpm",
-    "yarn": "pnpm"
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "clean": "node build.mjs --clean",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*"
   },
-  "engineStrict": true
+  "devDependencies": {
+    "@moonlight-mod/esbuild-config": "workspace:*",
+    "esbuild": "catalog:build",
+    "typescript": "catalog:build"
+  }
 }

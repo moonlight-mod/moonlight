@@ -1,17 +1,21 @@
 {
   "name": "@moonlight-mod/core-extensions",
   "private": true,
-  "engineStrict": true,
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10",
-    "npm": "pnpm",
-    "yarn": "pnpm"
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "clean": "node build.mjs --clean",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*",
-    "microdiff": "catalog:prod",
-    "nanotar": "catalog:prod"
+    "microdiff": "catalog:",
+    "nanotar": "catalog:"
+  },
+  "devDependencies": {
+    "@moonlight-mod/esbuild-config": "workspace:*",
+    "esbuild": "catalog:build",
+    "typescript": "catalog:build"
   }
 }

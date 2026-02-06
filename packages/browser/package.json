@@ -1,21 +1,25 @@
 {
   "name": "@moonlight-mod/browser",
   "private": true,
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10",
-    "npm": "pnpm",
-    "yarn": "pnpm"
+  "main": "./src/index.ts",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "clean": "node build.mjs --clean",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*",
+    "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/web-preload": "workspace:*",
-    "@zenfs/core": "catalog:prod",
-    "@zenfs/dom": "catalog:prod"
+    "@zenfs/core": "catalog:",
+    "@zenfs/dom": "catalog:"
   },
-  "engineStrict": true,
   "devDependencies": {
-    "@types/chrome": "catalog:dev"
+    "@moonlight-mod/esbuild-config": "workspace:*",
+    "@types/chrome": "catalog:types",
+    "@types/node": "catalog:types",
+    "esbuild": "catalog:build",
+    "typescript": "catalog:build"
   }
 }

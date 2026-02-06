@@ -4,14 +4,13 @@
   "exports": {
     "./*": "./src/*.ts"
   },
-  "engineStrict": true,
-  "engines": {
-    "node": ">=22",
-    "pnpm": ">=10",
-    "npm": "pnpm",
-    "yarn": "pnpm"
+  "scripts": {
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@moonlight-mod/types": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "catalog:build"
   }
 }

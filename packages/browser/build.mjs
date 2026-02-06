@@ -1,0 +1,37 @@
+import { buildOrWatchCore } from "@moonlight-mod/esbuild-config/internal";
+import { copyFile } from "@moonlight-mod/esbuild-config";
+import path from "node:path";
+
+await buildOrWatchCore(
+  {
+    watchDir: [path.resolve("./src"), path.resolve("../web-preload/src"), path.resolve("../core/src")],
+    cleanPath: [path.resolve("../../dist/browser"), path.resolve("../../dist/browser-mv2")]
+  },
+  {
+    name: "browser",
+    side: "browser",
+    entry: path.resolve("./src/index.ts"),
+    output: path.resolve("../../dist/browser/index.js"),
+    extraPlugins: [
+      copyFile(path.resolve("./manifest.json"), path.resolve("../../dist/browser/manifest.json")),
+      copyFile(path.resolve("./src/background.js"), path.resolve("../../dist/browser/background.js")),
+      copyFile(path.resolve("./moonlight-filter.json"), path.resolve("../../dist/browser/moonlight-filter.json"))
+    ],
+    extraConfig: {
+      jsx: "react"
+    }
+  },
+  {
+    name: "browser-mv2",
+    side: "browser",
+    entry: path.resolve("./src/index.ts"),
+    output: path.resolve("../../dist/browser-mv2/index.js"),
+    extraPlugins: [
+      copyFile(path.resolve("./manifestv2.json"), path.resolve("../../dist/browser-mv2/manifest.json")),
+      copyFile(path.resolve("./src/background-mv2.js"), path.resolve("../../dist/browser-mv2/background.js"))
+    ],
+    extraConfig: {
+      jsx: "react"
+    }
+  }
+);

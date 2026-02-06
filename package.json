@@ -1,5 +1,6 @@
 {
   "name": "moonlight",
+  "private": true,
   "version": "1.3.39",
   "packageManager": "pnpm@10.14.0+sha512.ad27a79641b49c3e481a16a805baa71817a04bbe06a38d17e60e2eaee83f6a146c6a688125f5792e48dd5ba30e7da52a5cda4c3992b9ccf333f9ce223af84748",
   "description": "Yet another Discord mod",
@@ -20,28 +21,22 @@
     "yarn": "pnpm"
   },
   "scripts": {
-    "build": "node build.mjs",
-    "dev": "node build.mjs --watch",
-    "clean": "node build.mjs --clean",
-    "browser": "node build.mjs --browser",
-    "browser-mv2": "node build.mjs --browser --mv2",
-    "lint": "eslint packages",
+    "build": "pnpm run -r build",
+    "dev": "pnpm run --parallel --stream dev",
+    "clean": "pnpm run --filter !@moonlight-mod/esbuild-config -r clean",
+    "lint": "eslint --ignore-pattern \"**/dist/**\"",
     "lint:fix": "pnpm lint --fix",
     "lint:report": "pnpm lint --output-file eslint_report.json --format json",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "pnpm run -r typecheck",
     "check": "pnpm run lint && pnpm run typecheck",
     "prepare": "husky install",
     "updates": "pnpm taze -r"
   },
   "devDependencies": {
     "@moonlight-mod/eslint-config": "catalog:dev",
-    "@types/node": "catalog:dev",
-    "esbuild": "catalog:dev",
-    "esbuild-copy-static-files": "catalog:dev",
     "eslint": "catalog:dev",
     "husky": "catalog:dev",
     "prettier": "catalog:dev",
-    "taze": "catalog:dev",
-    "typescript": "catalog:dev"
+    "taze": "catalog:dev"
   }
 }

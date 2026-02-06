@@ -14,7 +14,7 @@ export default function createFS(): MoonlightFS {
       return fs.readFileSync(path, "utf8");
     },
     async writeFile(path, data) {
-      fs.writeFileSync(path, Buffer.from(data));
+      fs.writeFileSync(path, data);
     },
     async writeFileString(path, data) {
       fs.writeFileSync(path, data, "utf8");

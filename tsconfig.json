@@ -1,8 +1,0 @@
-{
-  "extends": ["./tsconfig.base.json"],
-  "compilerOptions": {
-    "baseUrl": "./packages/",
-    "noEmit": true
-  },
-  "exclude": ["**/node_modules/**", "**/dist/**", "**/build/**", "**/result/**"]
-}

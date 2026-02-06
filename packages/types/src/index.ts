@@ -2,7 +2,6 @@
 /// <reference types="react" />
 /// <reference types="./import" />
 /// <reference types="./mappings" />
-/* eslint-disable no-var */
 
 import { MoonlightHost, MoonlightNode, MoonlightNodeSandboxed, MoonlightWeb } from "./globals";
 
