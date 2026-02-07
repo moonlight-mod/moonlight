@@ -16,24 +16,6 @@ export const patches: Patch[] = [
     }
   },
 
-  // Enable staff help menu
-  {
-    find: 'focusSectionProps:"HELP"===',
-    replace: {
-      match: /({hasBugReporterAccess:(\i)}=\i\.\i\.useExperiment\({location:"HeaderBar"},{autoTrackExposure:!1}\)),/,
-      replacement: (_, orig, isStaff) =>
-        `${orig};if(moonlight.getConfigOption("experiments","devtools")??false)${isStaff}=true;let `
-    }
-  },
-  {
-    find: 'navId:"staff-help-popout",',
-    replace: {
-      match: /isDiscordDeveloper:(\i)}\),/,
-      replacement: (_, isStaff) =>
-        `isDiscordDeveloper:(moonlight.getConfigOption("experiments","devtools")??false)||${isStaff}}),`
-    }
-  },
-
   // Enable further staff-locked options
   {
     find: "shouldShowLurkerModeUpsellPopout:",
