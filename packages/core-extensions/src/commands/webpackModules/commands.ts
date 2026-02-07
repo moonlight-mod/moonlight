@@ -30,11 +30,17 @@ export const commands: Commands = {
       applicationId: APPLICATION_ID,
       untranslatedDescription: command.description,
       displayDescription: command.description,
-      options: command.options?.map((o) => ({
-        ...o,
-        displayName: o.name,
-        displayDescription: o.description
-      }))
+      options: command.options?.map((o) => {
+        if (o.choices)
+          o.choices.forEach((c) => {
+            if (c.displayName == null) c.displayName = c.name;
+          });
+        return {
+          ...o,
+          displayName: o.name,
+          displayDescription: o.description
+        };
+      })
     };
     registeredCommands.push(registered);
   },

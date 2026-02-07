@@ -55,6 +55,7 @@ export type RegisteredCommandOption = MoonlightCommandOption & {
 
 export type CommandOptionChoice<T> = {
   name: string;
+  displayName: string;
   value: T;
 };
 
