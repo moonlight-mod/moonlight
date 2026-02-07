@@ -1,9 +1,5 @@
 name: Browser extension builds
-
-on:
-  push:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   browser:
@@ -23,6 +19,10 @@ jobs:
         env:
           NODE_ENV: production
         run: pnpm run build
+      - name: Build browser extensions
+        env:
+          NODE_ENV: production
+        run: pnpm run browser
 
       - name: Upload MV3
         uses: actions/upload-artifact@v4

@@ -28,7 +28,9 @@ jobs:
           NODE_ENV: production
           MOONLIGHT_BRANCH: stable
           MOONLIGHT_VERSION: ${{ github.ref_name }}
-        run: pnpm run build
+        run: |
+          pnpm run build
+          pnpm run browser
 
       - name: Separate browser builds
         run: |

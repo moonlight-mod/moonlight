@@ -12,7 +12,9 @@ await buildOrWatchCore(
     entry: path.resolve("./src/index.ts"),
     output: path.resolve("../../dist/web-preload.js"),
     extraConfig: {
-      jsx: "react"
+      footer: {
+        js: `\n//# sourceURL=web-preload.js`
+      }
     }
   }
 );
