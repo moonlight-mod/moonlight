@@ -27,7 +27,7 @@ stdenv.mkDerivation (finalAttrs: {
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
     fetcherVersion = 1;
-    hash = "sha256-8PvECP7iBCLOyAyiFN66cJ8LeGAmJ76mIH6Z+wGbNoQ=";
+    hash = "sha256-/4c71i9MyUo25gv8Q1qMzyQJ7eLJBk1xFP9ewKSGFdA=";
   };
 
   env = {
@@ -39,7 +39,6 @@ stdenv.mkDerivation (finalAttrs: {
     runHook preBuild
 
     pnpm run build
-    pnpm run browser-mv2
 
     runHook postBuild
   '';
