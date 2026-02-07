@@ -14,7 +14,7 @@ let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/Con
 // do this to avoid a hard dependency
 function lazyLoad() {
   if (!ConfirmModal) {
-    ConfirmModal = (spacepack.require("discord/components/modals/ConfirmModal") as any).VoidConfirmModal;
+    ConfirmModal = (spacepack.require("discord/components/modals/ConfirmModal") as any).ConfirmModal;
   }
 }
 
