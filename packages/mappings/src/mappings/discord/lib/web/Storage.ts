@@ -33,7 +33,7 @@ register((moonmap) => {
   const name = "discord/lib/web/Storage";
   moonmap.register({
     name,
-    find: "=window.localStorage}catch",
+    find: ["=window.localStorage", '="test"'],
     process({ id }) {
       moonmap.addModule(id, name);
 

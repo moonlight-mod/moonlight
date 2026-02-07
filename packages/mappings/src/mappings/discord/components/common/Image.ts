@@ -35,7 +35,7 @@ register((moonmap) => {
   const name = "discord/components/common/Image";
   moonmap.register({
     name,
-    find: ".clickableWrapper",
+    find: '.displayName="Image"',
     process({ id }) {
       moonmap.addModule(id, name);
 

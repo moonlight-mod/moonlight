@@ -15,7 +15,7 @@ register((moonmap) => {
   const name = "discord/packages/flux/connectStores";
   moonmap.register({
     name,
-    find: '="FluxContainer(".concat(',
+    find: "=`FluxContainer(",
     process({ id }) {
       moonmap.addModule(id, name);
 

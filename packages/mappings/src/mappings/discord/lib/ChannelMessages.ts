@@ -4,7 +4,7 @@ register((moonmap) => {
   const name = "discord/lib/ChannelMessages";
   moonmap.register({
     name,
-    find: '"_channelMessages",{}',
+    find: '("ChannelMessages")',
     process({ id }) {
       moonmap.addModule(id, name);
 

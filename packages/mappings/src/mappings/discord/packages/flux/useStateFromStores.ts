@@ -38,11 +38,11 @@ register((moonmap) => {
       });
       moonmap.addExport(name, "useStateFromStoresArray", {
         type: ModuleExportType.Function,
-        find: /return (.)\((.),(.),(.),(.)\.([^Z])\)/
+        find: /return (.)\((.),(.),(.),(.)\.([^A])\)/
       });
       moonmap.addExport(name, "useStateFromStoresObject", {
         type: ModuleExportType.Function,
-        find: /return (.)\((.),(.),(.),(.)\.Z\)/
+        find: /return (.)\((.),(.),(.),(.)\.A\)/
       });
 
       return true;

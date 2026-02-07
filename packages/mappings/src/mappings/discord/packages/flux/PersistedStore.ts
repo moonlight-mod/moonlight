@@ -70,13 +70,13 @@ register((moonmap) => {
   const name = "discord/packages/flux/PersistedStore";
   moonmap.register({
     name,
-    find: " initialized without a `persistKey`. Add one so we know where to save your stuff!",
+    find: "Add one so we know where to save your stuff!",
     process({ id }) {
       moonmap.addModule(id, name);
 
       moonmap.addExport(name, "PersistedStore", {
         type: ModuleExportType.Function,
-        find: " initialized without a `persistKey`. Add one so we know where to save your stuff!"
+        find: "Add one so we know where to save your stuff!"
       });
 
       return true;

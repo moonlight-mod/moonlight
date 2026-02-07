@@ -11,7 +11,7 @@ register((moonmap) => {
 
       moonmap.addExport(name, "UserActivityTypes", {
         type: ModuleExportType.Key,
-        find: "PROFILE_V2"
+        find: "STREAM_PREVIEW"
       });
 
       return true;

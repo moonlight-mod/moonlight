@@ -17,6 +17,10 @@ register((moonmap) => {
         type: ModuleExportType.Function,
         find: /return\(.&.\)===/
       });
+      moonmap.addExport(name, "hasAnyFlag", {
+        type: ModuleExportType.Function,
+        find: "!=0"
+      });
       moonmap.addExport(name, "removeFlag", {
         type: ModuleExportType.Function,
         find: /{return .&~.}/
@@ -27,11 +31,11 @@ register((moonmap) => {
       });
       moonmap.addExport(name, "setFlag", {
         type: ModuleExportType.Function,
-        find: /return .\|.;return .&~./
+        find: /.\?.\(.,.\):.\(.,.\)/
       });
       moonmap.addExport(name, "toggleFlag", {
         type: ModuleExportType.Function,
-        find: /return .&~.;return .\|./
+        find: /.\(.,.\)\?.\(.,.\):.\(.,.\)/
       });
 
       return true;

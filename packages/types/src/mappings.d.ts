@@ -77,6 +77,18 @@ declare module "@moonlight-mod/wp/discord/components/common/BaseHeaderBar" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/components/common/Breadcrumbs.css" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const breadcrumbs: MappedModules["discord/components/common/Breadcrumbs.css"]["breadcrumbs"];
+  export const breadcrumbWrapper: MappedModules["discord/components/common/Breadcrumbs.css"]["breadcrumbWrapper"];
+  export const activeBreadcrumb: MappedModules["discord/components/common/Breadcrumbs.css"]["activeBreadcrumb"];
+  export const breadcrumbClickWrapper: MappedModules["discord/components/common/Breadcrumbs.css"]["breadcrumbClickWrapper"];
+  export const breadcrumbFinalWrapper: MappedModules["discord/components/common/Breadcrumbs.css"]["breadcrumbFinalWrapper"];
+  export const breadcrumb: MappedModules["discord/components/common/Breadcrumbs.css"]["breadcrumb"];
+  export const breadcrumbArrow: MappedModules["discord/components/common/Breadcrumbs.css"]["breadcrumbArrow"];
+  export const interactiveBreadcrumb: MappedModules["discord/components/common/Breadcrumbs.css"]["interactiveBreadcrumb"];
+}
+
 declare module "@moonlight-mod/wp/discord/components/common/Card" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/components/common/Card"]["default"];
@@ -87,18 +99,6 @@ declare module "@moonlight-mod/wp/discord/components/common/FileUpload" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/components/common/FileUpload"]["default"];
   export default _default;
-}
-
-declare module "@moonlight-mod/wp/discord/components/common/FormSwitch.css" {
-  import { MappedModules } from "@moonlight-mod/mappings";
-  export const container: MappedModules["discord/components/common/FormSwitch.css"]["container"];
-  export const labelRow: MappedModules["discord/components/common/FormSwitch.css"]["labelRow"];
-  export const control: MappedModules["discord/components/common/FormSwitch.css"]["control"];
-  export const disabled: MappedModules["discord/components/common/FormSwitch.css"]["disabled"];
-  export const title: MappedModules["discord/components/common/FormSwitch.css"]["title"];
-  export const note: MappedModules["discord/components/common/FormSwitch.css"]["note"];
-  export const disabledText: MappedModules["discord/components/common/FormSwitch.css"]["disabledText"];
-  export const dividerDefault: MappedModules["discord/components/common/FormSwitch.css"]["dividerDefault"];
 }
 
 declare module "@moonlight-mod/wp/discord/components/common/HeaderBar.css" {
@@ -170,9 +170,11 @@ declare module "@moonlight-mod/wp/discord/components/common/Select" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const SingleSelect: MappedModules["discord/components/common/Select"]["SingleSelect"];
   export const Select: MappedModules["discord/components/common/Select"]["Select"];
-  export const useVariableSelect: MappedModules["discord/components/common/Select"]["useVariableSelect"];
-  export const useMultiSelect: MappedModules["discord/components/common/Select"]["useMultiSelect"];
+  export const singleSelect: MappedModules["discord/components/common/Select"]["singleSelect"];
   export const multiSelect: MappedModules["discord/components/common/Select"]["multiSelect"];
+  export const toggleSelect: MappedModules["discord/components/common/Select"]["toggleSelect"];
+  export const useSingleSelectState: MappedModules["discord/components/common/Select"]["useSingleSelectState"];
+  export const useVariableSelect: MappedModules["discord/components/common/Select"]["useVariableSelect"];
 }
 
 declare module "@moonlight-mod/wp/discord/components/common/index" {
@@ -262,10 +264,6 @@ declare module "@moonlight-mod/wp/discord/components/common/index" {
   export const BackdropStyles: MappedModules["discord/components/common/index"]["BackdropStyles"];
   export const BadgeShapes: MappedModules["discord/components/common/index"]["BadgeShapes"];
   export const CircleIconButtonColors: MappedModules["discord/components/common/index"]["CircleIconButtonColors"];
-  export const CircleIconButtonSizes: MappedModules["discord/components/common/index"]["CircleIconButtonSizes"];
-  export const FormErrorBlockColors: MappedModules["discord/components/common/index"]["FormErrorBlockColors"];
-  export const FormNoticeImagePositions: MappedModules["discord/components/common/index"]["FormNoticeImagePositions"];
-  export const FormTitleTags: MappedModules["discord/components/common/index"]["FormTitleTags"];
   export const HelpMessageTypes: MappedModules["discord/components/common/index"]["HelpMessageTypes"];
   export const ModalSize: MappedModules["discord/components/common/index"]["ModalSize"];
   export const ModalTransitionState: MappedModules["discord/components/common/index"]["ModalTransitionState"];
@@ -530,9 +528,10 @@ declare module "@moonlight-mod/wp/discord/modules/messages/web/Message.css" {
   export const compact: MappedModules["discord/modules/messages/web/Message.css"]["compact"];
   export const cozy: MappedModules["discord/modules/messages/web/Message.css"]["cozy"];
   export const contentOnly: MappedModules["discord/modules/messages/web/Message.css"]["contentOnly"];
+  export const preview: MappedModules["discord/modules/messages/web/Message.css"]["preview"];
   export const repliedMessage: MappedModules["discord/modules/messages/web/Message.css"]["repliedMessage"];
-  export const threadMessageAccessory: MappedModules["discord/modules/messages/web/Message.css"]["threadMessageAccessory"];
   export const executedCommand: MappedModules["discord/modules/messages/web/Message.css"]["executedCommand"];
+  export const threadMessageAccessory: MappedModules["discord/modules/messages/web/Message.css"]["threadMessageAccessory"];
   export const latin12CompactTimeStamp: MappedModules["discord/modules/messages/web/Message.css"]["latin12CompactTimeStamp"];
   export const latin24CompactTimeStamp: MappedModules["discord/modules/messages/web/Message.css"]["latin24CompactTimeStamp"];
   export const asianCompactTimeStamp: MappedModules["discord/modules/messages/web/Message.css"]["asianCompactTimeStamp"];
@@ -540,19 +539,20 @@ declare module "@moonlight-mod/wp/discord/modules/messages/web/Message.css" {
   export const messageSpine: MappedModules["discord/modules/messages/web/Message.css"]["messageSpine"];
   export const repliedMessageClickableSpine: MappedModules["discord/modules/messages/web/Message.css"]["repliedMessageClickableSpine"];
   export const repliedMessageContentHovered: MappedModules["discord/modules/messages/web/Message.css"]["repliedMessageContentHovered"];
-  export const threadMessageAccessoryAvatar: MappedModules["discord/modules/messages/web/Message.css"]["threadMessageAccessoryAvatar"];
+  export const executedCommandAvatar: MappedModules["discord/modules/messages/web/Message.css"]["executedCommandAvatar"];
   export const replyAvatar: MappedModules["discord/modules/messages/web/Message.css"]["replyAvatar"];
   export const replyBadge: MappedModules["discord/modules/messages/web/Message.css"]["replyBadge"];
-  export const executedCommandAvatar: MappedModules["discord/modules/messages/web/Message.css"]["executedCommandAvatar"];
   export const replyChatIconContainer: MappedModules["discord/modules/messages/web/Message.css"]["replyChatIconContainer"];
+  export const threadMessageAccessoryAvatar: MappedModules["discord/modules/messages/web/Message.css"]["threadMessageAccessoryAvatar"];
   export const replyIcon: MappedModules["discord/modules/messages/web/Message.css"]["replyIcon"];
   export const clanTagChiplet: MappedModules["discord/modules/messages/web/Message.css"]["clanTagChiplet"];
-  export const userJoinSystemMessageIcon: MappedModules["discord/modules/messages/web/Message.css"]["userJoinSystemMessageIcon"];
   export const ticketIcon: MappedModules["discord/modules/messages/web/Message.css"]["ticketIcon"];
+  export const userJoinSystemMessageIcon: MappedModules["discord/modules/messages/web/Message.css"]["userJoinSystemMessageIcon"];
   export const commandIcon: MappedModules["discord/modules/messages/web/Message.css"]["commandIcon"];
+  export const commandName: MappedModules["discord/modules/messages/web/Message.css"]["commandName"];
   export const username: MappedModules["discord/modules/messages/web/Message.css"]["username"];
   export const roleDot: MappedModules["discord/modules/messages/web/Message.css"]["roleDot"];
-  export const commandName: MappedModules["discord/modules/messages/web/Message.css"]["commandName"];
+  export const botTag: MappedModules["discord/modules/messages/web/Message.css"]["botTag"];
   export const appsIcon: MappedModules["discord/modules/messages/web/Message.css"]["appsIcon"];
   export const appLauncherOnboardingCommandName: MappedModules["discord/modules/messages/web/Message.css"]["appLauncherOnboardingCommandName"];
   export const targetUsername: MappedModules["discord/modules/messages/web/Message.css"]["targetUsername"];
@@ -572,7 +572,9 @@ declare module "@moonlight-mod/wp/discord/modules/messages/web/Message.css" {
   export const contents: MappedModules["discord/modules/messages/web/Message.css"]["contents"];
   export const zalgo: MappedModules["discord/modules/messages/web/Message.css"]["zalgo"];
   export const messageContent: MappedModules["discord/modules/messages/web/Message.css"]["messageContent"];
+  export const gradient: MappedModules["discord/modules/messages/web/Message.css"]["gradient"];
   export const header: MappedModules["discord/modules/messages/web/Message.css"]["header"];
+  export const withDisplayNameStyles: MappedModules["discord/modules/messages/web/Message.css"]["withDisplayNameStyles"];
   export const buttonContainer: MappedModules["discord/modules/messages/web/Message.css"]["buttonContainer"];
   export const avatar: MappedModules["discord/modules/messages/web/Message.css"]["avatar"];
   export const avatarDecoration: MappedModules["discord/modules/messages/web/Message.css"]["avatarDecoration"];
@@ -580,9 +582,8 @@ declare module "@moonlight-mod/wp/discord/modules/messages/web/Message.css" {
   export const timestamp: MappedModules["discord/modules/messages/web/Message.css"]["timestamp"];
   export const timestampInline: MappedModules["discord/modules/messages/web/Message.css"]["timestampInline"];
   export const alt: MappedModules["discord/modules/messages/web/Message.css"]["alt"];
-  export const timestampTooltip: MappedModules["discord/modules/messages/web/Message.css"]["timestampTooltip"];
   export const timestampVisibleOnHover: MappedModules["discord/modules/messages/web/Message.css"]["timestampVisibleOnHover"];
-  export const nitroAuthorBadgeTootip: MappedModules["discord/modules/messages/web/Message.css"]["nitroAuthorBadgeTootip"];
+  export const usernameColorOnName: MappedModules["discord/modules/messages/web/Message.css"]["usernameColorOnName"];
   export const headerText: MappedModules["discord/modules/messages/web/Message.css"]["headerText"];
   export const hasRoleIcon: MappedModules["discord/modules/messages/web/Message.css"]["hasRoleIcon"];
   export const hasBadges: MappedModules["discord/modules/messages/web/Message.css"]["hasBadges"];
@@ -831,6 +832,12 @@ declare module "@moonlight-mod/wp/discord/uikit/Button" {
 declare module "@moonlight-mod/wp/discord/uikit/Flex" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/uikit/Flex"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/uikit/OverflowTooltip" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/uikit/OverflowTooltip"]["default"];
   export default _default;
 }
 

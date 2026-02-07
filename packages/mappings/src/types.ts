@@ -9,9 +9,9 @@ import UserSettingsModalActionCreators from "./mappings/discord/actions/UserSett
 import AppStartPerformance from "./mappings/discord/common/AppStartPerformance";
 import Alerts from "./mappings/discord/components/common/Alerts";
 import BaseHeaderBar from "./mappings/discord/components/common/BaseHeaderBar";
+import BreadcrumbsCSS from "./mappings/discord/components/common/Breadcrumbs.css";
 import Card from "./mappings/discord/components/common/Card";
 import FileUpload from "./mappings/discord/components/common/FileUpload";
-import FormSwitchCSS from "./mappings/discord/components/common/FormSwitch.css";
 import HeaderBarCSS from "./mappings/discord/components/common/HeaderBar.css";
 import HelpMessageCSS from "./mappings/discord/components/common/HelpMessage.css";
 import Image from "./mappings/discord/components/common/Image";
@@ -56,6 +56,7 @@ import UserRecord from "./mappings/discord/records/UserRecord";
 import MarginsCSS from "./mappings/discord/styles/shared/Margins.css";
 import Button from "./mappings/discord/uikit/Button";
 import Flex from "./mappings/discord/uikit/Flex";
+import OverflowTooltip from "./mappings/discord/uikit/OverflowTooltip";
 import TextInput from "./mappings/discord/uikit/TextInput";
 import LegacyButton from "./mappings/discord/uikit/legacy/Button";
 import ClipboardUtils from "./mappings/discord/utils/ClipboardUtils";
@@ -82,9 +83,9 @@ export type MappedModules = {
   "discord/common/AppStartPerformance": AppStartPerformance;
   "discord/components/common/Alerts": Alerts;
   "discord/components/common/BaseHeaderBar": BaseHeaderBar;
+  "discord/components/common/Breadcrumbs.css": BreadcrumbsCSS;
   "discord/components/common/Card": Card;
   "discord/components/common/FileUpload": FileUpload;
-  "discord/components/common/FormSwitch.css": FormSwitchCSS;
   "discord/components/common/HeaderBar.css": HeaderBarCSS;
   "discord/components/common/HelpMessage.css": HelpMessageCSS;
   "discord/components/common/Image": Image;
@@ -129,6 +130,7 @@ export type MappedModules = {
   "discord/styles/shared/Margins.css": MarginsCSS;
   "discord/uikit/Button": Button;
   "discord/uikit/Flex": Flex;
+  "discord/uikit/OverflowTooltip": OverflowTooltip;
   "discord/uikit/TextInput": TextInput;
   "discord/uikit/legacy/Button": LegacyButton;
   "discord/utils/ClipboardUtils": ClipboardUtils;

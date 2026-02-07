@@ -30,7 +30,7 @@ register((moonmap) => {
   const name = "murmurhash";
   moonmap.register({
     name,
-    find: ".murmur;",
+    find: [".v2=", ".v3="],
     process({ id }) {
       moonmap.addModule(id, name);
 

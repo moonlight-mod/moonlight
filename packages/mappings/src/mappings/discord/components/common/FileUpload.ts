@@ -20,7 +20,6 @@ export type FileUploadProps = {
   filters: FileFilter[];
 };
 
-// Lazy on the types here since it's hard to test, don't want to spam oauth endpoints
 type Exports = {
   default: React.FC<FileUploadProps>;
 };
@@ -30,7 +29,7 @@ register((moonmap) => {
   const name = "discord/components/common/FileUpload";
   moonmap.register({
     name,
-    find: "fileUploadInput,",
+    find: ".currentTarget.files?.[0]",
     process({ id }) {
       moonmap.addModule(id, name);
 

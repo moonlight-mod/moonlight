@@ -27,7 +27,7 @@ register((moonmap) => {
       });
       moonmap.addExport(name, "fetchProfile", {
         type: ModuleExportType.Function,
-        find: '"fetchProfile error: "'
+        find: "fetchProfile error: "
       });
 
       return true;

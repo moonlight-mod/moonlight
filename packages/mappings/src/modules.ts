@@ -17,7 +17,6 @@ import "./mappings/discord/components/common/BaseHeaderBar";
 import "./mappings/discord/components/common/Breadcrumbs.css";
 import "./mappings/discord/components/common/Card";
 import "./mappings/discord/components/common/FileUpload";
-import "./mappings/discord/components/common/FormSwitch.css";
 import "./mappings/discord/components/common/HeaderBar.css";
 import "./mappings/discord/components/common/HelpMessage.css";
 import "./mappings/discord/components/common/Image";

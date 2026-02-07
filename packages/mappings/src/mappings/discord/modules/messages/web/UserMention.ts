@@ -4,7 +4,7 @@ register((moonmap) => {
   const name = "discord/modules/messages/web/UserMention";
   moonmap.register({
     name,
-    find: 'children:"@".concat',
+    find: "children:`@${",
     process({ id }) {
       moonmap.addModule(id, name);
 

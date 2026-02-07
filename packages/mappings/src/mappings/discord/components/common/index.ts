@@ -650,29 +650,6 @@ export type CircleIconButtonColors = {
   SECONDARY: string;
   PRIMARY: string;
 };
-export type CircleIconButtonSizes = {
-  SIZE_24: string;
-  SIZE_32: string;
-  SIZE_36: string;
-};
-export type FormErrorBlockColors = {
-  RED: string;
-  BACKGROUND_TERTIARY: string;
-  BACKGROUND_ACCENT: string;
-};
-export enum FormNoticeImagePositions {
-  LEFT = "left",
-  RIGHT = "right"
-}
-export enum FormTitleTags {
-  H1 = "h1",
-  H2 = "h2",
-  H3 = "h3",
-  H4 = "h4",
-  H5 = "h5",
-  LABEL = "label",
-  LEGEND = "legend"
-}
 export enum ModalSize {
   SMALL = "small",
   MEDIUM = "medium",
@@ -702,10 +679,6 @@ type UnsortedComponentTypes = {
   BackdropStyles: typeof BackdropStyles;
   BadgeShapes: BadgeShapes;
   CircleIconButtonColors: CircleIconButtonColors;
-  CircleIconButtonSizes: CircleIconButtonSizes;
-  FormErrorBlockColors: FormErrorBlockColors;
-  FormNoticeImagePositions: typeof FormNoticeImagePositions;
-  FormTitleTags: typeof FormTitleTags;
   HelpMessageTypes: typeof HelpMessageTypes;
   ModalSize: typeof ModalSize;
   ModalTransitionState: typeof ModalTransitionState;
@@ -1038,7 +1011,7 @@ register((moonmap) => {
       });
       moonmap.addExport(name, "Heading", {
         type: ModuleExportType.Function,
-        find: ['"data-excessive-heading-level"', ".defaultColor,"],
+        find: '>6?{"data-excessive-heading-level":',
         recursive: true
       });
       moonmap.addExport(name, "NumberInputStepper", {
@@ -1086,7 +1059,7 @@ register((moonmap) => {
       });
       moonmap.addExport(name, "ModalCloseButton", {
         type: ModuleExportType.Function,
-        find: ".closeWithCircleBackground"
+        find: ".withCircleBackground"
       });
       moonmap.addExport(name, "ModalContent", {
         type: ModuleExportType.Function,
@@ -1094,15 +1067,15 @@ register((moonmap) => {
       });
       moonmap.addExport(name, "ModalFooter", {
         type: ModuleExportType.Function,
-        find: ".footerSeparator"
+        find: ".separator??!0"
       });
       moonmap.addExport(name, "HelpMessage", {
         type: ModuleExportType.Function,
-        find: '"text-sm/medium"}'
+        find: '="text-sm/medium",icon:'
       });
       moonmap.addExport(name, "FormTitle", {
         type: ModuleExportType.Function,
-        find: 'case"legend"'
+        find: "`defaultMargin${"
       });
       moonmap.addExport(name, "Avatar", {
         type: ModuleExportType.Function,
@@ -1180,18 +1153,6 @@ register((moonmap) => {
         type: ModuleExportType.Key,
         find: "TERTIARY"
       });
-      moonmap.addExport(name, "CircleIconButtonSizes", {
-        type: ModuleExportType.Key,
-        find: "SIZE_36"
-      });
-      moonmap.addExport(name, "FormErrorBlockColors", {
-        type: ModuleExportType.Key,
-        find: "BACKGROUND_TERTIARY"
-      });
-      moonmap.addExport(name, "FormNoticeImagePositions", {
-        type: ModuleExportType.Key,
-        find: "LEFT"
-      });
       moonmap.addExport(name, "TransitionStates", {
         type: ModuleExportType.Key,
         find: "YEETED"
@@ -1207,10 +1168,6 @@ register((moonmap) => {
       moonmap.addExport(name, "ModalTransitionState", {
         type: ModuleExportType.Key,
         find: "EXITING"
-      });
-      moonmap.addExport(name, "FormTitleTags", {
-        type: ModuleExportType.Key,
-        find: "H5"
       });
 
       // Icons

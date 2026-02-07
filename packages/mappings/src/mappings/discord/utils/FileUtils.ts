@@ -11,7 +11,7 @@ register((moonmap) => {
 
       moonmap.addExport(name, "anyFileTooLarge", {
         type: ModuleExportType.Function,
-        find: /{return .\.size>.}/
+        find: /\.some\(.=>.\.size>/
       });
       moonmap.addExport(name, "classifyFile", {
         type: ModuleExportType.Function,
@@ -21,17 +21,21 @@ register((moonmap) => {
         type: ModuleExportType.Function,
         find: /null!=.\?.\.klass:"unknown"/
       });
+      moonmap.addExport(name, "fileUploadLimitRoadblockDescription", {
+        type: ModuleExportType.Function,
+        find: "useKibibytes:!0"
+      });
       moonmap.addExport(name, "getMaxRequestSize", {
         type: ModuleExportType.Function,
         find: ".isStaff()?"
       });
       moonmap.addExport(name, "getUploadFileSizeSum", {
         type: ModuleExportType.Function,
-        find: /\+=.\.value\.size/
+        find: /return .\(.\)>.\(\)/
       });
       moonmap.addExport(name, "makeFile", {
         type: ModuleExportType.Function,
-        find: '+=".".concat'
+        find: "return new File"
       });
       moonmap.addExport(name, "maxFileSize", {
         type: ModuleExportType.Function,

@@ -4,7 +4,7 @@ register((moonmap) => {
   const name = "discord/components/common/NoResults";
   moonmap.register({
     name,
-    find: ".sadImage,",
+    find: [",noResultsImageURL:", "backgroundImage:`url(${"],
     process({ id }) {
       moonmap.addModule(id, name);
 

@@ -9,10 +9,19 @@ register((moonmap) => {
     process({ id }) {
       moonmap.addModule(id, name);
 
+      moonmap.addExport(name, "getContrast", {
+        type: ModuleExportType.Function,
+        find: ")+.05)/(Math.min("
+      });
       moonmap.addExport(name, "getDarkness", {
         type: ModuleExportType.Function,
         find: "1-(.299*("
       });
+      // treeshaken probably, exported on mobile
+      /*moonmap.addExport(name, "getLuminance", {
+        type: ModuleExportType.Function,
+        find: "/=255)<=.03928?"
+      });*/
       moonmap.addExport(name, "hex2int", {
         type: ModuleExportType.Function,
         find: ").num()"
@@ -33,21 +42,18 @@ register((moonmap) => {
         type: ModuleExportType.Function,
         find: "=Math.round(60*("
       });
-      moonmap.addExport(name, "int2rgbArray", {
+      // treeshaken probably, exported on mobile
+      /*moonmap.addExport(name, "int2rgbArray", {
         type: ModuleExportType.Function,
         find: "return["
-      });
+      });*/
       moonmap.addExport(name, "int2rgba", {
         type: ModuleExportType.Function,
-        find: '"rgba(".concat('
+        find: "`rgba(${"
       });
       moonmap.addExport(name, "isValidHex", {
         type: ModuleExportType.Function,
         find: "().valid("
-      });
-      moonmap.addExport(name, "rgb2int", {
-        type: ModuleExportType.Function,
-        find: ".red<<16)+("
       });
 
       return true;
