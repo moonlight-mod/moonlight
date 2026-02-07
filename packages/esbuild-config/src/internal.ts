@@ -48,8 +48,7 @@ export function defineCoreConfig(options: CoreFactoryOptions): BuildOptions {
 }
 
 export interface CoreFactoryPathsOptions {
-  watchDir: string | string[];
-  cleanPath: string | string[];
+  cleanPaths?: string[];
 }
 
 export async function buildOrWatchConfigs(paths: CoreFactoryPathsOptions, ...configs: BuildOptions[]) {
@@ -58,11 +57,14 @@ export async function buildOrWatchConfigs(paths: CoreFactoryPathsOptions, ...con
 
   if (clean) {
     // since esbuild-config *is* the clean script, the package.json shorthand script filters it out
-    const cleanPaths = Array.isArray(paths.cleanPath) ? paths.cleanPath : [paths.cleanPath];
-    for (const path of cleanPaths) await fs.rm(path, { recursive: true, force: true });
+    if (paths.cleanPaths) {
+      for (const path of paths.cleanPaths) {
+        await fs.rm(path, { recursive: true, force: true });
+      }
+    }
   } else {
     if (watch) {
-      await watchConfigs(configs, paths.watchDir);
+      await watchConfigs(configs);
     } else {
       await buildConfigs(configs);
     }

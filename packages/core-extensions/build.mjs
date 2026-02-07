@@ -6,7 +6,7 @@ import fs from "node:fs/promises";
 const extensions = await fs.readdir("./src");
 
 await buildOrWatchConfigs(
-  { watchDir: path.resolve("./src"), cleanPath: path.resolve("../../dist/core-extensions") },
+  { cleanPaths: [path.resolve("../../dist/core-extensions")] },
   ...extensions
     .map((ext) =>
       defineConfigs({

@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import { build, context, type BuildOptions } from "esbuild";
 
 export const prod = process.env.NODE_ENV === "production";
@@ -37,28 +36,12 @@ export function buildConfigs(buildConfigs: BuildOptions[]) {
   return Promise.all(buildConfigs.map((config) => build(config)));
 }
 
-export function watchConfigs(buildConfigs: BuildOptions[], watchDir: string | string[]) {
+export function watchConfigs(buildConfigs: BuildOptions[]) {
   return Promise.all(
     buildConfigs.map(async (config) => {
       const ctx = await context(config);
-
-      async function rebuild() {
-        try {
-          await ctx.rebuild();
-        } catch {
-          // esbuild will log errors, we just need to not do anything
-        }
-      }
-
-      await rebuild();
-
-      const watchDirs = Array.isArray(watchDir) ? watchDir : [watchDir];
-      const watchers = [];
-      for (const dir of watchDirs) {
-        const watcher = fs.watch(dir, { recursive: true }, async () => await rebuild());
-        watchers.push(watcher);
-      }
-      return watchers;
+      await ctx.watch();
+      return ctx;
     })
-  ).then((watchers) => watchers.flat());
+  );
 }

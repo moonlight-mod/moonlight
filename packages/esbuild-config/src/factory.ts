@@ -133,7 +133,7 @@ export async function buildExtension(options: Omit<ESBuildFactoryOptions, "side"
 }
 
 export async function watchExtension(options: Omit<ESBuildFactoryOptions, "side">) {
-  return watchConfigs(defineConfigs(options), options.entry);
+  return watchConfigs(defineConfigs(options));
 }
 
 // In GitHub PR #3, these original names were modified to be more descriptive.

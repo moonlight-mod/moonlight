@@ -26,10 +26,7 @@ const banner = {
 };
 
 await buildOrWatchCore(
-  {
-    watchDir: [path.resolve("./src"), path.resolve("../web-preload/src"), path.resolve("../core/src")],
-    cleanPath: [path.resolve("../../dist/browser"), path.resolve("../../dist/browser-mv2")]
-  },
+  { cleanPaths: [path.resolve("../../dist/browser"), path.resolve("../../dist/browser-mv2")] },
   {
     name: "browser",
     side: "browser",
