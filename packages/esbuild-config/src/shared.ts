@@ -7,7 +7,6 @@ export const external = [
   "fs",
   "path",
   "module",
-  "events",
   "original-fs",
   "discord" // mappings
 ];

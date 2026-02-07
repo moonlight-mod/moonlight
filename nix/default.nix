@@ -39,6 +39,7 @@ stdenv.mkDerivation (finalAttrs: {
     runHook preBuild
 
     pnpm run build
+    pnpm run browser
 
     runHook postBuild
   '';

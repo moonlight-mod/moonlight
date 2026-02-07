@@ -21,6 +21,7 @@ export interface CoreFactoryOptions {
 
   extraExternal?: string[];
   extraPlugins?: Plugin[];
+  extraConfig?: BuildOptions;
 }
 
 export function defineCoreConfig(options: CoreFactoryOptions): BuildOptions {
@@ -40,7 +41,9 @@ export function defineCoreConfig(options: CoreFactoryOptions): BuildOptions {
     dropLabels: applyDropLabels(options.side),
 
     external: [...external, ...(options.extraExternal ?? [])],
-    plugins: [webpackImports, betterLogging(options.name), ...(options.extraPlugins ?? [])]
+    plugins: [webpackImports, betterLogging(options.name), ...(options.extraPlugins ?? [])],
+
+    ...options.extraConfig
   };
 }
 

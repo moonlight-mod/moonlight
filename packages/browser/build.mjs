@@ -1,6 +1,29 @@
 import { buildOrWatchCore } from "@moonlight-mod/esbuild-config/internal";
 import { copyFile } from "@moonlight-mod/esbuild-config";
+import fs from "node:fs";
 import path from "node:path";
+
+const coreExtensionsJson = {};
+const coreExtensionsRoot = "../../dist/core-extensions";
+
+function readDir(dir) {
+  if (!fs.existsSync(dir)) return;
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const filePath = dir + "/" + file;
+    const normalizedPath = filePath.replace(coreExtensionsRoot + "/", "");
+    if (fs.statSync(filePath).isDirectory()) {
+      readDir(filePath);
+    } else {
+      coreExtensionsJson[normalizedPath] = fs.readFileSync(filePath, "utf8");
+    }
+  }
+}
+
+readDir(coreExtensionsRoot);
+const banner = {
+  js: `window._moonlight_coreExtensionsStr = ${JSON.stringify(JSON.stringify(coreExtensionsJson))};`
+};
 
 await buildOrWatchCore(
   {
@@ -18,7 +41,7 @@ await buildOrWatchCore(
       copyFile(path.resolve("./moonlight-filter.json"), path.resolve("../../dist/browser/moonlight-filter.json"))
     ],
     extraConfig: {
-      jsx: "react"
+      banner
     }
   },
   {
@@ -31,7 +54,7 @@ await buildOrWatchCore(
       copyFile(path.resolve("./src/background-mv2.js"), path.resolve("../../dist/browser-mv2/background.js"))
     ],
     extraConfig: {
-      jsx: "react"
+      banner
     }
   }
 );

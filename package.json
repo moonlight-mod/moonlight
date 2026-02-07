@@ -21,9 +21,10 @@
     "yarn": "pnpm"
   },
   "scripts": {
-    "build": "pnpm run -r build",
+    "build": "pnpm run --filter=!browser -r build",
+    "browser": "pnpm run --filter=browser build",
     "dev": "pnpm run --parallel --stream dev",
-    "clean": "pnpm run --filter !@moonlight-mod/esbuild-config -r clean",
+    "clean": "pnpm run --filter=!esbuild-config -r clean",
     "lint": "eslint --ignore-pattern \"**/dist/**\"",
     "lint:fix": "pnpm lint --fix",
     "lint:report": "pnpm lint --output-file eslint_report.json --format json",
