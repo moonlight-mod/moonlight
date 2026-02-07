@@ -50,7 +50,6 @@ type Exports = {
   singleSelect: SelectInteractionCallback;
   multiSelect: SelectInteractionCallback;
   toggleSelect: SelectInteractionCallback;
-  useSingleSelectState: (props: SelectProps) => SelectState;
   useVariableSelect: (props: SelectProps) => SelectState;
 };
 export default Exports;
@@ -83,10 +82,6 @@ register((moonmap) => {
       moonmap.addExport(name, "toggleSelect", {
         type: ModuleExportType.Function,
         find: "?{newValues:new Set,"
-      });
-      moonmap.addExport(name, "useSingleSelectState", {
-        type: ModuleExportType.Function,
-        find: ["clear:()=>", "(null)"]
       });
       moonmap.addExport(name, "useVariableSelect", {
         type: ModuleExportType.Function,
