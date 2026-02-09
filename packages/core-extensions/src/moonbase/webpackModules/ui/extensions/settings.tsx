@@ -68,17 +68,13 @@ function markdownify(str: string) {
 }
 
 function useConfigEntry<T>(uniqueId: number, name: string) {
-  return useStateFromStores(
-    [MoonbaseSettingsStore],
-    () => {
-      return {
-        value: MoonbaseSettingsStore.getExtensionConfig<T>(uniqueId, name),
-        displayName: MoonbaseSettingsStore.getExtensionConfigName(uniqueId, name),
-        description: MoonbaseSettingsStore.getExtensionConfigDescription(uniqueId, name)
-      };
-    },
-    [uniqueId, name]
-  );
+  return useStateFromStores([MoonbaseSettingsStore], () => {
+    return {
+      value: MoonbaseSettingsStore.getExtensionConfig<T>(uniqueId, name),
+      displayName: MoonbaseSettingsStore.getExtensionConfigName(uniqueId, name),
+      description: MoonbaseSettingsStore.getExtensionConfigDescription(uniqueId, name)
+    };
+  }, [uniqueId, name]);
 }
 
 function Boolean({ ext, name, setting, disabled }: SettingsProps) {
@@ -336,15 +332,11 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
 function Custom({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName } = useConfigEntry<any>(ext.uniqueId, name);
 
-  const { component: Component } = useStateFromStores(
-    [MoonbaseSettingsStore],
-    () => {
-      return {
-        component: MoonbaseSettingsStore.getExtensionConfigComponent(ext.id, name)
-      };
-    },
-    [ext.uniqueId, name]
-  );
+  const { component: Component } = useStateFromStores([MoonbaseSettingsStore], () => {
+    return {
+      component: MoonbaseSettingsStore.getExtensionConfigComponent(ext.id, name)
+    };
+  }, [ext.uniqueId, name]);
 
   if (Component == null) {
     return (

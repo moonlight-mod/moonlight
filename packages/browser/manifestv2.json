@@ -15,19 +15,12 @@
     "https://api.github.com/*"
   ],
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "scripts": ["background.js"]
   },
   "content_scripts": [
     {
-      "js": [
-        "index.js"
-      ],
-      "matches": [
-        "https://*.discord.com/*",
-        "https://*.discordapp.com/*"
-      ],
+      "js": ["index.js"],
+      "matches": ["https://*.discord.com/*", "https://*.discordapp.com/*"],
       "run_at": "document_start",
       "world": "MAIN"
     }
