@@ -62,9 +62,7 @@ export const commands: Commands = {
   },
 
   anyScopeRegex(regex) {
-    const out = function (str: string) {
-      return regex.exec(str);
-    };
+    const out = (str: string) => regex.exec(str);
     out.regex = regex;
     return out;
   },

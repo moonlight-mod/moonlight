@@ -1,6 +1,6 @@
+import path from "node:path";
 import type { BrowserWindow } from "electron";
 import { app, desktopCapturer } from "electron";
-import path from "node:path";
 import { type PatchBay } from "./types";
 
 const logger = moonlightHost.getLogger("rocketship");

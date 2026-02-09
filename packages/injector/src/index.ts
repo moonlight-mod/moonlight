@@ -1,22 +1,22 @@
-import electron, {
-  BrowserWindowConstructorOptions,
-  BrowserWindow as ElectronBrowserWindow,
-  ipcMain,
-  app
-} from "electron";
-import Module from "node:module";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
-import { readConfig, writeConfig } from "@moonlight-mod/core/config";
-import { getExtensions } from "@moonlight-mod/core/extension";
-import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
-import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import EventEmitter from "node:events";
 import fs from "node:fs";
+import Module from "node:module";
 import path from "node:path";
-import persist from "@moonlight-mod/core/persist";
+import { readConfig, writeConfig } from "@moonlight-mod/core/config";
+import { getExtensions } from "@moonlight-mod/core/extension";
+import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import createFS from "@moonlight-mod/core/fs";
+import persist from "@moonlight-mod/core/persist";
 import { getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 import { getConfigPath, getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
+import electron, {
+  app,
+  BrowserWindowConstructorOptions,
+  BrowserWindow as ElectronBrowserWindow,
+  ipcMain
+} from "electron";
 
 const logger = new Logger("injector");
 
@@ -65,9 +65,9 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
       }
       regex += escapeRegExp(parts.join("."));
 
-      regex += "\\/" + escapeRegExp(match.groups.path).replace("\\*", ".*?");
+      regex += `\\/${escapeRegExp(match.groups.path).replace("\\*", ".*?")}`;
 
-      return new RegExp("^" + regex + "$");
+      return new RegExp(`^${regex}$`);
     })
     .filter(Boolean) as RegExp[];
 

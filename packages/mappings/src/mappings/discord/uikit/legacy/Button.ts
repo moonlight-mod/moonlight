@@ -1,14 +1,13 @@
-import register from "../../../../registry";
-import type {
-  Ref,
-  PropsWithChildren,
-  CSSProperties,
-  ComponentType,
-  MouseEventHandler,
-  KeyboardEventHandler
-} from "react";
-
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import type {
+  ComponentType,
+  CSSProperties,
+  KeyboardEventHandler,
+  MouseEventHandler,
+  PropsWithChildren,
+  Ref
+} from "react";
+import register from "../../../../registry";
 
 export enum ButtonLooks {
   FILLED = "lookFilled",

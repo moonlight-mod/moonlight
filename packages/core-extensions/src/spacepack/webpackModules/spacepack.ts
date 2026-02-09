@@ -1,6 +1,6 @@
+import { processFind, testFind } from "@moonlight-mod/core/util/patch";
 import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "@moonlight-mod/types";
 import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
-import { processFind, testFind } from "@moonlight-mod/core/util/patch";
 
 const webpackRequire = require as unknown as WebpackRequireType;
 const cache = webpackRequire.c;

@@ -1,19 +1,17 @@
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
-import { ExtensionState } from "../../../types";
-import FilterBar, { Filter, defaultFilter } from "./filterBar";
-import ExtensionCard from "./card";
-
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
+import { CircleInformationIcon, FormDivider, XSmallIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
+import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
-import { FormDivider, CircleInformationIcon, XSmallIcon } from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
-
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
-import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import { ExtensionState } from "../../../types";
 import HelpMessage from "../HelpMessage";
+import ExtensionCard from "./card";
+import FilterBar, { defaultFilter, Filter } from "./filterBar";
 
 const SearchBar = spacepack.require("discord/uikit/search/SearchBar").default;
 

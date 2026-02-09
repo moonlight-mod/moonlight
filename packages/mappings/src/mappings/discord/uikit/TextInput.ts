@@ -1,7 +1,6 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import type { Component, ComponentClass, PropsWithoutRef, Ref } from "react";
 import register from "../../../registry";
-
-import type { Component, Ref, PropsWithoutRef, ComponentClass } from "react";
 
 type Modify<T, R> = Pick<T, Exclude<keyof T, keyof R>> & R;
 

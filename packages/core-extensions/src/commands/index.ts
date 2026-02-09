@@ -1,4 +1,4 @@
-import { Patch, ExtensionWebpackModule } from "@moonlight-mod/types";
+import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 import { APPLICATION_ID } from "@moonlight-mod/types/coreExtensions/commands";
 
 export const patches: Patch[] = [

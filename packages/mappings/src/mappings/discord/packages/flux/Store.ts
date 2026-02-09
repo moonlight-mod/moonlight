@@ -1,8 +1,8 @@
-import type { BasePayload } from "./_shared";
-import type { ActionHandler, Dispatcher } from "./Dispatcher";
-import type { ChangeListeners } from "./ChangeListeners";
-import register from "../../../../registry";
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import register from "../../../../registry";
+import type { BasePayload } from "./_shared";
+import type { ChangeListeners } from "./ChangeListeners";
+import type { ActionHandler, Dispatcher } from "./Dispatcher";
 
 export type SyncFunction = () => boolean;
 type SyncsWith = {

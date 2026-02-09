@@ -101,7 +101,7 @@ const stripLoggers = [
 const simplePatches = [
   // Moment.js deprecation warnings
   ["suppressDeprecationWarnings=!1", "suppressDeprecationWarnings=!0"]
-] as { [0]: string | RegExp; [1]: string }[];
+] as { 0: string | RegExp; 1: string }[];
 
 export const patches: Patch[] = [
   {

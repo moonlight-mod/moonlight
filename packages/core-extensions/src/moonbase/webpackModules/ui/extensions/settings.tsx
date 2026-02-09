@@ -1,40 +1,40 @@
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import {
-  ExtensionSettingType,
   ExtensionSettingsManifest,
+  ExtensionSettingType,
   MultiSelectSettingType,
   NumberSettingType,
   SelectOption,
   SelectSettingType
 } from "@moonlight-mod/types/config";
-import { ExtensionState, MoonbaseExtension } from "../../../types";
-import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import React from "@moonlight-mod/wp/react";
-import {
-  FormSwitch,
-  FormItem,
-  FormText,
-  Slider,
-  TextArea,
-  Tooltip,
-  Clickable,
-  CircleXIcon,
-  Text,
-  NumberInputStepper
-} from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
-import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import {
-  SingleSelect,
-  useVariableSelect,
+  CircleXIcon,
+  Clickable,
+  FormItem,
+  FormSwitch,
+  FormText,
+  NumberInputStepper,
+  Slider,
+  Text,
+  TextArea,
+  Tooltip
+} from "@moonlight-mod/wp/discord/components/common/index";
+import {
+  Select as DiscordSelect,
   multiSelect,
-  Select as DiscordSelect
+  SingleSelect,
+  useVariableSelect
 } from "@moonlight-mod/wp/discord/components/common/Select";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { ExtensionState, MoonbaseExtension } from "../../../types";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack
@@ -364,7 +364,7 @@ function Setting({ ext, name, setting, disabled }: SettingsProps) {
     [ExtensionSettingType.Custom]: Custom
   };
   const element = elements[setting.type];
-  if (element == null) return <></>;
+  if (element == null) return;
   return React.createElement(element, { ext, name, setting, disabled });
 }
 

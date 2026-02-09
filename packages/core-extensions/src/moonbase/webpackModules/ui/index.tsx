@@ -1,18 +1,17 @@
-import React from "@moonlight-mod/wp/react";
-import { Text, TabBar } from "@moonlight-mod/wp/discord/components/common/index";
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
-
-import ExtensionsPage from "./extensions";
-import ConfigPage from "./config";
-import AboutPage from "./about";
-import Update from "./update";
-import RestartAdviceMessage from "./RestartAdvice";
+import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import { Divider } from "@moonlight-mod/wp/discord/components/common/BaseHeaderBar";
 import HeaderBarClasses from "@moonlight-mod/wp/discord/components/common/HeaderBar.css";
+import { TabBar, Text } from "@moonlight-mod/wp/discord/components/common/index";
 import PeoplePageClasses from "@moonlight-mod/wp/discord/modules/people/web/PeoplePage.css";
-import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
+import React from "@moonlight-mod/wp/react";
+import AboutPage from "./about";
+import ConfigPage from "./config";
+import ExtensionsPage from "./extensions";
+import RestartAdviceMessage from "./RestartAdvice";
+import Update from "./update";
 
 export const pages: {
   id: string;

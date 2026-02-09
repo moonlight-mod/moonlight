@@ -1,8 +1,8 @@
-import { MoonlightBranch } from "@moonlight-mod/types";
-import type { MoonbaseNatives, RepositoryManifest } from "./types";
 import extractAsar from "@moonlight-mod/core/asar";
-import { repoUrlFile, installedVersionFile } from "@moonlight-mod/types/constants";
+import { MoonlightBranch } from "@moonlight-mod/types";
+import { installedVersionFile, repoUrlFile } from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
+import type { MoonbaseNatives, RepositoryManifest } from "./types";
 
 const moonlightGlobal = globalThis.moonlightHost ?? globalThis.moonlightNode;
 

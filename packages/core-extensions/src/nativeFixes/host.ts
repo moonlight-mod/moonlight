@@ -1,14 +1,14 @@
-import { app, nativeTheme } from "electron";
-import * as path from "node:path";
-import * as fs from "node:fs/promises";
 import * as fsSync from "node:fs";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
+import { app, nativeTheme } from "electron";
 import { parseTarGzip } from "nanotar";
 
 const logger = moonlightHost.getLogger("nativeFixes/host");
 const enabledFeatures = app.commandLine.getSwitchValue("enable-features").split(",");
 const disabledFeatures = app.commandLine.getSwitchValue("disable-features").split(",");
 
-moonlightHost.events.on("window-created", function (browserWindow) {
+moonlightHost.events.on("window-created", (browserWindow) => {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "devtoolsThemeFix") ?? true) {
     browserWindow.webContents.on("devtools-opened", () => {
       if (!nativeTheme.shouldUseDarkColors) return;
@@ -150,7 +150,7 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
     });
 
     const reader = resp.body!.getReader();
-    const contentLength = parseInt(resp.headers.get("Content-Length") ?? "0");
+    const contentLength = parseInt(resp.headers.get("Content-Length") ?? "0", 10);
     logger.info(`Expecting ${contentLength} bytes for the update`);
     const bytes = new Uint8Array(contentLength);
     let pos = 0;
@@ -194,7 +194,7 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
 
       // Since we're unsafely replacing files as the process is still running, we write files into a temp filename
       // and call rename so we can avoid unfinished writes when it flushes to disk
-      const tempFilePath = targetFilePath + ".new";
+      const tempFilePath = `${targetFilePath}.new`;
       await fs.writeFile(tempFilePath, file.data);
       await fs.rename(tempFilePath, targetFilePath);
 

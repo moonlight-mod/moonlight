@@ -81,8 +81,8 @@ const mappedTypes = {
 let write = process.argv.includes("--write");
 
 function getExports(path) {
-  let sourcePath = "./src/mappings/" + path + ".ts";
-  if (!fs.existsSync(sourcePath)) sourcePath = "./src/mappings/" + path + "/index.ts";
+  let sourcePath = `./src/mappings/${path}.ts`;
+  if (!fs.existsSync(sourcePath)) sourcePath = `./src/mappings/${path}/index.ts`;
   if (!fs.existsSync(sourcePath)) return null;
   const program = ts.createProgram([sourcePath], {
     target: ts.ScriptTarget.ES2022,

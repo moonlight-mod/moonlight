@@ -1,7 +1,7 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../../../../registry";
-import type { ItemType } from "./SettingsItemConstants";
 import type { Store } from "../../../packages/flux/Store";
+import type { ItemType } from "./SettingsItemConstants";
 
 export type FinalizedItem<Props extends GenericProps, Type extends ItemType> = {
   key: string;

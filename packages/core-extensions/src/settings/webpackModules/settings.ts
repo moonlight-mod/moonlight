@@ -35,7 +35,7 @@ export const Settings: SettingsType = {
     });
   },
 
-  addHeader: function (label, pos = null) {
+  addHeader: (label, pos = null) => {
     Settings.ourSections.push({
       section: "HEADER",
       label: label,

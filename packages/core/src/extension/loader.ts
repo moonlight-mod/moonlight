@@ -1,19 +1,19 @@
 import {
-  ExtensionWebExports,
-  DetectedExtension,
-  ProcessedExtensions,
-  WebpackModuleFunc,
   constants,
+  DetectedExtension,
+  ExtensionEnvironment,
   ExtensionManifest,
-  ExtensionEnvironment
+  ExtensionWebExports,
+  ProcessedExtensions,
+  WebpackModuleFunc
 } from "@moonlight-mod/types";
+import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
 import { readConfig } from "../config";
-import Logger from "../util/logger";
 import { registerPatch, registerWebpackModule } from "../patch";
+import { registerStyles } from "../styles";
 import calculateDependencies from "../util/dependency";
 import { createEventEmitter } from "../util/event";
-import { registerStyles } from "../styles";
-import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
+import Logger from "../util/logger";
 
 const logger = new Logger("core/extension/loader");
 
@@ -45,7 +45,7 @@ async function evalEsm(source: string): Promise<ExtensionWebExports> {
 
 async function loadExtWeb(ext: DetectedExtension) {
   if (ext.scripts.web != null) {
-    const source = ext.scripts.web + `\n//# sourceURL=${ext.id}/web.js`;
+    const source = `${ext.scripts.web}\n//# sourceURL=${ext.id}/web.js`;
 
     let exports: ExtensionWebExports;
 
@@ -71,7 +71,7 @@ async function loadExtWeb(ext: DetectedExtension) {
     if (exports.webpackModules != null) {
       for (const [name, wp] of Object.entries(exports.webpackModules)) {
         if (wp.run == null && ext.scripts.webpackModules?.[name] != null) {
-          const source = ext.scripts.webpackModules[name]! + `\n//# sourceURL=${ext.id}/webpackModules/${name}.js`;
+          const source = `${ext.scripts.webpackModules[name]!}\n//# sourceURL=${ext.id}/webpackModules/${name}.js`;
           const func = new Function("module", "exports", "require", source) as WebpackModuleFunc;
           registerWebpackModule({
             ...wp,

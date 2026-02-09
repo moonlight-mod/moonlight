@@ -1,6 +1,6 @@
 import register from "../../../registry";
-import { BaseRecord } from "../lib/BaseRecord";
 import { UserFlags } from "../Constants";
+import { BaseRecord } from "../lib/BaseRecord";
 
 interface AvatarDecorationData {
   asset: string;

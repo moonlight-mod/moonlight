@@ -1,5 +1,5 @@
-import { buildOrWatchCore } from "@moonlight-mod/esbuild-config/internal";
 import path from "node:path";
+import { buildOrWatchCore } from "@moonlight-mod/esbuild-config/internal";
 
 await buildOrWatchCore(
   { cleanPaths: [path.resolve("../../dist/web-preload.js")] },

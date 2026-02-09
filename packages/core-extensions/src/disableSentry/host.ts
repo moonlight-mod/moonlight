@@ -1,5 +1,5 @@
-import { join } from "node:path";
 import { Module } from "node:module";
+import { join } from "node:path";
 
 const logger = moonlightHost.getLogger("disableSentry");
 

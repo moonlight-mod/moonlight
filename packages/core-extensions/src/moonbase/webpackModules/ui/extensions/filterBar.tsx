@@ -1,25 +1,25 @@
-import { tagNames } from "./info";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import * as React from "@moonlight-mod/wp/react";
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { WindowStore } from "@moonlight-mod/wp/common_stores";
+import { MenuCheckboxItem, MenuGroup, MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 import {
-  Text,
-  Heading,
-  Popout,
-  Dialog,
-  Menu,
+  ArrowsUpDownIcon,
   ChevronSmallDownIcon,
   ChevronSmallUpIcon,
-  ArrowsUpDownIcon,
+  Dialog,
+  Heading,
+  Menu,
+  Popout,
   RetryIcon,
+  Text,
   Tooltip
 } from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import { MenuGroup, MenuCheckboxItem, MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import TagItem from "@moonlight-mod/wp/discord/modules/forums/web/Tag";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import * as React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { tagNames } from "./info";
 
 export enum Filter {
   Core = 1 << 0,

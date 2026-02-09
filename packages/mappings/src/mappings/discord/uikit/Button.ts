@@ -1,8 +1,7 @@
-import register from "../../../registry";
-import type { PropsWithChildren, CSSProperties, ReactNode, ComponentType, ButtonHTMLAttributes, AriaRole } from "react";
-import type { IconProps } from "../components/common";
-
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import type { AriaRole, ButtonHTMLAttributes, ComponentType, CSSProperties, PropsWithChildren, ReactNode } from "react";
+import register from "../../../registry";
+import type { IconProps } from "../components/common";
 
 export type Button = ComponentType<
   ButtonHTMLAttributes<{

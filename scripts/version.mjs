@@ -16,7 +16,7 @@ const browserManifest = JSON.parse(await fs.readFile(browserManifestPath, "utf8"
 const browserManifestV2 = JSON.parse(await fs.readFile(browserManifestV2Path, "utf8"));
 
 if (!version) {
-  const [oldMajor, oldMinor, oldPatch] = mainPackage.version.split(".").map((p) => parseInt(p));
+  const [oldMajor, oldMinor, oldPatch] = mainPackage.version.split(".").map((p) => parseInt(p, 10));
 
   const now = new Date();
   const newMajor = now.getUTCFullYear();

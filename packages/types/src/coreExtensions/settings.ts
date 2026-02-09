@@ -1,11 +1,11 @@
-import React, { ReactElement } from "react";
-import type { Store } from "@moonlight-mod/mappings/discord/packages/flux/Store";
 import { ItemType } from "@moonlight-mod/mappings/discord/modules/user_settings/redesign/SettingsItemConstants";
 import type {
   FinalizedItem,
   GenericProps,
   SectionProps
 } from "@moonlight-mod/mappings/discord/modules/user_settings/redesign/SettingsItemCreators";
+import type { Store } from "@moonlight-mod/mappings/discord/packages/flux/Store";
+import React, { ReactElement } from "react";
 
 export type NoticeProps = {
   stores: Store<any>[];

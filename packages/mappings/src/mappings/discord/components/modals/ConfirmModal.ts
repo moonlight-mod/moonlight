@@ -1,9 +1,8 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import type { ComponentType, PropsWithChildren, ReactNode } from "react";
 import register from "../../../../registry";
-
-import type { ReactNode, ComponentType, PropsWithChildren } from "react";
-import type { ModalTransitionState } from "../common/index";
 import type { ButtonColors } from "../../uikit/legacy/Button";
+import type { ModalTransitionState } from "../common/index";
 
 export type ConfirmModalProps = PropsWithChildren<{
   header?: ReactNode;

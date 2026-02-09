@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
-import { LogLevel } from "@moonlight-mod/types/logger";
+
 import { Config } from "@moonlight-mod/types";
+import { LogLevel } from "@moonlight-mod/types/logger";
 
 const colors = {
   [LogLevel.SILLY]: "#EDD3E9",

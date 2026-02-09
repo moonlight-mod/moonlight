@@ -1,6 +1,6 @@
 import { Config } from "@moonlight-mod/types";
-import { getConfigPath } from "./util/data";
 import * as constants from "@moonlight-mod/types/constants";
+import { getConfigPath } from "./util/data";
 import Logger from "./util/logger";
 
 const logger = new Logger("core/config");

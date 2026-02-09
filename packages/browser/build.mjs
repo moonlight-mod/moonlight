@@ -1,7 +1,7 @@
-import { buildOrWatchCore } from "@moonlight-mod/esbuild-config/internal";
-import { copyFile } from "@moonlight-mod/esbuild-config";
 import fs from "node:fs";
 import path from "node:path";
+import { copyFile } from "@moonlight-mod/esbuild-config";
+import { buildOrWatchCore } from "@moonlight-mod/esbuild-config/internal";
 
 const coreExtensionsJson = {};
 const coreExtensionsRoot = "../../dist/core-extensions";
@@ -10,8 +10,8 @@ function readDir(dir) {
   if (!fs.existsSync(dir)) return;
   const files = fs.readdirSync(dir);
   for (const file of files) {
-    const filePath = dir + "/" + file;
-    const normalizedPath = filePath.replace(coreExtensionsRoot + "/", "");
+    const filePath = `${dir}/${file}`;
+    const normalizedPath = filePath.replace(`${coreExtensionsRoot}/`, "");
     if (fs.statSync(filePath).isDirectory()) {
       readDir(filePath);
     } else {

@@ -1,4 +1,4 @@
-import { Icons, IconSize } from "@moonlight-mod/types/coreExtensions/common";
+import { IconSize, Icons } from "@moonlight-mod/types/coreExtensions/common";
 import { tokens } from "@moonlight-mod/wp/discord/components/common/index";
 
 // This is defined in a Webpack module but we copy it here to be less breakage-prone

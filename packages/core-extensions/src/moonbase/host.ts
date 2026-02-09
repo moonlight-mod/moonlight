@@ -1,8 +1,8 @@
-import * as electron from "electron";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
-import getNatives from "./native";
 import { MoonlightBranch } from "@moonlight-mod/types";
+import * as electron from "electron";
+import getNatives from "./native";
 
 const natives = getNatives();
 
@@ -60,7 +60,7 @@ async function changeBranch(branch: MoonlightBranch) {
     electron.app.relaunch();
     electron.app.exit(0);
   } catch (e) {
-    await electron.dialog.showMessageBox({ message: "Failed to switch branches:\n" + e, type: "error" });
+    await electron.dialog.showMessageBox({ message: `Failed to switch branches:\n${e}`, type: "error" });
   }
 }
 

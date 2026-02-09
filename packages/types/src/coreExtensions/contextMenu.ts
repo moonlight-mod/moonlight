@@ -2,11 +2,11 @@ import {
   Menu,
   MenuCheckboxItem,
   MenuControlItem,
+  MenuElement,
   MenuGroup,
-  MenuRadioItem,
-  MenuSeparator,
   MenuItem,
-  MenuElement
+  MenuRadioItem,
+  MenuSeparator
 } from "@moonlight-mod/mappings/discord/components/common/index";
 
 export type ContextMenu = {

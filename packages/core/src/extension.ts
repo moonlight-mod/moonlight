@@ -1,4 +1,4 @@
-import { ExtensionManifest, DetectedExtension, ExtensionLoadSource, constants } from "@moonlight-mod/types";
+import { constants, DetectedExtension, ExtensionLoadSource, ExtensionManifest } from "@moonlight-mod/types";
 import { readConfig } from "./config";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 import Logger from "./util/logger";
@@ -61,7 +61,7 @@ async function loadDetectedExtensions(
         ? await moonlightNodeSandboxed.fs.readFileString(webPath)
         : undefined;
 
-      let url: string | undefined = undefined;
+      let url: string | undefined;
       const urlPath = moonlightNodeSandboxed.fs.join(dir, constants.repoUrlFile);
       if (type === ExtensionLoadSource.Normal && (await moonlightNodeSandboxed.fs.exists(urlPath))) {
         url = await moonlightNodeSandboxed.fs.readFileString(urlPath);
@@ -140,7 +140,7 @@ async function getExtensionsBrowser(): Promise<DetectedExtension[]> {
     const wpModulesPath = `${ext}/webpackModules`;
     for (const wpModuleFile of Object.keys(coreExtensionsFs)) {
       if (wpModuleFile.startsWith(wpModulesPath)) {
-        wpModules[wpModuleFile.replace(wpModulesPath + "/", "").replace(".js", "")] = coreExtensionsFs[wpModuleFile];
+        wpModules[wpModuleFile.replace(`${wpModulesPath}/`, "").replace(".js", "")] = coreExtensionsFs[wpModuleFile];
       }
     }
 

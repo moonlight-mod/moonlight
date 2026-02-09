@@ -1,20 +1,19 @@
-import register from "../../../../registry";
+import { ModuleExportType } from "@moonlight-mod/moonmap";
+import * as CSS from "csstype";
 import type {
   Component,
-  Ref,
-  PropsWithChildren,
-  PropsWithoutRef,
-  CSSProperties,
-  ReactNode,
-  ReactElement,
   ComponentClass,
   ComponentType,
-  FunctionComponent
+  CSSProperties,
+  FunctionComponent,
+  PropsWithChildren,
+  PropsWithoutRef,
+  ReactElement,
+  ReactNode,
+  Ref
 } from "react";
-import * as CSS from "csstype";
-
-import { ModuleExportType } from "@moonlight-mod/moonmap";
-import { FunctionNames, ComponentNames, IconNames } from "./_indexNames";
+import register from "../../../../registry";
+import { ComponentNames, FunctionNames, IconNames } from "./_indexNames";
 
 import type { Card } from "./Card.ts";
 import type { Image } from "./Image.ts";

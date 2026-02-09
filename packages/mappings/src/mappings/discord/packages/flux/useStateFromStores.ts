@@ -1,24 +1,18 @@
-import { DependencyList } from "react";
-import type { Store } from "./Store";
-import register from "../../../../registry";
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import { DependencyList } from "react";
+import register from "../../../../registry";
+import type { Store } from "./Store";
 
-export interface UseStateFromStores {
-  <T>(
-    stores: Store<any>[],
-    callback: () => T,
-    deps?: DependencyList,
-    shouldUpdate?: (oldState: T, newState: T) => boolean
-  ): T;
-}
+export type UseStateFromStores = <T>(
+  stores: Store<any>[],
+  callback: () => T,
+  deps?: DependencyList,
+  shouldUpdate?: (oldState: T, newState: T) => boolean
+) => T;
 
-export interface UseStateFromStoresArray {
-  <T>(stores: Store<any>[], callback: () => T, deps?: DependencyList): T;
-}
+export type UseStateFromStoresArray = <T>(stores: Store<any>[], callback: () => T, deps?: DependencyList) => T;
 
-export interface UseStateFromStoresObject {
-  <T>(stores: Store<any>[], callback: () => T, deps?: DependencyList): T;
-}
+export type UseStateFromStoresObject = <T>(stores: Store<any>[], callback: () => T, deps?: DependencyList) => T;
 
 register((moonmap) => {
   const name = "discord/packages/flux/useStateFromStores";

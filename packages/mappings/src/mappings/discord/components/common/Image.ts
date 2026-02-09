@@ -1,5 +1,5 @@
-import register from "../../../../registry";
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import register from "../../../../registry";
 
 export type Image = React.ComponentType<
   React.PropsWithChildren<{

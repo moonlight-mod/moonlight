@@ -1,24 +1,24 @@
+import { MoonlightBranch } from "@moonlight-mod/types";
+import {
+  Heading,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalRoot,
+  ModalSize,
+  openModal,
+  Text
+} from "@moonlight-mod/wp/discord/components/common/index";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
 import React from "@moonlight-mod/wp/react";
 import { UpdateState } from "../../types";
 import HelpMessage from "./HelpMessage";
-import { MoonlightBranch } from "@moonlight-mod/types";
-import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import {
-  Text,
-  ModalRoot,
-  ModalSize,
-  ModalContent,
-  ModalHeader,
-  Heading,
-  ModalCloseButton,
-  openModal
-} from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
-import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
 
 const strings: Record<UpdateState, string> = {
   [UpdateState.Ready]: "A new version of moonlight is available.",

@@ -1,12 +1,12 @@
 import { loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import { installWebpackPatcher, onModuleLoad, registerPatch, registerWebpackModule } from "@moonlight-mod/core/patch";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { installStyles } from "@moonlight-mod/core/styles";
+import { createEventEmitter } from "@moonlight-mod/core/util/event";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import LunAST from "@moonlight-mod/lunast";
-import Moonmap from "@moonlight-mod/moonmap";
 import loadMappings from "@moonlight-mod/mappings";
-import { createEventEmitter } from "@moonlight-mod/core/util/event";
+import Moonmap from "@moonlight-mod/moonmap";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
 import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
 
 async function load() {

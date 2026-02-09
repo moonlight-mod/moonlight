@@ -1,7 +1,8 @@
 // path is pure guessing as mobile doesn't use modals
 //import { ModuleExportType } from "@moonlight-mod/moonmap";
-import register from "../../../../registry";
+
 import type { StoreApi, UseBoundStore } from "zustand";
+import register from "../../../../registry";
 
 export type ModalContext = "default" | "popout";
 

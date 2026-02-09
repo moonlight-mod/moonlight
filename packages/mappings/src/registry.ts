@@ -1,5 +1,5 @@
-import type Moonmap from "@moonlight-mod/moonmap";
 import type LunAST from "@moonlight-mod/lunast";
+import type Moonmap from "@moonlight-mod/moonmap";
 
 type Callback = (moonmap: Moonmap, lunast: LunAST) => void;
 

@@ -1,13 +1,14 @@
 // TODO: clean up the styling here
-import React from "@moonlight-mod/wp/react";
-import { MoonbaseExtension } from "../../../types";
-import { openModalLazy } from "@moonlight-mod/wp/discord/modules/modals/Modals";
-import { Text } from "@moonlight-mod/wp/discord/components/common/index";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+
 import { ExtensionLoadSource } from "@moonlight-mod/types";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 import { SingleSelect } from "@moonlight-mod/wp/discord/components/common/Select";
+import { openModalLazy } from "@moonlight-mod/wp/discord/modules/modals/Modals";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { MoonbaseExtension } from "../../../types";
 
 let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").ConfirmModal;
 
@@ -83,7 +84,7 @@ function MissingExtensionPopup({
       onConfirm={() => {
         for (const pick of Object.values(options)) {
           if (pick != null) {
-            MoonbaseSettingsStore.installExtension(parseInt(pick as string));
+            MoonbaseSettingsStore.installExtension(parseInt(pick as string, 10));
           }
         }
       }}

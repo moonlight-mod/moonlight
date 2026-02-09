@@ -1,17 +1,17 @@
 import {
-  PatchReplace,
-  PatchReplaceType,
   ExplicitExtensionDependency,
   IdentifiedPatch,
   IdentifiedWebpackModule,
+  PatchReplace,
+  PatchReplaceType,
   WebpackJsonp,
   WebpackJsonpEntry,
   WebpackModuleFunc,
   WebpackRequireType
 } from "@moonlight-mod/types";
-import Logger from "./util/logger";
-import calculateDependencies, { Dependency } from "./util/dependency";
 import { WebEventType } from "@moonlight-mod/types/core/event";
+import calculateDependencies, { Dependency } from "./util/dependency";
+import Logger from "./util/logger";
 import { processFind, processReplace, testFind } from "./util/patch";
 
 const logger = new Logger("core/patch");
@@ -85,8 +85,7 @@ function patchModule(id: string, patchId: string, replaced: string, entry: Webpa
   // We have to wrap it so things don't break, though
   const patchedStr = patched[id].sort().join(", ");
 
-  const wrapped =
-    `(${replaced}).apply(this, arguments)\n` + `// Patched by moonlight: ${patchedStr}\n` + createSourceURL(id);
+  const wrapped = `(${replaced}).apply(this, arguments)\n// Patched by moonlight: ${patchedStr}\n${createSourceURL(id)}`;
 
   try {
     const func = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
@@ -117,7 +116,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
     if (!origModuleString.startsWith("function")) {
       const start = origModuleString.indexOf("(");
       if (start > -1) {
-        origModuleString = "function" + origModuleString.substring(start);
+        origModuleString = `function${origModuleString.substring(start)}`;
         moduleCache[id] = origModuleString;
       } else {
         throw new Error(`Failed to find start of module "${id}"!`);
@@ -178,7 +177,6 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
                 hardFailed = true;
                 break;
               } else {
-                continue;
               }
             }
           } else if (replace.type === PatchReplaceType.Module) {
@@ -224,7 +222,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
 
     if (moonlightNode.config.patchAll === true) {
       if ((typeof id !== "string" || !id.includes("_")) && !entry[id].__moonlight) {
-        const wrapped = `(${moduleCache[id]}).apply(this, arguments)\n` + createSourceURL(id);
+        const wrapped = `(${moduleCache[id]}).apply(this, arguments)\n${createSourceURL(id)}`;
         entry[id] = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
         entry[id].__moonlight = true;
       }
@@ -237,7 +235,7 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
         try {
           callback(id);
         } catch (e) {
-          logger.error("Error in module load subscription: " + e);
+          logger.error(`Error in module load subscription: ${e}`);
         }
       }
       moduleLoadSubscriptions.delete(id);
@@ -333,7 +331,7 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
         modules[id] = wpModule.run;
         wpModule.run.__moonlight = true;
         // @ts-expect-error hacks
-        wpModule.run.call = function (self, module, exports, require) {
+        wpModule.run.call = (self, module, exports, require) => {
           try {
             wpModule.run!.apply(self, [module, exports, require]);
           } catch (err) {

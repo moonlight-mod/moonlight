@@ -1,4 +1,13 @@
+import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
 import { Config, ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
+import { mainRepo } from "@moonlight-mod/types/constants";
+import { NodeEventType } from "@moonlight-mod/types/core/event";
+import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
+import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
+import { Store } from "@moonlight-mod/wp/discord/packages/flux";
+import diff from "microdiff";
+import getNatives from "../native";
 import {
   ExtensionState,
   MoonbaseExtension,
@@ -7,15 +16,6 @@ import {
   RestartAdvice,
   UpdateState
 } from "../types";
-import { Store } from "@moonlight-mod/wp/discord/packages/flux";
-import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
-import getNatives from "../native";
-import { mainRepo } from "@moonlight-mod/types/constants";
-import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
-import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
-import { NodeEventType } from "@moonlight-mod/types/core/event";
-import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
-import diff from "microdiff";
 
 const logger = moonlight.getLogger("moonbase");
 
@@ -277,7 +277,7 @@ class MoonbaseSettingsStore extends Store<any> {
   async updateAllExtensions() {
     for (const id of Object.keys(this.updates)) {
       try {
-        await this.installExtension(parseInt(id));
+        await this.installExtension(parseInt(id, 10));
       } catch (e) {
         logger.error("Error bulk updating extension", id, e);
       }
