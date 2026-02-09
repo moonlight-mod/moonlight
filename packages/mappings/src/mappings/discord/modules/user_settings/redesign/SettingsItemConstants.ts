@@ -35,7 +35,7 @@ register((moonmap, lunast) => {
   lunast.register({
     name,
     find: '.ROOT=0]="ROOT",',
-    process({ id, ast }) {
+    process({ id }) {
       moonmap.addModule(id, name);
 
       moonmap.addExport(name, "ItemType", {

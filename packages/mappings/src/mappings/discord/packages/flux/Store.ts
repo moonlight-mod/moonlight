@@ -34,6 +34,7 @@ export declare abstract class Store<T extends BasePayload> {
   registerActionHandlers(handlers: Record<T["type"], ActionHandler<T>>, band?: number): void;
   getName(): string;
   initializeIfNeeded(): void;
+  // biome-ignore lint/suspicious/useAdjacentOverloadSignatures: no state type parameter here
   initialize(): void;
   syncWith(stores: Store<T>[], callback: SyncFunction, timeout?: number): void;
   waitFor(...stores: Store<T>[]): void;

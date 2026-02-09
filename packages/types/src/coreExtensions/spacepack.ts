@@ -76,8 +76,7 @@ export type Spacepack = {
   findFunctionByStrings: (
     exports: Record<string, any>,
     ...strings: (string | RegExp)[]
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  ) => Function | null;
+  ) => ((...args: never) => unknown) | null;
 
   /**
    * Finds an object from a module's exports by a substring of string values

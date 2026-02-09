@@ -35,7 +35,7 @@ export const pages: {
   }
 ];
 
-export function Moonbase(props: { initialTab?: number } = {}) {
+export function Moonbase() {
   const subsection = useStateFromStores([UserSettingsModalStore], () => UserSettingsModalStore.getSubsection() ?? 0);
   const setSubsection = React.useCallback(
     (to: string) => {

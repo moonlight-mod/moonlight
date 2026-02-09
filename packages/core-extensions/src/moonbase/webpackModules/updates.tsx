@@ -20,7 +20,7 @@ function listener() {
     const extensionUpdateCount = Object.keys(MoonbaseSettingsStore.updates).length;
     const hasExtensionUpdates = extensionUpdateCount > 0;
 
-    let message;
+    let message = "";
 
     if (version != null) {
       message =
@@ -31,9 +31,7 @@ function listener() {
 
     if (hasExtensionUpdates) {
       let concat = false;
-      if (message == null) {
-        message = "";
-      } else {
+      if (message !== "") {
         concat = true;
         message += ", and ";
       }

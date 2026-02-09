@@ -1,15 +1,18 @@
-import type { LinkRedirect, LinkRedirectCallback } from "@moonlight-mod/types/coreExtensions/linkRedirect";
+import type {
+  LinkRedirectCallback,
+  LinkRedirect as LinkRedirectType
+} from "@moonlight-mod/types/coreExtensions/linkRedirect";
 
 const logger = moonlight.getLogger("Link Redirect");
 
-const LinkRedirect: LinkRedirect = {
+const linkRedirect: LinkRedirectType = {
   callbacks: new Map<string, LinkRedirectCallback>(),
   addCallback(name, callback) {
-    if (LinkRedirect.callbacks.has(name)) logger.warn(`Overwriting already existing link callback "${name}"!!`);
-    LinkRedirect.callbacks.set(name, callback);
+    if (linkRedirect.callbacks.has(name)) logger.warn(`Overwriting already existing link callback "${name}"!!`);
+    linkRedirect.callbacks.set(name, callback);
   },
   _runCallbacks(href) {
-    for (const [name, callback] of LinkRedirect.callbacks.entries()) {
+    for (const [name, callback] of linkRedirect.callbacks.entries()) {
       try {
         const newUrl = callback(href);
         if (newUrl == null) {
@@ -27,4 +30,4 @@ const LinkRedirect: LinkRedirect = {
   }
 };
 
-export default LinkRedirect;
+export default linkRedirect;

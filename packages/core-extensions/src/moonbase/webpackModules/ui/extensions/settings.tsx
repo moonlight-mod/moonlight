@@ -43,12 +43,11 @@ spacepack
     /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
     /webpackId:(\d+),name:"GuildSettings"/
   )
-  .then(
-    () =>
-      (GuildSettingsRoleEditClasses = spacepack.require(
-        "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
-      ))
-  );
+  .then(() => {
+    GuildSettingsRoleEditClasses = spacepack.require(
+      "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
+    );
+  });
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -77,7 +76,7 @@ function useConfigEntry<T>(uniqueId: number, name: string) {
   }, [uniqueId, name]);
 }
 
-function Boolean({ ext, name, setting, disabled }: SettingsProps) {
+function BooleanSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<boolean>(ext.uniqueId, name);
 
   return (
@@ -95,7 +94,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Number({ ext, name, setting, disabled }: SettingsProps) {
+function NumberSetting({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<number>(ext.uniqueId, name);
 
   const castedSetting = setting as NumberSettingType;
@@ -131,7 +130,7 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function String({ ext, name, setting, disabled }: SettingsProps) {
+function StringSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
@@ -146,7 +145,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
+function MultilineStringSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
@@ -163,7 +162,7 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Select({ ext, name, setting, disabled }: SettingsProps) {
+function SelectSetting({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   const castedSetting = setting as SelectSettingType;
@@ -186,7 +185,7 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
+function MultiSelectSetting({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string | string[]>(ext.uniqueId, name);
 
   const castedSetting = setting as MultiSelectSettingType;
@@ -213,7 +212,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disabled: boolean }) {
+function RemoveEntryButton({ onClick }: { onClick: () => void; disabled: boolean }) {
   return (
     <div className={GuildSettingsRoleEditClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
@@ -227,7 +226,7 @@ function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disable
   );
 }
 
-function List({ ext, name, setting, disabled }: SettingsProps) {
+function ListSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string[]>(ext.uniqueId, name);
 
   const entries = value ?? [];
@@ -274,7 +273,7 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
+function DictionarySetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<Record<string, string>>(ext.uniqueId, name);
 
   const entries = Object.entries(value ?? {});
@@ -329,7 +328,7 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Custom({ ext, name, setting, disabled }: SettingsProps) {
+function CustomSetting({ ext, name }: SettingsProps) {
   const { value, displayName } = useConfigEntry<any>(ext.uniqueId, name);
 
   const { component: Component } = useStateFromStores([MoonbaseSettingsStore], () => {
@@ -353,15 +352,15 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
 
 function Setting({ ext, name, setting, disabled }: SettingsProps) {
   const elements: Partial<Record<ExtensionSettingType, SettingsComponent>> = {
-    [ExtensionSettingType.Boolean]: Boolean,
-    [ExtensionSettingType.Number]: Number,
-    [ExtensionSettingType.String]: String,
-    [ExtensionSettingType.MultilineString]: MultilineString,
-    [ExtensionSettingType.Select]: Select,
-    [ExtensionSettingType.MultiSelect]: MultiSelect,
-    [ExtensionSettingType.List]: List,
-    [ExtensionSettingType.Dictionary]: Dictionary,
-    [ExtensionSettingType.Custom]: Custom
+    [ExtensionSettingType.Boolean]: BooleanSetting,
+    [ExtensionSettingType.Number]: NumberSetting,
+    [ExtensionSettingType.String]: StringSetting,
+    [ExtensionSettingType.MultilineString]: MultilineStringSetting,
+    [ExtensionSettingType.Select]: SelectSetting,
+    [ExtensionSettingType.MultiSelect]: MultiSelectSetting,
+    [ExtensionSettingType.List]: ListSetting,
+    [ExtensionSettingType.Dictionary]: DictionarySetting,
+    [ExtensionSettingType.Custom]: CustomSetting
   };
   const element = elements[setting.type];
   if (element == null) return;

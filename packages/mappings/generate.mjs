@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/** biome-ignore-all lint/suspicious/noConsole: repository script */
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as ts from "typescript";
@@ -175,7 +175,7 @@ function generateDeclares(prefix) {
             str += `  export default _default;\n`;
           } else {
             // :(
-            if (name.includes("-")) continue;
+            if (name === "toString" || name.includes("-")) continue;
 
             str += `  export const ${name}: MappedModules["${path}"]["${name}"];\n`;
           }

@@ -94,7 +94,7 @@ export const patches: Patch[] = [
     replace: [
       {
         match: /"Firefox"===(.)\(\)\.name/g,
-        replacement: (orig, info) => `true||${orig}`
+        replacement: (orig, _info) => `true||${orig}`
       }
     ]
   },
@@ -112,12 +112,12 @@ export const patches: Patch[] = [
       // Prevent loading of krisp native module by stubbing out desktop checks
       {
         match: /\(\(0,.\.isWindows\)\(\)\|\|\(0,.\.isLinux\)\(\)\|\|.+?&&!__OVERLAY__/,
-        replacement: (orig, macosPlatformCheck) => `false&&!__OVERLAY__`
+        replacement: `false&&!__OVERLAY__`
       },
       // Enable loading of web krisp equivelant by replacing isWeb with true
       {
         match: /\(0,.\.isWeb\)\(\)&&(.{1,2}\.supports\(.{1,2}\..{1,2}.NOISE_CANCELLATION)/,
-        replacement: (orig, supportsNoiseCancellation) => `true&&${supportsNoiseCancellation}`
+        replacement: (_, supportsNoiseCancellation) => `true&&${supportsNoiseCancellation}`
       }
     ]
   }

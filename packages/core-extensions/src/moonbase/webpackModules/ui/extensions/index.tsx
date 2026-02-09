@@ -65,10 +65,9 @@ export default function ExtensionsPage() {
           Object.entries(ext.manifest.settings).some(([key, setting]) =>
             (setting.displayName ?? key).toLowerCase().includes(query)
           )) ||
-        (ext.manifest?.meta?.authors != null &&
-          ext.manifest.meta.authors.some((author) =>
-            (typeof author === "string" ? author : author.name).toLowerCase().includes(query)
-          )) ||
+        ext?.manifest?.meta?.authors?.some((author) =>
+          (typeof author === "string" ? author : author.name).toLowerCase().includes(query)
+        ) ||
         ext.manifest.meta?.description?.toLowerCase().includes(query)) &&
       [...selectedTags.values()].every((tag) => ext.manifest.meta?.tags?.includes(tag as ExtensionTag)) &&
       // This seems very bad, sorry

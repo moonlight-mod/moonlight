@@ -16,7 +16,7 @@ const nightlyZipUrl = "https://moonlight-mod.github.io/moonlight/dist.tar.gz";
 export const userAgent = `moonlight/${moonlightGlobal.version} (https://github.com/moonlight-mod/moonlight)`;
 
 // User-Agent header causes trouble on Firefox
-const isBrowser = globalThis.moonlightNode != null && globalThis.moonlightNode.isBrowser;
+const isBrowser = globalThis.moonlightNode?.isBrowser;
 const sharedHeaders: Record<string, string> = {};
 if (!isBrowser) sharedHeaders["User-Agent"] = userAgent;
 

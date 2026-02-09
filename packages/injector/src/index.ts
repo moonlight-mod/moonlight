@@ -51,7 +51,7 @@ ipcMain.handle(constants.ipcSetBlockedList, (_, list: string[]) => {
   const compiled = list
     .map((pattern) => {
       const match = pattern.match(reMatchPattern);
-      if (!match?.groups) return;
+      if (!match?.groups) return [];
 
       let regex = "";
       if (match.groups.scheme === "*") regex += ".+?";

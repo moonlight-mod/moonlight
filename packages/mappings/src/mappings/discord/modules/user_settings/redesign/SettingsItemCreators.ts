@@ -74,7 +74,7 @@ register((moonmap, lunast) => {
   lunast.register({
     name,
     find: '("$Root",',
-    process({ id, ast }) {
+    process({ id }) {
       moonmap.addModule(id, name);
 
       // wrapped in a function that calls the actual function for whatever reason

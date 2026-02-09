@@ -28,12 +28,11 @@ spacepack
     /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
     /webpackId:(\d+),name:"GuildSettings"/
   )
-  .then(
-    () =>
-      (GuildSettingsRoleEditClasses = spacepack.require(
-        "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
-      ))
-  );
+  .then(() => {
+    GuildSettingsRoleEditClasses = spacepack.require(
+      "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
+    );
+  });
 
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (

@@ -64,6 +64,8 @@ function Badge({
 }) {
   if (onClick) style.cursor ??= "pointer";
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: Discord's a11y gets in the way
+    // biome-ignore lint/a11y/noStaticElementInteractions: Discord's CSS gets in the way
     <span
       className="moonlight-card-badge"
       style={
@@ -151,10 +153,10 @@ export default function ExtensionInfo({
           {tags.map((tag, i) => {
             const name = tagNames[tag];
             let color = "var(--background-mod-strong)";
-            let style;
+            const style: React.CSSProperties = {};
             if (tag === ExtensionTag.DangerZone) {
               color = "var(--red-460)";
-              style = { color: "var(--primary-230)" };
+              style.color = "var(--primary-230)";
             }
 
             return (

@@ -1,12 +1,23 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../../registry";
 
+export type ContextMenuProps = {
+  enableSpellCheck: boolean;
+};
+
 type Exports = {
   closeContextMenu: () => void;
-  // TODO: these have some extra args
-  openContextMenu: (event: React.SyntheticEvent, element: () => React.ReactNode) => void;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  openContextMenuLazy: Function;
+  openContextMenu: (
+    event: React.SyntheticEvent,
+    render: () => React.ReactNode,
+    props?: ContextMenuProps,
+    renderLazy?: () => React.ReactNode
+  ) => void;
+  openContextMenuLazy: (
+    event: React.SyntheticEvent,
+    renderLazy: () => React.ReactNode,
+    props?: ContextMenuProps
+  ) => void;
 };
 export default Exports;
 

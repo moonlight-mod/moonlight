@@ -18,14 +18,10 @@ function buildDependencyGraph<T, D>(
   origItems: Dependencies<T, D>,
   {
     fetchDep,
-    getDeps,
-    getIncompatible,
-    getEnabled
+    getDeps
   }: {
     fetchDep: FetchDep<T, D>;
     getDeps: GetDeps<T, D>;
-    getIncompatible?: GetIncompatible<T, D>;
-    getEnabled?: GetEnabled<T, D>;
   }
 ): [Dependencies<T, D>, DependencyGraph<T>] {
   let items = [...origItems];
@@ -100,12 +96,9 @@ export default function calculateDependencies<T, D>(
   }
 ): [Dependencies<T, D>, DependencyGraph<T>] {
   logger.trace("sortDependencies begin", origItems);
-  // eslint-disable-next-line prefer-const
   let [itemsOrig, dependencyGraphOrig] = buildDependencyGraph(origItems, {
     fetchDep,
-    getDeps,
-    getIncompatible,
-    getEnabled
+    getDeps
   });
 
   if (getEnabled != null) {
@@ -156,9 +149,7 @@ export default function calculateDependencies<T, D>(
   logger.trace("Verification stage", itemsOrig);
   const [items, dependencyGraph] = buildDependencyGraph(itemsOrig, {
     fetchDep,
-    getDeps,
-    getIncompatible,
-    getEnabled
+    getDeps
   });
 
   logger.trace("Sorting stage", items);

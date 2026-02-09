@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/** biome-ignore-all lint/suspicious/noConsole: repository script */
 import * as fs from "node:fs/promises";
 
 let version = process.argv[2];

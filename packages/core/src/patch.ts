@@ -369,11 +369,12 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
             if (require.m[id] == null) {
               logger.error(`Failing to load entrypoint module "${id}" because it's not found in Webpack.`);
             } else {
-              require(id);
+              return require(id);
             }
           } catch (err) {
             logger.error(`Failed to load entrypoint module "${id}":`, err);
           }
+          return undefined;
         })
     ]);
   }
@@ -398,12 +399,12 @@ function moduleSourceGetter(id: string) {
   them accordingly.
 */
 export async function installWebpackPatcher() {
-  await handleModuleDependencies();
+  handleModuleDependencies();
 
   moonlight.lunast.setModuleSourceGetter(moduleSourceGetter);
   moonlight.moonmap.setModuleSourceGetter(moduleSourceGetter);
 
-  const wpRequireFetcher: WebpackModuleFunc = (module, exports, require) => {
+  const wpRequireFetcher: WebpackModuleFunc = (_module, _exports, require) => {
     webpackRequire = require;
   };
   wpRequireFetcher.__moonlight = true;

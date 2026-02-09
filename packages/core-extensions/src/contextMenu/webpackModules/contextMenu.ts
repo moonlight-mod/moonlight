@@ -74,7 +74,7 @@ module.exports = {
 // Unmangle Menu elements
 const code = spacepack.require.m[moonlight.moonmap.modules["discord/modules/menus/web/Menu"]].toString();
 
-let MangledMenu;
+let MangledMenu: any;
 
 const typeRegex = /if\(.\.type===(.)\.(.+?)\).+?type:"(.+?)"/g;
 const typeMap: Record<string, string | undefined> = {

@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
+/** biome-ignore-all lint/suspicious/noConsole: background script */
 
 chrome.webRequest.onBeforeRequest.addListener(
   async (details) => {

@@ -49,9 +49,7 @@ moonlightHost.events.on("window-created", (window: BrowserWindow, isMainWindow: 
   };
 
   // setPermissionCheckHandler
-  windowSession.setPermissionCheckHandler((webcontents, permission, requestingOrigin, details) => {
-    return false;
-  });
+  windowSession.setPermissionCheckHandler(() => false);
 
   let caughtPermissionCheckHandler: PermissionCheckHandler | undefined;
 

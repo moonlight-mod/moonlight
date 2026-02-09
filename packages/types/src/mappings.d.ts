@@ -173,7 +173,6 @@ declare module "@moonlight-mod/wp/discord/components/common/Select" {
   export const singleSelect: MappedModules["discord/components/common/Select"]["singleSelect"];
   export const multiSelect: MappedModules["discord/components/common/Select"]["multiSelect"];
   export const toggleSelect: MappedModules["discord/components/common/Select"]["toggleSelect"];
-  export const useSingleSelectState: MappedModules["discord/components/common/Select"]["useSingleSelectState"];
   export const useVariableSelect: MappedModules["discord/components/common/Select"]["useVariableSelect"];
 }
 
@@ -979,7 +978,6 @@ declare module "@moonlight-mod/wp/platform.js" {
   export const version: MappedModules["platform.js"]["version"];
   export const os: MappedModules["platform.js"]["os"];
   export const parse: MappedModules["platform.js"]["parse"];
-  export const toString: MappedModules["platform.js"]["toString"];
 }
 
 declare module "@moonlight-mod/wp/react" {

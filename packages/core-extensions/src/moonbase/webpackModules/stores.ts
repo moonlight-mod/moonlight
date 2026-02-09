@@ -380,7 +380,9 @@ class MoonbaseSettingsStore extends Store<any> {
 
     await natives
       .updateMoonlight()
-      .then(() => (this.#updateState = UpdateState.Installed))
+      .then(() => {
+        this.#updateState = UpdateState.Installed;
+      })
       .catch((e) => {
         logger.error(e);
         this.#updateState = UpdateState.Failed;
@@ -421,7 +423,10 @@ class MoonbaseSettingsStore extends Store<any> {
     const n = this.config; // New config about to be saved
 
     let returnedAdvice = RestartAdvice.NotNeeded;
-    const updateAdvice = (r: RestartAdvice) => (returnedAdvice < r ? (returnedAdvice = r) : returnedAdvice);
+    const updateAdvice = (advice: RestartAdvice) => {
+      if (returnedAdvice < advice) returnedAdvice = advice;
+      return returnedAdvice;
+    };
 
     // Top-level keys, repositories is not needed here because Moonbase handles it.
     if (i.patchAll !== n.patchAll) updateAdvice(RestartAdvice.ReloadNeeded);

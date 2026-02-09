@@ -14,8 +14,7 @@ const sizes: Partial<Record<IconSize, number>> = {
 export const icons: Icons = {
   parseProps(props) {
     // NOTE: var() fallback is non-standard behavior, just for safety reasons
-    const color = props?.color ?? tokens?.colors?.["INTERACTIVE_NORMAL"] ?? "var(--interactive-normal)";
-
+    const color = props?.color ?? tokens?.colors?.INTERACTIVE_NORMAL ?? "var(--interactive-normal)";
     const size = sizes[props?.size ?? "md"];
 
     return {

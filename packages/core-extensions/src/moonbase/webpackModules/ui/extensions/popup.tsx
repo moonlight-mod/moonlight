@@ -116,7 +116,7 @@ function MissingExtensionPopup({
             gap: "10px"
           }}
         >
-          {Object.entries(deps).map(([id, candidates], i) => (
+          {Object.entries(deps).map(([id, candidates]) => (
             <>
               <Text
                 variant="text-md/normal"
@@ -160,7 +160,6 @@ function GenericExtensionPopup({
   content,
   transitionState,
   onClose,
-  uniqueId,
   cb
 }: {
   title: string;

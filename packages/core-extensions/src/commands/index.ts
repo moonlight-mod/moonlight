@@ -8,7 +8,7 @@ export const patches: Patch[] = [
       // inject commands
       {
         match: /return (\i)\.filter/,
-        replacement: (orig, commands) =>
+        replacement: (_, commands) =>
           `return [...${commands},...require("commands_commands").default._getCommands()].filter`
       },
 
@@ -56,7 +56,7 @@ export const patches: Patch[] = [
     find: ".icon,bot:null==",
     replace: {
       match: /(\.useMemo\(\(\)=>{(var \i;)?)((return |if\()(\i)\.type)/,
-      replacement: (_, before, beforeVar, after, afterIf, section) => `${before}
+      replacement: (_, before, _beforeVar, after, _afterIf, section) => `${before}
       if (${section}.id==="${APPLICATION_ID}") return "https://moonlight-mod.github.io/favicon.png";
       ${after}`
     }

@@ -5,7 +5,7 @@ const SectionAnchorIndicies = ["profile_panel", "user", "billing", "app", "activ
 const Settings: SettingsRedesign = {
   ourSections: [],
   aliases: {},
-  addSection: (item, section = null, before = false) => {
+  addSection(item, section = null, before = false) {
     // for normal javascript just in case
     if (item.type !== ItemType.SECTION) throw "Tried to call addSection with a non-section item.";
 
@@ -15,10 +15,11 @@ const Settings: SettingsRedesign = {
       before
     });
   },
-  addAlias: (oldName, newName) => {
+
+  addAlias(oldName, newName) {
     Settings.aliases[oldName] = newName;
   },
-  _mutateSections: (root) => {
+  _mutateSections(root) {
     // @ts-expect-error injecting fields
     if (root._moonlight) return root;
 
