@@ -187,17 +187,16 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
       if (filePath === "resources/app.asar") {
         // You tried
         targetFilePath = path.join(targetDir, "resources", "_app.asar");
-      } else if (filePath === appName || filePath === "chrome_crashpad_handler") {
-        // Can't write over the executable? Just move it! 4head
-        if (await exists(targetFilePath)) {
-          await fs.rename(targetFilePath, targetFilePath + ".bak");
-          await fs.unlink(targetFilePath + ".bak");
-        }
       }
-      const targetFileDir = path.dirname(targetFilePath);
 
+      const targetFileDir = path.dirname(targetFilePath);
       if (!(await exists(targetFileDir))) await fs.mkdir(targetFileDir, { recursive: true });
-      await fs.writeFile(targetFilePath, file.data);
+
+      // Since we're unsafely replacing files as the process is still running, we write files into a temp filename
+      // and call rename so we can avoid unfinished writes when it flushes to disk
+      const tempFilePath = targetFilePath + ".new";
+      await fs.writeFile(tempFilePath, file.data);
+      await fs.rename(tempFilePath, targetFilePath);
 
       const mode = file.attrs?.mode;
       if (mode != null) {
