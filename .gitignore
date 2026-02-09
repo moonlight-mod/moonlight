@@ -1,7 +1,11 @@
 node_modules/
+.DS_Store
+
 dist/
 dist.tar.gz
-.DS_Store
+browser.tar.gz
+browser-mv2.tar.gz
+
 # Nix
 /result
 *.drv
@@ -9,3 +13,5 @@ dist.tar.gz
 # IDEs
 .vscode/
 .idea/
+.zed/
+.helix/
