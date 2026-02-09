@@ -1,5 +1,5 @@
+import type { ComponentType, ReactNode } from "react";
 import register from "../../../../registry";
-import type { ReactNode, ComponentType } from "react";
 import { IconComponent, TooltipColors } from "./index";
 
 export type PanelButtonProps = {

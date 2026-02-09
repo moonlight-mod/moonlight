@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
+/** biome-ignore-all lint/suspicious/noConsole: devtools snippet */
 
 (() => {
   const ids = Object.values(moonlight.moonmap.modules);

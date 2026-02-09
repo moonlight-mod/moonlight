@@ -1,9 +1,11 @@
 node_modules/
+.DS_Store
+
 dist/
 dist.tar.gz
-.DS_Store
-eslint_report.json
-.eslintcache
+browser.tar.gz
+browser-mv2.tar.gz
+
 # Nix
 /result
 *.drv
@@ -11,3 +13,5 @@ eslint_report.json
 # IDEs
 .vscode/
 .idea/
+.zed/
+.helix/

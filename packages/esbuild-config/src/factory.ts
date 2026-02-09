@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { Plugin, BuildResult, BuildOptions } from "esbuild";
+import type { BuildOptions, BuildResult, Plugin } from "esbuild";
 
 import betterLogging from "./plugins/betterLogging.js";
-import webpackImports from "./plugins/webpackImports.js";
 import copyFile from "./plugins/copyFile.js";
-import { prod, external, fileExts, buildConfigs, watchConfigs, applyDropLabels } from "./shared.js";
+import webpackImports from "./plugins/webpackImports.js";
+import { applyDropLabels, buildConfigs, external, fileExts, prod, watchConfigs } from "./shared.js";
 
 export const sides = ["index", "webpackModules", "node", "host"] as const;
 

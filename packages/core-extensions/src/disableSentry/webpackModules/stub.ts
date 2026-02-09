@@ -15,7 +15,7 @@ export const proxy = () =>
   new Proxy(
     {},
     {
-      get(target, prop, receiver) {
+      get(_target, prop, _receiver) {
         if (prop === "profiledRootComponent") {
           return (arg: any) => arg;
         } else if (prop === "crash") {

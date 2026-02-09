@@ -41,7 +41,7 @@ export async function getConfigPath() {
     configPath = moonlightNodeSandboxed.fs.join(dir, "desktop.json");
   } else {
     const buildInfo: BuildInfo = JSON.parse(await moonlightNodeSandboxed.fs.readFileString(buildInfoPath));
-    configPath = moonlightNodeSandboxed.fs.join(dir, buildInfo.releaseChannel + ".json");
+    configPath = moonlightNodeSandboxed.fs.join(dir, `${buildInfo.releaseChannel}.json`);
   }
 
   return configPath;

@@ -1,6 +1,6 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../../../registry";
-import type { FriendSourceFlags, StatusTypes, SpoilerRenderSetting } from "../../Constants";
+import type { FriendSourceFlags, SpoilerRenderSetting, StatusTypes } from "../../Constants";
 
 export type UserSetting<T> = {
   getSetting: () => T;

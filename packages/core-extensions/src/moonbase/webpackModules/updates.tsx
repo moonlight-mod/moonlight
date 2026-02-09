@@ -1,9 +1,9 @@
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import Notices from "@moonlight-mod/wp/notices_notices";
 import { MoonlightBranch } from "@moonlight-mod/types";
-import React from "@moonlight-mod/wp/react";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
+import Notices from "@moonlight-mod/wp/notices_notices";
+import React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 function plural(str: string, num: number) {
   return `${str}${num > 1 ? "s" : ""}`;
@@ -20,7 +20,7 @@ function listener() {
     const extensionUpdateCount = Object.keys(MoonbaseSettingsStore.updates).length;
     const hasExtensionUpdates = extensionUpdateCount > 0;
 
-    let message;
+    let message = "";
 
     if (version != null) {
       message =
@@ -31,9 +31,7 @@ function listener() {
 
     if (hasExtensionUpdates) {
       let concat = false;
-      if (message == null) {
-        message = "";
-      } else {
+      if (message !== "") {
         concat = true;
         message += ", and ";
       }

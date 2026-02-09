@@ -1,5 +1,4 @@
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
+/** biome-ignore-all lint/suspicious/noConsole: devtools snippet */
 
 (() => {
   const icons = [];
@@ -15,7 +14,7 @@
     const keys = Object.keys(obj);
     if (keys.some((k) => obj[obj[k]] != null)) {
       for (const [key, value] of Object.entries(obj)) {
-        if (!isNaN(parseInt(key))) continue;
+        if (!Number.isNaN(parseInt(key, 10))) continue;
 
         if (key === value) {
           ret.push(`${key} = "${value}";`);

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../registry";
 

@@ -1,8 +1,8 @@
-import { MoonlightBranch } from "@moonlight-mod/types";
-import type { MoonbaseNatives, RepositoryManifest } from "./types";
 import extractAsar from "@moonlight-mod/core/asar";
-import { repoUrlFile, installedVersionFile } from "@moonlight-mod/types/constants";
+import { MoonlightBranch } from "@moonlight-mod/types";
+import { installedVersionFile, repoUrlFile } from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
+import type { MoonbaseNatives, RepositoryManifest } from "./types";
 
 const moonlightGlobal = globalThis.moonlightHost ?? globalThis.moonlightNode;
 
@@ -16,7 +16,7 @@ const nightlyZipUrl = "https://moonlight-mod.github.io/moonlight/dist.tar.gz";
 export const userAgent = `moonlight/${moonlightGlobal.version} (https://github.com/moonlight-mod/moonlight)`;
 
 // User-Agent header causes trouble on Firefox
-const isBrowser = globalThis.moonlightNode != null && globalThis.moonlightNode.isBrowser;
+const isBrowser = globalThis.moonlightNode?.isBrowser;
 const sharedHeaders: Record<string, string> = {};
 if (!isBrowser) sharedHeaders["User-Agent"] = userAgent;
 

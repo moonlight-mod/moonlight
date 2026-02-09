@@ -37,7 +37,7 @@ export function createEventEmitter<
   }
 
   nodeTarget: {
-    const EventEmitter = require("events");
+    const EventEmitter = require("node:events");
     const eventEmitter = new EventEmitter();
     const listeners = new Map<(data: EventData) => void, (e: Event) => void>();
 

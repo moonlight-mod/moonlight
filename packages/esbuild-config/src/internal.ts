@@ -1,10 +1,10 @@
 // everything here is specifically for moonlight's core; no stability guarantees
 import fs from "node:fs/promises";
 import type { BuildOptions, Plugin } from "esbuild";
-import { prod, external, applyDropLabels, watchConfigs, buildConfigs } from "./shared.js";
+import betterLogging from "./plugins/betterLogging.js";
 
 import webpackImports from "./plugins/webpackImports.js";
-import betterLogging from "./plugins/betterLogging.js";
+import { applyDropLabels, buildConfigs, external, prod, watchConfigs } from "./shared.js";
 
 export const define = {
   MOONLIGHT_BRANCH: JSON.stringify(process.env.MOONLIGHT_BRANCH ?? "dev"),

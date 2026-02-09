@@ -56,7 +56,7 @@ export const patches: Patch[] = [
     replace: [
       {
         match: /(?<=\.BADGES](=|:))(\i)(;|})/,
-        replacement: (_, leading, badges, trailing) =>
+        replacement: (_, _leading, badges, trailing) =>
           `require("componentEditor_messages").default._patchUsernameBadges(${badges},arguments[0])${trailing}`
       },
       {

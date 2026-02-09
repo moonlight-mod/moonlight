@@ -1,6 +1,6 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import register from "../../../../../registry";
 import type { ComponentType } from "react";
+import register from "../../../../../registry";
 
 export type Tag = {
   id: string;

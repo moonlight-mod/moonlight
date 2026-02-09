@@ -1,5 +1,5 @@
-import { app, session } from "electron";
 import { resolve } from "node:path";
+import { app, session } from "electron";
 
 const logger = moonlightHost.getLogger("devToolsExtensions");
 

@@ -40,11 +40,11 @@ export default function extractAsar(file: ArrayBuffer) {
   const ret: Record<string, Uint8Array> = {};
   function addDirectory(dir: AsarEntry, path: string) {
     for (const [name, data] of Object.entries(dir.files!)) {
-      const fullName = path + "/" + name;
+      const fullName = `${path}/${name}`;
       if (data.files != null) {
         addDirectory(data, fullName);
       } else {
-        br.position = base + parseInt(data.offset);
+        br.position = base + parseInt(data.offset, 10);
         const file = br.read(data.size);
         ret[fullName] = file;
       }

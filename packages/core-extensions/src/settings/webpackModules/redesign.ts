@@ -1,11 +1,11 @@
-import { SettingsRedesign, SettingsRedesignItemType as ItemType } from "@moonlight-mod/types/coreExtensions/settings";
+import { SettingsRedesignItemType as ItemType, SettingsRedesign } from "@moonlight-mod/types/coreExtensions/settings";
 
 const SectionAnchorIndicies = ["profile_panel", "user", "billing", "app", "activity", "developer", "logout"];
 
 const Settings: SettingsRedesign = {
   ourSections: [],
   aliases: {},
-  addSection: function (item, section = null, before = false) {
+  addSection(item, section = null, before = false) {
     // for normal javascript just in case
     if (item.type !== ItemType.SECTION) throw "Tried to call addSection with a non-section item.";
 
@@ -15,10 +15,11 @@ const Settings: SettingsRedesign = {
       before
     });
   },
-  addAlias: function (oldName, newName) {
+
+  addAlias(oldName, newName) {
     Settings.aliases[oldName] = newName;
   },
-  _mutateSections: function (root) {
+  _mutateSections(root) {
     // @ts-expect-error injecting fields
     if (root._moonlight) return root;
 

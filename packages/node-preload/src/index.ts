@@ -1,18 +1,17 @@
-import { webFrame, ipcRenderer, contextBridge } from "electron";
 import fs from "node:fs";
 import path from "node:path";
-
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
+import { getDynamicCors, registerBlocked, registerCors } from "@moonlight-mod/core/cors";
 import { getExtensions } from "@moonlight-mod/core/extension";
-import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
-import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import { loadExtensions, loadProcessedExtensions } from "@moonlight-mod/core/extension/loader";
 import createFS from "@moonlight-mod/core/fs";
-import { registerCors, registerBlocked, getDynamicCors } from "@moonlight-mod/core/cors";
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
-import { NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
+import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
 import { createEventEmitter } from "@moonlight-mod/core/util/event";
+import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
+import { constants, MoonlightBranch } from "@moonlight-mod/types";
+import { NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
+import { contextBridge, ipcRenderer, webFrame } from "electron";
 
 let initialized = false;
 let logger: Logger;

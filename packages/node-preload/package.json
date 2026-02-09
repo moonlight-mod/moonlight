@@ -5,7 +5,7 @@
     "build": "node build.mjs",
     "dev": "node build.mjs --watch",
     "clean": "node build.mjs --clean",
-    "typecheck": "tsc --noEmit"
+    "check:types": "tsc --noEmit"
   },
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",

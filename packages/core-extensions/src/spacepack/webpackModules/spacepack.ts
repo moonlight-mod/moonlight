@@ -1,6 +1,6 @@
+import { processFind, testFind } from "@moonlight-mod/core/util/patch";
 import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "@moonlight-mod/types";
 import { Spacepack } from "@moonlight-mod/types/coreExtensions/spacepack";
-import { processFind, testFind } from "@moonlight-mod/core/util/patch";
 
 const webpackRequire = require as unknown as WebpackRequireType;
 const cache = webpackRequire.c;
@@ -13,7 +13,7 @@ export const spacepack: Spacepack = {
   modules,
   cache,
 
-  inspect: (module: number | string) => {
+  inspect(module: number | string) {
     if (typeof module === "number") {
       module = module.toString();
     }
@@ -41,14 +41,14 @@ export const spacepack: Spacepack = {
     ) as WebpackModuleFunc;
   },
 
-  findByCode: (...args: (string | RegExp)[]) => {
+  findByCode(...args: (string | RegExp)[]) {
     const ret = Object.entries(modules)
-      .filter(([id, mod]) => !args.some((item) => !testFind(mod.toString(), processFind(item))))
+      .filter(([_id, mod]) => !args.some((item) => !testFind(mod.toString(), processFind(item))))
       .map(([id]) => {
         //if (!(id in cache)) require(id);
         //return cache[id];
 
-        let exports;
+        let exports: any;
         try {
           exports = require(id);
         } catch (e) {
@@ -69,10 +69,10 @@ export const spacepack: Spacepack = {
     return ret;
   },
 
-  findByExports: (...args: string[]) => {
+  findByExports(...args: string[]) {
     return Object.entries(cache)
       .filter(
-        ([id, { exports }]) =>
+        ([_id, { exports }]) =>
           !args.some(
             (item) =>
               !(
@@ -89,9 +89,9 @@ export const spacepack: Spacepack = {
       }, []);
   },
 
-  findObjectFromKey: (exports: Record<string, any>, key: string) => {
+  findObjectFromKey(exports: Record<string, any>, key: string) {
     let ret = null;
-    let subKey;
+    let subKey: string | undefined;
     if (key.indexOf(".") > -1) {
       const splitKey = key.split(".");
       key = splitKey[0];
@@ -119,17 +119,17 @@ export const spacepack: Spacepack = {
     return ret;
   },
 
-  findObjectFromValue: (exports: Record<string, any>, value: any) => {
+  findObjectFromValue(exports: Record<string, any>, value: any) {
     let ret = null;
     for (const exportKey in exports) {
       const obj = exports[exportKey];
-      // eslint-disable-next-line eqeqeq
+      // biome-ignore lint/suspicious/noDoubleEquals: intended behavior
       if (obj == value) {
         ret = obj;
         break;
       }
       for (const subKey in obj) {
-        // eslint-disable-next-line eqeqeq
+        // biome-ignore lint/suspicious/noDoubleEquals: intended behavior
         if (obj && obj[subKey] == value) {
           ret = obj;
           break;
@@ -144,11 +144,11 @@ export const spacepack: Spacepack = {
     return ret;
   },
 
-  findObjectFromKeyValuePair: (exports: Record<string, any>, key: string, value: any) => {
+  findObjectFromKeyValuePair(exports: Record<string, any>, key: string, value: any) {
     let ret = null;
     for (const exportKey in exports) {
       const obj = exports[exportKey];
-      // eslint-disable-next-line eqeqeq
+      // biome-ignore lint/suspicious/noDoubleEquals: intended behavior
       if (obj && obj[key] == value) {
         ret = obj;
         break;
@@ -169,10 +169,10 @@ export const spacepack: Spacepack = {
     return ret;
   },
 
-  findFunctionByStrings: (exports: Record<string, any>, ...strings: (string | RegExp)[]) => {
+  findFunctionByStrings(exports: Record<string, any>, ...strings: (string | RegExp)[]) {
     const ret =
       Object.entries(exports).filter(
-        ([index, func]) =>
+        ([_index, func]) =>
           typeof func === "function" && !strings.some((query) => !testFind(func.toString(), processFind(query)))
       )?.[0]?.[1] ?? null;
 
@@ -183,7 +183,7 @@ export const spacepack: Spacepack = {
     return ret;
   },
 
-  findObjectFromValueSubstring: (exports: Record<string, any>, find: string) => {
+  findObjectFromValueSubstring(exports: Record<string, any>, find: string) {
     let ret = null;
     for (const exportKey in exports) {
       const obj = exports[exportKey];
@@ -200,7 +200,7 @@ export const spacepack: Spacepack = {
     return ret;
   },
 
-  lazyLoad: (find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) => {
+  async lazyLoad(find: string | RegExp | (string | RegExp)[], chunk: RegExp, module: RegExp) {
     chunk = processFind(chunk);
     module = processFind(module);
 
@@ -213,7 +213,7 @@ export const spacepack: Spacepack = {
     const findId = mod[0].id;
     const findCode = webpackRequire.m[findId].toString().replace(/\n/g, "");
 
-    let chunkIds;
+    let chunkIds: string[] = [];
     if (chunk.flags.includes("g")) {
       chunkIds = [...findCode.matchAll(chunk)].map(([, id]) => id);
     } else {
@@ -221,7 +221,7 @@ export const spacepack: Spacepack = {
       if (match) chunkIds = [...match[0].matchAll(/"(\d+)"/g)].map(([, id]) => id);
     }
 
-    if (!chunkIds || chunkIds.length === 0) {
+    if (chunkIds.length === 0) {
       logger.warn("lazyLoad: Chunk ID match failed", find, chunk, module, new Error().stack!.substring(5));
       return Promise.reject("Chunk ID match failed");
     }
@@ -232,10 +232,11 @@ export const spacepack: Spacepack = {
       return Promise.reject("Module ID match failed");
     }
 
-    return Promise.all(chunkIds.map((c) => webpackRequire.e(c))).then(() => webpackRequire(moduleId));
+    await Promise.all(chunkIds.map((c) => webpackRequire.e(c)));
+    return webpackRequire(moduleId);
   },
 
-  filterReal: (modules: WebpackModule[]) => {
+  filterReal(modules: WebpackModule[]) {
     return modules.filter((module) => module.id.toString().match(/^\d+$/));
   }
 };

@@ -1,10 +1,8 @@
 import { ComponentConstructor } from "flux/lib/FluxContainer";
-import type { Store } from "./Store";
 import register from "../../../../registry";
+import type { Store } from "./Store";
 
-export interface ConnectStores {
-  <T>(stores: Store<any>[], callback: T, context?: any): ComponentConstructor<T>;
-}
+export type ConnectStores = <T>(stores: Store<any>[], callback: T, context?: any) => ComponentConstructor<T>;
 
 type Exports = {
   default: ConnectStores;

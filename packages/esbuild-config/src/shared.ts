@@ -1,4 +1,4 @@
-import { build, context, type BuildOptions } from "esbuild";
+import { type BuildOptions, build, context } from "esbuild";
 
 export const prod = process.env.NODE_ENV === "production";
 export const external = [

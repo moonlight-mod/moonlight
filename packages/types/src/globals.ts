@@ -1,17 +1,17 @@
-import type { Logger } from "./logger";
-import type { Config, ConfigExtension } from "./config";
-import type { DetectedExtension, IdentifiedPatch, IdentifiedWebpackModule, ProcessedExtensions } from "./extension";
-import type EventEmitter from "events";
+import type EventEmitter from "node:events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
+import type { Config, ConfigExtension } from "./config";
 import type {
-  WebEventPayloads,
-  WebEventType,
   MoonlightEventEmitter,
+  NodeEventPayloads,
   NodeEventType,
-  NodeEventPayloads
+  WebEventPayloads,
+  WebEventType
 } from "./core/event";
+import type { DetectedExtension, IdentifiedPatch, IdentifiedWebpackModule, ProcessedExtensions } from "./extension";
 import type { MoonlightFS } from "./fs";
+import type { Logger } from "./logger";
 
 export type MoonlightHost = {
   config: Config;

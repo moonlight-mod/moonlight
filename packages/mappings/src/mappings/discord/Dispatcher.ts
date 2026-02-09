@@ -1,6 +1,6 @@
+import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../registry";
 import type { Dispatcher } from "./packages/flux/Dispatcher";
-import { ModuleExportType } from "@moonlight-mod/moonmap";
 
 type Exports = {
   default: Dispatcher<any>;

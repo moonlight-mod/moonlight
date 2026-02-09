@@ -3,9 +3,9 @@
 // <NotNite> bro are you fucking kidding me
 // <NotNite> that's literally the icon we use for the update banner
 
-import React from "@moonlight-mod/wp/react";
-import icons from "@moonlight-mod/wp/common_icons";
 import type { IconProps } from "@moonlight-mod/types/coreExtensions/common";
+import icons from "@moonlight-mod/wp/common_icons";
+import React from "@moonlight-mod/wp/react";
 
 export default function ThemeDarkIcon(props?: IconProps) {
   const parsed = icons.parseProps(props);

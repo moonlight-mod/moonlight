@@ -1,8 +1,8 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../../../registry";
+import type { DepGraph } from "../../../dependency-graph";
 import type { BasePayload, Interceptor, Listener } from "./_shared";
 import type { ActionLogger } from "./LoggingUtils";
-import type { DepGraph } from "../../../dependency-graph";
 
 // fiery was here :) jan 16th 2025
 

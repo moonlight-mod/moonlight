@@ -1,7 +1,7 @@
 import {
   ChatButtonList,
-  ChatButtonListItem,
-  ChatButtonListAnchors
+  ChatButtonListAnchors,
+  ChatButtonListItem
 } from "@moonlight-mod/types/coreExtensions/componentEditor";
 import React from "@moonlight-mod/wp/react";
 

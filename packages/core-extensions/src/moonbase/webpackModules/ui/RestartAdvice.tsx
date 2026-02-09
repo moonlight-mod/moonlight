@@ -1,7 +1,7 @@
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import { CircleWarningIcon } from "@moonlight-mod/wp/discord/components/common/index";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
 import { RestartAdvice } from "../../types";
 import HelpMessage from "./HelpMessage";

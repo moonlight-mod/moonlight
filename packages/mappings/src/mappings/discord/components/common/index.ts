@@ -1,20 +1,19 @@
-import register from "../../../../registry";
+import { ModuleExportType } from "@moonlight-mod/moonmap";
+import * as CSS from "csstype";
 import type {
   Component,
-  Ref,
-  PropsWithChildren,
-  PropsWithoutRef,
-  CSSProperties,
-  ReactNode,
-  ReactElement,
   ComponentClass,
   ComponentType,
-  FunctionComponent
+  CSSProperties,
+  FunctionComponent,
+  PropsWithChildren,
+  PropsWithoutRef,
+  ReactElement,
+  ReactNode,
+  Ref
 } from "react";
-import * as CSS from "csstype";
-
-import { ModuleExportType } from "@moonlight-mod/moonmap";
-import { FunctionNames, ComponentNames, IconNames } from "./_indexNames";
+import register from "../../../../registry";
+import { ComponentNames, FunctionNames, IconNames } from "./_indexNames";
 
 import type { Card } from "./Card.ts";
 import type { Image } from "./Image.ts";
@@ -48,34 +47,35 @@ export enum TextAreaWrap {
   OFF = "off"
 }
 
-export interface TextArea extends ComponentClass<
-  PropsWithoutRef<{
-    value?: string;
-    defaultValue?: string;
-    autoComplete?: TextAreaAutoComplete;
-    autoFocus?: boolean;
-    cols?: number;
-    disabled?: boolean;
-    form?: string;
-    maxLength?: number;
-    minLength?: number;
-    name?: string;
-    onChange?: (value: string, name: string) => void;
-    onChangeCapture?: (value: string, name: string) => void;
-    onInput?: (value: string, name: string) => void;
-    onInputCapture?: (value: string, name: string) => void;
-    onInvalid?: (value: string, name: string) => void;
-    onInvalidCapture?: (value: string, name: string) => void;
-    onSelect?: (value: string, name: string) => void;
-    onSelectCapture?: (value: string, name: string) => void;
-    placeholder?: string;
-    readOnly?: boolean;
-    required?: boolean;
-    rows?: number;
-    wrap?: TextAreaWrap;
-    className?: string;
-  }>
-> {
+export interface TextArea
+  extends ComponentClass<
+    PropsWithoutRef<{
+      value?: string;
+      defaultValue?: string;
+      autoComplete?: TextAreaAutoComplete;
+      autoFocus?: boolean;
+      cols?: number;
+      disabled?: boolean;
+      form?: string;
+      maxLength?: number;
+      minLength?: number;
+      name?: string;
+      onChange?: (value: string, name: string) => void;
+      onChangeCapture?: (value: string, name: string) => void;
+      onInput?: (value: string, name: string) => void;
+      onInputCapture?: (value: string, name: string) => void;
+      onInvalid?: (value: string, name: string) => void;
+      onInvalidCapture?: (value: string, name: string) => void;
+      onSelect?: (value: string, name: string) => void;
+      onSelectCapture?: (value: string, name: string) => void;
+      placeholder?: string;
+      readOnly?: boolean;
+      required?: boolean;
+      rows?: number;
+      wrap?: TextAreaWrap;
+      className?: string;
+    }>
+  > {
   AutoCompletes: typeof TextAreaAutoComplete;
   Wraps: typeof TextAreaWrap;
 }
@@ -93,15 +93,16 @@ export enum FormTextTypes {
   SUCCESS = "success"
 }
 
-interface FormText extends ComponentClass<
-  PropsWithChildren<{
-    type?: FormTextTypes;
-    className?: string;
-    disabled?: boolean;
-    selectable?: boolean;
-    style?: CSSProperties;
-  }>
-> {
+interface FormText
+  extends ComponentClass<
+    PropsWithChildren<{
+      type?: FormTextTypes;
+      className?: string;
+      disabled?: boolean;
+      selectable?: boolean;
+      style?: CSSProperties;
+    }>
+  > {
   Types: typeof FormTextTypes;
 }
 // #endregion
@@ -703,7 +704,11 @@ type UntypedFunctions = Record<FunctionNames, any>;
 // TODO: wtaf is up with react types not working in jsx
 // FIXME: tsc doesnt see [index: string]: any;
 interface Exports
-  extends IconComponents, UntypedComponents, UntypedFunctions, UnsortedComponentTypes, ComponentConstants {
+  extends IconComponents,
+    UntypedComponents,
+    UntypedFunctions,
+    UnsortedComponentTypes,
+    ComponentConstants {
   Clickable: ComponentClass<
     PropsWithChildren<{
       onClick?: () => void;

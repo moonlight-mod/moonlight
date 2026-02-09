@@ -1,16 +1,16 @@
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import {
-  Text,
-  useThemeContext,
   AngleBracketsIcon,
   BookCheckIcon,
-  ClydeIcon
+  ClydeIcon,
+  Text,
+  useThemeContext
 } from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import React from "@moonlight-mod/wp/react";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 
 const wordmark = "https://raw.githubusercontent.com/moonlight-mod/moonlight/refs/heads/main/img/wordmark.png";
 const wordmarkLight =

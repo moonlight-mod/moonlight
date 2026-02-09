@@ -1,8 +1,8 @@
-import type { BasePayload } from "./_shared";
-import type { ActionHandler, Dispatcher } from "./Dispatcher";
-import type { ChangeListeners } from "./ChangeListeners";
-import register from "../../../../registry";
 import { ModuleExportType } from "@moonlight-mod/moonmap";
+import register from "../../../../registry";
+import type { BasePayload } from "./_shared";
+import type { ChangeListeners } from "./ChangeListeners";
+import type { ActionHandler, Dispatcher } from "./Dispatcher";
 
 export type SyncFunction = () => boolean;
 type SyncsWith = {
@@ -34,6 +34,7 @@ export declare abstract class Store<T extends BasePayload> {
   registerActionHandlers(handlers: Record<T["type"], ActionHandler<T>>, band?: number): void;
   getName(): string;
   initializeIfNeeded(): void;
+  // biome-ignore lint/suspicious/useAdjacentOverloadSignatures: no state type parameter here
   initialize(): void;
   syncWith(stores: Store<T>[], callback: SyncFunction, timeout?: number): void;
   waitFor(...stores: Store<T>[]): void;

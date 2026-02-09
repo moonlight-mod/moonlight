@@ -1,6 +1,6 @@
+import path from "node:path";
 import type { BrowserWindow } from "electron";
 import { app, desktopCapturer } from "electron";
-import path from "node:path";
 import { type PatchBay } from "./types";
 
 const logger = moonlightHost.getLogger("rocketship");
@@ -52,7 +52,7 @@ moonlightHost.events.on("window-created", (window: BrowserWindow, isMainWindow: 
 
   // @ts-expect-error these types ancient
   windowSession.setDisplayMediaRequestHandler(
-    (request: any, callback: any) => {
+    (_request: any, callback: any) => {
       const linked = linkVenmic();
       desktopCapturer.getSources({ types: ["screen", "window"] }).then((sources) => {
         //logger.debug("desktopCapturer.getSources", sources);

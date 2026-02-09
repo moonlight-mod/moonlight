@@ -5,10 +5,10 @@ export type ChatButtonListAnchors = "gift" | "gif" | "sticker" | "emoji" | "acti
 
 export enum ChatButtonListAnchorIndicies {
   gift = 0,
-  "gif",
-  "sticker",
-  "emoji",
-  "activity"
+  gif,
+  sticker,
+  emoji,
+  activity
 }
 
 export type ChatButtonListItem = {

@@ -33,7 +33,7 @@
     "build": "tsc --build",
     "dev": "pnpm run build --watch --preserveWatchOutput",
     "clean": "pnpm run build --clean",
-    "typecheck": "pnpm run build --noEmit",
+    "check:types": "pnpm run build --noEmit",
     "prepare": "pnpm run build"
   },
   "devDependencies": {

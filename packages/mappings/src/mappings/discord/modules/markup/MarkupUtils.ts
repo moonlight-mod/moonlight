@@ -1,5 +1,5 @@
-import register from "../../../../registry";
 import { ReactElement } from "react";
+import register from "../../../../registry";
 
 // This isn't everything, but it's most of it
 export type MarkupConfig = {

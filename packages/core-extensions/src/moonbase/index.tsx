@@ -15,8 +15,8 @@ export const patches: Patch[] = [
 
       // wrap actions field to display error details
       {
-        match: /(?<=return(\(0,(\i)\.jsx\))\(.+?,)action:(\i),className:/,
-        replacement: (_, createElement, ReactJSX, action) =>
+        match: /(?<=return(\(0,\i\.jsx\))\(.+?,)action:(\i),className:/,
+        replacement: (_, createElement, action) =>
           `action:require("moonbase_crashScreen")?.wrapAction?${createElement}(require("moonbase_crashScreen").wrapAction,{action:${action},state:this.state}):${action},className:`
       },
 

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.3.14/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "lineWidth": 120
+  },
+  "javascript": {
+    "jsxRuntime": "reactClassic",
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noUnreachable": "off", // esbuild drop labels
+        "noUnusedLabels": "off", // esbuild drop labels
+        "noUnusedImports": "off" // false positives for React: https://github.com/biomejs/biome/blob/c8dbbbe9363fb156a29de174ba7735154f6bc783/crates/biome_js_analyze/src/react.rs#L122
+      },
+      "style": {
+        "useImportType": "off", // false positives for React (see above)
+        "noNonNullAssertion": "off" // annoying when working with Discord
+      },
+      "suspicious": {
+        "noExplicitAny": "off", // annoying when working with Discord
+        "noConfusingLabels": "off", // esbuild drop labels
+        "noConsole": "error" // use the logger instead
+      },
+      "complexity": {
+        "noUselessEscapeInRegex": "off", // \i
+        "noImportantStyles": "off" // can't really avoid this with some things
+      }
+    }
+  }
+}

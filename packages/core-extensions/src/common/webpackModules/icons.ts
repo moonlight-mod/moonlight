@@ -1,4 +1,4 @@
-import { Icons, IconSize } from "@moonlight-mod/types/coreExtensions/common";
+import { IconSize, Icons } from "@moonlight-mod/types/coreExtensions/common";
 import { tokens } from "@moonlight-mod/wp/discord/components/common/index";
 
 // This is defined in a Webpack module but we copy it here to be less breakage-prone
@@ -14,8 +14,7 @@ const sizes: Partial<Record<IconSize, number>> = {
 export const icons: Icons = {
   parseProps(props) {
     // NOTE: var() fallback is non-standard behavior, just for safety reasons
-    const color = props?.color ?? tokens?.colors?.["INTERACTIVE_NORMAL"] ?? "var(--interactive-normal)";
-
+    const color = props?.color ?? tokens?.colors?.INTERACTIVE_NORMAL ?? "var(--interactive-normal)";
     const size = sizes[props?.size ?? "md"];
 
     return {

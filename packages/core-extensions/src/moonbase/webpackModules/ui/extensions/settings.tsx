@@ -1,40 +1,40 @@
+import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import {
-  ExtensionSettingType,
   ExtensionSettingsManifest,
+  ExtensionSettingType,
   MultiSelectSettingType,
   NumberSettingType,
   SelectOption,
   SelectSettingType
 } from "@moonlight-mod/types/config";
-import { ExtensionState, MoonbaseExtension } from "../../../types";
-import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import React from "@moonlight-mod/wp/react";
-import {
-  FormSwitch,
-  FormItem,
-  FormText,
-  Slider,
-  TextArea,
-  Tooltip,
-  Clickable,
-  CircleXIcon,
-  Text,
-  NumberInputStepper
-} from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
-import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import {
-  SingleSelect,
-  useVariableSelect,
+  CircleXIcon,
+  Clickable,
+  FormItem,
+  FormSwitch,
+  FormText,
+  NumberInputStepper,
+  Slider,
+  Text,
+  TextArea,
+  Tooltip
+} from "@moonlight-mod/wp/discord/components/common/index";
+import {
+  Select as DiscordSelect,
   multiSelect,
-  Select as DiscordSelect
+  SingleSelect,
+  useVariableSelect
 } from "@moonlight-mod/wp/discord/components/common/Select";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
+import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
+import React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import { ExtensionState, MoonbaseExtension } from "../../../types";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack
@@ -43,12 +43,11 @@ spacepack
     /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
     /webpackId:(\d+),name:"GuildSettings"/
   )
-  .then(
-    () =>
-      (GuildSettingsRoleEditClasses = spacepack.require(
-        "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
-      ))
-  );
+  .then(() => {
+    GuildSettingsRoleEditClasses = spacepack.require(
+      "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
+    );
+  });
 
 type SettingsProps = {
   ext: MoonbaseExtension;
@@ -68,20 +67,16 @@ function markdownify(str: string) {
 }
 
 function useConfigEntry<T>(uniqueId: number, name: string) {
-  return useStateFromStores(
-    [MoonbaseSettingsStore],
-    () => {
-      return {
-        value: MoonbaseSettingsStore.getExtensionConfig<T>(uniqueId, name),
-        displayName: MoonbaseSettingsStore.getExtensionConfigName(uniqueId, name),
-        description: MoonbaseSettingsStore.getExtensionConfigDescription(uniqueId, name)
-      };
-    },
-    [uniqueId, name]
-  );
+  return useStateFromStores([MoonbaseSettingsStore], () => {
+    return {
+      value: MoonbaseSettingsStore.getExtensionConfig<T>(uniqueId, name),
+      displayName: MoonbaseSettingsStore.getExtensionConfigName(uniqueId, name),
+      description: MoonbaseSettingsStore.getExtensionConfigDescription(uniqueId, name)
+    };
+  }, [uniqueId, name]);
 }
 
-function Boolean({ ext, name, setting, disabled }: SettingsProps) {
+function BooleanSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<boolean>(ext.uniqueId, name);
 
   return (
@@ -99,7 +94,7 @@ function Boolean({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Number({ ext, name, setting, disabled }: SettingsProps) {
+function NumberSetting({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<number>(ext.uniqueId, name);
 
   const castedSetting = setting as NumberSettingType;
@@ -135,7 +130,7 @@ function Number({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function String({ ext, name, setting, disabled }: SettingsProps) {
+function StringSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
@@ -150,7 +145,7 @@ function String({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
+function MultilineStringSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   return (
@@ -167,7 +162,7 @@ function MultilineString({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Select({ ext, name, setting, disabled }: SettingsProps) {
+function SelectSetting({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string>(ext.uniqueId, name);
 
   const castedSetting = setting as SelectSettingType;
@@ -190,7 +185,7 @@ function Select({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
+function MultiSelectSetting({ ext, name, setting, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string | string[]>(ext.uniqueId, name);
 
   const castedSetting = setting as MultiSelectSettingType;
@@ -217,7 +212,7 @@ function MultiSelect({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disabled: boolean }) {
+function RemoveEntryButton({ onClick }: { onClick: () => void; disabled: boolean }) {
   return (
     <div className={GuildSettingsRoleEditClasses.removeButtonContainer}>
       <Tooltip text="Remove entry" position="top">
@@ -231,7 +226,7 @@ function RemoveEntryButton({ onClick, disabled }: { onClick: () => void; disable
   );
 }
 
-function List({ ext, name, setting, disabled }: SettingsProps) {
+function ListSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<string[]>(ext.uniqueId, name);
 
   const entries = value ?? [];
@@ -278,7 +273,7 @@ function List({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
+function DictionarySetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName, description } = useConfigEntry<Record<string, string>>(ext.uniqueId, name);
 
   const entries = Object.entries(value ?? {});
@@ -333,18 +328,14 @@ function Dictionary({ ext, name, setting, disabled }: SettingsProps) {
   );
 }
 
-function Custom({ ext, name, setting, disabled }: SettingsProps) {
+function CustomSetting({ ext, name }: SettingsProps) {
   const { value, displayName } = useConfigEntry<any>(ext.uniqueId, name);
 
-  const { component: Component } = useStateFromStores(
-    [MoonbaseSettingsStore],
-    () => {
-      return {
-        component: MoonbaseSettingsStore.getExtensionConfigComponent(ext.id, name)
-      };
-    },
-    [ext.uniqueId, name]
-  );
+  const { component: Component } = useStateFromStores([MoonbaseSettingsStore], () => {
+    return {
+      component: MoonbaseSettingsStore.getExtensionConfigComponent(ext.id, name)
+    };
+  }, [ext.uniqueId, name]);
 
   if (Component == null) {
     return (
@@ -361,18 +352,18 @@ function Custom({ ext, name, setting, disabled }: SettingsProps) {
 
 function Setting({ ext, name, setting, disabled }: SettingsProps) {
   const elements: Partial<Record<ExtensionSettingType, SettingsComponent>> = {
-    [ExtensionSettingType.Boolean]: Boolean,
-    [ExtensionSettingType.Number]: Number,
-    [ExtensionSettingType.String]: String,
-    [ExtensionSettingType.MultilineString]: MultilineString,
-    [ExtensionSettingType.Select]: Select,
-    [ExtensionSettingType.MultiSelect]: MultiSelect,
-    [ExtensionSettingType.List]: List,
-    [ExtensionSettingType.Dictionary]: Dictionary,
-    [ExtensionSettingType.Custom]: Custom
+    [ExtensionSettingType.Boolean]: BooleanSetting,
+    [ExtensionSettingType.Number]: NumberSetting,
+    [ExtensionSettingType.String]: StringSetting,
+    [ExtensionSettingType.MultilineString]: MultilineStringSetting,
+    [ExtensionSettingType.Select]: SelectSetting,
+    [ExtensionSettingType.MultiSelect]: MultiSelectSetting,
+    [ExtensionSettingType.List]: ListSetting,
+    [ExtensionSettingType.Dictionary]: DictionarySetting,
+    [ExtensionSettingType.Custom]: CustomSetting
   };
   const element = elements[setting.type];
-  if (element == null) return <></>;
+  if (element == null) return;
   return React.createElement(element, { ext, name, setting, disabled });
 }
 

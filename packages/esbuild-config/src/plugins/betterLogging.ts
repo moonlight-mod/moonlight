@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/** biome-ignore-all lint/suspicious/noConsole: logger */
 import type { Plugin } from "esbuild";
 import { formatMessages } from "esbuild";
 

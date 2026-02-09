@@ -1,19 +1,19 @@
-import settings from "@moonlight-mod/wp/settings_settings";
-import redesign from "@moonlight-mod/wp/settings_redesign";
-import React from "@moonlight-mod/wp/react";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { Moonbase, pages, RestartAdviceMessage, Update } from "@moonlight-mod/wp/moonbase_ui";
+import { Breadcrumbs, Text } from "@moonlight-mod/wp/discord/components/common/index";
+//import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
+import {
+  createPanel,
+  createSection,
+  createSidebarItem
+} from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemCreators";
 //import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import { Text, Breadcrumbs } from "@moonlight-mod/wp/discord/components/common/index";
-//import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
-import {
-  createSection,
-  createSidebarItem,
-  createPanel
-} from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemCreators";
 import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
+import { Moonbase, pages, RestartAdviceMessage, Update } from "@moonlight-mod/wp/moonbase_ui";
+import React from "@moonlight-mod/wp/react";
+import redesign from "@moonlight-mod/wp/settings_redesign";
+import settings from "@moonlight-mod/wp/settings_settings";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 const notice = {
   stores: [MoonbaseSettingsStore],

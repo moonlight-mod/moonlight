@@ -2,25 +2,24 @@ import { LogLevel } from "@moonlight-mod/types";
 
 const logLevels = Object.values(LogLevel).filter((v) => typeof v === "string") as string[];
 
-import React from "@moonlight-mod/wp/react";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import {
+  CircleXIcon,
+  Clickable,
   FormDivider,
   FormItem,
-  FormText,
   FormSwitch,
-  Tooltip,
-  Clickable,
-  CircleXIcon
+  FormText,
+  Tooltip
 } from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
 import { SingleSelect } from "@moonlight-mod/wp/discord/components/common/Select";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
-
+import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
+import React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack
@@ -29,12 +28,11 @@ spacepack
     /\[(?:.\.e\("\d+?"\),?)+\][^}]+?webpackId:\d+,name:"GuildSettings"/,
     /webpackId:(\d+),name:"GuildSettings"/
   )
-  .then(
-    () =>
-      (GuildSettingsRoleEditClasses = spacepack.require(
-        "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
-      ))
-  );
+  .then(() => {
+    GuildSettingsRoleEditClasses = spacepack.require(
+      "discord/modules/guild_settings/roles/web/GuildSettingsRoleEdit.css"
+    );
+  });
 
 function RemoveEntryButton({ onClick }: { onClick: () => void }) {
   return (

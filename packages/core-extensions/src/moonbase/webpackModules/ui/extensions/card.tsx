@@ -1,37 +1,36 @@
-import { ExtensionState } from "../../../types";
-import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
-
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
+import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import {
-  ScienceIcon,
-  DownloadIcon,
-  TrashIcon,
   AngleBracketsIcon,
-  Tooltip,
   Card,
-  Text,
-  FormSwitch,
-  TabBar,
   ChannelListIcon,
+  DownloadIcon,
+  FormSwitch,
   HeartIcon,
-  WindowTopOutlineIcon,
-  WarningIcon
+  ScienceIcon,
+  TabBar,
+  Text,
+  Tooltip,
+  TrashIcon,
+  WarningIcon,
+  WindowTopOutlineIcon
 } from "@moonlight-mod/wp/discord/components/common/index";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
-import React from "@moonlight-mod/wp/react";
+import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
+import BuildOverrideClasses from "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverride.css";
+import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
+import AppCardClasses from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
+import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
+import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
-import AppCardClasses from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
-import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
-import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
-import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
-import BuildOverrideClasses from "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverride.css";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
-import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
+import React from "@moonlight-mod/wp/react";
+import { ExtensionState } from "../../../types";
 import ExtensionInfo from "./info";
-import Settings from "./settings";
 import { doGenericExtensionPopup, doMissingExtensionPopup } from "./popup";
+import Settings from "./settings";
 
 export enum ExtensionPage {
   Info,
@@ -91,27 +90,27 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
   const enabledDependants = useStateFromStores([MoonbaseSettingsStore], () =>
     Object.keys(MoonbaseSettingsStore.extensions)
       .filter((uniqueId) => {
-        const potentialDependant = MoonbaseSettingsStore.getExtension(parseInt(uniqueId));
+        const potentialDependant = MoonbaseSettingsStore.getExtension(parseInt(uniqueId, 10));
 
         return (
           potentialDependant.manifest.dependencies?.includes(ext?.id) &&
-          MoonbaseSettingsStore.getExtensionEnabled(parseInt(uniqueId))
+          MoonbaseSettingsStore.getExtensionEnabled(parseInt(uniqueId, 10))
         );
       })
-      .map((a) => MoonbaseSettingsStore.getExtension(parseInt(a)))
+      .map((a) => MoonbaseSettingsStore.getExtension(parseInt(a, 10)))
   );
   const implicitlyEnabled = enabledDependants.length > 0;
 
   const hasDuplicateEntry = useStateFromStores([MoonbaseSettingsStore], () =>
     Object.entries(MoonbaseSettingsStore.extensions).some(
       ([otherUniqueId, otherExt]) =>
-        otherExt != null && otherExt?.id === ext?.id && parseInt(otherUniqueId) !== uniqueId
+        otherExt != null && otherExt?.id === ext?.id && parseInt(otherUniqueId, 10) !== uniqueId
     )
   );
 
-  return ext == null ? (
-    <></>
-  ) : (
+  if (ext == null) return;
+
+  return (
     <Card editable={true} className={`${AppCardClasses.card} moonbase-extension-card`}>
       <div className={`${AppCardClasses.cardHeader} moonbase-extension-card-header`}>
         <Flex direction={Flex.Direction.VERTICAL}>
@@ -203,19 +202,19 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
                   disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
                   // FIXME this no longer works!!!
                   /*tooltipNote={
-                    ext.compat !== ExtensionCompat.Compatible ? (
-                      COMPAT_TEXT_MAP[ext.compat]
-                    ) : implicitlyEnabled ? (
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div>{`This extension is a dependency of the following enabled extension${
-                          enabledDependants.length > 1 ? "s" : ""
-                        }:`}</div>
-                        {enabledDependants.map((dep) => (
-                          <div>{"• " + (dep.manifest.meta?.name ?? dep.id)}</div>
-                        ))}
-                      </div>
-                    ) : undefined
-                  }*/
+                  ext.compat !== ExtensionCompat.Compatible ? (
+                    COMPAT_TEXT_MAP[ext.compat]
+                  ) : implicitlyEnabled ? (
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                      <div>{`This extension is a dependency of the following enabled extension${
+                        enabledDependants.length > 1 ? "s" : ""
+                      }:`}</div>
+                      {enabledDependants.map((dep) => (
+                        <div>{"• " + (dep.manifest.meta?.name ?? dep.id)}</div>
+                      ))}
+                    </div>
+                  ) : undefined
+                }*/
                   onChange={() => {
                     const toggle = () => {
                       MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);

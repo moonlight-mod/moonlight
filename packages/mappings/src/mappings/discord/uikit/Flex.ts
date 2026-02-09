@@ -1,7 +1,7 @@
-import register from "../../../registry";
+import * as CSS from "csstype";
 
 import { ComponentClass, CSSProperties, PropsWithChildren } from "react";
-import * as CSS from "csstype";
+import register from "../../../registry";
 
 export enum FlexDirection {
   VERTICAL = "vertical",
@@ -28,19 +28,20 @@ export enum FlexWrap {
   WRAP = "wrap",
   WRAP_REVERSE = "wrapReverse"
 }
-export interface Flex extends ComponentClass<
-  PropsWithChildren<{
-    className?: string;
-    direction?: FlexDirection;
-    justify?: FlexJustify;
-    align?: FlexAlign;
-    wrap?: FlexWrap;
-    shrink?: CSS.Property.FlexShrink;
-    grow?: CSS.Property.FlexGrow;
-    basis?: CSS.Property.FlexBasis;
-    style?: CSSProperties;
-  }>
-> {
+export interface Flex
+  extends ComponentClass<
+    PropsWithChildren<{
+      className?: string;
+      direction?: FlexDirection;
+      justify?: FlexJustify;
+      align?: FlexAlign;
+      wrap?: FlexWrap;
+      shrink?: CSS.Property.FlexShrink;
+      grow?: CSS.Property.FlexGrow;
+      basis?: CSS.Property.FlexBasis;
+      style?: CSSProperties;
+    }>
+  > {
   Direction: typeof FlexDirection;
   Align: typeof FlexAlign;
   Justify: typeof FlexJustify;

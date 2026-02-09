@@ -6,7 +6,7 @@ export const Settings: SettingsType = {
   sectionNames: [],
   sectionMenuItems: {},
 
-  addSection: (section, label, element, color = null, pos, notice, onClick) => {
+  addSection(section, label, element, color = null, pos, notice, onClick) {
     const data: SettingsSection = {
       section,
       label,
@@ -24,18 +24,19 @@ export const Settings: SettingsType = {
   addSectionMenuItems(section, ...newItems) {
     const data = Settings.ourSections.find((x) => x.section === section);
     if (!data || !("element" in data)) throw new Error(`Could not find section "${section}"`);
-    (Settings.sectionMenuItems[section] ??= []).push(...newItems);
+    Settings.sectionMenuItems[section] ??= [];
+    Settings.sectionMenuItems[section].push(...newItems);
     data._moonlight_submenu ??= () => Settings.sectionMenuItems[section];
   },
 
-  addDivider: (pos = null) => {
+  addDivider(pos = null) {
     Settings.ourSections.push({
       section: "DIVIDER",
       pos: pos === null ? -4 : pos
     });
   },
 
-  addHeader: function (label, pos = null) {
+  addHeader(label, pos = null) {
     Settings.ourSections.push({
       section: "HEADER",
       label: label,
@@ -43,7 +44,7 @@ export const Settings: SettingsType = {
     });
   },
 
-  _mutateSections: (sections) => {
+  _mutateSections(sections) {
     for (const section of Settings.ourSections) {
       // Discord's `pos` only supports numbers, so lets call the function to get the position.
       if (typeof section.pos === "function") {

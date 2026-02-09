@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/** biome-ignore-all lint/suspicious/noConsole: repository script */
 import * as fs from "node:fs";
 import * as path from "node:path";
 import * as ts from "typescript";
@@ -81,8 +81,8 @@ const mappedTypes = {
 let write = process.argv.includes("--write");
 
 function getExports(path) {
-  let sourcePath = "./src/mappings/" + path + ".ts";
-  if (!fs.existsSync(sourcePath)) sourcePath = "./src/mappings/" + path + "/index.ts";
+  let sourcePath = `./src/mappings/${path}.ts`;
+  if (!fs.existsSync(sourcePath)) sourcePath = `./src/mappings/${path}/index.ts`;
   if (!fs.existsSync(sourcePath)) return null;
   const program = ts.createProgram([sourcePath], {
     target: ts.ScriptTarget.ES2022,
@@ -175,7 +175,7 @@ function generateDeclares(prefix) {
             str += `  export default _default;\n`;
           } else {
             // :(
-            if (name.includes("-")) continue;
+            if (name === "toString" || name.includes("-")) continue;
 
             str += `  export const ${name}: MappedModules["${path}"]["${name}"];\n`;
           }

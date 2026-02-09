@@ -1,10 +1,9 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import register from "../../../../registry";
-
 import type { DebouncedFunc } from "lodash";
+import register from "../../../../registry";
 import type { BasePayload } from "./_shared";
-import type { Store } from "./Store";
 import type { ActionHandler, Dispatcher } from "./Dispatcher";
+import type { Store } from "./Store";
 
 export type ClearAll = {
   omit: string[];
