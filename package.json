@@ -25,19 +25,14 @@
     "browser": "pnpm run --filter=browser build",
     "dev": "pnpm run --parallel --stream dev",
     "clean": "pnpm run --filter=!esbuild-config -r clean",
-    "lint": "eslint --ignore-pattern \"**/dist/**\"",
-    "lint:fix": "pnpm lint --fix",
-    "lint:report": "pnpm lint --output-file eslint_report.json --format json",
-    "typecheck": "pnpm run -r typecheck",
-    "check": "pnpm run lint && pnpm run typecheck",
-    "prepare": "husky install",
-    "updates": "pnpm taze -r"
+    "check": "biome check",
+    "check:ci": "biome ci",
+    "check:write": "biome check --write",
+    "check:types": "pnpm run -r check:types",
+    "prepare": "husky install"
   },
   "devDependencies": {
-    "@moonlight-mod/eslint-config": "catalog:dev",
-    "eslint": "catalog:dev",
-    "husky": "catalog:dev",
-    "prettier": "catalog:dev",
-    "taze": "catalog:dev"
+    "@biomejs/biome": "catalog:lint",
+    "husky": "catalog:lint"
   }
 }

@@ -5,7 +5,7 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "check:types": "tsc --noEmit"
   },
   "dependencies": {
     "@moonlight-mod/types": "workspace:*"
