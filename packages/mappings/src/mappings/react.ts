@@ -9,7 +9,7 @@ register((moonmap) => {
   const name = "react";
   moonmap.register({
     name,
-    find: [/\.?version(?:=|:)/, /\.?createElement(?:=|:)/],
+    find: [/\.?version(?:=|:)/, /\.?createElement(?:=|:)/, 'Symbol.for("react.forward_ref")'],
     process({ id }) {
       moonmap.addModule(id, name);
 
