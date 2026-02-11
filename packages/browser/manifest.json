@@ -3,7 +3,7 @@
   "manifest_version": 3,
   "name": "moonlight",
   "description": "Yet another Discord mod",
-  "version": "2026.2.0",
+  "version": "2026.2.1",
   "permissions": ["declarativeNetRequestWithHostAccess", "webRequest", "scripting", "webNavigation"],
   "host_permissions": [
     "https://moonlight-mod.github.io/*",
