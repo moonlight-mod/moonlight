@@ -8,6 +8,7 @@ const keys = [
   "captureException",
   "captureCrash",
   "captureMessage",
+  "addFeatureFlag",
   "addBreadcrumb"
 ];
 
