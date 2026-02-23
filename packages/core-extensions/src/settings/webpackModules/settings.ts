@@ -1,4 +1,4 @@
-import { SettingsSection, Settings as SettingsType } from "@moonlight-mod/types/coreExtensions/settings";
+import type { SettingsSection, Settings as SettingsType } from "@moonlight-mod/types/coreExtensions/settings";
 //import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 
 export const Settings: SettingsType = {

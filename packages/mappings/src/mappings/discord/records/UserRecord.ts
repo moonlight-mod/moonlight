@@ -1,5 +1,5 @@
 import register from "../../../registry";
-import { UserFlags } from "../Constants";
+import type { UserFlags } from "../Constants";
 import { BaseRecord } from "../lib/BaseRecord";
 
 interface AvatarDecorationData {

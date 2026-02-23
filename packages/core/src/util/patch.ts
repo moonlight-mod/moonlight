@@ -1,4 +1,4 @@
-import { PatchReplace, PatchReplaceType } from "@moonlight-mod/types";
+import { type PatchReplace, PatchReplaceType } from "@moonlight-mod/types";
 
 type SingleFind = string | RegExp;
 type Find = SingleFind | SingleFind[];

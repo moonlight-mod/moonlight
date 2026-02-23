@@ -1,13 +1,13 @@
 import {
   constants,
-  DetectedExtension,
+  type DetectedExtension,
   ExtensionEnvironment,
-  ExtensionManifest,
-  ExtensionWebExports,
-  ProcessedExtensions,
-  WebpackModuleFunc
+  type ExtensionManifest,
+  type ExtensionWebExports,
+  type ProcessedExtensions,
+  type WebpackModuleFunc
 } from "@moonlight-mod/types";
-import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
+import { type WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
 import { readConfig } from "../config";
 import { registerPatch, registerWebpackModule } from "../patch";
 import { registerStyles } from "../styles";

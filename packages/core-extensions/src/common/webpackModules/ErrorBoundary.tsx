@@ -1,4 +1,4 @@
-import { ErrorBoundaryProps, ErrorBoundaryState } from "@moonlight-mod/types/coreExtensions/common";
+import type { ErrorBoundaryProps, ErrorBoundaryState } from "@moonlight-mod/types/coreExtensions/common";
 import React from "@moonlight-mod/wp/react";
 
 const logger = moonlight.getLogger("ErrorBoundary");

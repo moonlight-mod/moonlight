@@ -1,5 +1,5 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import { DependencyList } from "react";
+import type { DependencyList } from "react";
 import register from "../../../../registry";
 import type { Store } from "./Store";
 

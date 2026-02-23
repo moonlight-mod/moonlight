@@ -1,4 +1,4 @@
-import { constants, DetectedExtension, ExtensionLoadSource, ExtensionManifest } from "@moonlight-mod/types";
+import { constants, type DetectedExtension, ExtensionLoadSource, type ExtensionManifest } from "@moonlight-mod/types";
 import { readConfig } from "./config";
 import { getCoreExtensionsPath, getExtensionsPath } from "./util/data";
 import Logger from "./util/logger";

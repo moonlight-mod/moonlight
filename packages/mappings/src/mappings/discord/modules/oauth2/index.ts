@@ -1,4 +1,4 @@
-import { ComponentType } from "react";
+import type { ComponentType } from "react";
 import register from "../../../../registry";
 
 export type OAuth2Response = {

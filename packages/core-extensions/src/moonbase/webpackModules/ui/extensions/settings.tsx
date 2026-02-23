@@ -1,11 +1,11 @@
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import {
-  ExtensionSettingsManifest,
+  type ExtensionSettingsManifest,
   ExtensionSettingType,
-  MultiSelectSettingType,
-  NumberSettingType,
-  SelectOption,
-  SelectSettingType
+  type MultiSelectSettingType,
+  type NumberSettingType,
+  type SelectOption,
+  type SelectSettingType
 } from "@moonlight-mod/types/config";
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import {
@@ -34,7 +34,7 @@ import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { ExtensionState, MoonbaseExtension } from "../../../types";
+import { ExtensionState, type MoonbaseExtension } from "../../../types";
 
 let GuildSettingsRoleEditClasses: any;
 spacepack

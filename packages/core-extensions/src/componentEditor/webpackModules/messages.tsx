@@ -1,9 +1,9 @@
 import {
-  MessageBadge,
+  type MessageBadge,
   MessageBadgeIndicies,
-  Messages,
-  MessageUsername,
-  MessageUsernameBadge,
+  type Messages,
+  type MessageUsername,
+  type MessageUsernameBadge,
   MessageUsernameBadgeIndicies,
   MessageUsernameIndicies
 } from "@moonlight-mod/types/coreExtensions/componentEditor";

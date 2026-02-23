@@ -1,6 +1,6 @@
-import * as CSS from "csstype";
+import type * as CSS from "csstype";
 
-import { ComponentClass, CSSProperties, PropsWithChildren } from "react";
+import type { ComponentClass, CSSProperties, PropsWithChildren } from "react";
 import register from "../../../registry";
 
 export enum FlexDirection {

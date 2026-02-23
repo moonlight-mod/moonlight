@@ -1,4 +1,4 @@
-import { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "../discord";
+import type { WebpackModule, WebpackModuleFunc, WebpackRequireType } from "../discord";
 
 export type Spacepack = {
   /**

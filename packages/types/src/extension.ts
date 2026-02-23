@@ -1,6 +1,6 @@
-import { ExtensionSettingsManifest } from "./config";
-import { Snowflake } from "./discord";
-import { WebpackModuleFunc } from "./discord/webpack";
+import type { ExtensionSettingsManifest } from "./config";
+import type { Snowflake } from "./discord";
+import type { WebpackModuleFunc } from "./discord/webpack";
 
 export enum ExtensionTag {
   Accessibility = "accessibility",

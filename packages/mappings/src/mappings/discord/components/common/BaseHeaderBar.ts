@@ -1,5 +1,5 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import * as CSS from "csstype";
+import type * as CSS from "csstype";
 import type { ComponentType, ReactNode } from "react";
 import register from "../../../../registry";
 import type { IconComponent, LayerPosition, TooltipColors } from "./index";

@@ -6,8 +6,8 @@ import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
 import LunAST from "@moonlight-mod/lunast";
 import loadMappings from "@moonlight-mod/mappings";
 import Moonmap from "@moonlight-mod/moonmap";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
-import { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
+import { constants, type MoonlightBranch } from "@moonlight-mod/types";
+import type { WebEventPayloads, WebEventType } from "@moonlight-mod/types/core/event";
 
 async function load() {
   delete window._moonlightWebLoad;

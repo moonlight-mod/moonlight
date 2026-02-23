@@ -1,4 +1,4 @@
-import { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
+import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   // chat buttons

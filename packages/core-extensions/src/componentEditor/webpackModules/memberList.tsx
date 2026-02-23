@@ -1,6 +1,6 @@
 import {
-  MemberList,
-  MemberListDecorator,
+  type MemberList,
+  type MemberListDecorator,
   MemberListDecoratorAnchorIndicies
 } from "@moonlight-mod/types/coreExtensions/componentEditor";
 import React from "@moonlight-mod/wp/react";

@@ -9,8 +9,8 @@ import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonl
 import { getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
 import { createEventEmitter } from "@moonlight-mod/core/util/event";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
-import { NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
+import { constants, type MoonlightBranch } from "@moonlight-mod/types";
+import { type NodeEventPayloads, NodeEventType } from "@moonlight-mod/types/core/event";
 import { contextBridge, ipcRenderer, webFrame } from "electron";
 
 let initialized = false;

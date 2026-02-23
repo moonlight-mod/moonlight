@@ -1,8 +1,8 @@
 import {
   APPLICATION_ID,
-  Commands,
-  LegacyCommand,
-  RegisteredCommand
+  type Commands,
+  type LegacyCommand,
+  type RegisteredCommand
 } from "@moonlight-mod/types/coreExtensions/commands";
 
 type LegacyCommands = Record<string, LegacyCommand>;

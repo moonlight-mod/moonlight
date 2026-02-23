@@ -1,5 +1,5 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import * as CSS from "csstype";
+import type * as CSS from "csstype";
 import type {
   Component,
   ComponentClass,
@@ -13,7 +13,7 @@ import type {
   Ref
 } from "react";
 import register from "../../../../registry";
-import { ComponentNames, FunctionNames, IconNames } from "./_indexNames";
+import type { ComponentNames, FunctionNames, IconNames } from "./_indexNames";
 
 import type { Card } from "./Card.ts";
 import type { Image } from "./Image.ts";

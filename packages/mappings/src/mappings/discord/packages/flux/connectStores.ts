@@ -1,4 +1,4 @@
-import { ComponentConstructor } from "flux/lib/FluxContainer";
+import type { ComponentConstructor } from "flux/lib/FluxContainer";
 import register from "../../../../registry";
 import type { Store } from "./Store";
 

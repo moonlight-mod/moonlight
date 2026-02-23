@@ -1,4 +1,4 @@
-import { Config } from "@moonlight-mod/types";
+import type { Config } from "@moonlight-mod/types";
 import * as constants from "@moonlight-mod/types/constants";
 import { getConfigPath } from "./util/data";
 import Logger from "./util/logger";

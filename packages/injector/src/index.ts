@@ -10,10 +10,10 @@ import persist from "@moonlight-mod/core/persist";
 import { getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 import { getConfigPath, getExtensionsPath, getMoonlightDir } from "@moonlight-mod/core/util/data";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
-import { constants, MoonlightBranch } from "@moonlight-mod/types";
+import { constants, type MoonlightBranch } from "@moonlight-mod/types";
 import electron, {
   app,
-  BrowserWindowConstructorOptions,
+  type BrowserWindowConstructorOptions,
   BrowserWindow as ElectronBrowserWindow,
   ipcMain
 } from "electron";

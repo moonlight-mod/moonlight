@@ -1,9 +1,9 @@
 import {
-  DMList,
+  type DMList,
   DMListAnchorIndicies,
-  DMListDecorator,
+  type DMListDecorator,
   DMListDecoratorAnchorIndicies,
-  DMListItem
+  type DMListItem
 } from "@moonlight-mod/types/coreExtensions/componentEditor";
 import React from "@moonlight-mod/wp/react";
 

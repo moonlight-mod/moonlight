@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 import register from "../../../../registry";
 
 // This isn't everything, but it's most of it

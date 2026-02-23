@@ -1,4 +1,4 @@
-import { MoonlightEventEmitter } from "@moonlight-mod/types/core/event";
+import type { MoonlightEventEmitter } from "@moonlight-mod/types/core/event";
 
 export function createEventEmitter<
   EventId extends string = string,

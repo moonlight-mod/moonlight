@@ -1,19 +1,19 @@
-import { Exports as AppPanels } from "../coreExtensions/appPanels";
-import { Exports as Commands } from "../coreExtensions/commands";
-import { ErrorBoundaryExports as ErrorBoundary, IconsExports as Icons } from "../coreExtensions/common";
-import {
+import type { Exports as AppPanels } from "../coreExtensions/appPanels";
+import type { Exports as Commands } from "../coreExtensions/commands";
+import type { ErrorBoundaryExports as ErrorBoundary, IconsExports as Icons } from "../coreExtensions/common";
+import type {
   ChatButtonListExports as ChatButtonList,
   DMListExports as DMList,
   MemberListExports as MemberList,
   MessagesExports as Messages
 } from "../coreExtensions/componentEditor";
-import { Exports as ContextMenu } from "../coreExtensions/contextMenu";
-import { Exports as LinkRedirect } from "../coreExtensions/linkRedirect";
-import { Exports as Markdown } from "../coreExtensions/markdown";
-import { Exports as Moonbase } from "../coreExtensions/moonbase";
-import { Exports as Notices } from "../coreExtensions/notices";
-import { Exports as Settings } from "../coreExtensions/settings";
-import { Exports as Spacepack } from "../coreExtensions/spacepack";
+import type { Exports as ContextMenu } from "../coreExtensions/contextMenu";
+import type { Exports as LinkRedirect } from "../coreExtensions/linkRedirect";
+import type { Exports as Markdown } from "../coreExtensions/markdown";
+import type { Exports as Moonbase } from "../coreExtensions/moonbase";
+import type { Exports as Notices } from "../coreExtensions/notices";
+import type { Exports as Settings } from "../coreExtensions/settings";
+import type { Exports as Spacepack } from "../coreExtensions/spacepack";
 
 declare function WebpackRequire(id: string): any;
 

@@ -1,4 +1,4 @@
-import { MarkdownRule, Ruleset, SlateRule } from "@moonlight-mod/types/coreExtensions/markdown";
+import type { MarkdownRule, Ruleset, SlateRule } from "@moonlight-mod/types/coreExtensions/markdown";
 
 export const rules: Record<string, (rules: Record<string, MarkdownRule>) => MarkdownRule> = {};
 export const slateRules: Record<string, (rules: Record<string, SlateRule>) => SlateRule> = {};

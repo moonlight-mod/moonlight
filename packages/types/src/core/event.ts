@@ -1,5 +1,5 @@
-import { Config } from "../config";
-import { WebpackModuleFunc, WebpackRequireType } from "../discord";
+import type { Config } from "../config";
+import type { WebpackModuleFunc, WebpackRequireType } from "../discord";
 
 export interface MoonlightEventEmitter<EventId extends string = string, EventData = Record<EventId, any>> {
   dispatchEvent: <Id extends keyof EventData>(id: Id, data: EventData[Id]) => void;

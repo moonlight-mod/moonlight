@@ -1,4 +1,4 @@
-import { ExtensionWebExports, Patch, PatchReplaceType } from "@moonlight-mod/types";
+import { type ExtensionWebExports, type Patch, PatchReplaceType } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {

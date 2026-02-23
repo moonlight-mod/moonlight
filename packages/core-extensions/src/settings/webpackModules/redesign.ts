@@ -1,4 +1,7 @@
-import { SettingsRedesignItemType as ItemType, SettingsRedesign } from "@moonlight-mod/types/coreExtensions/settings";
+import {
+  SettingsRedesignItemType as ItemType,
+  type SettingsRedesign
+} from "@moonlight-mod/types/coreExtensions/settings";
 
 const SectionAnchorIndicies = ["profile_panel", "user", "billing", "app", "activity", "developer", "logout"];
 

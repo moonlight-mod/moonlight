@@ -1,4 +1,4 @@
-import { Patch } from "@moonlight-mod/types";
+import type { Patch } from "@moonlight-mod/types";
 
 const notXssDefensesOnly = () =>
   (moonlight.getConfigOption<boolean>("quietLoggers", "xssDefensesOnly") ?? false) === false;

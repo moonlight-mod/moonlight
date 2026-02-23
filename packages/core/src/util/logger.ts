@@ -1,5 +1,5 @@
 /** biome-ignore-all lint/suspicious/noConsole: logger */
-import { Config } from "@moonlight-mod/types";
+import type { Config } from "@moonlight-mod/types";
 import { LogLevel } from "@moonlight-mod/types/logger";
 
 const colors = {

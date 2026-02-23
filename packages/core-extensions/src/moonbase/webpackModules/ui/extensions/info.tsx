@@ -2,7 +2,7 @@ import { ExtensionTag } from "@moonlight-mod/types";
 import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 
 import React from "@moonlight-mod/wp/react";
-import { MoonbaseExtension } from "../../../types";
+import type { MoonbaseExtension } from "../../../types";
 
 type Dependency = {
   id: string;

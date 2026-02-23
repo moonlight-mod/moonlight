@@ -1,16 +1,16 @@
 import {
-  ExplicitExtensionDependency,
-  IdentifiedPatch,
-  IdentifiedWebpackModule,
-  PatchReplace,
+  type ExplicitExtensionDependency,
+  type IdentifiedPatch,
+  type IdentifiedWebpackModule,
+  type PatchReplace,
   PatchReplaceType,
-  WebpackJsonp,
-  WebpackJsonpEntry,
-  WebpackModuleFunc,
-  WebpackRequireType
+  type WebpackJsonp,
+  type WebpackJsonpEntry,
+  type WebpackModuleFunc,
+  type WebpackRequireType
 } from "@moonlight-mod/types";
 import { WebEventType } from "@moonlight-mod/types/core/event";
-import calculateDependencies, { Dependency } from "./util/dependency";
+import calculateDependencies, { type Dependency } from "./util/dependency";
 import Logger from "./util/logger";
 import { processFind, processReplace, testFind } from "./util/patch";
 

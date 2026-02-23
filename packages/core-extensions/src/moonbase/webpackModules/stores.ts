@@ -1,18 +1,18 @@
 import { checkExtensionCompat, ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { getConfigOption, setConfigOption } from "@moonlight-mod/core/util/config";
-import { Config, ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
+import { type Config, ExtensionEnvironment, ExtensionLoadSource, ExtensionSettingsAdvice } from "@moonlight-mod/types";
 import { mainRepo } from "@moonlight-mod/types/constants";
 import { NodeEventType } from "@moonlight-mod/types/core/event";
-import { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
+import type { CustomComponent } from "@moonlight-mod/types/coreExtensions/moonbase";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
 import { Store } from "@moonlight-mod/wp/discord/packages/flux";
 import diff from "microdiff";
 import getNatives from "../native";
 import {
   ExtensionState,
-  MoonbaseExtension,
-  MoonbaseNatives,
-  RepositoryManifest,
+  type MoonbaseExtension,
+  type MoonbaseNatives,
+  type RepositoryManifest,
   RestartAdvice,
   UpdateState
 } from "../types";

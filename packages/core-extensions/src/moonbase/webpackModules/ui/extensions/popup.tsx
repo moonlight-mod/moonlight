@@ -8,7 +8,7 @@ import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import { MoonbaseExtension } from "../../../types";
+import type { MoonbaseExtension } from "../../../types";
 
 let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").ConfirmModal;
 

@@ -3,7 +3,7 @@
 /// <reference types="./import" />
 /// <reference types="./mappings" />
 
-import { MoonlightHost, MoonlightNode, MoonlightNodeSandboxed, MoonlightWeb } from "./globals";
+import type { MoonlightHost, MoonlightNode, MoonlightNodeSandboxed, MoonlightWeb } from "./globals";
 
 export type { AST } from "@moonlight-mod/lunast";
 export { ModuleExport, ModuleExportType } from "@moonlight-mod/moonmap";

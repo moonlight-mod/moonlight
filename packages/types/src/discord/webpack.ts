@@ -1,5 +1,5 @@
-import { WebpackRequire as MappingsWebpackRequire } from "@moonlight-mod/mappings";
-import WebpackRequire from "./require";
+import type { WebpackRequire as MappingsWebpackRequire } from "@moonlight-mod/mappings";
+import type WebpackRequire from "./require";
 
 export type WebpackRequireType = typeof MappingsWebpackRequire &
   typeof WebpackRequire & {
