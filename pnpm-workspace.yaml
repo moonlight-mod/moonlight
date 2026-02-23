@@ -14,7 +14,7 @@ catalogs:
     esbuild: ^0.19.3
     typescript: ^5.3.3
   lint:
-    "@biomejs/biome": 2.3.14
+    "@biomejs/biome": 2.4.4
     husky: ^8.0.3
   types:
     "@types/chroma-js": ^3.1.0
