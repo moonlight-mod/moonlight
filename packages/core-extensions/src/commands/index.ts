@@ -53,12 +53,11 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: ".icon,bot:null==",
+    find: /\.icon,bot:\i\.application\?\.bot,/,
     replace: {
-      match: /(\.useMemo\(\(\)=>{(var \i;)?)((return |if\()(\i)\.type)/,
-      replacement: (_, before, _beforeVar, after, _afterIf, section) => `${before}
-      if (${section}.id==="${APPLICATION_ID}") return "https://moonlight-mod.github.io/favicon.png";
-      ${after}`
+      match: /(\.useMemo\(\(\)=>)((\i)\.type)/,
+      replacement: (_, before, after, section) =>
+        `${before}${section}.id==="${APPLICATION_ID}"?"https://moonlight-mod.github.io/favicon.png":${after}`
     }
   },
   // fix icon sizing because they expect built in to be 24 and others to be 32
