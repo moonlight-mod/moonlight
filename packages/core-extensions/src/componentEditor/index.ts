@@ -25,7 +25,7 @@ export const patches: Patch[] = [
         replacement: 'children:require("componentEditor_dmList").default._patchItems(['
       },
       {
-        match: /(?<=visibleElementRef:\i}\)]}\))]/,
+        match: /(?<=visibleElementRef:\i}\):null]}\))]/,
         replacement: "],arguments[0])"
       }
     ],
