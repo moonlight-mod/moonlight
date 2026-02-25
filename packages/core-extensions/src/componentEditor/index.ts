@@ -3,10 +3,10 @@ import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 export const patches: Patch[] = [
   // chat buttons
   {
-    find: '"gift")}),',
+    find: '},"appLauncher")),',
     replace: [
       {
-        match: /(?<=className:\i\(\)\(\i\.\i,\{\[\i\.\i\]:\i\}\),children:)(\i)/,
+        match: /(?<=\("div",{className:\i\.\i,children:)(\i)/,
         replacement: (_, original) => `require("componentEditor_chatButtonList").default._patchButtons(${original})`
       }
     ]
