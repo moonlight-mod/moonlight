@@ -9,11 +9,11 @@ export const patches: Patch[] = [
     }
   },
   {
-    find: '["href","onClick","className","children","rel","target",',
+    find: /&&delete \i\.href,/,
     replace: {
-      match: /\((\i)\){var{href:/,
+      match: /\((\i)\){let{href:/,
       replacement: (_, props) =>
-        `(${props}){${props}.href=require("linkRedirect_linkRedirect").default._runCallbacks(${props}.href);var{href:`
+        `(${props}){${props}.href=require("linkRedirect_linkRedirect").default._runCallbacks(${props}.href);let{href:`
     }
   }
 ];
