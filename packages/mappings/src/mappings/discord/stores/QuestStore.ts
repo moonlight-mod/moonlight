@@ -1,10 +1,10 @@
 import register from "../../../registry";
 
 register((moonmap) => {
-  const name = "discord/stores/QuestsStore";
+  const name = "discord/stores/QuestStore";
   moonmap.register({
     name,
-    find: '"QuestsStore"',
+    find: '"QuestStore"',
     process({ id }) {
       moonmap.addModule(id, name);
 
