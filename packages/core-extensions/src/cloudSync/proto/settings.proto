@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+message CustomUserSettings {
+  message Versions {
+    uint32 client_version = 1;
+    uint32 server_version = 2;
+    uint32 data_version = 3;
+  }
+
+  message SettingsEntry {
+    bytes data = 1;
+  }
+
+  message MoonlightSettingsEntry {
+    uint32 version = 1;
+    bytes data = 2;
+  }
+
+  message ClientSettings {
+    SettingsEntry shared = 1;
+    MoonlightSettingsEntry moonlight = 14045442;
+  }
+
+  optional Versions versions = 1;
+  optional ClientSettings settings = 2;
+}

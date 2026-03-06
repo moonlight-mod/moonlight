@@ -1,0 +1,13 @@
+{
+  "$schema": "https://moonlight-mod.github.io/manifest.schema.json",
+  "id": "cloudSync",
+  "apiLevel": 2,
+  "meta": {
+    "name": "Cloud Sync",
+    "tagline": "Sync your moonlight settings to Discord",
+    "authors": ["moonlight"],
+    "tags": ["qol"]
+  },
+  "dependencies": ["spacepack", "notices"],
+  "cors": []
+}

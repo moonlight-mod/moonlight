@@ -1,7 +1,7 @@
 import type EventEmitter from "node:events";
 import type LunAST from "@moonlight-mod/lunast";
 import type Moonmap from "@moonlight-mod/moonmap";
-import type { Config, ConfigExtension } from "./config";
+import type { Config, ConfigExtension, SyncConfig } from "./config";
 import type {
   MoonlightEventEmitter,
   NodeEventPayloads,
@@ -50,6 +50,9 @@ export type MoonlightNode = {
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   setConfigOption: <T>(ext: string, name: string, value: T) => Promise<void>;
   writeConfig: (config: Config) => Promise<void>;
+
+  getSyncConfig: () => SyncConfig;
+  setSyncConfig: (config: SyncConfig) => Promise<void>;
 
   getNatives: (ext: string) => any | undefined;
   getLogger: (id: string) => Logger;

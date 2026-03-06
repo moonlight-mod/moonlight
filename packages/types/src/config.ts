@@ -6,6 +6,10 @@ export type Config = {
   patchAll?: boolean;
 };
 
+export type SyncConfig = {
+  syncedRemoteVersion: number;
+};
+
 export type ConfigExtensions = { [key: string]: boolean } | { [key: string]: ConfigExtension };
 
 export type ConfigExtension = {
