@@ -1,5 +1,8 @@
 ## Core Extensions
 
-### Disable Sentry
+Patch fixes for the following:
 
-- Add stub function for `addFeatureFlag`
+- Component Editor
+- Commands
+- Link Redirect
+- Settings
