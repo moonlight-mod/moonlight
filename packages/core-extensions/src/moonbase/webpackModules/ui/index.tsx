@@ -8,6 +8,7 @@ import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import React from "@moonlight-mod/wp/react";
 import AboutPage from "./about";
+import CloudSyncPage from "./cloudSync";
 import ConfigPage from "./config";
 import ExtensionsPage from "./extensions";
 import RestartAdviceMessage from "./RestartAdvice";
@@ -27,6 +28,11 @@ export const pages: {
     id: "config",
     name: "Config",
     element: ConfigPage
+  },
+  {
+    id: "cloudSync",
+    name: "Cloud Sync",
+    element: CloudSyncPage
   },
   {
     id: "about",

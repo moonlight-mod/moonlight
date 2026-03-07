@@ -34,6 +34,7 @@ async function load() {
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
     apiLevel: constants.apiLevel,
 
+    getFullConfig: moonlightNode.getFullConfig.bind(moonlightNode),
     getConfig: moonlightNode.getConfig.bind(moonlightNode),
     getConfigOption: moonlightNode.getConfigOption.bind(moonlightNode),
     setConfigOption: moonlightNode.setConfigOption.bind(moonlightNode),
