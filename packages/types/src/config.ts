@@ -4,10 +4,7 @@ export type Config = {
   devSearchPaths?: string[];
   loggerLevel?: string;
   patchAll?: boolean;
-};
-
-export type SyncConfig = {
-  syncedRemoteVersion: number;
+  _rev?: number;
 };
 
 export type ConfigExtensions = { [key: string]: boolean } | { [key: string]: ConfigExtension };

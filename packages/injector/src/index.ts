@@ -260,6 +260,9 @@ export async function inject(asarPath: string, _injectorConfig?: InjectorConfig)
       // @ts-expect-error Set by esbuild
       branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
+      getFullConfig() {
+        return config;
+      },
       getConfig,
       getConfigPath,
       getConfigOption(ext, name) {

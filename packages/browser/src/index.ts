@@ -2,7 +2,6 @@ import "@moonlight-mod/web-preload";
 import { readConfig, writeConfig } from "@moonlight-mod/core/config";
 import { getExtensions } from "@moonlight-mod/core/extension";
 import { loadExtensions } from "@moonlight-mod/core/extension/loader";
-import { readSyncConfig, writeSyncConfig } from "@moonlight-mod/core/syncConfig";
 import { getConfig, getConfigOption, getManifest, setConfigOption } from "@moonlight-mod/core/util/config";
 import { createEventEmitter } from "@moonlight-mod/core/util/event";
 import Logger, { initLogger } from "@moonlight-mod/core/util/logger";
@@ -104,7 +103,6 @@ window._moonlightBrowserInit = async () => {
 
   // Actual loading begins here
   let config = await readConfig();
-  let syncConfig = await readSyncConfig();
   initLogger(config);
 
   const extensions = await getExtensions();
@@ -125,6 +123,9 @@ window._moonlightBrowserInit = async () => {
     // @ts-expect-error Set by esbuild
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
+    getFullConfig() {
+      return config;
+    },
     getConfig(ext) {
       return getConfig(ext, config);
     },
@@ -135,14 +136,6 @@ window._moonlightBrowserInit = async () => {
     async setConfigOption(ext, name, value) {
       setConfigOption(config, ext, name, value);
       await this.writeConfig(config);
-    },
-
-    getSyncConfig() {
-      return syncConfig;
-    },
-    async setSyncConfig(newConfig) {
-      await writeSyncConfig(newConfig);
-      syncConfig = newConfig;
     },
 
     getNatives: () => {},

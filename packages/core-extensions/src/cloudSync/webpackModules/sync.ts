@@ -52,7 +52,7 @@ class CloudSyncStore extends Store<any> {
   start(initial: boolean = true) {
     if (!this.isEnabled() && initial) return;
 
-    this.remoteVersion = moonlightNode.getSyncConfig().syncedRemoteVersion;
+    this.remoteVersion = moonlightNode.getFullConfig()._rev ?? 0;
     this.isFirstSync = this.remoteVersion === 0;
     this.accountId = moonlightNode.getConfigOption<string>("cloudSync", "accountId");
 
@@ -73,7 +73,7 @@ class CloudSyncStore extends Store<any> {
 
     // We can't trust future versions anymore
     this.remoteVersion = 0;
-    await moonlightNode.setSyncConfig({ syncedRemoteVersion: 0 });
+    await moonlightNode.writeConfig({ ...moonlightNode.getFullConfig(), _rev: 0 });
 
     this.status = SyncStatus.Idle;
     this.lastError = null;
@@ -269,8 +269,10 @@ class CloudSyncStore extends Store<any> {
     this.emitChange();
 
     try {
-      logger.trace("Pushing config", moonlightNode.config);
-      const configJson = JSON.stringify(moonlightNode.config);
+      const currentConfig = moonlightNode.getFullConfig();
+      logger.trace("Pushing config", currentConfig, "with remoteVersion", this.remoteVersion);
+      const { _rev, ...configToSend } = currentConfig;
+      const configJson = JSON.stringify(configToSend);
       const dataBytes = toBinary(configJson);
       const newVersion = this.remoteVersion + 1;
 
@@ -310,7 +312,7 @@ class CloudSyncStore extends Store<any> {
         throw new Error("Push repeatedly out of date after data_version refresh");
       }
 
-      await moonlightNode.setSyncConfig({ syncedRemoteVersion: newVersion });
+      await moonlightNode.writeConfig({ ...moonlightNode.getFullConfig(), _rev: newVersion });
       this.remoteVersion = newVersion;
       this.localDirty = false;
       this.status = SyncStatus.Idle;
@@ -354,8 +356,7 @@ class CloudSyncStore extends Store<any> {
     try {
       const remoteConfig: Config = JSON.parse(configJson);
 
-      await moonlightNode.writeConfig(remoteConfig);
-      await moonlightNode.setSyncConfig({ syncedRemoteVersion: remoteVersion });
+      await moonlightNode.writeConfig({ ...remoteConfig, _rev: remoteVersion });
     } catch (e) {
       logger.error("Failed to apply remote config:", e);
     }
