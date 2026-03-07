@@ -126,8 +126,8 @@ class CloudSyncStore extends Store<any> {
 
   // As Flux no longer dispatches USER_SETTINGS_PROTO_UPDATE for unknown protos, we hook it manually
   onUserSettingsProtoUpdate = async ({ settings }: UserSettingsProtoUpdate) => {
-    logger.trace("Received USER_SETTINGS_PROTO_UPDATE", settings);
     if (settings.type !== 3) return;
+    logger.trace("Received USER_SETTINGS_PROTO_UPDATE", settings);
 
     // Keep pending state up to date with the latest remote even during conflict
     if (this.status === SyncStatus.Conflict) {
