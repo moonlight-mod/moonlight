@@ -740,6 +740,8 @@ declare module "@moonlight-mod/wp/discord/modules/user_settings/redesign/Setting
   export const createSection: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSection"];
   export const createSidebarItem: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSidebarItem"];
   export const createPanel: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createPanel"];
+  export const createTabItem: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createTabItem"];
+  export const createCustom: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createCustom"];
 }
 
 declare module "@moonlight-mod/wp/discord/packages/flux" {

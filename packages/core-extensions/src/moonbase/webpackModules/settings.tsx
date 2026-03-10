@@ -1,9 +1,11 @@
 import { Breadcrumbs, Text } from "@moonlight-mod/wp/discord/components/common/index";
 //import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 import {
+  createCustom,
   createPanel,
   createSection,
-  createSidebarItem
+  createSidebarItem,
+  createTabItem
 } from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemCreators";
 //import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
@@ -110,9 +112,17 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
 const redesignTitle = () => "moonlight";
 const redesignPanel = createPanel("moonbase_panel", {
   useTitle: redesignTitle,
-  buildLayout: () => [],
-  // @ts-expect-error discord :(
-  StronglyDiscouragedCustomComponent: Moonbase,
+  buildLayout: () =>
+    pages.map((page) =>
+      createTabItem(`moonbase_tab-${page.id}`, {
+        getTitle: () => page.name,
+        buildLayout: () => [
+          createCustom(`moonbase_tab-${page.id}_content`, {
+            Component: page.element
+          })
+        ]
+      })
+    ),
   notice
 });
 const redesignSidebarItem = createSidebarItem("moonbase_item", {
