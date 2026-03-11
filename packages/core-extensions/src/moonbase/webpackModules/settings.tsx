@@ -118,7 +118,14 @@ const redesignPanel = createPanel("moonbase_panel", {
         getTitle: () => page.name,
         buildLayout: () => [
           createCustom(`moonbase_tab-${page.id}_content`, {
-            Component: page.element
+            Component: () => (
+              <>
+                <RestartAdviceMessage />
+                <Update />
+
+                <page.element />
+              </>
+            )
           })
         ]
       })
