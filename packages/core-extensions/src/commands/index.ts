@@ -3,7 +3,7 @@ import { APPLICATION_ID } from "@moonlight-mod/types/coreExtensions/commands";
 
 export const patches: Patch[] = [
   {
-    find: '"shrug",',
+    find: "discord/modules/application_commands/ApplicationCommandBuiltIns",
     replace: [
       // inject commands
       {
