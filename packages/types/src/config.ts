@@ -4,6 +4,7 @@ export type Config = {
   devSearchPaths?: string[];
   loggerLevel?: string;
   patchAll?: boolean;
+  _rev?: number;
 };
 
 export type ConfigExtensions = { [key: string]: boolean } | { [key: string]: ConfigExtension };

@@ -40,11 +40,16 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { ext: "spacepack", id: "spacepack" },
       { id: "react" },
       { id: "discord/components/common/index" },
+      { id: "discord/components/common/Select" },
+      { id: "discord/uikit/Flex" },
+      { id: "discord/uikit/legacy/Button" },
       { ext: "moonbase", id: "stores" },
       { ext: "moonbase", id: "ThemeDarkIcon" },
       { id: "discord/modules/guild_settings/web/AppCard.css" },
       { ext: "contextMenu", id: "contextMenu" },
       { id: "discord/modules/modals/Modals" },
+      { ext: "cloudSync", id: "sync" },
+      { ext: "common", id: "ErrorBoundary" },
       "Masks.PANEL_BUTTON",
       '"Missing channel in Channel.openChannelContextMenu"'
     ]

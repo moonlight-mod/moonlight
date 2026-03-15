@@ -239,8 +239,9 @@ class MoonbaseSettingsStore extends Store<any> {
     return settings?.[key]?.description;
   }
 
-  setExtensionConfig(id: string, key: string, value: any) {
+  setExtensionConfig(id: string, key: string, value: any, permanent: boolean = false) {
     setConfigOption(this.config, id, key, value);
+    if (permanent) moonlightNode.setConfigOption(id, key, value);
     this.modified = this.isModified();
     this.emitChange();
   }

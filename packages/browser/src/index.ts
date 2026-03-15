@@ -123,6 +123,9 @@ window._moonlightBrowserInit = async () => {
     // @ts-expect-error Set by esbuild
     branch: MOONLIGHT_BRANCH as MoonlightBranch,
 
+    getFullConfig() {
+      return config;
+    },
     getConfig(ext) {
       return getConfig(ext, config);
     },
