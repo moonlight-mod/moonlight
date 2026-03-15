@@ -175,7 +175,7 @@ if (isOverlay) {
             try {
               const url = new URL(script.src);
               const hasUrl =
-                url.pathname.match(/\/assets\/[a-zA-Z]+\./) &&
+                url.pathname.match(/\/assets\/[a-zA-Z-]+\./) &&
                 !url.searchParams.has("inj") &&
                 (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
               const shouldIgnore = ignoreScripts.some((other) => url.pathname.startsWith(`/assets/${other}`));
