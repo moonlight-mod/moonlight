@@ -2,9 +2,8 @@
 
 ### Moonbase
 
-- Fix being unable to type in text entries for Repositories and Extension search paths
-- Discord changed something with settings internals _again_
+- Fix "Open Moonbase" on notices not doing anything
 
-### No Hide Token
+### Commands
 
-- Add a patch to stub out creating devtools callbacks to prevent needless errors as Discord now adds callbacks over IPC
+- Fix patch find to fix crash
