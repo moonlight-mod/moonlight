@@ -285,10 +285,24 @@ function handleModuleDependencies() {
 }
 
 const injectedWpModules: IdentifiedWebpackModule[] = [];
-function injectModules(entry: WebpackJsonpEntry[1], scanOnly?: boolean) {
+function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?: WebpackJsonpEntry) {
   const modules: Record<string, WebpackModuleFunc> = {};
   const entrypoints: string[] = [];
   let inject = false;
+
+  for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
+    // @ts-expect-error probably should fix the type on this idk
+    func.__moonlight = true;
+    injectedWpModules.push({ id: name, run: func });
+    modules[name] = func;
+    inject = true;
+  }
+
+  if (webpackRequire != null) {
+    for (const id of moonlight.moonmap.getLazyModules()) {
+      webpackRequire.e(id);
+    }
+  }
 
   for (const [_modId, mod] of Object.entries(entry)) {
     const modStr = mod.toString();
@@ -321,70 +335,64 @@ function injectModules(entry: WebpackJsonpEntry[1], scanOnly?: boolean) {
         }
       }
 
-      if (!scanOnly) {
-        webpackModules.delete(wpModule);
-        moonlight.pendingModules.delete(wpModule);
-        injectedWpModules.push(wpModule);
+      webpackModules.delete(wpModule);
+      moonlight.pendingModules.delete(wpModule);
+      injectedWpModules.push(wpModule);
 
-        inject = true;
+      inject = true;
 
-        if (wpModule.run) {
-          modules[id] = wpModule.run;
-          wpModule.run.__moonlight = true;
-          // @ts-expect-error hacks
-          wpModule.run.call = (self, module, exports, require) => {
-            try {
-              wpModule.run!.apply(self, [module, exports, require]);
-            } catch (err) {
-              logger.error(`Failed to run module "${id}":`, err);
-            }
-          };
-          if (wpModule.entrypoint) entrypoints.push(id);
-        }
+      if (wpModule.run) {
+        modules[id] = wpModule.run;
+        wpModule.run.__moonlight = true;
+        // @ts-expect-error hacks
+        wpModule.run.call = (self, module, exports, require) => {
+          try {
+            wpModule.run!.apply(self, [module, exports, require]);
+          } catch (err) {
+            logger.error(`Failed to run module "${id}":`, err);
+          }
+        };
+        if (wpModule.entrypoint) entrypoints.push(id);
       }
     }
 
     if (!webpackModules.size) break;
   }
 
-  if (!scanOnly) {
-    for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
-      // @ts-expect-error probably should fix the type on this idk
-      func.__moonlight = true;
-      injectedWpModules.push({ id: name, run: func });
-      modules[name] = func;
-      inject = true;
-    }
-
-    if (webpackRequire != null) {
-      for (const id of moonlight.moonmap.getLazyModules()) {
-        webpackRequire.e(id);
-      }
-    }
-  }
-
   if (inject) {
-    logger.trace("Injecting custom Webpack modules:", modules, entrypoints);
-    window.webpackChunkdiscord_app.push([
-      [--chunkId],
-      modules,
-      (require: WebpackRequireType) => {
-        if (require.__moonlight) {
-          entrypoints.map((id) => {
-            try {
-              if (require.m[id] == null) {
-                logger.error(`Failing to load entrypoint module "${id}" because it's not found in Webpack.`);
-              } else {
-                require(id);
-              }
-            } catch (err) {
-              logger.error(`Failed to load entrypoint module "${id}":`, err);
+    // biome-ignore lint/correctness/noUnusedFunctionParameters: keep ts happy
+    let oldEntry = (require: WebpackRequireType) => {};
+    if (fullEntry?.[2] != null) {
+      oldEntry = fullEntry[2];
+    }
+
+    const loader = (require: WebpackRequireType) => {
+      if (require.__moonlight) {
+        entrypoints.map((id) => {
+          try {
+            if (require.m[id] == null) {
+              logger.error(`Failing to load entrypoint module "${id}" because it's not found in Webpack.`);
+            } else {
+              require(id);
             }
-            return undefined;
-          });
-        }
+          } catch (err) {
+            logger.error(`Failed to load entrypoint module "${id}":`, err);
+          }
+          return undefined;
+        });
       }
-    ]);
+      oldEntry(require);
+    };
+
+    if (splice && fullEntry != null) {
+      logger.trace("Splicing custom Webpack modules:", fullEntry[0], modules, entrypoints, entry);
+      fullEntry[1] = { ...fullEntry[1], ...modules };
+
+      if (entrypoints.length > 0) fullEntry[2] = loader;
+    } else {
+      logger.trace("Injecting custom Webpack modules:", modules, entrypoints);
+      window.webpackChunkdiscord_app.push([[--chunkId], modules, entrypoints.length > 0 ? loader : undefined]);
+    }
   }
 }
 
@@ -453,9 +461,9 @@ export async function installWebpackPatcher() {
             }
 
             try {
+              injectModules(items[1], true, items);
               logger.trace("Injecting Webpack modules:", items[1]);
               const res = currentPush.apply(realWebpackJsonp, [items]);
-              injectModules(items[1]);
               return res;
             } catch (err) {
               logger.error("Failed to inject Webpack modules:", err);
@@ -481,7 +489,7 @@ export async function installWebpackPatcher() {
   // This is triggered when the individual Webpack entrypoints load with their initial modules
   Object.defineProperty(Function.prototype, "m", {
     configurable: true,
-    set(modules: any) {
+    set(modules: { [id: string]: WebpackModuleFunc }) {
       const { stack } = new Error();
       if (stack!.includes("/assets/") && !Array.isArray(modules)) {
         // We should only use the "main" `require` when possible - this is how we distinguish them
@@ -496,8 +504,21 @@ export async function installWebpackPatcher() {
 
         if (this.__moonlight) {
           patchModules(modules);
-          // We aren't early enough to actually inject modules, but we can start scanning for dependencies now
-          injectModules(modules, true);
+          const fakeEntry: WebpackJsonpEntry = [[chunkId], { ...modules }, undefined];
+          injectModules(modules, true, fakeEntry);
+
+          const newModules = fakeEntry[1];
+          const modKeys = Object.keys(modules);
+          const newModKeys = Object.keys(newModules);
+          const newMods = newModKeys.filter((key) => !modKeys.includes(key));
+
+          if (newMods.length > 0) {
+            logger.trace("Splicing into initial Webpack modules!", newMods);
+            for (const id of newMods) {
+              modules[id] = newModules[id];
+            }
+            if (fakeEntry[2] != null) window.webpackChunkdiscord_app.push([[chunkId--], {}, fakeEntry[2]]);
+          }
         }
       }
 
