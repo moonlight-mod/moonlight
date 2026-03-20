@@ -83,7 +83,7 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
           <RemoveEntryButton
             key={`${config}-${i}-delete`}
             onClick={() => {
-              const newItems = items.slice(i, 1);
+              const newItems = items.filter((_, idx) => idx !== i);
               MoonbaseSettingsStore.setConfigOption(config, newItems);
             }}
           />
