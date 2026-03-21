@@ -430,6 +430,30 @@ export async function installWebpackPatcher() {
     run: wpRequireFetcher
   });
 
+  registerPatch({
+    find: ".extendSuperProperties({launch_signature:",
+    replace: [
+      {
+        match: /=performance\.now\(\),(\i)=(.+?:null);(\i)\.extendSuperProperties\({launch_signature:\i}\);/,
+        replacement: (_, sigVar, launch_signature, PropertiesHelper) => `=performance.now(),${sigVar}=null;
+        let _libdiscoreInitialized=false;
+        Object.defineProperty(window,"_libdiscoreInitialized",{
+          set: (x)=>{
+            _libdiscoreInitialized = x;
+            const sig = ${launch_signature};
+            ${sigVar} = sig;
+            ${PropertiesHelper}.extendSuperProperties({
+              launch_signature: sig
+            });
+          },
+          get: () => _libdiscoreInitialized
+        });`
+      }
+    ],
+    ext: "analyticsHelperFix",
+    id: 0
+  });
+
   // https://github.com/web-infra-dev/rspack/blob/2d78ee6c08d41ac538628c752fa97a8a75f4192f/crates/rspack_plugin_runtime/src/runtime_module/runtime/jsonp_chunk_loading_with_callback.ejs#L29-L31
   let realWebpackJsonp: WebpackJsonp | null = null;
   Object.defineProperty(window, "webpackChunkdiscord_app", {
