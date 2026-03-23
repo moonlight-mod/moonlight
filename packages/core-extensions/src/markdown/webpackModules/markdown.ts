@@ -32,12 +32,27 @@ export function blacklistFromRuleset(ruleset: Ruleset, name: string) {
   ruleBlacklists[ruleset][name] = true;
 }
 
-export function _addRules(originalRules: Record<string, MarkdownRule>) {
-  for (const name in rules) {
-    originalRules[`__moonlight_${name}`] = rules[name](originalRules);
+export function _setupRulesets(rulesets: Record<Ruleset, Record<string, MarkdownRule>>) {
+  const newRulesets = {};
+  const originalRules = rulesets.RULES;
+
+  for (const ruleset of Object.keys(rulesets) as Ruleset[]) {
+    Object.defineProperty(newRulesets, ruleset, {
+      get: () => {
+        const set = rulesets[ruleset];
+        const blacklist = ruleBlacklists[ruleset] ?? {};
+        for (const name in rules) {
+          if (blacklist[name]) continue;
+
+          set[`__moonlight_${name}`] = rules[name](originalRules);
+        }
+
+        return set;
+      }
+    });
   }
 
-  return originalRules;
+  return newRulesets;
 }
 
 export function _addSlateRules(originalRules: Record<string, SlateRule>) {
@@ -54,15 +69,4 @@ export function _addSlateDecorators(originalRules: Record<string, string>) {
   }
 
   return originalRules;
-}
-
-export function _applyRulesetBlacklist(rulesets: Record<Ruleset, Record<string, MarkdownRule>>) {
-  for (const ruleset of Object.keys(rulesets) as Ruleset[]) {
-    if (ruleset === "RULES") continue;
-
-    const rules = rulesets[ruleset];
-    for (const rule in ruleBlacklists[ruleset] || {}) {
-      delete rules[`__moonlight_${rule}`];
-    }
-  }
 }

@@ -1,5 +1,9 @@
 ## Core Extensions
 
-### Disable Sentry
+### Moonbase
 
-- Add stub function for `addFeatureFlag`
+- Fix "Open Moonbase" on notices not doing anything
+
+### Commands
+
+- Fix patch find to fix crash

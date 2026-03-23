@@ -5,12 +5,9 @@ export const patches: Patch[] = [
     find: "/^(¯\\\\_\\(ツ\\)_\\/¯)/.exec",
     replace: [
       {
-        match: /={newline:(.+?)},(\i)=\(0,/,
-        replacement: (_, rules, RULES) => `=require("markdown_markdown")._addRules({newline:${rules}}),${RULES}=(0,`
-      },
-      {
-        match: /(?<=,(\i)={RULES:.+?})/,
-        replacement: (_, rulesets) => `;require("markdown_markdown")._applyRulesetBlacklist(${rulesets});`
+        match: /,(\i)=({RULES:.+?})/,
+        replacement: (_, rulesetsVar, rulesets) =>
+          `,${rulesetsVar}=require("markdown_markdown")._setupRulesets(${rulesets});`
       }
     ]
   },

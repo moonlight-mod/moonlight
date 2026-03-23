@@ -13,6 +13,7 @@ import {
   Tooltip
 } from "@moonlight-mod/wp/discord/components/common/index";
 import { SingleSelect } from "@moonlight-mod/wp/discord/components/common/Select";
+import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
@@ -49,7 +50,10 @@ function RemoveEntryButton({ onClick }: { onClick: () => void }) {
 }
 
 function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }) {
-  const items = MoonbaseSettingsStore.getConfigOption(config) ?? [];
+  const items = useStateFromStores([MoonbaseSettingsStore], () => MoonbaseSettingsStore.getConfigOption(config) ?? [], [
+    config
+  ]);
+
   return (
     <Flex
       style={{
@@ -59,7 +63,7 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
     >
       {items.map((val, i) => (
         <div
-          key={i}
+          key={`${config}-${i}`}
           style={{
             display: "grid",
             height: "32px",
@@ -69,16 +73,18 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
           }}
         >
           <TextInput
+            key={`${config}-${i}-input`}
             value={val}
             onChange={(newVal: string) => {
-              items[i] = newVal;
-              MoonbaseSettingsStore.setConfigOption(config, items);
+              const newItems = items.map((v, idx) => (idx === i ? newVal : v));
+              MoonbaseSettingsStore.setConfigOption(config, newItems);
             }}
           />
           <RemoveEntryButton
+            key={`${config}-${i}-delete`}
             onClick={() => {
-              items.splice(i, 1);
-              MoonbaseSettingsStore.setConfigOption(config, items);
+              const newItems = items.filter((_, idx) => idx !== i);
+              MoonbaseSettingsStore.setConfigOption(config, newItems);
             }}
           />
         </div>
@@ -92,8 +98,8 @@ function ArrayFormItem({ config }: { config: "repositories" | "devSearchPaths" }
           marginTop: "10px"
         }}
         onClick={() => {
-          items.push("");
-          MoonbaseSettingsStore.setConfigOption(config, items);
+          const newItems = [...items, ""];
+          MoonbaseSettingsStore.setConfigOption(config, newItems);
         }}
       >
         Add new entry

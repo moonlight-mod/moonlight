@@ -12,14 +12,25 @@ export type FinalizedItem<Props extends GenericProps, Type extends ItemType> = {
   parent?: FinalizedItem<Props, ItemType>;
 } & Props;
 
+export type FinalizedItemWithoutLayout<Props extends GenericPropsWithoutLayout, Type extends ItemType> = {
+  key: string;
+  type: Type;
+} & Props;
+
+export type AnyFinalizedItem =
+  | FinalizedItem<GenericProps, ItemType>
+  | FinalizedItemWithoutLayout<GenericPropsWithoutLayout, ItemType>;
+
 export type GenericProps = {
-  buildLayout: () => FinalizedItem<GenericProps, ItemType>[];
+  buildLayout: () => AnyFinalizedItem[];
   usePredicate?: () => boolean;
   getLegacySearchKey?: () => string;
   useTitle?: () => string;
   useNavigationTitle?: () => string;
   useSearchTerms?: () => string[];
 };
+
+export type GenericPropsWithoutLayout = Omit<GenericProps, "buildLayout">;
 
 export type SectionProps = {
   hoised?: boolean;
@@ -58,6 +69,16 @@ export type PaneProps = {
   render: React.FC<any>;
 } & GenericProps;
 
+export type TabProps = {
+  getTitle?: () => string;
+  initialize?: () => void;
+  onItemSelect?: () => void;
+} & GenericProps;
+
+export type CustomProps = {
+  Component: React.FC<any>;
+} & GenericPropsWithoutLayout;
+
 // TODO: type the rest, only typing whats used to get moonbase working
 
 type Exports = {
@@ -65,6 +86,8 @@ type Exports = {
   createSection: (key: string, props: SectionProps) => FinalizedItem<SectionProps, ItemType.SECTION>;
   createSidebarItem: (key: string, props: SidebarItemProps) => FinalizedItem<SidebarItemProps, ItemType.SIDEBAR_ITEM>;
   createPanel: (key: string, props: PanelProps) => FinalizedItem<PanelProps, ItemType.PANEL>;
+  createTabItem: (key: string, props: TabProps) => FinalizedItem<TabProps, ItemType.TAB_ITEM>;
+  createCustom: (key: string, props: CustomProps) => FinalizedItemWithoutLayout<CustomProps, ItemType.CUSTOM>;
 };
 export default Exports;
 

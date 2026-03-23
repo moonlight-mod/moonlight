@@ -18,7 +18,7 @@ register((moonmap) => {
   const name = "discord/uikit/OverflowTooltip";
   moonmap.register({
     name,
-    find: /position:.,delay:.,\.\.\./,
+    find: /position:.,delay:.,lineClamp:.=1,\.\.\./,
     process({ id }) {
       moonmap.addModule(id, name);
 

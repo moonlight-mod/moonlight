@@ -1,3 +1,4 @@
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
 import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import { Divider } from "@moonlight-mod/wp/discord/components/common/BaseHeaderBar";
@@ -59,7 +60,7 @@ export function Moonbase() {
   );
 
   return (
-    <>
+    <ErrorBoundary>
       <div className={`${HeaderBarClasses.children} ${Margins.marginBottom20}`}>
         <Text className={HeaderBarClasses.titleWrapper} variant="heading-lg/semibold" tag="h2">
           Moonbase
@@ -83,7 +84,7 @@ export function Moonbase() {
       <Update />
 
       {React.createElement(pages[subsection].element)}
-    </>
+    </ErrorBoundary>
   );
 }
 
