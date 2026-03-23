@@ -27,9 +27,9 @@ type BuildInfo = {
   version: string;
 };
 
-export async function getConfigPath(suffix = "") {
+export async function getConfigPath() {
   browser: {
-    return suffix ? `/config${suffix}.json` : "/config.json";
+    return "/config.json";
   }
 
   const dir = await getMoonlightDir();
@@ -38,10 +38,10 @@ export async function getConfigPath(suffix = "") {
 
   const buildInfoPath = moonlightNodeSandboxed.fs.join(process.resourcesPath, "build_info.json");
   if (!(await moonlightNodeSandboxed.fs.exists(buildInfoPath))) {
-    configPath = moonlightNodeSandboxed.fs.join(dir, `desktop${suffix}.json`);
+    configPath = moonlightNodeSandboxed.fs.join(dir, "desktop.json");
   } else {
     const buildInfo: BuildInfo = JSON.parse(await moonlightNodeSandboxed.fs.readFileString(buildInfoPath));
-    configPath = moonlightNodeSandboxed.fs.join(dir, `${buildInfo.releaseChannel}${suffix}.json`);
+    configPath = moonlightNodeSandboxed.fs.join(dir, `${buildInfo.releaseChannel}.json`);
   }
 
   return configPath;
