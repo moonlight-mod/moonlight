@@ -2,8 +2,12 @@
 
 ### Moonbase
 
-- Fix "Open Moonbase" on notices not doing anything
+- Fix array options in the config tab (repos, extension search paths) removing all items when removing one
 
-### Commands
+### Markdown
 
-- Fix patch find to fix crash
+- Rework how rules are added
+
+## Mappings
+
+- Fix find for OverflowTooltip
