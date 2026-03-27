@@ -8,6 +8,9 @@ const modules = webpackRequire.m;
 
 const logger = moonlight.getLogger("spacepack");
 
+const proxyTest = Symbol("spacepack.proxyTest");
+const defaultKeys = ["default", "Z", "ZP", "A", "Ay"];
+
 export const spacepack: Spacepack = {
   require: webpackRequire,
   modules,
@@ -73,14 +76,26 @@ export const spacepack: Spacepack = {
     return Object.entries(cache)
       .filter(
         ([_id, { exports }]) =>
-          !args.some(
-            (item) =>
-              !(
-                exports !== undefined &&
-                exports !== window &&
-                (exports?.[item] || exports?.default?.[item] || exports?.Z?.[item] || exports?.ZP?.[item])
-              )
-          )
+          !args.some((item) => {
+            let target = null;
+
+            if (exports?.[proxyTest] != null) return true;
+            if (exports?.[item] != null) target = exports?.[item];
+
+            if (target == null) {
+              for (const key of defaultKeys) {
+                if (exports?.[key]) {
+                  if (exports?.[key]?.[proxyTest] != null) continue;
+                  if (exports?.[key]?.[item] != null) {
+                    target = exports?.[key]?.[item];
+                    break;
+                  }
+                }
+              }
+            }
+
+            return !(exports !== undefined && exports !== window && target != null);
+          })
       )
       .map((item) => item[1])
       .reduce<WebpackModule[]>((prev, curr) => {
