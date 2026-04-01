@@ -285,10 +285,24 @@ function handleModuleDependencies() {
 }
 
 const injectedWpModules: IdentifiedWebpackModule[] = [];
-function injectModules(entry: WebpackJsonpEntry[1]) {
+function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?: WebpackJsonpEntry) {
   const modules: Record<string, WebpackModuleFunc> = {};
   const entrypoints: string[] = [];
   let inject = false;
+
+  for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
+    // @ts-expect-error probably should fix the type on this idk
+    func.__moonlight = true;
+    injectedWpModules.push({ id: name, run: func });
+    modules[name] = func;
+    inject = true;
+  }
+
+  if (webpackRequire != null) {
+    for (const id of moonlight.moonmap.getLazyModules()) {
+      webpackRequire.e(id);
+    }
+  }
 
   for (const [_modId, mod] of Object.entries(entry)) {
     const modStr = mod.toString();
@@ -341,42 +355,44 @@ function injectModules(entry: WebpackJsonpEntry[1]) {
         if (wpModule.entrypoint) entrypoints.push(id);
       }
     }
+
     if (!webpackModules.size) break;
   }
 
-  for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
-    // @ts-expect-error probably should fix the type on this idk
-    func.__moonlight = true;
-    injectedWpModules.push({ id: name, run: func });
-    modules[name] = func;
-    inject = true;
-  }
-
-  if (webpackRequire != null) {
-    for (const id of moonlight.moonmap.getLazyModules()) {
-      webpackRequire.e(id);
-    }
-  }
-
   if (inject) {
-    logger.debug("Injecting modules:", modules, entrypoints);
-    window.webpackChunkdiscord_app.push([
-      [--chunkId],
-      modules,
-      (require: WebpackRequireType) =>
+    // biome-ignore lint/correctness/noUnusedFunctionParameters: keep ts happy
+    let oldEntry = (require: WebpackRequireType) => {};
+    if (fullEntry?.[2] != null) {
+      oldEntry = fullEntry[2];
+    }
+
+    const loader = (require: WebpackRequireType) => {
+      if (require.__moonlight) {
         entrypoints.map((id) => {
           try {
             if (require.m[id] == null) {
               logger.error(`Failing to load entrypoint module "${id}" because it's not found in Webpack.`);
             } else {
-              return require(id);
+              require(id);
             }
           } catch (err) {
             logger.error(`Failed to load entrypoint module "${id}":`, err);
           }
           return undefined;
-        })
-    ]);
+        });
+      }
+      oldEntry(require);
+    };
+
+    if (splice && fullEntry != null) {
+      logger.trace("Splicing custom Webpack modules:", fullEntry[0], modules, entrypoints, entry);
+      fullEntry[1] = { ...fullEntry[1], ...modules };
+
+      if (entrypoints.length > 0) fullEntry[2] = loader;
+    } else {
+      logger.trace("Injecting custom Webpack modules:", modules, entrypoints);
+      window.webpackChunkdiscord_app.push([[--chunkId], modules, entrypoints.length > 0 ? loader : undefined]);
+    }
   }
 }
 
@@ -414,47 +430,79 @@ export async function installWebpackPatcher() {
     run: wpRequireFetcher
   });
 
+  registerPatch({
+    find: ".extendSuperProperties({launch_signature:",
+    replace: [
+      {
+        match: /=performance\.now\(\),(\i)=(.+?:null);(\i)\.extendSuperProperties\({launch_signature:\i}\);/,
+        replacement: (_, sigVar, launch_signature, PropertiesHelper) => `=performance.now(),${sigVar}=null;
+        let _libdiscoreInitialized=false;
+        Object.defineProperty(window,"_libdiscoreInitialized",{
+          set: (x)=>{
+            _libdiscoreInitialized = x;
+            const sig = ${launch_signature};
+            ${sigVar} = sig;
+            ${PropertiesHelper}.extendSuperProperties({
+              launch_signature: sig
+            });
+          },
+          get: () => _libdiscoreInitialized
+        });`
+      }
+    ],
+    ext: "analyticsHelperFix",
+    id: 0
+  });
+
+  // https://github.com/web-infra-dev/rspack/blob/2d78ee6c08d41ac538628c752fa97a8a75f4192f/crates/rspack_plugin_runtime/src/runtime_module/runtime/jsonp_chunk_loading_with_callback.ejs#L29-L31
   let realWebpackJsonp: WebpackJsonp | null = null;
   Object.defineProperty(window, "webpackChunkdiscord_app", {
     set: (jsonp: WebpackJsonp) => {
+      // The load process does `chunk = chunk || []` so this doesn't really matter, but just in case
+      if (realWebpackJsonp) return;
       realWebpackJsonp = jsonp;
-      const realPush = jsonp.push;
-      if (jsonp.push.__moonlight !== true) {
-        jsonp.push = (items) => {
-          moonlight.events.dispatchEvent(WebEventType.ChunkLoad, {
-            chunkId: items[0],
-            modules: items[1],
-            require: items[2]
-          });
 
-          patchModules(items[1]);
+      // .push is overriden for each Webpack entrypoint
+      let currentPush: WebpackJsonp["push"] = jsonp.push;
+      Object.defineProperty(jsonp, "push", {
+        set: (push: WebpackJsonp["push"]) => {
+          logger.trace("Overwriting Webpack push:", push);
+          currentPush = push;
+        },
 
-          try {
-            const res = realPush.apply(realWebpackJsonp, [items]);
-            if (!realPush.__moonlight) {
-              logger.trace("Injecting Webpack modules", items[1]);
-              injectModules(items[1]);
+        get: () => {
+          const fakePush: WebpackJsonp["push"] = (items) => {
+            moonlight.events.dispatchEvent(WebEventType.ChunkLoad, {
+              chunkId: items[0],
+              modules: items[1],
+              require: items[2]
+            });
+
+            try {
+              patchModules(items[1]);
+            } catch (err) {
+              logger.warn("Failed to patch Webpack modules:", err);
             }
 
-            return res;
-          } catch (err) {
-            logger.error("Failed to inject Webpack modules:", err);
-            return 0;
-          }
-        };
+            try {
+              injectModules(items[1], true, items);
+              logger.trace("Injecting Webpack modules:", items[1]);
+              const res = currentPush.apply(realWebpackJsonp, [items]);
+              return res;
+            } catch (err) {
+              logger.error("Failed to inject Webpack modules:", err);
+              return 0;
+            }
+          };
 
-        jsonp.push.bind = (thisArg: any, ...args: any[]) => {
-          return realPush.bind(thisArg, ...args);
-        };
+          // Multiple Webpack entrypoints load on top of each other by using `bind`, so we must pass through to the next push function so we don't cause an infinite loop
+          fakePush.bind = (thisArg: any, ...args: any[]) => {
+            return currentPush.bind(thisArg, ...args);
+          };
 
-        jsonp.push.__moonlight = true;
-        if (!realPush.__moonlight) {
-          logger.debug("Injecting Webpack modules with empty entry");
-          // Inject an empty entry to cause iteration to happen once
-          // Kind of a dirty hack but /shrug
-          injectModules({ deez: () => {} });
+          return fakePush;
         }
-      }
+      });
     },
 
     get: () => {
@@ -462,18 +510,40 @@ export async function installWebpackPatcher() {
     }
   });
 
+  // This is triggered when the individual Webpack entrypoints load with their initial modules
   Object.defineProperty(Function.prototype, "m", {
     configurable: true,
-    set(modules: any) {
+    set(modules: { [id: string]: WebpackModuleFunc }) {
       const { stack } = new Error();
       if (stack!.includes("/assets/") && !Array.isArray(modules)) {
+        // We should only use the "main" `require` when possible - this is how we distinguish them
+        if (stack!.includes("/assets/web.")) {
+          this.__moonlight = true;
+        }
+
+        if (!window.webpackChunkdiscord_app) window.webpackChunkdiscord_app = [];
         moonlight.events.dispatchEvent(WebEventType.ChunkLoad, {
           modules: modules
         });
-        patchModules(modules);
 
-        if (!window.webpackChunkdiscord_app) window.webpackChunkdiscord_app = [];
-        injectModules(modules);
+        if (this.__moonlight) {
+          patchModules(modules);
+          const fakeEntry: WebpackJsonpEntry = [[chunkId], { ...modules }, undefined];
+          injectModules(modules, true, fakeEntry);
+
+          const newModules = fakeEntry[1];
+          const modKeys = Object.keys(modules);
+          const newModKeys = Object.keys(newModules);
+          const newMods = newModKeys.filter((key) => !modKeys.includes(key));
+
+          if (newMods.length > 0) {
+            logger.trace("Splicing into initial Webpack modules!", newMods);
+            for (const id of newMods) {
+              modules[id] = newModules[id];
+            }
+            if (fakeEntry[2] != null) window.webpackChunkdiscord_app.push([[chunkId--], {}, fakeEntry[2]]);
+          }
+        }
       }
 
       Object.defineProperty(this, "m", {
