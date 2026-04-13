@@ -13,8 +13,7 @@ import {
   Text,
   Tooltip,
   TrashIcon,
-  WarningIcon,
-  WindowTopOutlineIcon
+  WarningIcon
 } from "@moonlight-mod/wp/discord/components/common/index";
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
 import BuildOverrideClasses from "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverride.css";
@@ -27,10 +26,14 @@ import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
+import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { ExtensionState } from "../../../types";
 import ExtensionInfo from "./info";
 import { doGenericExtensionPopup, doMissingExtensionPopup } from "./popup";
 import Settings from "./settings";
+
+// FIXME: path this module
+const { WindowTopOutlineIcon } = spacepack.findByCode("AppleNeutralIcon:")[0].exports;
 
 export enum ExtensionPage {
   Info,
