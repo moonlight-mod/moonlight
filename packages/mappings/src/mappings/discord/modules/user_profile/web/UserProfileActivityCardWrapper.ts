@@ -4,7 +4,7 @@ register((moonmap) => {
   const name = "discord/modules/user_profile/web/UserProfileActivityCardWrapper";
   moonmap.register({
     name,
-    find: '("UserProfileActivityCardWrapper",',
+    find: /},`activity-\${.}`\)\),/,
     process({ id }) {
       moonmap.addModule(id, name);
 
