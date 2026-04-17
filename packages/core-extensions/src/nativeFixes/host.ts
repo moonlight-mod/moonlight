@@ -124,14 +124,7 @@ app.commandLine.appendSwitch = function (theSwitch, value) {
   return realAppendSwitch.call(this, theSwitch, value);
 };
 
-if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxUpdater")) {
-  const exePath = app.getPath("exe");
-  const appName = path.basename(exePath);
-  const targetDir = path.dirname(exePath);
-  const { releaseChannel }: { releaseChannel: string } = JSON.parse(
-    fsSync.readFileSync(path.join(targetDir, "resources", "build_info.json"), "utf8")
-  );
-
+function installLinuxUpdater(appName: string, targetDir: string, releaseChannel: string) {
   const updaterModule = require(path.join(moonlightHost.asarPath, "app_bootstrap", "hostUpdater.js"));
   const updater = updaterModule.constructor;
 
@@ -244,4 +237,18 @@ if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nati
       return realEmit.call(this, event, ...args);
     }
   };
+}
+
+if (process.platform === "linux" && moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxUpdater")) {
+  const exePath = app.getPath("exe");
+  const appName = path.basename(exePath);
+  const targetDir = path.dirname(exePath);
+  const { releaseChannel }: { releaseChannel: string } = JSON.parse(
+    fsSync.readFileSync(path.join(targetDir, "resources", "build_info.json"), "utf8")
+  );
+
+  // HACK: Disable on Canary until we support new updater
+  if (releaseChannel !== "canary") {
+    installLinuxUpdater(appName, targetDir, releaseChannel);
+  }
 }
