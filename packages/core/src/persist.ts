@@ -6,15 +6,16 @@ const logger = new Logger("core/persist");
 
 export default function persist(asarPath: string) {
   try {
-    if (process.platform === "win32") {
-      persistWin32(asarPath);
+    // on Linux, this only affects versions with the updater_bootstrap mechanism
+    if (process.platform === "win32" || process.platform === "linux") {
+      persistUpdater(asarPath);
     }
   } catch (e) {
     logger.error(`Failed to persist moonlight: ${e}`);
   }
 }
 
-function persistWin32(asarPath: string) {
+function persistUpdater(asarPath: string) {
   const updaterModule = require(join(asarPath, "common", "updater"));
   const updater = updaterModule.Updater;
 
