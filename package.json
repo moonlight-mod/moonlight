@@ -29,10 +29,13 @@
     "check:ci": "biome ci",
     "check:write": "biome check --write",
     "check:types": "pnpm run -r check:types",
+    "build:proto": "node scripts/build-proto.mjs",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:lint",
-    "husky": "catalog:lint"
+    "husky": "catalog:lint",
+    "@protobuf-ts/plugin": "^2.9.0",
+    "@protobuf-ts/protoc": "^2.9.0"
   }
 }

@@ -23,6 +23,7 @@ export type MoonlightHost = {
   version: string;
   branch: MoonlightBranch;
 
+  getFullConfig: () => Config;
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigPath: () => Promise<string>;
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
@@ -46,6 +47,7 @@ export type MoonlightNode = {
   version: string;
   branch: MoonlightBranch;
 
+  getFullConfig: () => Config;
   getConfig: (ext: string) => ConfigExtension["config"];
   getConfigOption: <T>(ext: string, name: string) => T | undefined;
   setConfigOption: <T>(ext: string, name: string, value: T) => Promise<void>;
@@ -82,6 +84,7 @@ export type MoonlightWeb = {
   apiLevel: number;
 
   // Re-exports for ease of use
+  getFullConfig: () => Config;
   getConfig: MoonlightNode["getConfig"];
   getConfigOption: MoonlightNode["getConfigOption"];
   setConfigOption: MoonlightNode["setConfigOption"];

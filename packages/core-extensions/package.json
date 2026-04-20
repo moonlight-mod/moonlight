@@ -10,6 +10,7 @@
   "dependencies": {
     "@moonlight-mod/core": "workspace:*",
     "@moonlight-mod/types": "workspace:*",
+    "@protobuf-ts/runtime": "catalog:",
     "microdiff": "catalog:",
     "nanotar": "catalog:"
   },
