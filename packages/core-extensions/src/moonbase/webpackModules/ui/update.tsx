@@ -1,19 +1,19 @@
 import { MoonlightBranch } from "@moonlight-mod/types";
+import Heading from "@moonlight-mod/wp/discord/design/components/Heading/Heading";
 import {
-  Heading,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalRoot,
-  ModalSize,
-  openModal,
-  Text
-} from "@moonlight-mod/wp/discord/components/common/index";
+  ModalSize
+} from "@moonlight-mod/wp/discord/design/components/Modal/web/Modal";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
+import { openModal } from "@moonlight-mod/wp/discord/modules/modals/Modals";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button"; // FIXME: move to void/mana
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import ThemeDarkIcon from "@moonlight-mod/wp/moonbase_ThemeDarkIcon";
 import React from "@moonlight-mod/wp/react";

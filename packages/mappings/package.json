@@ -38,6 +38,7 @@
     "prepare": "pnpm run build"
   },
   "dependencies": {
+    "@discord/intl": "catalog:types",
     "@types/chroma-js": "catalog:types",
     "@types/flux": "catalog:types",
     "@types/highlightjs": "catalog:types",
@@ -45,6 +46,7 @@
     "@types/platform": "catalog:types",
     "@types/react": "catalog:types",
     "csstype": "catalog:types",
+    "moment": "catalog:types",
     "zustand": "catalog:types"
   },
   "devDependencies": {

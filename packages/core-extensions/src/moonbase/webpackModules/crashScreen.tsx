@@ -1,8 +1,8 @@
 import type { ConfigExtension, DetectedExtension } from "@moonlight-mod/types";
-import { TabBar } from "@moonlight-mod/wp/discord/components/common/index";
+import Button from "@moonlight-mod/wp/discord/design/components/Button/web/Button";
+import TabBar from "@moonlight-mod/wp/discord/design/components/TabBar/TabBar";
 import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
 import { useStateFromStores, useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
 import { type RepositoryManifest, UpdateState } from "../types";
@@ -69,7 +69,8 @@ function ExtensionUpdateCard({ id, ext }: UpdateCardProps) {
       </div>
       <div className="moonbase-crash-extensionCard-button">
         <Button
-          color={Button.Colors.GREEN}
+          text={extensionButtonStrings[state]}
+          variant="active"
           disabled={state !== UpdateState.Ready}
           onClick={() => {
             setState(UpdateState.Working);
@@ -77,9 +78,7 @@ function ExtensionUpdateCard({ id, ext }: UpdateCardProps) {
               .then(() => setState(UpdateState.Installed))
               .catch(() => setState(UpdateState.Failed));
           }}
-        >
-          {extensionButtonStrings[state]}
-        </Button>
+        />
       </div>
     </div>
   );
@@ -119,9 +118,7 @@ function ExtensionDisableCard({ ext }: { ext: DetectedExtension }) {
         <div className="moonbase-crash-extensionCard-version">{`v${ext.manifest.version ?? "???"}`}</div>
       </div>
       <div className="moonbase-crash-extensionCard-button">
-        <Button color={Button.Colors.RED} onClick={disableWithDependents}>
-          Disable
-        </Button>
+        <Button text="Disable" variant="critical-primary" onClick={disableWithDependents} />
       </div>
     </div>
   );
@@ -176,7 +173,7 @@ export function wrapAction({ action, state }: WrapperProps) {
         className={`${DiscoveryClasses.tabBar} moonbase-crash-tabs`}
         type="top"
         selectedItem={tab}
-        onItemSelect={(v) => setTab(v)}
+        onItemSelect={(v: string) => setTab(v)}
       >
         <TabBar.Item className={DiscoveryClasses.tabBarItem} id="crash">
           Crash details
@@ -239,7 +236,7 @@ export function UpdateButton({ state, setState }: { state: ErrorState; setState:
     state.__moonlight_update === UpdateState.Installed ||
     state.__moonlight_update === undefined ? null : (
     <Button
-      size={Button.Sizes.LARGE}
+      text={state.__moonlight_update !== undefined ? buttonStrings[state.__moonlight_update] : ""}
       disabled={state.__moonlight_update !== UpdateState.Ready}
       onClick={() => {
         setState({
@@ -262,8 +259,6 @@ export function UpdateButton({ state, setState }: { state: ErrorState; setState:
             });
           });
       }}
-    >
-      {state.__moonlight_update !== undefined ? buttonStrings[state.__moonlight_update] : ""}
-    </Button>
+    />
   );
 }

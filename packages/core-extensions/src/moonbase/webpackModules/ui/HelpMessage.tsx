@@ -1,5 +1,5 @@
 import HelpMessageClasses from "@moonlight-mod/wp/discord/components/common/HelpMessage.css";
-import { Text } from "@moonlight-mod/wp/discord/components/common/index";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import React from "@moonlight-mod/wp/react";

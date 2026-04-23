@@ -21,8 +21,8 @@ import {
   Tooltip
 } from "@moonlight-mod/wp/discord/components/common/index";
 import {
-  Select as DiscordSelect,
   multiSelect,
+  Select as SelectComponent,
   SingleSelect,
   useVariableSelect
 } from "@moonlight-mod/wp/discord/components/common/Select";
@@ -194,7 +194,7 @@ function MultiSelectSetting({ ext, name, setting, disabled }: SettingsProps) {
   return (
     <FormItem className={Margins.marginTop20} title={displayName}>
       {description && <FormText className={Margins.marginBottom8}>{markdownify(description)}</FormText>}
-      <DiscordSelect
+      <SelectComponent
         autofocus={false}
         clearable={false}
         closeOnSelect={false}

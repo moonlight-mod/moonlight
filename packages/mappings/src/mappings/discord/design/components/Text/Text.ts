@@ -1,0 +1,114 @@
+import { ModuleExportType } from "@moonlight-mod/moonmap";
+import type { ComponentType, CSSProperties, PropsWithChildren } from "react";
+import register from "../../../../../registry";
+
+// FIXME: common types
+type Modify<T, R> = Pick<T, Exclude<keyof T, keyof R>> & R;
+
+export type TextVariant =
+  | "heading-sm/normal"
+  | "heading-sm/medium"
+  | "heading-sm/semibold"
+  | "heading-sm/bold"
+  | "heading-sm/extrabold"
+  | "heading-md/normal"
+  | "heading-md/medium"
+  | "heading-md/semibold"
+  | "heading-md/bold"
+  | "heading-md/extrabold"
+  | "heading-lg/normal"
+  | "heading-lg/medium"
+  | "heading-lg/semibold"
+  | "heading-lg/bold"
+  | "heading-lg/extrabold"
+  | "heading-xl/normal"
+  | "heading-xl/medium"
+  | "heading-xl/semibold"
+  | "heading-xl/bold"
+  | "heading-xl/extrabold"
+  | "heading-xxl/normal"
+  | "heading-xxl/medium"
+  | "heading-xxl/semibold"
+  | "heading-xxl/bold"
+  | "heading-xxl/extrabold"
+  | "eyebrow"
+  | "heading-deprecated-12/normal"
+  | "heading-deprecated-12/medium"
+  | "heading-deprecated-12/semibold"
+  | "heading-deprecated-12/bold"
+  | "heading-deprecated-12/extrabold"
+  | "redesign/heading-18/bold"
+  | "text-xxs/normal"
+  | "text-xxs/medium"
+  | "text-xxs/semibold"
+  | "text-xxs/bold"
+  | "text-xs/normal"
+  | "text-xs/medium"
+  | "text-xs/semibold"
+  | "text-xs/bold"
+  | "text-sm/normal"
+  | "text-sm/medium"
+  | "text-sm/semibold"
+  | "text-sm/bold"
+  | "text-md/normal"
+  | "text-md/medium"
+  | "text-md/semibold"
+  | "text-md/bold"
+  | "text-lg/normal"
+  | "text-lg/medium"
+  | "text-lg/semibold"
+  | "text-lg/bold"
+  | "redesign/message-preview/normal"
+  | "redesign/message-preview/medium"
+  | "redesign/message-preview/semibold"
+  | "redesign/message-preview/bold"
+  | "redesign/channel-title/normal"
+  | "redesign/channel-title/medium"
+  | "redesign/channel-title/semibold"
+  | "redesign/channel-title/bold"
+  | "display-sm"
+  | "display-md"
+  | "display-lg"
+  | "code";
+
+type Exports = {
+  default: ComponentType<
+    PropsWithChildren<
+      Modify<
+        React.HTMLAttributes<HTMLDivElement>,
+        {
+          variant: TextVariant;
+          tag?: string;
+          selectable?: boolean;
+          className?: string;
+          lineClamp?: number;
+          color?: string;
+          tabularNumbers?: boolean;
+          scaleFontToUserSettings?: boolean;
+          style?: CSSProperties;
+        }
+      >
+    >
+  >;
+};
+export default Exports;
+
+register((moonmap) => {
+  const name = "discord/design/components/Text/Text";
+  const find = '"data-text-variant":';
+  moonmap.register({
+    name,
+    find,
+    process({ id }) {
+      moonmap.addModule(id, name);
+
+      moonmap.addExport(name, "default", {
+        type: ModuleExportType.Function,
+        find,
+        recursive: true
+      });
+
+      return true;
+    }
+  });
+});

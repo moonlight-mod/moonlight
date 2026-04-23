@@ -39,7 +39,12 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
     dependencies: [
       { ext: "spacepack", id: "spacepack" },
       { id: "react" },
-      { id: "discord/components/common/index" },
+      { id: "discord/design/components/TabBar/TabBar" },
+      { id: "discord/design/components/Text/Text" },
+      { id: "discord/design/components/Heading/Heading" },
+      { id: "discord/modules/icons/web/CircleWarningIcon" },
+      { id: "discord/design/components/ThemeContextProvider/ThemeContext" },
+      { id: "design/components/Modal/web/Modal" },
       { ext: "moonbase", id: "stores" },
       { ext: "moonbase", id: "ThemeDarkIcon" },
       { id: "discord/modules/guild_settings/web/AppCard.css" },
@@ -92,7 +97,8 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { id: "react" },
       { ext: "moonbase", id: "stores" },
       { id: "discord/packages/flux" },
-      { id: "discord/components/common/index" },
+      { id: "discord/design/components/Button/web/Button" },
+      { id: "discord/design/components/TabBar/TabBar" },
       { id: "discord/modules/discovery/web/Discovery.css" }
     ]
   }

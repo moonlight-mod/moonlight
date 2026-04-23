@@ -282,6 +282,68 @@ declare module "@moonlight-mod/wp/discord/components/modals/ConfirmModal" {
   export const ConfirmModal: MappedModules["discord/components/modals/ConfirmModal"]["ConfirmModal"];
 }
 
+declare module "@moonlight-mod/wp/discord/design/components/Button/web/Button" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Button/web/Button"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Clickable/web/Clickable" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Clickable/web/Clickable"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Heading/Heading" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Heading/Heading"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Modal/web/Modal" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const ModalRoot: MappedModules["discord/design/components/Modal/web/Modal"]["ModalRoot"];
+  export const ModalHeader: MappedModules["discord/design/components/Modal/web/Modal"]["ModalHeader"];
+  export const ModalCloseButton: MappedModules["discord/design/components/Modal/web/Modal"]["ModalCloseButton"];
+  export const ModalContent: MappedModules["discord/design/components/Modal/web/Modal"]["ModalContent"];
+  export const ModalFooter: MappedModules["discord/design/components/Modal/web/Modal"]["ModalFooter"];
+  export const ModalSize: MappedModules["discord/design/components/Modal/web/Modal"]["ModalSize"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/TabBar/TabBar" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/TabBar/TabBar"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Text/Text" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Text/Text"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/ThemeContextProvider/ThemeContext" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const createThemedContext: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["createThemedContext"];
+  export const useThemeContext: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["useThemeContext"];
+  export const FALLBACK_THEME_CONTEXT_VALUE: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["FALLBACK_THEME_CONTEXT_VALUE"];
+  export const ThemeContext: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["ThemeContext"];
+  export const UseThemeContext: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["UseThemeContext"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Tooltip/web/VoidTooltip" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Tooltip/web/VoidTooltip"]["default"];
+  export default _default;
+  export const Colors: MappedModules["discord/design/components/Tooltip/web/VoidTooltip"]["Colors"];
+}
+
+declare module "@moonlight-mod/wp/discord/intl" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const intl: MappedModules["discord/intl"]["intl"];
+  export const t: MappedModules["discord/intl"]["t"];
+}
+
 declare module "@moonlight-mod/wp/discord/lib/BaseRecord" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/lib/BaseRecord"]["default"];
@@ -312,6 +374,14 @@ declare module "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverr
   export const barLoader: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["barLoader"];
   export const barTitle: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["barTitle"];
   export const buttonLoader: MappedModules["discord/modules/build_overrides/web/BuildOverride.css"]["buttonLoader"];
+}
+
+declare module "@moonlight-mod/wp/discord/modules/chat/web/ImageHoverButtons.css" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const hoverButton: MappedModules["discord/modules/chat/web/ImageHoverButtons.css"]["hoverButton"];
+  export const sizer: MappedModules["discord/modules/chat/web/ImageHoverButtons.css"]["sizer"];
+  export const nonMediaMosaicItem: MappedModules["discord/modules/chat/web/ImageHoverButtons.css"]["nonMediaMosaicItem"];
+  export const hoverButtonGroup: MappedModules["discord/modules/chat/web/ImageHoverButtons.css"]["hoverButtonGroup"];
 }
 
 declare module "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css" {
@@ -493,10 +563,40 @@ declare module "@moonlight-mod/wp/discord/modules/guild_sidebar/web/CategoryChan
   export const refreshVoiceChannelsButtonInner: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["refreshVoiceChannelsButtonInner"];
 }
 
+declare module "@moonlight-mod/wp/discord/modules/icons/web/AngleBracketsIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/BookCheckIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/CircleWarningIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/ClydeIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/GameControllerIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/GlobeEarthIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/MaximizeIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/MobilePhoneIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/PauseIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/PlayIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/ScreenIcon" {}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/VrHeadsetIcon" {}
+
 declare module "@moonlight-mod/wp/discord/modules/markup/MarkupUtils" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/markup/MarkupUtils"]["default"];
   export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/media_viewer/web/components/openMediaModal" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const openMediaModal: MappedModules["discord/modules/media_viewer/web/components/openMediaModal"]["openMediaModal"];
+  export const MEDIA_MODAL_KEY: MappedModules["discord/modules/media_viewer/web/components/openMediaModal"]["MEDIA_MODAL_KEY"];
 }
 
 declare module "@moonlight-mod/wp/discord/modules/menus/web/Menu" {
@@ -825,11 +925,6 @@ declare module "@moonlight-mod/wp/discord/styles/shared/Margins.css" {
   export const marginLeft8: MappedModules["discord/styles/shared/Margins.css"]["marginLeft8"];
 }
 
-declare module "@moonlight-mod/wp/discord/uikit/Button" {
-  import { MappedModules } from "@moonlight-mod/mappings";
-  export const Button: MappedModules["discord/uikit/Button"]["Button"];
-}
-
 declare module "@moonlight-mod/wp/discord/uikit/Flex" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/uikit/Flex"]["default"];
@@ -868,6 +963,23 @@ declare module "@moonlight-mod/wp/discord/utils/ComponentDispatchUtils" {
   export const ComponentDispatch: MappedModules["discord/utils/ComponentDispatchUtils"]["ComponentDispatch"];
 }
 
+declare module "@moonlight-mod/wp/discord/utils/DateUtils" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const differenceInCalendarDays: MappedModules["discord/utils/DateUtils"]["differenceInCalendarDays"];
+  export const differenceInDays: MappedModules["discord/utils/DateUtils"]["differenceInDays"];
+  export const isSameDay: MappedModules["discord/utils/DateUtils"]["isSameDay"];
+  export const isWithinInterval: MappedModules["discord/utils/DateUtils"]["isWithinInterval"];
+  export const dateFormat: MappedModules["discord/utils/DateUtils"]["dateFormat"];
+  export const calendarFormat: MappedModules["discord/utils/DateUtils"]["calendarFormat"];
+  export const calendarFormatCompact: MappedModules["discord/utils/DateUtils"]["calendarFormatCompact"];
+  export const accessibilityLabelCalendarFormat: MappedModules["discord/utils/DateUtils"]["accessibilityLabelCalendarFormat"];
+  export const diffAsUnits: MappedModules["discord/utils/DateUtils"]["diffAsUnits"];
+  export const unitsAsStrings: MappedModules["discord/utils/DateUtils"]["unitsAsStrings"];
+  export const getMonthlyProgressPercentage: MappedModules["discord/utils/DateUtils"]["getMonthlyProgressPercentage"];
+  export const getDaysRemainingInMonth: MappedModules["discord/utils/DateUtils"]["getDaysRemainingInMonth"];
+  export const formatDateForDatetimeLocal: MappedModules["discord/utils/DateUtils"]["formatDateForDatetimeLocal"];
+}
+
 declare module "@moonlight-mod/wp/discord/utils/HTTPUtils" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const HTTP: MappedModules["discord/utils/HTTPUtils"]["HTTP"];
@@ -883,6 +995,22 @@ declare module "@moonlight-mod/wp/discord/utils/NativeUtils" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/utils/NativeUtils"]["default"];
   export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/utils/UserUtils" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/utils/UserUtils"]["default"];
+  export default _default;
+  export const nameFromUser: MappedModules["discord/utils/UserUtils"]["nameFromUser"];
+  export const getName: MappedModules["discord/utils/UserUtils"]["getName"];
+  export const useName: MappedModules["discord/utils/UserUtils"]["useName"];
+  export const humanizeStatus: MappedModules["discord/utils/UserUtils"]["humanizeStatus"];
+  export const accountAgeInRange: MappedModules["discord/utils/UserUtils"]["accountAgeInRange"];
+  export const ageEligibleForPremiumUpsell: MappedModules["discord/utils/UserUtils"]["ageEligibleForPremiumUpsell"];
+  export const isNewUser: MappedModules["discord/utils/UserUtils"]["isNewUser"];
+  export const getUserTag: MappedModules["discord/utils/UserUtils"]["getUserTag"];
+  export const useDirectMessageRecipient: MappedModules["discord/utils/UserUtils"]["useDirectMessageRecipient"];
+  export const getUserIsStaff: MappedModules["discord/utils/UserUtils"]["getUserIsStaff"];
 }
 
 declare module "@moonlight-mod/wp/highlight.js" {

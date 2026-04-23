@@ -1,14 +1,12 @@
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
-import {
-  AngleBracketsIcon,
-  BookCheckIcon,
-  ClydeIcon,
-  Text,
-  useThemeContext
-} from "@moonlight-mod/wp/discord/components/common/index";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
+import { useThemeContext } from "@moonlight-mod/wp/discord/design/components/ThemeContextProvider/ThemeContext";
+import AngleBracketsIcon from "@moonlight-mod/wp/discord/modules/icons/web/AngleBracketsIcon";
+import BookCheckIcon from "@moonlight-mod/wp/discord/modules/icons/web/BookCheckIcon";
+import ClydeIcon from "@moonlight-mod/wp/discord/modules/icons/web/ClydeIcon";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
+import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button"; // FIXME: move to mana/void
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 

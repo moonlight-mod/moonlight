@@ -7,7 +7,7 @@ interface AvatarDecorationData {
   skuId: string;
 }
 
-declare class UserRecord extends BaseRecord {
+export declare class UserRecord extends BaseRecord {
   id: string;
   username: string;
   discriminator: string;
