@@ -1,4 +1,5 @@
-import { Breadcrumbs, Text } from "@moonlight-mod/wp/discord/components/common/index";
+import Breadcrumbs from "@moonlight-mod/wp/discord/design/components/Breadcrumbs/web/Breadcrumbs";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 //import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
 import {
   createCustom,
@@ -16,6 +17,7 @@ import React from "@moonlight-mod/wp/react";
 import redesign from "@moonlight-mod/wp/settings_redesign";
 import settings from "@moonlight-mod/wp/settings_settings";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
+import ErrorBoundary from "src/common/webpackModules/ErrorBoundary";
 
 const notice = {
   stores: [MoonbaseSettingsStore],
@@ -73,7 +75,7 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
         { id, label: page.name }
       ];
       return (
-        <>
+        <ErrorBoundary>
           <Breadcrumbs
             className={Margins.marginBottom20}
             renderCustomBreadcrumb={renderBreadcrumb}
@@ -87,7 +89,7 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
           <Update />
 
           <page.element />
-        </>
+        </ErrorBoundary>
       );
     });
   }
@@ -119,12 +121,12 @@ const redesignPanel = createPanel("moonbase_panel", {
         buildLayout: () => [
           createCustom(`moonbase_tab-${page.id}_content`, {
             Component: () => (
-              <>
+              <ErrorBoundary>
                 <RestartAdviceMessage />
                 <Update />
 
                 <page.element />
-              </>
+              </ErrorBoundary>
             )
           })
         ]

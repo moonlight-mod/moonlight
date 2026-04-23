@@ -1,5 +1,5 @@
 import type { IconSize, Icons } from "@moonlight-mod/types/coreExtensions/common";
-import { tokens } from "@moonlight-mod/wp/discord/components/common/index";
+import tokens from "@moonlight-mod/wp/discord/packages/tokens";
 
 // This is defined in a Webpack module but we copy it here to be less breakage-prone
 const sizes: Partial<Record<IconSize, number>> = {

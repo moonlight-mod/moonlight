@@ -3,16 +3,11 @@ import { LogLevel } from "@moonlight-mod/types";
 const logLevels = Object.values(LogLevel).filter((v) => typeof v === "string") as string[];
 
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
-import {
-  CircleXIcon,
-  Clickable,
-  FormDivider,
-  FormItem,
-  FormSwitch,
-  FormText,
-  Tooltip
-} from "@moonlight-mod/wp/discord/components/common/index";
+import { FormDivider, FormItem, FormSwitch, FormText } from "@moonlight-mod/wp/discord/components/common/index";
 import { SingleSelect } from "@moonlight-mod/wp/discord/components/common/Select";
+import Clickable from "@moonlight-mod/wp/discord/design/components/Clickable/web/Clickable";
+import Tooltip from "@moonlight-mod/wp/discord/design/components/Tooltip/web/VoidTooltip";
+import CircleXIcon from "@moonlight-mod/wp/discord/modules/icons/web/CircleXIcon";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";

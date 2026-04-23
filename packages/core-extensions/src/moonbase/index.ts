@@ -44,7 +44,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { id: "discord/design/components/Heading/Heading" },
       { id: "discord/modules/icons/web/CircleWarningIcon" },
       { id: "discord/design/components/ThemeContextProvider/ThemeContext" },
-      { id: "design/components/Modal/web/Modal" },
+      { id: "discord/design/components/Modal/web/Modal" },
       { ext: "moonbase", id: "stores" },
       { ext: "moonbase", id: "ThemeDarkIcon" },
       { id: "discord/modules/guild_settings/web/AppCard.css" },
@@ -66,6 +66,9 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
       { id: "react" },
       { ext: "moonbase", id: "ui" },
       { ext: "contextMenu", id: "contextMenu" },
+      { id: "discord/design/components/Text/Text" },
+      { id: "discord/design/components/Breadcrumbs/web/Breadcrumbs" },
+      { id: "discord/modules/user_settings/redesign/SettingsItemCreators" },
       ':"USER_SETTINGS_MODAL_SET_SECTION"'
     ],
     entrypoint: true

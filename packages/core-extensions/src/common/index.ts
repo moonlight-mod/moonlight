@@ -8,6 +8,6 @@ export const webpackModules: ExtensionWebExports["webpackModules"] = {
     dependencies: [{ id: "react" }]
   },
   icons: {
-    dependencies: [{ id: "react" }, { id: "discord/components/common/index" }]
+    dependencies: [{ id: "react" }, { id: "discord/packages/tokens" }]
   }
 };

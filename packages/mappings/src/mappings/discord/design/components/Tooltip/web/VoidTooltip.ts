@@ -1,5 +1,5 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import type { CSSProperties, PropsWithChildren } from "react";
+import type { CSSProperties } from "react";
 import register from "../../../../../../registry";
 
 export type LayerPosition = "top" | "bottom" | "left" | "right" | "center" | "window_center";
@@ -14,7 +14,7 @@ export enum TooltipColors {
   RED = "red"
 }
 
-type TooltipProps = PropsWithChildren<{
+type TooltipProps = {
   text: React.ReactNode;
   align?: LayerAlign;
   position?: LayerPosition;
@@ -38,10 +38,11 @@ type TooltipProps = PropsWithChildren<{
   onTooltipHide?: (props: TooltipProps) => void;
   shouldShow?: boolean;
   forceOpen?: boolean;
-}>;
+  children: ((props: any) => React.ReactNode) | React.ReactNode;
+};
 
 type Exports = {
-  default: React.ComponentType<TooltipProps>;
+  default: React.ComponentClass<TooltipProps> & { Colors: TooltipColors };
   Colors: TooltipColors;
 };
 export default Exports;

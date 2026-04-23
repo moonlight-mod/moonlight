@@ -5,7 +5,7 @@ export const patches: Patch[] = [
     find: 'setProperty("--custom-app-panels-height"',
     replace: [
       {
-        match: /\(0,.\.jsx\)\((.\..),{section:/,
+        match: /(?<={containerRef:\i,children:\[.+?)\(0,\i\.jsx\)\((\i\.\i),{section:/,
         replacement: (prev, el) => `...require("appPanels_appPanels").default.getPanels(${el}),${prev}`
       }
     ]

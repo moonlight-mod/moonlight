@@ -282,6 +282,12 @@ declare module "@moonlight-mod/wp/discord/components/modals/ConfirmModal" {
   export const ConfirmModal: MappedModules["discord/components/modals/ConfirmModal"]["ConfirmModal"];
 }
 
+declare module "@moonlight-mod/wp/discord/design/components/Breadcrumbs/web/Breadcrumbs" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Breadcrumbs/web/Breadcrumbs"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/design/components/Button/web/Button" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/design/components/Button/web/Button"]["default"];
@@ -578,6 +584,12 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/BookCheckIcon" {
 declare module "@moonlight-mod/wp/discord/modules/icons/web/CircleWarningIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/CircleWarningIcon"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/CircleXIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/CircleXIcon"]["default"];
   export default _default;
 }
 
@@ -947,6 +959,12 @@ declare module "@moonlight-mod/wp/discord/packages/flux/Store" {
 declare module "@moonlight-mod/wp/discord/packages/flux/connectStores" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/packages/flux/connectStores"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/packages/tokens" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/packages/tokens"]["default"];
   export default _default;
 }
 

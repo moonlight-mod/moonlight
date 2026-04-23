@@ -1,16 +1,17 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import type { ComponentType, Context, ReactNode } from "react";
 import register from "../../../../../registry";
+import type { Density, Themes } from "../../../packages/tokens";
 
 type ThemeContext = {
-  theme: "light" | "dark" | "darker" | "midnight";
+  theme: Themes;
   primaryColor: string | null;
   secondaryColor: string | null;
   gradient: any | null; // FIXME
   flags: number;
   constrast: number;
   saturation: number;
-  density: "compact" | "cozy" | "default";
+  density: Density;
   disableAdaptiveTheme: boolean;
   reduceAdaptiveTheme: boolean;
 };

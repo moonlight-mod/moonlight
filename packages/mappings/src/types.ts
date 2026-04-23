@@ -20,6 +20,7 @@ import type ScrollerCSS from "./mappings/discord/components/common/Scroller.css"
 import type Select from "./mappings/discord/components/common/Select";
 import type ConfirmModal from "./mappings/discord/components/modals/ConfirmModal";
 import type DispatcherInstance from "./mappings/discord/Dispatcher";
+import type Breadcrumbs from "./mappings/discord/design/components/Breadcrumbs/web/Breadcrumbs";
 import type Button from "./mappings/discord/design/components/Button/web/Button";
 import type Clickable from "./mappings/discord/design/components/Clickable/web/Clickable";
 import type Heading from "./mappings/discord/design/components/Heading/Heading";
@@ -46,6 +47,7 @@ import type CategoryChannelCSS from "./mappings/discord/modules/guild_sidebar/we
 import type AngleBracketsIcon from "./mappings/discord/modules/icons/web/AngleBracketsIcon";
 import type BookCheckIcon from "./mappings/discord/modules/icons/web/BookCheckIcon";
 import type CircleWarningIcon from "./mappings/discord/modules/icons/web/CircleWarningIcon";
+import type CircleXIcon from "./mappings/discord/modules/icons/web/CircleXIcon";
 import type ClydeIcon from "./mappings/discord/modules/icons/web/ClydeIcon";
 import type GameControllerIcon from "./mappings/discord/modules/icons/web/GameControllerIcon";
 import type GlobeEarthIcon from "./mappings/discord/modules/icons/web/GlobeEarthIcon";
@@ -75,6 +77,7 @@ import type Emitter from "./mappings/discord/packages/flux/Emitter";
 import type LoggingUtils from "./mappings/discord/packages/flux/LoggingUtils";
 import type PersistedStore from "./mappings/discord/packages/flux/PersistedStore";
 import type Store from "./mappings/discord/packages/flux/Store";
+import type Tokens from "./mappings/discord/packages/tokens";
 import type UserRecord from "./mappings/discord/records/UserRecord";
 import type MarginsCSS from "./mappings/discord/styles/shared/Margins.css";
 import type Flex from "./mappings/discord/uikit/Flex";
@@ -118,6 +121,7 @@ export type MappedModules = {
   "discord/components/common/Select": Select;
   "discord/components/common/index": Components;
   "discord/components/modals/ConfirmModal": ConfirmModal;
+  "discord/design/components/Breadcrumbs/web/Breadcrumbs": Breadcrumbs;
   "discord/design/components/Button/web/Button": Button;
   "discord/design/components/Clickable/web/Clickable": Clickable;
   "discord/design/components/Heading/Heading": Heading;
@@ -144,6 +148,7 @@ export type MappedModules = {
   "discord/modules/icons/web/AngleBracketsIcon": AngleBracketsIcon;
   "discord/modules/icons/web/BookCheckIcon": BookCheckIcon;
   "discord/modules/icons/web/CircleWarningIcon": CircleWarningIcon;
+  "discord/modules/icons/web/CircleXIcon": CircleXIcon;
   "discord/modules/icons/web/ClydeIcon": ClydeIcon;
   "discord/modules/icons/web/GameControllerIcon": GameControllerIcon;
   "discord/modules/icons/web/GlobeEarthIcon": GlobeEarthIcon;
@@ -173,6 +178,7 @@ export type MappedModules = {
   "discord/packages/flux/PersistedStore": PersistedStore;
   "discord/packages/flux/Store": Store;
   "discord/packages/flux/connectStores": connectStores;
+  "discord/packages/tokens": Tokens;
   "discord/records/UserRecord": UserRecord;
   "discord/styles/shared/Margins.css": MarginsCSS;
   "discord/uikit/Flex": Flex;
