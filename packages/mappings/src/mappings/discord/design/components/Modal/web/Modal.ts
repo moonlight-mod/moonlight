@@ -1,7 +1,7 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../../../../../registry";
 
-enum ModalSize {
+export enum ModalSize {
   SMALL = "small",
   MEDIUM = "medium",
   LARGE = "large",
@@ -15,7 +15,7 @@ type Exports = {
   ModalCloseButton: React.ComponentType<any>;
   ModalContent: React.ComponentType<any>;
   ModalFooter: React.ComponentType<any>;
-  ModalSize: ModalSize;
+  ModalSize: typeof ModalSize;
 };
 export default Exports;
 

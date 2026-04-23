@@ -1,5 +1,5 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import type { CSSProperties, PropsWithChildren } from "react";
+import type { AriaAttributes, CSSProperties, PropsWithChildren } from "react";
 import register from "../../../../../registry";
 
 type Exports = {
@@ -14,7 +14,31 @@ type Exports = {
       onItemSelect: (id: any) => void;
       look?: string;
     }>
-  >;
+  > & {
+    Item: React.ComponentType<
+      PropsWithChildren<{
+        className?: string;
+        id?: any;
+        selectedItem?: string;
+        color?: string;
+        disabled?: boolean;
+        onContextMenu?: (event: React.MouseEvent) => void;
+        clickableRef?: React.Ref<any>;
+        look?: string;
+        disableItemStyles?: boolean;
+      }>
+    >;
+    Separator: React.ComponentType<{ style?: CSSProperties }>;
+    Panel: React.ComponentType<PropsWithChildren<{ id: string }>>;
+    Header: React.ComponentType<
+      PropsWithChildren<{
+        className?: string;
+        onClick?: () => void;
+        "aria-expanded": AriaAttributes["aria-expanded"];
+        "aria-controls": AriaAttributes["aria-controls"];
+      }>
+    >;
+  };
 };
 export default Exports;
 
