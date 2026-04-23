@@ -347,7 +347,16 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
         // @ts-expect-error hacks
         wpModule.run.call = (self, module, exports, require) => {
           try {
-            wpModule.run!.apply(self, [module, exports, require]);
+            function requireWrapper(moduleId: string) {
+              try {
+                return require(moduleId);
+              } catch (err) {
+                logger.error(`Module "${id}" failed to require "${moduleId}":`, err);
+                throw new Error(`Failed to require "${moduleId}"`);
+              }
+            }
+            Object.defineProperties(requireWrapper, Object.getOwnPropertyDescriptors(require));
+            wpModule.run!.apply(self, [module, exports, requireWrapper as WebpackRequireType]);
           } catch (err) {
             logger.error(`Failed to run module "${id}":`, err);
           }
