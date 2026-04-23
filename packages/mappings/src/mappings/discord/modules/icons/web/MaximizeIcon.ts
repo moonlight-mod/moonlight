@@ -1,7 +1,8 @@
 import { registerIconModule } from "../../../../../utils";
 import type { IconExports } from "./_types";
 
-export default IconExports;
+type Exports = IconExports;
+export default Exports;
 
 registerIconModule(
   "discord/modules/icons/web/MaximizeIcon",

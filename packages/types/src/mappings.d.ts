@@ -563,29 +563,77 @@ declare module "@moonlight-mod/wp/discord/modules/guild_sidebar/web/CategoryChan
   export const refreshVoiceChannelsButtonInner: MappedModules["discord/modules/guild_sidebar/web/CategoryChannel.css"]["refreshVoiceChannelsButtonInner"];
 }
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/AngleBracketsIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/AngleBracketsIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/AngleBracketsIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/BookCheckIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/BookCheckIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/BookCheckIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/CircleWarningIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/CircleWarningIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/CircleWarningIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/ClydeIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/ClydeIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/ClydeIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/GameControllerIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/GameControllerIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/GameControllerIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/GlobeEarthIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/GlobeEarthIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/GlobeEarthIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/MaximizeIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/MaximizeIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/MaximizeIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/MobilePhoneIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/MobilePhoneIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/MobilePhoneIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/PauseIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/PauseIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/PauseIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/PlayIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/PlayIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/PlayIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/ScreenIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/ScreenIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/ScreenIcon"]["default"];
+  export default _default;
+}
 
-declare module "@moonlight-mod/wp/discord/modules/icons/web/VrHeadsetIcon" {}
+declare module "@moonlight-mod/wp/discord/modules/icons/web/VrHeadsetIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/VrHeadsetIcon"]["default"];
+  export default _default;
+}
 
 declare module "@moonlight-mod/wp/discord/modules/markup/MarkupUtils" {
   import { MappedModules } from "@moonlight-mod/mappings";
