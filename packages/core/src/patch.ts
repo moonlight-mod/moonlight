@@ -76,19 +76,41 @@ function createSourceURL(id: string) {
   return `//# sourceURL=Webpack-Module/${id.slice(0, 3)}/${id}`;
 }
 
+function wrapRequire(id: string, require: WebpackRequireType): WebpackRequireType {
+  function requireWrapper(moduleId: string) {
+    try {
+      if (!require.m[moduleId]) {
+        logger.error(`Module "${id}" tried to require "${moduleId}", but it is missing!`);
+      } else {
+        return require(moduleId);
+      }
+    } catch (err) {
+      logger.error(`Module "${id}" failed to require "${moduleId}":`, err);
+      throw new Error(`Failed to require "${moduleId}"`);
+    }
+  }
+  Object.defineProperties(requireWrapper, Object.getOwnPropertyDescriptors(require));
+
+  return requireWrapper as WebpackRequireType;
+}
+
 function patchModule(id: string, patchId: string, replaced: string, entry: WebpackJsonpEntry[1]) {
   // Store what extensions patched what modules for easier debugging
   patched[id] = patched[id] ?? [];
   patched[id].push(patchId);
+  const patchedStr = patched[id].sort().join(", ");
 
   // Webpack module arguments are minified, so we replace them with consistent names
   // We have to wrap it so things don't break, though
-  const patchedStr = patched[id].sort().join(", ");
-
   const wrapped = `(${replaced}).apply(this, arguments)\n// Patched by moonlight: ${patchedStr}\n${createSourceURL(id)}`;
 
   try {
     const func = new Function("module", "exports", "require", wrapped) as WebpackModuleFunc;
+    // @ts-expect-error hacks
+    func.call = (self, module, exports, require) => {
+      func.apply(self, [module, exports, wrapRequire(id, require)]);
+    };
+
     entry[id] = func;
     entry[id].__moonlight = true;
     return true;
@@ -347,16 +369,7 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
         // @ts-expect-error hacks
         wpModule.run.call = (self, module, exports, require) => {
           try {
-            function requireWrapper(moduleId: string) {
-              try {
-                return require(moduleId);
-              } catch (err) {
-                logger.error(`Module "${id}" failed to require "${moduleId}":`, err);
-                throw new Error(`Failed to require "${moduleId}"`);
-              }
-            }
-            Object.defineProperties(requireWrapper, Object.getOwnPropertyDescriptors(require));
-            wpModule.run!.apply(self, [module, exports, requireWrapper as WebpackRequireType]);
+            wpModule.run!.apply(self, [module, exports, wrapRequire(id, require)]);
           } catch (err) {
             logger.error(`Failed to run module "${id}":`, err);
           }
