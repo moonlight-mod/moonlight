@@ -175,7 +175,7 @@ if (isOverlay) {
             try {
               const url = new URL(script.src);
               const hasUrl =
-                url.pathname.match(/\/assets\/[a-zA-Z-]+\./) &&
+                url.pathname.match(/\/assets\/(\d{3,5}|[a-zA-Z-]+)\./) &&
                 !url.searchParams.has("inj") &&
                 (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
               const shouldIgnore = ignoreScripts.some((other) => url.pathname.startsWith(`/assets/${other}`));
@@ -185,12 +185,20 @@ if (isOverlay) {
             }
           });
 
+          scripts.sort((a, b) => a.src.localeCompare(b.src));
+
+          ipcRenderer.sendSync(
+            constants.ipcNodePreloadKickoff,
+            scripts.map((script) => script.src)
+          );
+
           for (const script of scripts) {
             const newScript = document.createElement("script");
             for (const attr of script.attributes) {
               if (attr.name === "src") attr.value += "?inj";
               newScript.setAttribute(attr.name, attr.value);
             }
+
             script.remove();
             document.documentElement.appendChild(newScript);
           }

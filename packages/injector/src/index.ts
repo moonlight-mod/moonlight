@@ -24,6 +24,8 @@ let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
 let blockedUrls: RegExp[] = [];
 let injectorConfig: InjectorConfig | undefined;
+let startupScripts: string[] = [];
+const startupScriptsRan = new Set<string>();
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
   e.returnValue = oldPreloadPath;
@@ -34,6 +36,10 @@ ipcMain.on(constants.ipcGetAppData, (e) => {
 });
 ipcMain.on(constants.ipcGetInjectorConfig, (e) => {
   e.returnValue = injectorConfig;
+});
+ipcMain.on(constants.ipcNodePreloadKickoff, (e, scripts: string[]) => {
+  startupScripts = scripts.map((s) => new URL(s).pathname);
+  e.returnValue = true;
 });
 ipcMain.handle(constants.ipcMessageBox, (_, opts) => {
   electron.dialog.showMessageBoxSync(opts);
@@ -137,6 +143,11 @@ class BrowserWindow extends ElectronBrowserWindow {
       }
     }
 
+    this.webContents.on("did-navigate", () => {
+      startupScripts = [];
+      startupScriptsRan.clear();
+    });
+
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
         // Patch CSP so things can use externally hosted assets
@@ -176,7 +187,7 @@ class BrowserWindow extends ElectronBrowserWindow {
       if (details.resourceType === "script" && isMainWindow) {
         const url = new URL(details.url);
         const hasUrl =
-          url.pathname.match(/\/assets\/[a-zA-Z\-]+\./) &&
+          url.pathname.match(/\/assets\/(\d{3,5}|[a-zA-Z\-]+)\./) &&
           !url.searchParams.has("inj") &&
           (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
 
@@ -185,7 +196,10 @@ class BrowserWindow extends ElectronBrowserWindow {
         const testScripts = (scripts: string[]) =>
           scripts.some((script) => url.pathname.startsWith(`/assets/${script}`));
         const shouldInit = hasUrl && testScripts(initScripts);
-        const shouldBlock = hasUrl && !testScripts(allowScripts);
+        const shouldBlock =
+          startupScripts.length > 0
+            ? hasUrl && startupScripts.includes(url.pathname) && !startupScriptsRan.has(url.pathname)
+            : hasUrl && !testScripts(allowScripts);
 
         if (shouldInit) {
           setTimeout(() => {
@@ -193,6 +207,8 @@ class BrowserWindow extends ElectronBrowserWindow {
             this.webContents.send(constants.ipcNodePreloadKickoff, [details.url]);
           }, 0);
         }
+
+        if (startupScripts.includes(url.pathname)) startupScriptsRan.add(url.pathname);
 
         if (shouldBlock) return cb({ cancel: true });
       }
