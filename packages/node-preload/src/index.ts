@@ -185,7 +185,8 @@ if (isOverlay) {
             }
           });
 
-          scripts.sort((a, b) => a.src.localeCompare(b.src));
+          // bruh.
+          if (moonlightNode.config.patchAll) scripts.sort((a, b) => a.src.localeCompare(b.src));
 
           ipcRenderer.sendSync(
             constants.ipcNodePreloadKickoff,
