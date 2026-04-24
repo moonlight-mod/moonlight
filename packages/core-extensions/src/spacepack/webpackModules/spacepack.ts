@@ -34,7 +34,16 @@ export const spacepack: Spacepack = {
       return func;
     }
 
-    const funcStr = func.toString();
+    let funcStr = func.toString();
+
+    if (!funcStr.startsWith("function")) {
+      const start = funcStr.indexOf("(");
+      if (start > -1) {
+        funcStr = `function${funcStr.substring(start)}`;
+      } else {
+        throw new Error(`Failed to find start of module "${module}"!`);
+      }
+    }
 
     return new Function(
       "module",
