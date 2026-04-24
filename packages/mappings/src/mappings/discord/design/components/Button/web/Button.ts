@@ -14,9 +14,10 @@ type Exports = {
       | "active"
       | "overlay-primary"
       | "overlay-secondary"
-      | "expressive";
+      | "expressive"
+      | "icon-only";
     size?: "md" | "sm";
-    text: ReactNode;
+    text?: ReactNode;
     icon?: ComponentType<IconProps>;
     iconPosition?: "start" | "end";
     iconOpticalOffsetMargin?: number;

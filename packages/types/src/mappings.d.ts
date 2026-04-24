@@ -300,6 +300,26 @@ declare module "@moonlight-mod/wp/discord/design/components/Clickable/web/Clicka
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/design/components/Form/web/Field" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Form/web/Field"]["default"];
+  export default _default;
+  export const splitFieldProps: MappedModules["discord/design/components/Form/web/Field"]["splitFieldProps"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Form/web/FieldSet" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Form/web/FieldSet"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Form/web/FieldSet.css" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const fieldset: MappedModules["discord/design/components/Form/web/FieldSet.css"]["fieldset"];
+  export const description: MappedModules["discord/design/components/Form/web/FieldSet.css"]["description"];
+  export const legend: MappedModules["discord/design/components/Form/web/FieldSet.css"]["legend"];
+}
+
 declare module "@moonlight-mod/wp/discord/design/components/Heading/Heading" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/design/components/Heading/Heading"]["default"];
@@ -314,6 +334,18 @@ declare module "@moonlight-mod/wp/discord/design/components/Modal/web/Modal" {
   export const ModalContent: MappedModules["discord/design/components/Modal/web/Modal"]["ModalContent"];
   export const ModalFooter: MappedModules["discord/design/components/Modal/web/Modal"]["ModalFooter"];
   export const ModalSize: MappedModules["discord/design/components/Modal/web/Modal"]["ModalSize"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Stack/Stack" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Stack/Stack"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Switch/web/VoidSwitch" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Switch/web/VoidSwitch"]["default"];
+  export default _default;
 }
 
 declare module "@moonlight-mod/wp/discord/design/components/TabBar/TabBar" {
@@ -638,6 +670,12 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/PlayIcon" {
 declare module "@moonlight-mod/wp/discord/modules/icons/web/ScreenIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/ScreenIcon"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/TrashIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/TrashIcon"]["default"];
   export default _default;
 }
 
