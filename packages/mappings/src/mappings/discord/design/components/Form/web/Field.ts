@@ -3,7 +3,7 @@ import type { AriaRole, ComponentType, PropsWithChildren, ReactNode, Ref } from 
 import register from "../../../../../../registry";
 import type { IconComponent } from "../../../../modules/icons/web/_types";
 
-type FieldProps = {
+export type FieldProps = {
   label?: ReactNode;
   hideLabel?: boolean;
   badge?: ReactNode;

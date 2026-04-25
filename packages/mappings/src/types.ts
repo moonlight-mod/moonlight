@@ -34,7 +34,9 @@ import type ManaConfirmModal from "./mappings/discord/design/components/Modal/we
 import type LegacyModal from "./mappings/discord/design/components/Modal/web/LegacyModal";
 import type Modal from "./mappings/discord/design/components/Modal/web/Modal";
 import type Notice from "./mappings/discord/design/components/Notice/web/Notice";
+import type NumberInputStepper from "./mappings/discord/design/components/NumberInput/web/NumberInputStepper";
 import type Popout from "./mappings/discord/design/components/Popout/web/Popout";
+import type Slider from "./mappings/discord/design/components/Slider/web/Slider";
 import type Stack from "./mappings/discord/design/components/Stack/Stack";
 import type ManaSwitch from "./mappings/discord/design/components/Switch/web/ManaSwitch";
 import type VoidSwitch from "./mappings/discord/design/components/Switch/web/VoidSwitch";
@@ -42,6 +44,7 @@ import type TabBar from "./mappings/discord/design/components/TabBar/TabBar";
 import type Text from "./mappings/discord/design/components/Text/Text";
 import type ThemeContext from "./mappings/discord/design/components/ThemeContextProvider/ThemeContext";
 import type VoidTooltip from "./mappings/discord/design/components/Tooltip/web/VoidTooltip";
+import type ManaTextArea from "./mappings/discord/design/mana/components/TextArea/web/TextArea";
 import type DiscordIntl from "./mappings/discord/intl";
 import type BaseRecord from "./mappings/discord/lib/BaseRecord";
 import type Storage from "./mappings/discord/lib/web/Storage";
@@ -161,7 +164,9 @@ export type MappedModules = {
   "discord/design/components/Modal/web/LegacyModal": LegacyModal;
   "discord/design/components/Modal/web/Modal": Modal;
   "discord/design/components/Notice/web/Notice": Notice;
+  "discord/design/components/NumberInput/web/NumberInputStepper": NumberInputStepper;
   "discord/design/components/Popout/web/Popout": Popout;
+  "discord/design/components/Slider/web/Slider": Slider;
   "discord/design/components/Stack/Stack": Stack;
   "discord/design/components/Switch/web/ManaSwitch": ManaSwitch;
   "discord/design/components/Switch/web/VoidSwitch": VoidSwitch;
@@ -169,6 +174,7 @@ export type MappedModules = {
   "discord/design/components/Text/Text": Text;
   "discord/design/components/ThemeContextProvider/ThemeContext": ThemeContext;
   "discord/design/components/Tooltip/web/VoidTooltip": VoidTooltip;
+  "discord/design/mana/components/TextArea/web/TextArea": ManaTextArea;
   "discord/intl": DiscordIntl;
   "discord/lib/BaseRecord": BaseRecord;
   "discord/lib/web/Storage": Storage;

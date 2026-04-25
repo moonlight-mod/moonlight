@@ -373,9 +373,21 @@ declare module "@moonlight-mod/wp/discord/design/components/Notice/web/Notice" {
   export const NoticeColors: MappedModules["discord/design/components/Notice/web/Notice"]["NoticeColors"];
 }
 
+declare module "@moonlight-mod/wp/discord/design/components/NumberInput/web/NumberInputStepper" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/NumberInput/web/NumberInputStepper"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/design/components/Popout/web/Popout" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/design/components/Popout/web/Popout"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Slider/web/Slider" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Slider/web/Slider"]["default"];
   export default _default;
 }
 
@@ -423,6 +435,12 @@ declare module "@moonlight-mod/wp/discord/design/components/Tooltip/web/VoidTool
   const _default: MappedModules["discord/design/components/Tooltip/web/VoidTooltip"]["default"];
   export default _default;
   export const Colors: MappedModules["discord/design/components/Tooltip/web/VoidTooltip"]["Colors"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/mana/components/TextArea/web/TextArea" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/mana/components/TextArea/web/TextArea"]["default"];
+  export default _default;
 }
 
 declare module "@moonlight-mod/wp/discord/intl" {

@@ -140,6 +140,10 @@ textarea.moonbase-resizeable {
   align-items: center;
 }
 
+.moonbase-settings-number-input > div[class^="value_"] {
+  width: unset !important;
+}
+
 /* Crash screen */
 .moonbase-crash-wrapper > [class^="buttons_"] {
   gap: 1rem;
