@@ -213,7 +213,7 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
                   shouldShow={ext.compat !== ExtensionCompat.Compatible || implicitlyEnabled}
                 >
                   {(props: any) => (
-                    <div {...props} stlye={{ maxWidth: "44px" }}>
+                    <div {...props} style={{ maxWidth: "44px" }}>
                       <Switch
                         hideLabel={true}
                         layout="vertical"
