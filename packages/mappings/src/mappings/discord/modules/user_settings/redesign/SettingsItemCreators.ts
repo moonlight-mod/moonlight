@@ -151,6 +151,10 @@ register((moonmap, lunast) => {
         type: ModuleExportType.Function,
         find: ".LIST,"
       });
+      moonmap.addExport(name, "createNestedPanelNavigator", {
+        type: ModuleExportType.Function,
+        find: ".NESTED_PANEL_NAVIGATOR,"
+      });
       moonmap.addExport(name, "createRelated", {
         type: ModuleExportType.Function,
         find: ".RELATED,"
@@ -177,7 +181,7 @@ register((moonmap, lunast) => {
       });
       moonmap.addExport(name, "createSelect", {
         type: ModuleExportType.Function,
-        find: ".SELECT,"
+        find: ".SELECT}"
       });
       moonmap.addExport(name, "createRadio", {
         type: ModuleExportType.Function,

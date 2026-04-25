@@ -150,8 +150,3 @@ const redesignSection = createSection("moonbase_section", {
   buildLayout: () => [redesignSidebarItem]
 });
 redesign.addSection(redesignSection, oldLocation ? "logout" : "profile_panel", oldLocation!);
-
-redesign.addAlias("moonbase", "moonbase_panel");
-for (const page of pages) {
-  redesign.addAlias(`moonbase-${page.id}`, "moonbase_panel");
-}

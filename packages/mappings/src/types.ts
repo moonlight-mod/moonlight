@@ -14,7 +14,6 @@ import type FileUpload from "./mappings/discord/components/common/FileUpload";
 import type HeaderBarCSS from "./mappings/discord/components/common/HeaderBar.css";
 import type HelpMessageCSS from "./mappings/discord/components/common/HelpMessage.css";
 import type Image from "./mappings/discord/components/common/Image";
-import type Components from "./mappings/discord/components/common/index";
 import type PanelButton from "./mappings/discord/components/common/PanelButton";
 import type ScrollerCSS from "./mappings/discord/components/common/Scroller.css";
 import type Select from "./mappings/discord/components/common/Select";
@@ -148,7 +147,6 @@ export type MappedModules = {
   "discord/components/common/PanelButton": PanelButton;
   "discord/components/common/Scroller.css": ScrollerCSS;
   "discord/components/common/Select": Select;
-  "discord/components/common/index": Components;
   "discord/components/modals/ConfirmModal": ConfirmModal;
   "discord/design/components/Breadcrumbs/web/Breadcrumbs": Breadcrumbs;
   "discord/design/components/Button/web/Button": Button;

@@ -16,7 +16,6 @@ const mappedTypes = {
   "discord/components/common/HeaderBar.css": "HeaderBarCSS",
   "discord/components/common/HelpMessage.css": "HelpMessageCSS",
   "discord/components/common/Image": "Image",
-  "discord/components/common/index": "Components",
   "discord/components/common/PanelButton": "PanelButton",
   "discord/components/common/Scroller.css": "ScrollerCSS",
   "discord/components/common/Select": "Select",

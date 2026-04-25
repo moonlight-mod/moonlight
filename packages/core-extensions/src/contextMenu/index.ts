@@ -3,16 +3,11 @@ import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 export const patches: Patch[] = [
   {
     find: "Menu API only allows Items and groups of Items as children.",
-    replace: [
-      {
-        match: /(?<=let{navId[^}]+?}=(.),.=).+?(?=,)/,
-        replacement: (items, props) => `require("contextMenu_contextMenu")._patchMenu(${props},${items})`
-      },
-      {
-        match: /(?<=})(?=function (\i)\(\i\){return \i\(\i\)\.reduce\()/,
-        replacement: (_, name) => `exports.__contextMenu_parse=${name};`
-      }
-    ]
+    replace: {
+      match: /(function \i\(\i\){let{navId[^}]+?}=(\i),\i=)(function \i\(\i\){return.+? instead`\)},\[\]\)})(\(\i\)),/,
+      replacement: (_, func, props, parser, children) =>
+        `;let _parser=${parser};exports.__contextMenu_parse=_parser;${func}require("contextMenu_contextMenu")._patchMenu(${props},_parser${children}),`
+    }
   },
   {
     find: ".getContextMenu(",

@@ -46,19 +46,18 @@ export const patches: Patch[] = [
 
   // add icon
   {
-    find: ",hasSpaceTerminator:",
-    replace: {
-      match: /(\i)\.type===/,
-      replacement: (orig, section) => `${section}.id!=="${APPLICATION_ID}"&&${orig}`
-    }
-  },
-  {
     find: /\.icon,bot:\i\.application\?\.bot,/,
-    replace: {
-      match: /(\.useMemo\(\(\)=>)((\i)\.type)/,
-      replacement: (_, before, after, section) =>
-        `${before}${section}.id==="${APPLICATION_ID}"?"https://moonlight-mod.github.io/favicon.png":${after}`
-    }
+    replace: [
+      {
+        match: /(?<==\i=>)(\i)\.type===/,
+        replacement: (orig, section) => `${section}.id!=="${APPLICATION_ID}"&&${orig}`
+      },
+      {
+        match: /(\.useMemo\(\(\)=>)((\i)\.type)/,
+        replacement: (_, before, after, section) =>
+          `${before}${section}.id==="${APPLICATION_ID}"?"https://moonlight-mod.github.io/favicon.png":${after}`
+      }
+    ]
   },
   // fix icon sizing because they expect built in to be 24 and others to be 32
   {

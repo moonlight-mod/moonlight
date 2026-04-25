@@ -7,13 +7,6 @@ export const patches: Patch[] = [
       match: /,(\i)=\(0,\i\.\i\)\({buildLayout:.+?,analyticsKey:"user_settings"}\)/,
       replacement: (orig, sections) => `${orig};require("settings_redesign").default._mutateSections(${sections});`
     }
-  },
-  {
-    find: 'type:"USER_SETTINGS_MODAL_OPEN",subsection:',
-    replace: {
-      match: ".DEVELOPER_OPTIONS_PANEL],",
-      replacement: '.DEVELOPER_OPTIONS_PANEL], ...Object.entries(require("settings_redesign").default.aliases),'
-    }
   }
 ];
 
