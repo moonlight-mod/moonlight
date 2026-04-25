@@ -1,16 +1,15 @@
-import { ModuleExportType } from "@moonlight-mod/moonmap";
-import type { ComponentType, Ref } from "react";
+import type { ComponentType } from "react";
 import register from "../../../../../../registry";
 import type { FieldComponentProps } from "../../Form/web/Field";
 
 type Exports = {
   default: ComponentType<
     {
-      onChange: (value: boolean) => void;
       checked?: boolean;
       disabled?: boolean;
+      id?: string;
+      onChange: (value: boolean) => void;
       focusProps?: any;
-      innerRef?: Ref<any>;
       hasIcon?: boolean;
     } & FieldComponentProps
   >;
@@ -18,18 +17,12 @@ type Exports = {
 export default Exports;
 
 register((moonmap) => {
-  const name = "discord/design/components/Switch/web/VoidSwitch";
-  const find = ".colors.SLIDER_TRACK_BACKGROUND).spring(),";
+  const name = "discord/design/components/Switch/web/ManaSwitch";
   moonmap.register({
     name,
-    find,
+    find: ".colors.SWITCH_BACKGROUND_DEFAULT).spring(),",
     process({ id }) {
       moonmap.addModule(id, name);
-
-      moonmap.addExport(name, "default", {
-        type: ModuleExportType.Function,
-        find
-      });
 
       return true;
     }

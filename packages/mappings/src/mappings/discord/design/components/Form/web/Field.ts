@@ -19,18 +19,16 @@ type FieldProps = {
   layoutConfig?: any;
 };
 
+export type FieldComponentProps = FieldProps & {
+  role?: AriaRole;
+  interactiveLabel?: boolean;
+  auxiliaryContentPosition?: "under-control" | "under-label";
+  trailingAuxiliaryContent?: ReactNode;
+  ref?: Ref<any>;
+};
+
 type Exports = {
-  default: ComponentType<
-    PropsWithChildren<
-      FieldProps & {
-        role?: AriaRole;
-        interactiveLabel?: boolean;
-        auxiliaryContentPosition?: "under-control" | "under-label";
-        trailingAuxiliaryContent?: ReactNode;
-        ref?: Ref<any>;
-      }
-    >
-  >;
+  default: ComponentType<PropsWithChildren<FieldComponentProps>>;
   splitFieldProps: (props: Record<string, any>) => { fieldProps: FieldProps; props: Record<string, any> };
 };
 export default Exports;

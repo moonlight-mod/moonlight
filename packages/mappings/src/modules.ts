@@ -43,6 +43,7 @@ import "./mappings/discord/design/components/Modal/web/Modal";
 import "./mappings/discord/design/components/Notice/web/Notice";
 import "./mappings/discord/design/components/Popout/web/Popout";
 import "./mappings/discord/design/components/Stack/Stack";
+import "./mappings/discord/design/components/Switch/web/ManaSwitch";
 import "./mappings/discord/design/components/Switch/web/VoidSwitch";
 import "./mappings/discord/design/components/TabBar/TabBar";
 import "./mappings/discord/design/components/Text/Text";

@@ -4,7 +4,7 @@ import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import Card from "@moonlight-mod/wp/discord/components/common/Card";
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
 import Button from "@moonlight-mod/wp/discord/design/components/Button/web/Button";
-import Switch from "@moonlight-mod/wp/discord/design/components/Switch/web/VoidSwitch";
+import Switch from "@moonlight-mod/wp/discord/design/components/Switch/web/ManaSwitch";
 import TabBar from "@moonlight-mod/wp/discord/design/components/TabBar/TabBar";
 import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 import Tooltip from "@moonlight-mod/wp/discord/design/components/Tooltip/web/VoidTooltip";
@@ -213,7 +213,7 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
                   shouldShow={ext.compat !== ExtensionCompat.Compatible || implicitlyEnabled}
                 >
                   {(props: any) => (
-                    <div {...props} style={{ maxWidth: "44px" }}>
+                    <div {...props} style={{ maxWidth: "48px" }}>
                       <Switch
                         hideLabel={true}
                         layout="vertical"

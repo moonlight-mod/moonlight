@@ -8,7 +8,7 @@ import Button from "@moonlight-mod/wp/discord/design/components/Button/web/Butto
 import Field from "@moonlight-mod/wp/discord/design/components/Form/web/Field";
 import FieldSetClasses from "@moonlight-mod/wp/discord/design/components/Form/web/FieldSet.css";
 import Stack from "@moonlight-mod/wp/discord/design/components/Stack/Stack";
-import Switch from "@moonlight-mod/wp/discord/design/components/Switch/web/VoidSwitch";
+import Switch from "@moonlight-mod/wp/discord/design/components/Switch/web/ManaSwitch";
 import CircleXIcon from "@moonlight-mod/wp/discord/modules/icons/web/CircleXIcon";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import TextInput from "@moonlight-mod/wp/discord/uikit/TextInput";

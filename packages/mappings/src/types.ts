@@ -2,9 +2,10 @@
 import type ChromaJS from "./mappings/chroma-js";
 import type classnames from "./mappings/classnames";
 import type DependencyGraph from "./mappings/dependency-graph";
+import type Constants from "./mappings/discord/Constants";
+import type DispatcherInstance from "./mappings/discord/Dispatcher";
 import type ContextMenuActionCreators from "./mappings/discord/actions/ContextMenuActionCreators";
 import type UserSettingsModalActionCreators from "./mappings/discord/actions/UserSettingsModalActionCreators";
-import type Constants from "./mappings/discord/Constants";
 import type AppStartPerformance from "./mappings/discord/common/AppStartPerformance";
 import type Alerts from "./mappings/discord/components/common/Alerts";
 import type BaseHeaderBar from "./mappings/discord/components/common/BaseHeaderBar";
@@ -14,12 +15,11 @@ import type FileUpload from "./mappings/discord/components/common/FileUpload";
 import type HeaderBarCSS from "./mappings/discord/components/common/HeaderBar.css";
 import type HelpMessageCSS from "./mappings/discord/components/common/HelpMessage.css";
 import type Image from "./mappings/discord/components/common/Image";
-import type Components from "./mappings/discord/components/common/index";
 import type PanelButton from "./mappings/discord/components/common/PanelButton";
 import type ScrollerCSS from "./mappings/discord/components/common/Scroller.css";
 import type Select from "./mappings/discord/components/common/Select";
+import type Components from "./mappings/discord/components/common/index";
 import type ConfirmModal from "./mappings/discord/components/modals/ConfirmModal";
-import type DispatcherInstance from "./mappings/discord/Dispatcher";
 import type Breadcrumbs from "./mappings/discord/design/components/Breadcrumbs/web/Breadcrumbs";
 import type Button from "./mappings/discord/design/components/Button/web/Button";
 import type TextButton from "./mappings/discord/design/components/Button/web/TextButton";
@@ -34,6 +34,7 @@ import type Modal from "./mappings/discord/design/components/Modal/web/Modal";
 import type Notice from "./mappings/discord/design/components/Notice/web/Notice";
 import type Popout from "./mappings/discord/design/components/Popout/web/Popout";
 import type Stack from "./mappings/discord/design/components/Stack/Stack";
+import type ManaSwitch from "./mappings/discord/design/components/Switch/web/ManaSwitch";
 import type VoidSwitch from "./mappings/discord/design/components/Switch/web/VoidSwitch";
 import type TabBar from "./mappings/discord/design/components/TabBar/TabBar";
 import type Text from "./mappings/discord/design/components/Text/Text";
@@ -88,25 +89,25 @@ import type MessageCSS from "./mappings/discord/modules/messages/web/Message.css
 import type Modals from "./mappings/discord/modules/modals/Modals";
 import type Oauth2 from "./mappings/discord/modules/oauth2/index";
 import type PeoplePageCSS from "./mappings/discord/modules/people/web/PeoplePage.css";
+import type UserSettings from "./mappings/discord/modules/user_settings/UserSettings";
 import type SettingsItemConstants from "./mappings/discord/modules/user_settings/redesign/SettingsItemConstants";
 import type SettingsItemCreators from "./mappings/discord/modules/user_settings/redesign/SettingsItemCreators";
-import type UserSettings from "./mappings/discord/modules/user_settings/UserSettings";
 import type Flux from "./mappings/discord/packages/flux";
 import type BatchedStoreListener from "./mappings/discord/packages/flux/BatchedStoreListener";
 import type ChangeListeners from "./mappings/discord/packages/flux/ChangeListeners";
-import type connectStores from "./mappings/discord/packages/flux/connectStores";
 import type _Dispatcher from "./mappings/discord/packages/flux/Dispatcher";
 import type Emitter from "./mappings/discord/packages/flux/Emitter";
 import type LoggingUtils from "./mappings/discord/packages/flux/LoggingUtils";
 import type PersistedStore from "./mappings/discord/packages/flux/PersistedStore";
 import type Store from "./mappings/discord/packages/flux/Store";
+import type connectStores from "./mappings/discord/packages/flux/connectStores";
 import type Tokens from "./mappings/discord/packages/tokens";
 import type UserRecord from "./mappings/discord/records/UserRecord";
 import type MarginsCSS from "./mappings/discord/styles/shared/Margins.css";
 import type Flex from "./mappings/discord/uikit/Flex";
-import type LegacyButton from "./mappings/discord/uikit/legacy/Button";
 import type OverflowTooltip from "./mappings/discord/uikit/OverflowTooltip";
 import type TextInput from "./mappings/discord/uikit/TextInput";
+import type LegacyButton from "./mappings/discord/uikit/legacy/Button";
 import type ClipboardUtils from "./mappings/discord/utils/ClipboardUtils";
 import type ComponentDispatchUtils from "./mappings/discord/utils/ComponentDispatchUtils";
 import type DateUtils from "./mappings/discord/utils/DateUtils";
@@ -124,7 +125,7 @@ import type UUID from "./mappings/uuid/v4";
 
 export type MappedModules = {
   "chroma-js": ChromaJS;
-  classnames: classnames;
+  "classnames": classnames;
   "dependency-graph": DependencyGraph;
   "discord/Constants": Constants;
   "discord/Dispatcher": DispatcherInstance;
@@ -158,6 +159,7 @@ export type MappedModules = {
   "discord/design/components/Notice/web/Notice": Notice;
   "discord/design/components/Popout/web/Popout": Popout;
   "discord/design/components/Stack/Stack": Stack;
+  "discord/design/components/Switch/web/ManaSwitch": ManaSwitch;
   "discord/design/components/Switch/web/VoidSwitch": VoidSwitch;
   "discord/design/components/TabBar/TabBar": TabBar;
   "discord/design/components/Text/Text": Text;
@@ -240,11 +242,13 @@ export type MappedModules = {
   "discord/utils/UserUtils": UserUtils;
   "highlight.js": HighlightJS;
   "highlight.js/lib/core": HighlightJSCore;
-  lodash: lodash;
-  murmurhash: murmurhash;
+  "lodash": lodash;
+  "murmurhash": murmurhash;
   "platform.js": PlatformJS;
-  react: React;
+  "react": React;
   "uuid/v4": UUID;
 };
 
-export declare function WebpackRequire<T extends keyof MappedModules>(module: T): MappedModules[T];
+export declare function WebpackRequire<T extends keyof MappedModules>(
+  module: T
+): MappedModules[T];
