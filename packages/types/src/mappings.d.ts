@@ -1,6 +1,5 @@
 // auto-generated
-declare module "@moonlight-mod/wp/chroma-js" {
-}
+declare module "@moonlight-mod/wp/chroma-js" {}
 
 declare module "@moonlight-mod/wp/classnames" {
   import { MappedModules } from "@moonlight-mod/mappings";
@@ -1303,8 +1302,7 @@ declare module "@moonlight-mod/wp/highlight.js/lib/core" {
   export const UNDERSCORE_TITLE_MODE: MappedModules["highlight.js/lib/core"]["UNDERSCORE_TITLE_MODE"];
 }
 
-declare module "@moonlight-mod/wp/lodash" {
-}
+declare module "@moonlight-mod/wp/lodash" {}
 
 declare module "@moonlight-mod/wp/murmurhash" {
   import { MappedModules } from "@moonlight-mod/mappings";
@@ -1332,6 +1330,4 @@ declare module "@moonlight-mod/wp/react" {
   export = _;
 }
 
-declare module "@moonlight-mod/wp/uuid/v4" {
-}
-
+declare module "@moonlight-mod/wp/uuid/v4" {}
