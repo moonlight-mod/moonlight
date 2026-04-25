@@ -1,5 +1,5 @@
 import { ExtensionTag } from "@moonlight-mod/types";
-import { Text } from "@moonlight-mod/wp/discord/components/common/index";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 
 import React from "@moonlight-mod/wp/react";
 import type { MoonbaseExtension } from "../../../types";

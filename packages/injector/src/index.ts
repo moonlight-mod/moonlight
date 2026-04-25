@@ -24,10 +24,10 @@ let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
 let blockedUrls: RegExp[] = [];
 let injectorConfig: InjectorConfig | undefined;
-let startupScripts: string[] = [];
-const startupScriptsRan = new Set<string>();
+let initCalled = false;
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
+  initCalled = true;
   e.returnValue = oldPreloadPath;
 });
 
@@ -37,8 +37,7 @@ ipcMain.on(constants.ipcGetAppData, (e) => {
 ipcMain.on(constants.ipcGetInjectorConfig, (e) => {
   e.returnValue = injectorConfig;
 });
-ipcMain.on(constants.ipcNodePreloadKickoff, (e, scripts: string[]) => {
-  startupScripts = scripts.map((s) => new URL(s).pathname);
+ipcMain.on(constants.ipcNodePreloadKickoff, (e) => {
   e.returnValue = true;
 });
 ipcMain.handle(constants.ipcMessageBox, (_, opts) => {
@@ -144,8 +143,7 @@ class BrowserWindow extends ElectronBrowserWindow {
     }
 
     this.webContents.on("did-navigate", () => {
-      startupScripts = [];
-      startupScriptsRan.clear();
+      initCalled = false;
     });
 
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
@@ -196,10 +194,7 @@ class BrowserWindow extends ElectronBrowserWindow {
         const testScripts = (scripts: string[]) =>
           scripts.some((script) => url.pathname.startsWith(`/assets/${script}`));
         const shouldInit = hasUrl && testScripts(initScripts);
-        const shouldBlock =
-          startupScripts.length > 0
-            ? hasUrl && startupScripts.includes(url.pathname) && !startupScriptsRan.has(url.pathname)
-            : hasUrl && !testScripts(allowScripts);
+        const shouldBlock = hasUrl && !testScripts(allowScripts);
 
         if (shouldInit) {
           setTimeout(() => {
@@ -208,9 +203,7 @@ class BrowserWindow extends ElectronBrowserWindow {
           }, 0);
         }
 
-        if (startupScripts.includes(url.pathname)) startupScriptsRan.add(url.pathname);
-
-        if (shouldBlock) return cb({ cancel: true });
+        if (shouldBlock && !initCalled) return cb({ cancel: true });
       }
 
       // Allow plugins to block some URLs,

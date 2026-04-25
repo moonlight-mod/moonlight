@@ -17,10 +17,10 @@ type HumanizeStatus = (
 
 type UseDirectMessageRecipient = (channel: any) => UserRecord; // FIXME: ChannelRecord
 
-type AgeRange = {
+/*type AgeRange = {
   minDaysOld?: number;
   maxDaysOld: number;
-};
+};*/
 
 type Exports = {
   default: {
@@ -41,7 +41,7 @@ type Exports = {
   //getGlobalName: GenericUserToString;
   //getFormattedName: GenericUserToString;
   humanizeStatus: HumanizeStatus;
-  accountAgeInRange: (user: UserRecord, range: AgeRange) => boolean;
+  //accountAgeInRange: (user: UserRecord, range: AgeRange) => boolean;
   ageEligibleForPremiumUpsell: GenericUserToBool;
   isNewUser: GenericUserToBool;
   getUserTag: GenericUserToString;
@@ -85,10 +85,11 @@ register((moonmap) => {
         type: ModuleExportType.Function,
         find: ":{},{isMobile:"
       });
-      moonmap.addExport(name, "accountAgeInRange", {
+      // treeshaken
+      /*moonmap.addExport(name, "accountAgeInRange", {
         type: ModuleExportType.Function,
         find: ".createdAt.getTime();return"
-      });
+      });*/
       moonmap.addExport(name, "ageEligibleForPremiumUpsell", {
         type: ModuleExportType.Function,
         find: "maxDaysOld:30"

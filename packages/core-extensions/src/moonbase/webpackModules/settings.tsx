@@ -114,6 +114,15 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
 const redesignTitle = () => "moonlight";
 const redesignPanel = createPanel("moonbase_panel", {
   useTitle: redesignTitle,
+  decoration: {
+    type: 0, // DecorationTypes.STRONGLY_DISCOURAGED_CUSTOM,
+    component: () => (
+      <ErrorBoundary>
+        <Update />
+        <RestartAdviceMessage />
+      </ErrorBoundary>
+    )
+  },
   buildLayout: () =>
     pages.map((page) =>
       createTabItem(`moonbase_tab-${page.id}`, {
@@ -122,9 +131,6 @@ const redesignPanel = createPanel("moonbase_panel", {
           createCustom(`moonbase_tab-${page.id}_content`, {
             Component: () => (
               <ErrorBoundary>
-                <RestartAdviceMessage />
-                <Update />
-
                 <page.element />
               </ErrorBoundary>
             )

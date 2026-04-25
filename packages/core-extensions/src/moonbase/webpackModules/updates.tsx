@@ -5,6 +5,8 @@ import Notices from "@moonlight-mod/wp/notices_notices";
 import React from "@moonlight-mod/wp/react";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 
+const logger = moonlight.getLogger("moonbase");
+
 function plural(str: string, num: number) {
   return `${str}${num > 1 ? "s" : ""}`;
 }
@@ -56,8 +58,10 @@ function listener() {
           name: "Open Moonbase",
           onClick: () => {
             const openUserSettings =
-              spacepack.findByCode(`type:"USER_SETTINGS_MODAL_OPEN",section:`)[0]?.exports?.openUserSettings ??
-              (() => {});
+              spacepack.findByCode("USER_SETTINGS_MODAL_KEY:()=>")[0]?.exports?.openUserSettings ??
+              (() => {
+                logger.error("openUserSettings not found");
+              });
             openUserSettings("moonbase_panel");
             return true;
           }

@@ -1,39 +1,34 @@
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { constants, ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
-import {
-  AngleBracketsIcon,
-  Card,
-  ChannelListIcon,
-  DownloadIcon,
-  FormSwitch,
-  HeartIcon,
-  ScienceIcon,
-  TabBar,
-  Text,
-  Tooltip,
-  TrashIcon,
-  WarningIcon
-} from "@moonlight-mod/wp/discord/components/common/index";
+import Card from "@moonlight-mod/wp/discord/components/common/Card";
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
+import Button from "@moonlight-mod/wp/discord/design/components/Button/web/Button";
+import Switch from "@moonlight-mod/wp/discord/design/components/Switch/web/VoidSwitch";
+import TabBar from "@moonlight-mod/wp/discord/design/components/TabBar/TabBar";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
+import Tooltip from "@moonlight-mod/wp/discord/design/components/Tooltip/web/VoidTooltip";
 import BuildOverrideClasses from "@moonlight-mod/wp/discord/modules/build_overrides/web/BuildOverride.css";
 import DiscoveryClasses from "@moonlight-mod/wp/discord/modules/discovery/web/Discovery.css";
 import AppCardClasses from "@moonlight-mod/wp/discord/modules/guild_settings/web/AppCard.css";
+import AngleBracketsIcon from "@moonlight-mod/wp/discord/modules/icons/web/AngleBracketsIcon";
+import ChannelListIcon from "@moonlight-mod/wp/discord/modules/icons/web/ChannelListIcon";
+import DownloadIcon from "@moonlight-mod/wp/discord/modules/icons/web/DownloadIcon";
+import HeartIcon from "@moonlight-mod/wp/discord/modules/icons/web/HeartIcon";
+import ScienceIcon from "@moonlight-mod/wp/discord/modules/icons/web/ScienceIcon";
+import TrashIcon from "@moonlight-mod/wp/discord/modules/icons/web/TrashIcon";
+import WarningIcon from "@moonlight-mod/wp/discord/modules/icons/web/WarningIcon";
+import WindowTopOutlineIcon from "@moonlight-mod/wp/discord/modules/icons/web/WindowTopOutlineIcon";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
-import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import { ExtensionState } from "../../../types";
 import ExtensionInfo from "./info";
 import { doGenericExtensionPopup, doMissingExtensionPopup } from "./popup";
 import Settings from "./settings";
-
-// FIXME: path this module
-const { WindowTopOutlineIcon } = spacepack.findByCode("AppleNeutralIcon:")[0].exports;
 
 export enum ExtensionPage {
   Info,
@@ -156,26 +151,26 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
                 shouldShow={conflicting || ext.compat !== ExtensionCompat.Compatible}
               >
                 {(props: any) => (
-                  <Button
-                    {...props}
-                    color={Button.Colors.BRAND}
-                    submitting={busy}
-                    disabled={ext.compat !== ExtensionCompat.Compatible || conflicting}
-                    onClick={async () => {
-                      await MoonbaseSettingsStore.installExtension(uniqueId);
-                      const deps = await MoonbaseSettingsStore.getDependencies(uniqueId);
-                      if (deps != null) {
-                        await doMissingExtensionPopup(deps);
-                      }
+                  <div {...props}>
+                    <Button
+                      text="Install"
+                      variant="primary"
+                      loading={busy}
+                      disabled={ext.compat !== ExtensionCompat.Compatible || conflicting}
+                      onClick={async () => {
+                        await MoonbaseSettingsStore.installExtension(uniqueId);
+                        const deps = await MoonbaseSettingsStore.getDependencies(uniqueId);
+                        if (deps != null) {
+                          await doMissingExtensionPopup(deps);
+                        }
 
-                      // Don't auto enable dangerous extensions
-                      if (!ext.manifest?.meta?.tags?.includes(ExtensionTag.DangerZone)) {
-                        MoonbaseSettingsStore.setExtensionEnabled(uniqueId, true);
-                      }
-                    }}
-                  >
-                    Install
-                  </Button>
+                        // Don't auto enable dangerous extensions
+                        if (!ext.manifest?.meta?.tags?.includes(ExtensionTag.DangerZone)) {
+                          MoonbaseSettingsStore.setExtensionEnabled(uniqueId, true);
+                        }
+                      }}
+                    />
+                  </div>
                 )}
               </Tooltip>
             ) : (
@@ -200,48 +195,57 @@ export default function ExtensionCard({ uniqueId, selectTag }: { uniqueId: numbe
                   />
                 )}
 
-                <FormSwitch
-                  checked={ext.compat === ExtensionCompat.Compatible && (enabled || implicitlyEnabled)}
-                  disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
-                  // FIXME this no longer works!!!
-                  /*tooltipNote={
-                  ext.compat !== ExtensionCompat.Compatible ? (
-                    COMPAT_TEXT_MAP[ext.compat]
-                  ) : implicitlyEnabled ? (
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                      <div>{`This extension is a dependency of the following enabled extension${
-                        enabledDependants.length > 1 ? "s" : ""
-                      }:`}</div>
-                      {enabledDependants.map((dep) => (
-                        <div>{"• " + (dep.manifest.meta?.name ?? dep.id)}</div>
-                      ))}
-                    </div>
-                  ) : undefined
-                }*/
-                  onChange={() => {
-                    const toggle = () => {
-                      MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
-                    };
+                <Tooltip
+                  text={
+                    ext.compat !== ExtensionCompat.Compatible ? (
+                      COMPAT_TEXT_MAP[ext.compat]
+                    ) : implicitlyEnabled ? (
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <div>{`This extension is a dependency of the following enabled extension${
+                          enabledDependants.length > 1 ? "s" : ""
+                        }:`}</div>
+                        {enabledDependants.map((dep) => (
+                          <div>{`• ${dep.manifest.meta?.name ?? dep.id}`}</div>
+                        ))}
+                      </div>
+                    ) : null
+                  }
+                  shouldShow={ext.compat !== ExtensionCompat.Compatible || implicitlyEnabled}
+                >
+                  {(props: any) => (
+                    <div {...props} stlye={{ maxWidth: "44px" }}>
+                      <Switch
+                        hideLabel={true}
+                        layout="vertical"
+                        checked={ext.compat === ExtensionCompat.Compatible && (enabled || implicitlyEnabled)}
+                        disabled={implicitlyEnabled || ext.compat !== ExtensionCompat.Compatible}
+                        onChange={() => {
+                          const toggle = () => {
+                            MoonbaseSettingsStore.setExtensionEnabled(uniqueId, !enabled);
+                          };
 
-                    if (enabled && constants.builtinExtensions.includes(ext.id)) {
-                      doGenericExtensionPopup(
-                        "Built in extension",
-                        "This extension is enabled by default. Disabling it might have consequences. Are you sure you want to disable it?",
-                        uniqueId,
-                        toggle
-                      );
-                    } else if (!enabled && ext.manifest?.meta?.tags?.includes(ExtensionTag.DangerZone)) {
-                      doGenericExtensionPopup(
-                        "Dangerous extension",
-                        "This extension is marked as dangerous. Enabling it might have consequences. Are you sure you want to enable it?",
-                        uniqueId,
-                        toggle
-                      );
-                    } else {
-                      toggle();
-                    }
-                  }}
-                />
+                          if (enabled && constants.builtinExtensions.includes(ext.id)) {
+                            doGenericExtensionPopup(
+                              "Built in extension",
+                              "This extension is enabled by default. Disabling it might have consequences. Are you sure you want to disable it?",
+                              uniqueId,
+                              toggle
+                            );
+                          } else if (!enabled && ext.manifest?.meta?.tags?.includes(ExtensionTag.DangerZone)) {
+                            doGenericExtensionPopup(
+                              "Dangerous extension",
+                              "This extension is marked as dangerous. Enabling it might have consequences. Are you sure you want to enable it?",
+                              uniqueId,
+                              toggle
+                            );
+                          } else {
+                            toggle();
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </Tooltip>
               </>
             )}
           </div>

@@ -1,8 +1,10 @@
 import { ExtensionCompat } from "@moonlight-mod/core/extension/loader";
 import { ExtensionLoadSource, ExtensionTag } from "@moonlight-mod/types";
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
-import { CircleInformationIcon, FormDivider, XSmallIcon } from "@moonlight-mod/wp/discord/components/common/index";
 import PanelButton from "@moonlight-mod/wp/discord/components/common/PanelButton";
+import Divider from "@moonlight-mod/wp/discord/design/components/Divider/Divider";
+import CircleInformationIcon from "@moonlight-mod/wp/discord/modules/icons/web/CircleInformationIcon";
+import XSmallIcon from "@moonlight-mod/wp/discord/modules/icons/web/XSmallIcon";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
@@ -143,7 +145,7 @@ export default function ExtensionsPage() {
         </ErrorBoundary>
       ))}
       {filteredWithUpdates.length > 0 && filteredWithoutUpdates.length > 0 && (
-        <FormDivider className="moonbase-update-divider" />
+        <Divider className="moonbase-update-divider" gap="16px" />
       )}
       {filteredWithoutUpdates.map((ext) => (
         <ErrorBoundary>

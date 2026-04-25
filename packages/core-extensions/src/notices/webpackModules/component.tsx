@@ -1,7 +1,11 @@
 import type { Notice as NoticeType } from "@moonlight-mod/types/coreExtensions/notices";
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
-import { Notice, NoticeCloseButton, PrimaryCTANoticeButton } from "@moonlight-mod/wp/discord/components/common/index";
 import Dispatcher from "@moonlight-mod/wp/discord/Dispatcher";
+import {
+  Notice,
+  NoticeCloseButton,
+  PrimaryCTANoticeButton
+} from "@moonlight-mod/wp/discord/design/components/Notice/web/Notice";
 import { useStateFromStoresObject } from "@moonlight-mod/wp/discord/packages/flux";
 import NoticesStore from "@moonlight-mod/wp/notices_notices";
 import React from "@moonlight-mod/wp/react";

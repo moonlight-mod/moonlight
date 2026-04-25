@@ -84,8 +84,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
         ext: "spacepack",
         id: "spacepack"
       },
-      { id: "discord/Constants" },
-      { id: "discord/components/common/index" }
+      { id: "discord/Constants" }
     ],
     entrypoint: true
   },

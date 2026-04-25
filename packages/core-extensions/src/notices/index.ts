@@ -34,7 +34,7 @@ export const webpackModules: Record<string, ExtensionWebpackModule> = {
     dependencies: [
       { id: "react" },
       { id: "discord/Dispatcher" },
-      { id: "discord/components/common/index" },
+      { id: "discord/design/components/Notice/web/Notice" },
       { id: "discord/packages/flux" },
       { ext: "notices", id: "notices" }
     ]

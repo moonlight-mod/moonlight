@@ -1,38 +1,48 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
-import type { AriaRole, ComponentType, CSSProperties, PropsWithChildren, ReactNode, Ref } from "react";
+import type {
+  AriaRole,
+  ButtonHTMLAttributes,
+  ComponentType,
+  CSSProperties,
+  PropsWithChildren,
+  ReactNode,
+  Ref
+} from "react";
 import register from "../../../../../../registry";
 import type { IconProps } from "../../../../modules/icons/web/_types";
 
 type Exports = {
-  default: ComponentType<{
-    role?: AriaRole;
-    variant?:
-      | "primary"
-      | "secondary"
-      | "critical-primary"
-      | "critical-secondary"
-      | "active"
-      | "overlay-primary"
-      | "overlay-secondary"
-      | "expressive"
-      | "icon-only";
-    size?: "md" | "sm";
-    text?: ReactNode;
-    icon?: ComponentType<IconProps>;
-    iconPosition?: "start" | "end";
-    iconOpticalOffsetMargin?: number;
-    fullWidth?: boolean;
-    focusProps?: PropsWithChildren<any>;
-    loading?: boolean;
-    loadingStartedLabel?: ReactNode;
-    loadingFinishedLabel?: ReactNode;
-    rounded?: boolean;
-    className?: string;
-    style?: CSSProperties;
-    buttonRef?: Ref<any>;
-    disabled?: boolean;
-    onClick: () => void;
-  }>;
+  default: ComponentType<
+    {
+      role?: AriaRole;
+      variant?:
+        | "primary"
+        | "secondary"
+        | "critical-primary"
+        | "critical-secondary"
+        | "active"
+        | "overlay-primary"
+        | "overlay-secondary"
+        | "expressive"
+        | "icon-only";
+      size?: "md" | "sm";
+      text?: ReactNode;
+      icon?: ComponentType<IconProps>;
+      iconPosition?: "start" | "end";
+      iconOpticalOffsetMargin?: number;
+      fullWidth?: boolean;
+      focusProps?: PropsWithChildren<any>;
+      loading?: boolean;
+      loadingStartedLabel?: ReactNode;
+      loadingFinishedLabel?: ReactNode;
+      rounded?: boolean;
+      className?: string;
+      style?: CSSProperties;
+      buttonRef?: Ref<any>;
+      disabled?: boolean;
+      onClick?: () => void;
+    } & ButtonHTMLAttributes<HTMLButtonElement>
+  >;
 };
 export default Exports;
 

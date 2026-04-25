@@ -188,17 +188,14 @@ if (isOverlay) {
           // bruh.
           if (moonlightNode.config.patchAll) scripts.sort((a, b) => a.src.localeCompare(b.src));
 
-          ipcRenderer.sendSync(
-            constants.ipcNodePreloadKickoff,
-            scripts.map((script) => script.src)
-          );
-
           for (const script of scripts) {
             const newScript = document.createElement("script");
             for (const attr of script.attributes) {
               if (attr.name === "src") attr.value += "?inj";
               newScript.setAttribute(attr.name, attr.value);
             }
+
+            if (script.src.includes("/assets/web.")) ipcRenderer.sendSync(constants.ipcNodePreloadKickoff);
 
             script.remove();
             document.documentElement.appendChild(newScript);

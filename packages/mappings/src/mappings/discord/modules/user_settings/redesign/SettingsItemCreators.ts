@@ -57,11 +57,20 @@ export type SidebarItemProps = {
   )*/;
 } & GenericProps;
 
+export enum DecorationTypes {
+  STRONGLY_DISCOURAGED_CUSTOM,
+  INLINE_NOTICE
+}
+
 export type PanelProps = {
   useBadge?: React.FC<any>;
   notice: {
     stores: Store<any>[];
     element: React.FunctionComponent;
+  };
+  decoration: {
+    type: DecorationTypes.STRONGLY_DISCOURAGED_CUSTOM;
+    component: React.FC<any>;
   };
 } & GenericProps;
 

@@ -1,18 +1,16 @@
 import { WindowStore } from "@moonlight-mod/wp/common_stores";
 import { MenuCheckboxItem, MenuGroup, MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
-import {
-  ArrowsUpDownIcon,
-  ChevronSmallDownIcon,
-  ChevronSmallUpIcon,
-  Dialog,
-  Heading,
-  Menu,
-  Popout,
-  RetryIcon,
-  Text,
-  Tooltip
-} from "@moonlight-mod/wp/discord/components/common/index";
+import Dialog from "@moonlight-mod/wp/discord/design/components/Dialog/web/Dialog";
+import Heading from "@moonlight-mod/wp/discord/design/components/Heading/Heading";
+import Popout from "@moonlight-mod/wp/discord/design/components/Popout/web/Popout";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
+import Tooltip from "@moonlight-mod/wp/discord/design/components/Tooltip/web/VoidTooltip";
 import TagItem from "@moonlight-mod/wp/discord/modules/forums/web/Tag";
+import ArrowsUpDownIcon from "@moonlight-mod/wp/discord/modules/icons/web/ArrowsUpDownIcon";
+import ChevronSmallDownIcon from "@moonlight-mod/wp/discord/modules/icons/web/ChevronSmallDownIcon";
+import ChevronSmallUpIcon from "@moonlight-mod/wp/discord/modules/icons/web/ChevronSmallUpIcon";
+import RetryIcon from "@moonlight-mod/wp/discord/modules/icons/web/RetryIcon";
+import { Menu } from "@moonlight-mod/wp/discord/modules/menus/web/Menu";
 import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import { Button } from "@moonlight-mod/wp/discord/uikit/legacy/Button";
