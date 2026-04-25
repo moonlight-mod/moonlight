@@ -1,21 +1,28 @@
-import { ModuleExportType } from "@moonlight-mod/moonmap";
+import type { PropsWithChildren, ReactNode, Ref } from "react";
 import register from "../../../../../../registry";
+import type { ButtonProps } from "../../Button/web/Button";
 
-export enum ModalSize {
-  SMALL = "small",
-  MEDIUM = "medium",
-  LARGE = "large",
-  DYNAMIC = "dynamic"
-}
+export type ModalProps = {
+  size?: "md" | "sm";
+  title?: ReactNode;
+  subtitle?: ReactNode;
+  input?: ReactNode;
+  preview?: ReactNode;
+  actions?: ButtonProps[];
+  actionBarInput?: ReactNode;
+  actionBarInputLayout?: "default" | "chat-input";
+  listProps?: any;
+  notice?: {
+    message?: ReactNode;
+    type?: "critical" | "warning" | "info" | "success";
+  };
+  onScroll?: () => void;
+  scrollerRef?: Ref<any>;
+  transitionState?: number | null;
+};
 
-// FIXME: proper types
 type Exports = {
-  ModalRoot: React.ComponentType<any>;
-  ModalHeader: React.ComponentType<any>;
-  ModalCloseButton: React.ComponentType<any>;
-  ModalContent: React.ComponentType<any>;
-  ModalFooter: React.ComponentType<any>;
-  ModalSize: typeof ModalSize;
+  Modal: React.ComponentType<PropsWithChildren<ModalProps>>;
 };
 export default Exports;
 
@@ -23,36 +30,9 @@ register((moonmap) => {
   const name = "discord/design/components/Modal/web/Modal";
   moonmap.register({
     name,
-    find: ".withCircleBackground",
+    find: "{Modal:()=>",
     process({ id }) {
       moonmap.addModule(id, name);
-
-      moonmap.addExport(name, "ModalRoot", {
-        type: ModuleExportType.Function,
-        find: ",fullscreenOnMobile:"
-      });
-      moonmap.addExport(name, "ModalHeader", {
-        type: ModuleExportType.Function,
-        find: "let{headerId:"
-      });
-      moonmap.addExport(name, "ModalCloseButton", {
-        type: ModuleExportType.Function,
-        find: ".withCircleBackground"
-      });
-      moonmap.addExport(name, "ModalContent", {
-        type: ModuleExportType.Function,
-        find: ",scrollbarType:"
-      });
-      moonmap.addExport(name, "ModalFooter", {
-        type: ModuleExportType.Function,
-        find: ".separator??!0"
-      });
-      moonmap.addExport(name, "ModalSize", {
-        type: ModuleExportType.Key,
-        find: "DYNAMIC"
-      });
-
-      // FIXME: ModalScroller(?), some other type thing (default/subtle) that isnt even used by anything lol
 
       return true;
     }

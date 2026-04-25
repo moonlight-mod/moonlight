@@ -30,6 +30,8 @@ import type Field from "./mappings/discord/design/components/Form/web/Field";
 import type FieldSet from "./mappings/discord/design/components/Form/web/FieldSet";
 import type FieldSetCSS from "./mappings/discord/design/components/Form/web/FieldSet.css";
 import type Heading from "./mappings/discord/design/components/Heading/Heading";
+import type ManaConfirmModal from "./mappings/discord/design/components/Modal/web/ConfirmModal";
+import type LegacyModal from "./mappings/discord/design/components/Modal/web/LegacyModal";
 import type Modal from "./mappings/discord/design/components/Modal/web/Modal";
 import type Notice from "./mappings/discord/design/components/Notice/web/Notice";
 import type Popout from "./mappings/discord/design/components/Popout/web/Popout";
@@ -155,6 +157,8 @@ export type MappedModules = {
   "discord/design/components/Form/web/FieldSet": FieldSet;
   "discord/design/components/Form/web/FieldSet.css": FieldSetCSS;
   "discord/design/components/Heading/Heading": Heading;
+  "discord/design/components/Modal/web/ConfirmModal": ManaConfirmModal;
+  "discord/design/components/Modal/web/LegacyModal": LegacyModal;
   "discord/design/components/Modal/web/Modal": Modal;
   "discord/design/components/Notice/web/Notice": Notice;
   "discord/design/components/Popout/web/Popout": Popout;

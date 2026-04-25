@@ -1,23 +1,14 @@
 // TODO: clean up the styling here
 
 import { ExtensionLoadSource } from "@moonlight-mod/types";
-import { Text } from "@moonlight-mod/wp/discord/components/common/index";
 import { SingleSelect } from "@moonlight-mod/wp/discord/components/common/Select";
+import { ConfirmModal } from "@moonlight-mod/wp/discord/design/components/Modal/web/ConfirmModal";
+import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 import { openModalLazy } from "@moonlight-mod/wp/discord/modules/modals/Modals";
 import Flex from "@moonlight-mod/wp/discord/uikit/Flex";
 import { MoonbaseSettingsStore } from "@moonlight-mod/wp/moonbase_stores";
 import React from "@moonlight-mod/wp/react";
-import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
 import type { MoonbaseExtension } from "../../../types";
-
-let ConfirmModal: typeof import("@moonlight-mod/wp/discord/components/modals/ConfirmModal").ConfirmModal;
-
-// do this to avoid a hard dependency
-function lazyLoad() {
-  if (!ConfirmModal) {
-    ConfirmModal = (spacepack.require("discord/components/modals/ConfirmModal") as any).ConfirmModal;
-  }
-}
 
 const presentableLoadSources: Record<ExtensionLoadSource, string> = {
   [ExtensionLoadSource.Developer]: "Local extension", // should never show up
@@ -65,7 +56,6 @@ function MissingExtensionPopup({
   transitionState: number | null;
   onClose: () => void;
 }) {
-  lazyLoad();
   const amountNotAvailable = Object.values(deps).filter((candidates) => candidates.length === 0).length;
 
   const [options, setOptions] = React.useState<Record<string, string | undefined>>(
@@ -81,6 +71,7 @@ function MissingExtensionPopup({
     <ConfirmModal
       cancelText="Cancel"
       confirmText="Install"
+      // @ts-expect-error callback types dont need to be strict
       onConfirm={() => {
         for (const pick of Object.values(options)) {
           if (pick != null) {
@@ -88,7 +79,7 @@ function MissingExtensionPopup({
           }
         }
       }}
-      header="Extension dependencies"
+      title="Extension dependencies"
       transitionState={transitionState}
       onClose={onClose}
     >
@@ -169,14 +160,13 @@ function GenericExtensionPopup({
   uniqueId: number;
   cb: () => void;
 }) {
-  lazyLoad();
-
   return (
     <ConfirmModal
-      header={title}
+      title={title}
       confirmText="Yes"
       cancelText="No"
       onClose={onClose}
+      // @ts-expect-error callback types dont need to be strict
       onConfirm={cb}
       transitionState={transitionState}
     >

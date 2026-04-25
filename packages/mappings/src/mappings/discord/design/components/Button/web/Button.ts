@@ -11,38 +11,41 @@ import type {
 import register from "../../../../../../registry";
 import type { IconProps } from "../../../../modules/icons/web/_types";
 
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "critical-primary"
+  | "critical-secondary"
+  | "active"
+  | "overlay-primary"
+  | "overlay-secondary"
+  | "expressive"
+  | "icon-only";
+
+export type ButtonProps = {
+  role?: AriaRole;
+  variant?: ButtonVariant;
+  size?: "md" | "sm";
+  text?: ReactNode;
+  icon?: ComponentType<IconProps>;
+  iconPosition?: "start" | "end";
+  iconOpticalOffsetMargin?: number;
+  fullWidth?: boolean;
+  focusProps?: PropsWithChildren<any>;
+  loading?: boolean;
+  loadingStartedLabel?: ReactNode;
+  loadingFinishedLabel?: ReactNode;
+  rounded?: boolean;
+  className?: string;
+  style?: CSSProperties;
+  buttonRef?: Ref<any>;
+  disabled?: boolean;
+  onClick?: () => void;
+  autoFocus?: boolean;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
 type Exports = {
-  default: ComponentType<
-    {
-      role?: AriaRole;
-      variant?:
-        | "primary"
-        | "secondary"
-        | "critical-primary"
-        | "critical-secondary"
-        | "active"
-        | "overlay-primary"
-        | "overlay-secondary"
-        | "expressive"
-        | "icon-only";
-      size?: "md" | "sm";
-      text?: ReactNode;
-      icon?: ComponentType<IconProps>;
-      iconPosition?: "start" | "end";
-      iconOpticalOffsetMargin?: number;
-      fullWidth?: boolean;
-      focusProps?: PropsWithChildren<any>;
-      loading?: boolean;
-      loadingStartedLabel?: ReactNode;
-      loadingFinishedLabel?: ReactNode;
-      rounded?: boolean;
-      className?: string;
-      style?: CSSProperties;
-      buttonRef?: Ref<any>;
-      disabled?: boolean;
-      onClick?: () => void;
-    } & ButtonHTMLAttributes<HTMLButtonElement>
-  >;
+  default: ComponentType<ButtonProps>;
 };
 export default Exports;
 

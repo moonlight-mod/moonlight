@@ -39,6 +39,8 @@ import "./mappings/discord/design/components/Form/web/Field";
 import "./mappings/discord/design/components/Form/web/FieldSet";
 import "./mappings/discord/design/components/Form/web/FieldSet.css";
 import "./mappings/discord/design/components/Heading/Heading";
+import "./mappings/discord/design/components/Modal/web/ConfirmModal";
+import "./mappings/discord/design/components/Modal/web/LegacyModal";
 import "./mappings/discord/design/components/Modal/web/Modal";
 import "./mappings/discord/design/components/Notice/web/Notice";
 import "./mappings/discord/design/components/Popout/web/Popout";

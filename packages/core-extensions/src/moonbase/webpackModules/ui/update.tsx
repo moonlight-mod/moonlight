@@ -6,7 +6,7 @@ import {
   ModalHeader,
   ModalRoot,
   ModalSize
-} from "@moonlight-mod/wp/discord/design/components/Modal/web/Modal";
+} from "@moonlight-mod/wp/discord/design/components/Modal/web/LegacyModal";
 import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 import MarkupUtils from "@moonlight-mod/wp/discord/modules/markup/MarkupUtils";
 import MarkupClasses from "@moonlight-mod/wp/discord/modules/messages/web/Markup.css";

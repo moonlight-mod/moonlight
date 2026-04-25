@@ -345,14 +345,24 @@ declare module "@moonlight-mod/wp/discord/design/components/Heading/Heading" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/design/components/Modal/web/ConfirmModal" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const ConfirmModal: MappedModules["discord/design/components/Modal/web/ConfirmModal"]["ConfirmModal"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Modal/web/LegacyModal" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const ModalRoot: MappedModules["discord/design/components/Modal/web/LegacyModal"]["ModalRoot"];
+  export const ModalHeader: MappedModules["discord/design/components/Modal/web/LegacyModal"]["ModalHeader"];
+  export const ModalCloseButton: MappedModules["discord/design/components/Modal/web/LegacyModal"]["ModalCloseButton"];
+  export const ModalContent: MappedModules["discord/design/components/Modal/web/LegacyModal"]["ModalContent"];
+  export const ModalFooter: MappedModules["discord/design/components/Modal/web/LegacyModal"]["ModalFooter"];
+  export const ModalSize: MappedModules["discord/design/components/Modal/web/LegacyModal"]["ModalSize"];
+}
+
 declare module "@moonlight-mod/wp/discord/design/components/Modal/web/Modal" {
   import { MappedModules } from "@moonlight-mod/mappings";
-  export const ModalRoot: MappedModules["discord/design/components/Modal/web/Modal"]["ModalRoot"];
-  export const ModalHeader: MappedModules["discord/design/components/Modal/web/Modal"]["ModalHeader"];
-  export const ModalCloseButton: MappedModules["discord/design/components/Modal/web/Modal"]["ModalCloseButton"];
-  export const ModalContent: MappedModules["discord/design/components/Modal/web/Modal"]["ModalContent"];
-  export const ModalFooter: MappedModules["discord/design/components/Modal/web/Modal"]["ModalFooter"];
-  export const ModalSize: MappedModules["discord/design/components/Modal/web/Modal"]["ModalSize"];
+  export const Modal: MappedModules["discord/design/components/Modal/web/Modal"]["Modal"];
 }
 
 declare module "@moonlight-mod/wp/discord/design/components/Notice/web/Notice" {
