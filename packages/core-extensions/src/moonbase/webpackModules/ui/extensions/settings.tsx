@@ -303,7 +303,7 @@ function DictionarySetting({ ext, name, disabled }: SettingsProps) {
   );
 }
 
-function CustomSetting({ ext, name }: SettingsProps) {
+function CustomSetting({ ext, name, disabled }: SettingsProps) {
   const { value, displayName } = useConfigEntry<any>(ext.uniqueId, name);
 
   const { component: Component } = useStateFromStores([MoonbaseSettingsStore], () => {
@@ -320,7 +320,11 @@ function CustomSetting({ ext, name }: SettingsProps) {
 
   return (
     <ErrorBoundary>
-      <Component value={value} setValue={(value) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)} />
+      <Component
+        value={value}
+        setValue={(value) => MoonbaseSettingsStore.setExtensionConfig(ext.id, name, value)}
+        disabled={disabled}
+      />
     </ErrorBoundary>
   );
 }

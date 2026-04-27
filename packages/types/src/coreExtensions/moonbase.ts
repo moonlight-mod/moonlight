@@ -1,6 +1,7 @@
 export type CustomComponentProps = {
   value: any;
   setValue: (value: any) => void;
+  disabled: boolean;
 };
 
 export type CustomComponent = React.FC<CustomComponentProps>;

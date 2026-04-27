@@ -1,5 +1,22 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import register from "../../../registry";
+import type { UserRecord } from "../records/UserRecord";
+import type { HTTPUtilsResponse } from "../utils/HTTPUtils";
+
+type Exports = {
+  acceptAgreements: (terms?: boolean, privacy?: boolean) => Promise<HTTPUtilsResponse>;
+  fetchCurrentUser: () => UserRecord;
+  fetchProfile: (
+    userId: string,
+    options?: {
+      type?: "popout" | "modal";
+    },
+    callback?: (user: any, guildId: string) => void
+  ) => Promise<void>;
+  getUser: (userId: string) => Promise<UserRecord>;
+  setFlag: (flag: number, append: boolean) => Promise<HTTPUtilsResponse>;
+};
+export default Exports;
 
 register((moonmap) => {
   const name = "discord/actions/UserActionCreators";
@@ -29,6 +46,8 @@ register((moonmap) => {
         type: ModuleExportType.Function,
         find: "fetchProfile error: "
       });
+
+      // TODO: two new exports
 
       return true;
     }

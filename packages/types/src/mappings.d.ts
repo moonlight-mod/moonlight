@@ -51,6 +51,21 @@ declare module "@moonlight-mod/wp/discord/actions/ContextMenuActionCreators" {
   export const openContextMenuLazy: MappedModules["discord/actions/ContextMenuActionCreators"]["openContextMenuLazy"];
 }
 
+declare module "@moonlight-mod/wp/discord/actions/UserActionCreators" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const acceptAgreements: MappedModules["discord/actions/UserActionCreators"]["acceptAgreements"];
+  export const fetchCurrentUser: MappedModules["discord/actions/UserActionCreators"]["fetchCurrentUser"];
+  export const fetchProfile: MappedModules["discord/actions/UserActionCreators"]["fetchProfile"];
+  export const getUser: MappedModules["discord/actions/UserActionCreators"]["getUser"];
+  export const setFlag: MappedModules["discord/actions/UserActionCreators"]["setFlag"];
+}
+
+declare module "@moonlight-mod/wp/discord/actions/UserProfileModalActionCreators" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const openUserProfileModal: MappedModules["discord/actions/UserProfileModalActionCreators"]["openUserProfileModal"];
+  export const closeUserProfileModal: MappedModules["discord/actions/UserProfileModalActionCreators"]["closeUserProfileModal"];
+}
+
 declare module "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/actions/UserSettingsModalActionCreators"]["default"];
@@ -179,6 +194,18 @@ declare module "@moonlight-mod/wp/discord/components/common/Select" {
 declare module "@moonlight-mod/wp/discord/components/modals/ConfirmModal" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const ConfirmModal: MappedModules["discord/components/modals/ConfirmModal"]["ConfirmModal"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Avatar/web/Avatar" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Avatar/web/Avatar"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Avatar/web/AvatarConstants" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const Sizes: MappedModules["discord/design/components/Avatar/web/AvatarConstants"]["Sizes"];
+  export const SizeSpec: MappedModules["discord/design/components/Avatar/web/AvatarConstants"]["SizeSpec"];
 }
 
 declare module "@moonlight-mod/wp/discord/design/components/Breadcrumbs/web/Breadcrumbs" {
@@ -327,6 +354,26 @@ declare module "@moonlight-mod/wp/discord/design/components/ThemeContextProvider
   export const FALLBACK_THEME_CONTEXT_VALUE: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["FALLBACK_THEME_CONTEXT_VALUE"];
   export const ThemeContext: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["ThemeContext"];
   export const UseThemeContext: MappedModules["discord/design/components/ThemeContextProvider/ThemeContext"]["UseThemeContext"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Toast/web/Toast" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const createToast: MappedModules["discord/design/components/Toast/web/Toast"]["createToast"];
+  export const Toast: MappedModules["discord/design/components/Toast/web/Toast"]["Toast"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Toast/web/ToastAPI" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const useToastStore: MappedModules["discord/design/components/Toast/web/ToastAPI"]["useToastStore"];
+  export const showToast: MappedModules["discord/design/components/Toast/web/ToastAPI"]["showToast"];
+  export const popToast: MappedModules["discord/design/components/Toast/web/ToastAPI"]["popToast"];
+}
+
+declare module "@moonlight-mod/wp/discord/design/components/Toast/web/ToastConstants" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  export const ToastType: MappedModules["discord/design/components/Toast/web/ToastConstants"]["ToastType"];
+  export const ToastPosition: MappedModules["discord/design/components/Toast/web/ToastConstants"]["ToastPosition"];
+  export const TOAST_DEFAULT_OPTIONS: MappedModules["discord/design/components/Toast/web/ToastConstants"]["TOAST_DEFAULT_OPTIONS"];
 }
 
 declare module "@moonlight-mod/wp/discord/design/components/Tooltip/web/VoidTooltip" {
@@ -573,6 +620,18 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/AngleBracketsIcon" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/modules/icons/web/ArrowAngleLeftUpIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/ArrowAngleLeftUpIcon"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/ArrowAngleRightUpIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/ArrowAngleRightUpIcon"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/modules/icons/web/ArrowsUpDownIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/ArrowsUpDownIcon"]["default"];
@@ -627,9 +686,21 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/ClydeIcon" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/modules/icons/web/CopyIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/CopyIcon"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/modules/icons/web/DownloadIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/DownloadIcon"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/FullscreenEnterIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/FullscreenEnterIcon"]["default"];
   export default _default;
 }
 
@@ -651,9 +722,21 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/HeartIcon" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/modules/icons/web/LinkIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/LinkIcon"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/modules/icons/web/MaximizeIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/MaximizeIcon"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/MinusIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/MinusIcon"]["default"];
   export default _default;
 }
 
@@ -675,6 +758,12 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/PlayIcon" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/modules/icons/web/PlusLargeIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/PlusLargeIcon"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/modules/icons/web/RetryIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/RetryIcon"]["default"];
@@ -690,6 +779,12 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/ScienceIcon" {
 declare module "@moonlight-mod/wp/discord/modules/icons/web/ScreenIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/ScreenIcon"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/StarIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/StarIcon"]["default"];
   export default _default;
 }
 
@@ -711,9 +806,21 @@ declare module "@moonlight-mod/wp/discord/modules/icons/web/WarningIcon" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/modules/icons/web/WindowLaunchIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/WindowLaunchIcon"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/modules/icons/web/WindowTopOutlineIcon" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/modules/icons/web/WindowTopOutlineIcon"]["default"];
+  export default _default;
+}
+
+declare module "@moonlight-mod/wp/discord/modules/icons/web/XLargeIcon" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/modules/icons/web/XLargeIcon"]["default"];
   export default _default;
 }
 

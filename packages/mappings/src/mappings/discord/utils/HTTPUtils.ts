@@ -7,6 +7,23 @@ export type HTTPUtilsRequest = {
   headers?: Record<string, string>;
   body?: any;
   oldFormErrors?: boolean;
+  attachments?: { name: string; file: Blob; filename?: string }[];
+  fields?: { name: string; value: string }[];
+  context?: Record<string, any>;
+  withCredentials?: boolean;
+  reason?: string;
+  retried?: number;
+  timeout?: number;
+  binary?: boolean;
+  onRequestProgress?: (progress: any) => void; // FIXME: superagent type
+  backoff?: any; // FIXME
+  interceptResponse?: (
+    response: HTTPUtilsResponse,
+    interceptor: (newHeaders: Record<string, string>, newIntercept: HTTPUtilsRequest["interceptResponse"]) => void,
+    onError: (error: any) => void // FIXME
+  ) => boolean;
+  rejectWithError?: boolean;
+  signal?: any; // FIXME
 };
 
 export type HTTPUtilsResponse = {

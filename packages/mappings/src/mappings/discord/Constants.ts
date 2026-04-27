@@ -110,6 +110,13 @@ export enum AnalyticsLocations {
   VOICE_PANEL = "Voice Panel"
 }
 
+export enum AppContext {
+  OVERLAY = "OVERLAY",
+  APP = "APP",
+  POPOUT = "POPOUT",
+  CALL_TILE_POPOUT = "CALL_TILE_POPOUT"
+}
+
 export enum ChannelLayouts {
   FULL_SCREEN = "full-screen",
   MINIMUM = "minimum",
@@ -1877,6 +1884,10 @@ register((moonmap) => {
       moonmap.addExport(name, "AnalyticsLocations", {
         type: ModuleExportType.Key,
         find: "APPLICATION_CONTEXT_MENU_TOGGLE_INSTALL"
+      });
+      moonmap.addExport(name, "AppContext", {
+        type: ModuleExportType.Key,
+        find: "CALL_TILE_POPOUT"
       });
       moonmap.addExport(name, "ChannelLayouts", {
         type: ModuleExportType.Key,
