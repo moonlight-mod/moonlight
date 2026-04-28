@@ -113,10 +113,18 @@ export default function calculateDependencies<T, D>(
           validateDeps({ id, data });
         }
       } else {
-        const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(([, v]) => v?.has(dep.id));
+        const dependsOnMe = Array.from(dependencyGraphOrig.entries()).filter(
+          ([k, v]) =>
+            getEnabled!({
+              id: k,
+              // @ts-expect-error FIXME typewise, it works in runtime
+              data: v
+            }) && v?.has(dep.id)
+        );
 
+        // FIXME: the getEnabled call breaks this
         if (dependsOnMe.length > 0) {
-          logger.debug("Implicitly enabling dependency", dep.id);
+          logger.debug("Implicitly enabling dependency", dep.id, dependsOnMe);
           implicitlyEnabled.push(dep.id);
         }
       }
