@@ -147,69 +147,44 @@ if (isOverlay) {
   // something from the original process
   require(oldPreloadPath);
 } else {
-  ipcRenderer.on(constants.ipcNodePreloadKickoff, (_, blockedScripts: string[]) => {
-    (async () => {
-      try {
-        await init();
-        logger.debug("Blocked scripts:", blockedScripts);
+  const doInit = async () => {
+    try {
+      await init();
 
-        const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
-        logger.debug("Old preload path:", oldPreloadPath);
-        if (oldPreloadPath) require(oldPreloadPath);
+      const oldPreloadPath: string = ipcRenderer.sendSync(constants.ipcGetOldPreloadPath);
+      logger!.debug("Old preload path:", oldPreloadPath);
+      if (oldPreloadPath) require(oldPreloadPath);
 
-        // Do this to get global.DiscordNative assigned
-        // @ts-expect-error Lying to discord_desktop_core
-        process.emit("loaded");
+      // Do this to get global.DiscordNative assigned
+      // @ts-expect-error Lying to discord_desktop_core
+      process.emit("loaded");
+    } catch (e) {
+      // biome-ignore lint/suspicious/noConsole: logger unlikely to be initialized
+      console.error("[moonlight:node-preload] Error initializing:", e);
+    }
+  };
 
-        function replayScripts() {
-          const ignoreScripts = [
-            // We never blocked this in the first place
-            "popout.",
-            // We don't want this to load at all
-            "sentry."
-          ];
-
-          const scripts = [...document.querySelectorAll("script")].filter((script) => {
-            if (!script.src) return false;
-
-            try {
-              const url = new URL(script.src);
-              const hasUrl =
-                url.pathname.match(/\/assets\/(\d{3,5}|[a-zA-Z-]+)\./) &&
-                !url.searchParams.has("inj") &&
-                (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
-              const shouldIgnore = ignoreScripts.some((other) => url.pathname.startsWith(`/assets/${other}`));
-              return hasUrl && !shouldIgnore;
-            } catch {
-              return false;
-            }
-          });
-
-          // bruh.
-          if (moonlightNode.config.patchAll) scripts.sort((a, b) => a.src.localeCompare(b.src));
-
-          for (const script of scripts) {
-            const newScript = document.createElement("script");
-            for (const attr of script.attributes) {
-              if (attr.name === "src") attr.value += "?inj";
-              newScript.setAttribute(attr.name, attr.value);
-            }
-
-            if (script.src.includes("/assets/web.")) ipcRenderer.sendSync(constants.ipcNodePreloadKickoff);
-
-            script.remove();
-            document.documentElement.appendChild(newScript);
-          }
-        }
-
-        if (document.readyState === "complete") {
-          replayScripts();
-        } else {
-          window.addEventListener("load", replayScripts);
-        }
-      } catch (e) {
-        logger.error("Error restoring original scripts:", e);
+  // violentmonkey's document-start injector logic
+  const getOwnProp = (obj: any, key: any, defVal?: any) => {
+    try {
+      if (obj && Object.hasOwn(obj, key)) {
+        defVal = obj[key];
       }
-    })();
+    } catch {
+      // noop
+    }
+    return defVal;
+  };
+  const elemByTag = (tag: string, i?: number) => getOwnProp(document.getElementsByTagName(tag), i || 0);
+  const observer = new MutationObserver(() => {
+    if (elemByTag("*")) {
+      observer.disconnect();
+
+      setTimeout(() => {
+        window.stop();
+        doInit();
+      }, 0);
+    }
   });
+  observer.observe(document, { childList: true, subtree: true });
 }

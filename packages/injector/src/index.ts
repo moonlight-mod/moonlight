@@ -24,21 +24,13 @@ let oldPreloadPath: string | undefined;
 let corsAllow: string[] = [];
 let blockedUrls: RegExp[] = [];
 let injectorConfig: InjectorConfig | undefined;
-let initCalled = false;
 
 ipcMain.on(constants.ipcGetOldPreloadPath, (e) => {
-  initCalled = true;
   e.returnValue = oldPreloadPath;
 });
 
 ipcMain.on(constants.ipcGetAppData, (e) => {
   e.returnValue = app.getPath("appData");
-});
-ipcMain.on(constants.ipcGetInjectorConfig, (e) => {
-  e.returnValue = injectorConfig;
-});
-ipcMain.on(constants.ipcNodePreloadKickoff, (e) => {
-  e.returnValue = true;
 });
 ipcMain.handle(constants.ipcMessageBox, (_, opts) => {
   electron.dialog.showMessageBoxSync(opts);
@@ -142,10 +134,6 @@ class BrowserWindow extends ElectronBrowserWindow {
       }
     }
 
-    this.webContents.on("did-navigate", () => {
-      initCalled = false;
-    });
-
     this.webContents.session.webRequest.onHeadersReceived((details, cb) => {
       if (details.responseHeaders != null) {
         // Patch CSP so things can use externally hosted assets
@@ -171,41 +159,6 @@ class BrowserWindow extends ElectronBrowserWindow {
     });
 
     this.webContents.session.webRequest.onBeforeRequest((details, cb) => {
-      /*
-        In order to get moonlight loading to be truly async, we prevent Discord
-        from loading their scripts immediately. We block the requests, keep note
-        of their URLs, and then send them off to node-preload when we get all of
-        them. node-preload then loads node side, web side, and then recreates
-        the script elements to cause them to re-fetch.
-
-        The browser extension also does this, but in a background script (see
-        packages/browser/src/background.js - we should probably get this working
-        with esbuild someday).
-      */
-      if (details.resourceType === "script" && isMainWindow) {
-        const url = new URL(details.url);
-        const hasUrl =
-          url.pathname.match(/\/assets\/(\d{3,5}|[a-zA-Z\-]+)\./) &&
-          !url.searchParams.has("inj") &&
-          (url.host.endsWith("discord.com") || url.host.endsWith("discordapp.com"));
-
-        const initScripts = ["web."];
-        const allowScripts = ["popout."];
-        const testScripts = (scripts: string[]) =>
-          scripts.some((script) => url.pathname.startsWith(`/assets/${script}`));
-        const shouldInit = hasUrl && testScripts(initScripts);
-        const shouldBlock = hasUrl && !testScripts(allowScripts);
-
-        if (shouldInit) {
-          setTimeout(() => {
-            logger.debug("Kicking off node-preload", details.url);
-            this.webContents.send(constants.ipcNodePreloadKickoff, [details.url]);
-          }, 0);
-        }
-
-        if (shouldBlock && !initCalled) return cb({ cancel: true });
-      }
-
       // Allow plugins to block some URLs,
       // this is needed because multiple webRequest handlers cannot be registered at once
       cb({ cancel: blockedUrls.some((u) => u.test(details.url)) });

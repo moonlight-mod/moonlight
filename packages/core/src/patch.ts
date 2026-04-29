@@ -121,10 +121,17 @@ function patchModule(id: string, patchId: string, replaced: string, entry: Webpa
   }
 }
 
-function patchModules(entry: WebpackJsonpEntry[1]) {
+const previouslyPatched = new Map<string, IdentifiedPatch>();
+
+function patchModules(entry: WebpackJsonpEntry[1], chunkId?: WebpackJsonpEntry[0]) {
   // Populate the module cache
   for (const [id, func] of Object.entries(entry)) {
-    if (!Object.hasOwn(moduleCache, id) && func.__moonlight !== true) {
+    if (func.__moonlight !== true) {
+      if (Object.hasOwn(moduleCache, id)) {
+        logger.debug(`Chunk "${chunkId?.join(", ") ?? "<unknown>"}" replacing module "${id}"`);
+        if (previouslyPatched.has(id)) moonlight.unpatched.add(previouslyPatched.get(id)!);
+      }
+
       moduleCache[id] = func.toString().replace(/\n/g, "");
       moonlight.moonmap.parseScript(id, moduleCache[id]);
     }
@@ -217,7 +224,10 @@ function patchModules(entry: WebpackJsonpEntry[1]) {
           exts.add(patch.ext);
         }
 
-        if (isPatched) moonlight.unpatched.delete(patch);
+        if (isPatched) {
+          previouslyPatched.set(id, patch);
+          moonlight.unpatched.delete(patch);
+        }
         if (shouldRemove) patches.splice(i--, 1);
       }
     }
@@ -501,7 +511,7 @@ export async function installWebpackPatcher() {
             });
 
             try {
-              patchModules(items[1]);
+              patchModules(items[1], items[0]);
             } catch (err) {
               logger.warn("Failed to patch Webpack modules:", err);
             }
