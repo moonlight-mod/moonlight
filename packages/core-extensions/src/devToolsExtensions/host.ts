@@ -10,7 +10,8 @@ app.whenReady().then(async () => {
     const resolved = resolve(path);
 
     try {
-      await session.defaultSession.loadExtension(resolved);
+      // @ts-expect-error ancient type
+      await session.defaultSession.extensions.loadExtension(resolved);
     } catch (err) {
       logger.error(`Failed to load an extension in "${resolved}":`, err);
     }
