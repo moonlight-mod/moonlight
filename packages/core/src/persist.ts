@@ -15,10 +15,7 @@ export default function persist(asarPath: string) {
   }
 }
 
-function persistUpdater(asarPath: string) {
-  const updaterModule = require(join(asarPath, "common", "updater"));
-  const updater = updaterModule.Updater;
-
+function patchUpdater(asarPath: string, updater: any) {
   const currentAppDir = join(dirname(asarPath), "app");
 
   const realEmit = updater.prototype.emit;
@@ -47,4 +44,31 @@ function persistUpdater(asarPath: string) {
 
     return realEmit.call(this, event, ...args);
   };
+}
+
+function persistUpdater(asarPath: string) {
+  if (existsSync(join(asarPath, "common", "updater"))) {
+    const updaterModule = require(join(asarPath, "common", "updater"));
+    const updater = updaterModule.Updater;
+
+    patchUpdater(asarPath, updater);
+  } else if (existsSync(join(asarPath, "bundle.js"))) {
+    let realUpdater: any;
+    Object.defineProperty(Object.prototype, "Updater", {
+      configurable: true,
+      set(Updater) {
+        realUpdater = Updater;
+        if (Updater != null) {
+          patchUpdater(asarPath, Updater);
+          // @ts-expect-error yes it in fact doesn't exist
+          delete Object.prototype.Updater;
+        }
+      },
+      get() {
+        return realUpdater;
+      }
+    });
+  } else {
+    logger.error("Neither updater nor bundle found, something in the asar has changed");
+  }
 }
