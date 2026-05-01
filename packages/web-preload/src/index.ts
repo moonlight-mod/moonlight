@@ -14,6 +14,10 @@ async function load() {
   initLogger(moonlightNode.config);
   const logger = new Logger("web-preload");
 
+  // workaround for stophack already loading a partial state of discord
+  // this needs to be this early, otherwise we end up with a half broken webpack
+  window.webpackChunkdiscord_app = [];
+
   window.moonlight = {
     patched: new Map(),
     unpatched: new Set(),
@@ -55,6 +59,37 @@ async function load() {
   } catch (e) {
     logger.error("Error setting up web-preload", e);
   }
+
+  // {{{ stophack
+  // recreate the document since stophack stopped loading everything
+  const newDocument = await fetch(document.location.href.split("#")[0])
+    .then((res) => res.text())
+    .then((t) => new DOMParser().parseFromString(t, "text/html"));
+
+  // remove preloads because it confuses the browser and anything thats uncached will fail to (re)load properly
+  for (const preload of newDocument.querySelectorAll('link[rel="preload"]')) {
+    preload.remove();
+  }
+  // unknown if this is needed
+  for (const script of newDocument.querySelectorAll("script[defer]")) {
+    script.removeAttribute("defer");
+  }
+
+  const oldRoot = document.documentElement;
+  const newRoot = newDocument.documentElement;
+
+  for (const attr of oldRoot.attributes) oldRoot.removeAttributeNode(attr);
+  for (const attr of newRoot.attributes) oldRoot.setAttributeNode(attr.cloneNode() as Attr);
+  oldRoot.replaceChildren(...newRoot.children);
+
+  // force all scripts to re-evaluate
+  for (const script of document.getElementsByTagName("script")) {
+    const newScript = document.createElement("script");
+    for (const attr of script.attributes) newScript.setAttribute(attr.name, attr.value);
+
+    script.replaceWith(newScript);
+  }
+  // }}}
 
   if (document.readyState === "complete") {
     installStyles(document);

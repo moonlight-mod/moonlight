@@ -164,3 +164,27 @@ window._moonlightBrowserInit = async () => {
   // This is set by web-preload for us
   await window._moonlightWebLoad!();
 };
+
+// violentmonkey's document-start injector logic
+const getOwnProp = (obj: any, key: any, defVal?: any) => {
+  try {
+    if (obj && Object.hasOwn(obj, key)) {
+      defVal = obj[key];
+    }
+  } catch {
+    // noop
+  }
+  return defVal;
+};
+const elemByTag = (tag: string, i?: number) => getOwnProp(document.getElementsByTagName(tag), i || 0);
+const observer = new MutationObserver(() => {
+  if (elemByTag("*")) {
+    observer.disconnect();
+
+    setTimeout(() => {
+      window.stop();
+      window._moonlightBrowserInit!();
+    }, 0);
+  }
+});
+observer.observe(document, { childList: true, subtree: true });
