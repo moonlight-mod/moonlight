@@ -96,20 +96,29 @@ export default function ExtensionsPage() {
 
   return (
     <>
-      <SearchBar
-        size="md"
-        query={query}
-        onChange={(v: string) => setQuery(v.toLowerCase())}
-        onClear={() => setQuery("")}
-        autoFocus={true}
-        autoComplete="off"
-        inputProps={{
-          autoCapitalize: "none",
-          autoCorrect: "off",
-          spellCheck: "false"
-        }}
-      />
-      <FilterBar filter={filter} setFilter={setFilter} selectedTags={selectedTags} setSelectedTags={setSelectedTags} />
+      <ErrorBoundary>
+        <SearchBar
+          size="md"
+          query={query}
+          onChange={(v: string) => setQuery(v.toLowerCase())}
+          onClear={() => setQuery("")}
+          autoFocus={true}
+          autoComplete="off"
+          inputProps={{
+            autoCapitalize: "none",
+            autoCorrect: "off",
+            spellCheck: "false"
+          }}
+        />
+      </ErrorBoundary>
+      <ErrorBoundary>
+        <FilterBar
+          filter={filter}
+          setFilter={setFilter}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+        />
+      </ErrorBoundary>
 
       {filteredWithUpdates.length > 0 && (
         <HelpMessage

@@ -5,7 +5,7 @@ register((moonmap) => {
   const name = "discord/uikit/search/SearchBar";
   moonmap.register({
     name,
-    find: ["inputRef:", "query:", "autoComplete:"],
+    find: [/clearable:null!=.,/, /placeholder:.=/],
     process({ id }) {
       moonmap.addModule(id, name);
 
