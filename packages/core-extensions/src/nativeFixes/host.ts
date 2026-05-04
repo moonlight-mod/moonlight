@@ -1,10 +1,5 @@
-import * as fsSync from "node:fs";
-import * as fs from "node:fs/promises";
-import * as path from "node:path";
 import { app, nativeTheme } from "electron";
-import { parseTarGzip } from "nanotar";
 
-const logger = moonlightHost.getLogger("nativeFixes/host");
 const enabledFeatures = app.commandLine.getSwitchValue("enable-features").split(",");
 const disabledFeatures = app.commandLine.getSwitchValue("disable-features").split(",");
 
