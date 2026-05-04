@@ -1,40 +1,18 @@
-Discord pushed two breaking updates within two days. A lot of modules had to be remapped due to the common components module disappearing.
-
-Extensions that relied on common components will need to be updated by their authors.
-
 ## Core
 
-- Internal refactoring to support loading multiple initial Webpack chunks
-  - This was done to fix launch signature not generating
-- Enable persistence on Linux
+- Rewrote moonlight's script blocking mechanism (thanks @marshift for the inspiration!)
+  - The browser extension may work unreliably right now; we're working on it:tm:
+  - If you encounter any issues with loading Discord, please let us know
+- Cleaned up some things in the Nix flake (thank you @isabelroses!)
+- Fixed disabled extensions still implicitly enabling other extensions
 
-### Injector & Node Preload
+## Core extensions
 
-- Send back a response from preload when the `web` chunk is loaded to workaround initial chunks with numeric names being added
-  - The web extension still needs this fixed
-
-### Module Patching
-
-- Patched and injected modules now have a require wrapper to log an error when a required module is not found
-
-## Core Extensions
-
-- Patch fixes where relevant
-
-### Moonbase
-
-- The config tab and extension settings have been slightly redesigned to fit within Discord's Mana/Void design system
-
-### Spacepack
-
-- Filter out proxies and support `A` and `Ay` as default keys in `findByExports`
-  - You should still consider `findByExports` deprecated for use in extensions
-- Fix `inspect` breaking when `patchAll` is disabled
-
-### Native Fixes
-
-- Linux Updater is now disabled on Canary due to Discord working on their own native updater solution
+- Disable Sentry: Updated to support the newly bundled .asar
+- Native Fixes: Removed Linux updater
+  - Discord on Linux has a built-in Linux updater now! Thank you for your service over the years, `nativeFixes/host.ts` :saluting_face:
+  - If you cannot patch moonlight from the moonlight installer, make sure it is updated to the latest version
 
 ## Mappings
 
-- 71 new mapped modules
+- Fixes for latest Discord
