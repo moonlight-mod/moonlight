@@ -54,6 +54,30 @@
       });
 
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        in
+        {
+          default = pkgs.mkShell {
+            nativeBuildInputs =
+              with pkgs;
+              [
+                biome
+              ]
+              ++ self.packages.${system}.moonlight.nativeBuildInputs;
+
+            shellHook = ''
+              export BIOME_BINARY="${pkgs.lib.getExe pkgs.biome}"
+            '';
+          };
+        }
+      );
     }
     // {
       homeModules.default = ./nix/home-manager.nix;
