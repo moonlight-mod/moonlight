@@ -563,4 +563,5 @@ class MoonbaseSettingsStore extends Store<any> {
 }
 
 const settingsStore = new MoonbaseSettingsStore();
+
 export { settingsStore as MoonbaseSettingsStore };

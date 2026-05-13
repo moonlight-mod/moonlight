@@ -14,7 +14,7 @@ catalogs:
     esbuild: ^0.19.3
     typescript: ^5.3.3
   lint:
-    "@biomejs/biome": 2.4.4
+    "@biomejs/biome": 2.4.12
     husky: ^8.0.3
   types:
     "@discord/intl": ^0.29.1

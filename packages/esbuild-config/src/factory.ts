@@ -139,10 +139,10 @@ export async function watchExtension(options: Omit<ESBuildFactoryOptions, "side"
 // In GitHub PR #3, these original names were modified to be more descriptive.
 // We re-export these as to not break backwards compatibility with older plugins.
 export {
+  betterLogging as deduplicatedLogging,
+  buildExtension as buildExt,
   defineConfig as makeExtConfig,
   defineConfigs as makeExtConfigs,
-  buildExtension as buildExt,
   watchExtension as watchExt,
-  betterLogging as deduplicatedLogging,
   webpackImports as wpImport
 };
