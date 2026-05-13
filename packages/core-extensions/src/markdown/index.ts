@@ -2,7 +2,7 @@ import type { ExtensionWebpackModule, Patch } from "@moonlight-mod/types";
 
 export const patches: Patch[] = [
   {
-    find: "/^(¯\\\\_\\(ツ\\)_\\/¯)/.exec",
+    find: "/^(\\xaf\\\\_\\(\\u30c4\\)_\\/\\xaf)/.exec",
     replace: [
       {
         match: /,(\i)=({RULES:.+?})/,
