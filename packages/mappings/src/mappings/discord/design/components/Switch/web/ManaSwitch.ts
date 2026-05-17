@@ -1,3 +1,4 @@
+import { ModuleExportType } from "@moonlight-mod/moonmap";
 import type { ComponentType } from "react";
 import register from "../../../../../../registry";
 import type { FieldComponentProps } from "../../Form/web/Field";
@@ -18,11 +19,17 @@ export default Exports;
 
 register((moonmap) => {
   const name = "discord/design/components/Switch/web/ManaSwitch";
+  const find = ".colors.SWITCH_BACKGROUND_DEFAULT).spring(),";
   moonmap.register({
     name,
-    find: ".colors.SWITCH_BACKGROUND_DEFAULT).spring(),",
+    find,
     process({ id }) {
       moonmap.addModule(id, name);
+
+      moonmap.addExport(name, "default", {
+        type: ModuleExportType.Function,
+        find
+      });
 
       return true;
     }
