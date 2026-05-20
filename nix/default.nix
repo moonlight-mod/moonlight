@@ -6,7 +6,10 @@
   pnpmConfigHook,
   fetchPnpmDeps,
 }:
-
+let
+  nodejs = nodejs_22;
+  pnpm = pnpm_10.override { inherit nodejs; };
+in
 stdenv.mkDerivation (finalAttrs: {
   pname = "moonlight";
   version = (builtins.fromJSON (builtins.readFile ./../package.json)).version;
@@ -19,13 +22,14 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   nativeBuildInputs = [
-    nodejs_22
-    pnpm_10
+    nodejs
+    pnpm
     pnpmConfigHook
   ];
 
   pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs) pname version src;
+    inherit pnpm;
     fetcherVersion = 3;
     hash = "sha256-+jxp3dD/SyGdskMyw0jhDzDRj7wXD4Egkx3ok3cMiyc=";
   };
