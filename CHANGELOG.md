@@ -1,8 +1,9 @@
-## Core extensions
+## Nix
 
-### Markdown
-- Fix patch find
+- Pin node and pnpm versions to fix issues when making the flake follow nixpkgs `unstable` branch
 
-## Mappings
+## Core Extensions
 
-- Fixes for latest Discord
+### Moonbase
+
+- Fix switch items being only the switch
