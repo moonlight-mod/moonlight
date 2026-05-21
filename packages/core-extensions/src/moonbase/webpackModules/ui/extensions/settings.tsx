@@ -20,7 +20,7 @@ import FieldSetClasses from "@moonlight-mod/wp/discord/design/components/Form/we
 import NumberInputStepper from "@moonlight-mod/wp/discord/design/components/NumberInput/web/NumberInputStepper";
 import Slider from "@moonlight-mod/wp/discord/design/components/Slider/web/Slider";
 import Stack from "@moonlight-mod/wp/discord/design/components/Stack/Stack";
-import Switch from "@moonlight-mod/wp/discord/design/components/Switch/web/ManaSwitch";
+import Switch from "@moonlight-mod/wp/discord/design/components/Switch/web/ManaFormSwitch";
 import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 import TextArea from "@moonlight-mod/wp/discord/design/mana/components/TextArea/web/TextArea";
 import CircleXIcon from "@moonlight-mod/wp/discord/modules/icons/web/CircleXIcon";

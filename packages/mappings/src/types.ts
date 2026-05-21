@@ -41,6 +41,7 @@ import type NumberInputStepper from "./mappings/discord/design/components/Number
 import type Popout from "./mappings/discord/design/components/Popout/web/Popout";
 import type Slider from "./mappings/discord/design/components/Slider/web/Slider";
 import type Stack from "./mappings/discord/design/components/Stack/Stack";
+import type ManaFormSwitch from "./mappings/discord/design/components/Switch/web/ManaFormSwitch";
 import type ManaSwitch from "./mappings/discord/design/components/Switch/web/ManaSwitch";
 import type VoidSwitch from "./mappings/discord/design/components/Switch/web/VoidSwitch";
 import type TabBar from "./mappings/discord/design/components/TabBar/TabBar";
@@ -187,6 +188,7 @@ export type MappedModules = {
   "discord/design/components/Popout/web/Popout": Popout;
   "discord/design/components/Slider/web/Slider": Slider;
   "discord/design/components/Stack/Stack": Stack;
+  "discord/design/components/Switch/web/ManaFormSwitch": ManaFormSwitch;
   "discord/design/components/Switch/web/ManaSwitch": ManaSwitch;
   "discord/design/components/Switch/web/VoidSwitch": VoidSwitch;
   "discord/design/components/TabBar/TabBar": TabBar;

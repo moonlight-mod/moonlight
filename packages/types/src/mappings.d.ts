@@ -323,6 +323,12 @@ declare module "@moonlight-mod/wp/discord/design/components/Stack/Stack" {
   export default _default;
 }
 
+declare module "@moonlight-mod/wp/discord/design/components/Switch/web/ManaFormSwitch" {
+  import { MappedModules } from "@moonlight-mod/mappings";
+  const _default: MappedModules["discord/design/components/Switch/web/ManaFormSwitch"]["default"];
+  export default _default;
+}
+
 declare module "@moonlight-mod/wp/discord/design/components/Switch/web/ManaSwitch" {
   import { MappedModules } from "@moonlight-mod/mappings";
   const _default: MappedModules["discord/design/components/Switch/web/ManaSwitch"]["default"];

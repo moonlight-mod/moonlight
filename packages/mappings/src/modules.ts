@@ -49,6 +49,7 @@ import "./mappings/discord/design/components/NumberInput/web/NumberInputStepper"
 import "./mappings/discord/design/components/Popout/web/Popout";
 import "./mappings/discord/design/components/Slider/web/Slider";
 import "./mappings/discord/design/components/Stack/Stack";
+import "./mappings/discord/design/components/Switch/web/ManaFormSwitch";
 import "./mappings/discord/design/components/Switch/web/ManaSwitch";
 import "./mappings/discord/design/components/Switch/web/VoidSwitch";
 import "./mappings/discord/design/components/TabBar/TabBar";

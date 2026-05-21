@@ -1,19 +1,18 @@
 import { ModuleExportType } from "@moonlight-mod/moonmap";
 import type { ComponentType } from "react";
 import register from "../../../../../../registry";
-import type { FieldComponentProps } from "../../Form/web/Field";
+
+export type SwitchProps = {
+  checked?: boolean;
+  disabled?: boolean;
+  id?: string;
+  onChange: (value: boolean) => void;
+  focusProps?: any;
+  hasIcon?: boolean;
+};
 
 type Exports = {
-  default: ComponentType<
-    {
-      checked?: boolean;
-      disabled?: boolean;
-      id?: string;
-      onChange: (value: boolean) => void;
-      focusProps?: any;
-      hasIcon?: boolean;
-    } & FieldComponentProps
-  >;
+  default: ComponentType<SwitchProps>;
 };
 export default Exports;
 

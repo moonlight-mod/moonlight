@@ -42,6 +42,7 @@ const mappedTypes = {
   "discord/design/components/Popout/web/Popout": "Popout",
   "discord/design/components/Slider/web/Slider": "Slider",
   "discord/design/components/Stack/Stack": "Stack",
+  "discord/design/components/Switch/web/ManaFormSwitch": "ManaFormSwitch",
   "discord/design/components/Switch/web/ManaSwitch": "ManaSwitch",
   "discord/design/components/Switch/web/VoidSwitch": "VoidSwitch",
   "discord/design/components/TabBar/TabBar": "TabBar",
