@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -44,21 +45,27 @@ in
       };
   };
 
-  config = lib.mkIf cfg.enable {
-    xdg.configFile."moonlight-mod/stable.json" = lib.mkIf (cfg.configs.stable != null) {
-      text = builtins.toJSON cfg.configs.stable;
-    };
-
-    xdg.configFile."moonlight-mod/ptb.json" = lib.mkIf (cfg.configs.ptb != null) {
-      text = builtins.toJSON cfg.configs.ptb;
-    };
-
-    xdg.configFile."moonlight-mod/canary.json" = lib.mkIf (cfg.configs.canary != null) {
-      text = builtins.toJSON cfg.configs.canary;
-    };
-
-    xdg.configFile."moonlight-mod/development.json" = lib.mkIf (cfg.configs.development != null) {
-      text = builtins.toJSON cfg.configs.development;
-    };
-  };
+  config = lib.mkIf cfg.enable (
+    let
+      file = value:
+        lib.mkIf (value != null) {
+          text = builtins.toJSON value;
+        };
+    in
+    if pkgs.stdenv.isDarwin then {
+      home.file = {
+        "Library/Application Support/moonlight-mod/stable.json" = file cfg.configs.stable;
+        "Library/Application Support/moonlight-mod/ptb.json" = file cfg.configs.ptb;
+        "Library/Application Support/moonlight-mod/canary.json" = file cfg.configs.canary;
+        "Library/Application Support/moonlight-mod/development.json" = file cfg.configs.development;
+      };
+    } else {
+      xdg.configFile = {
+        "moonlight-mod/stable.json" = file cfg.configs.stable;
+        "moonlight-mod/ptb.json" = file cfg.configs.ptb;
+        "moonlight-mod/canary.json" = file cfg.configs.canary;
+        "moonlight-mod/development.json" = file cfg.configs.development;
+      };
+    }
+  );
 }
