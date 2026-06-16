@@ -52,20 +52,23 @@ in
           text = builtins.toJSON value;
         };
     in
-    if pkgs.stdenv.isDarwin then {
-      home.file = {
-        "Library/Application Support/moonlight-mod/stable.json" = file cfg.configs.stable;
-        "Library/Application Support/moonlight-mod/ptb.json" = file cfg.configs.ptb;
-        "Library/Application Support/moonlight-mod/canary.json" = file cfg.configs.canary;
-        "Library/Application Support/moonlight-mod/development.json" = file cfg.configs.development;
-      };
-    } else {
-      xdg.configFile = {
-        "moonlight-mod/stable.json" = file cfg.configs.stable;
-        "moonlight-mod/ptb.json" = file cfg.configs.ptb;
-        "moonlight-mod/canary.json" = file cfg.configs.canary;
-        "moonlight-mod/development.json" = file cfg.configs.development;
-      };
-    }
+    lib.mkMerge [
+      (lib.mkIf pkgs.stdenv.isDarwin {
+        home.file = {
+          "Library/Application Support/moonlight-mod/stable.json" = file cfg.configs.stable;
+          "Library/Application Support/moonlight-mod/ptb.json" = file cfg.configs.ptb;
+          "Library/Application Support/moonlight-mod/canary.json" = file cfg.configs.canary;
+          "Library/Application Support/moonlight-mod/development.json" = file cfg.configs.development;
+        };
+      })
+      (lib.mkIf (!pkgs.stdenv.isDarwin) {
+        xdg.configFile = {
+          "moonlight-mod/stable.json" = file cfg.configs.stable;
+          "moonlight-mod/ptb.json" = file cfg.configs.ptb;
+          "moonlight-mod/canary.json" = file cfg.configs.canary;
+          "moonlight-mod/development.json" = file cfg.configs.development;
+        };
+      })
+    ]
   );
 }
