@@ -325,9 +325,41 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
   for (const [name, func] of Object.entries(moonlight.moonmap.getWebpackModules("window.moonlight.moonmap"))) {
     // @ts-expect-error probably should fix the type on this idk
     func.__moonlight = true;
-    injectedWpModules.push({ id: name, run: func });
-    modules[name] = func;
-    inject = true;
+
+    const moduleId = moonlight.moonmap.modules[name];
+    const modStr = moduleCache[moduleId];
+    const tree = moonlight.lunast.utils.parseFixed(`(${modStr})`);
+
+    // @ts-expect-error FIXME proper type checking (tree.type === "Program", body[0].type === "ExpressionStatement")
+    const modExpr = tree.body[0].expression;
+    const reqParam = modExpr.params[2];
+    const dependencies = [];
+    for (const node of modExpr.body.body) {
+      if (node.type !== "VariableDeclaration") continue;
+
+      for (const dec of node.declarations) {
+        const expr = dec.init;
+        if (expr == null) continue;
+        if (expr.type !== "CallExpression") continue;
+        if (expr.callee.type !== "Identifier" && expr.callee.name !== reqParam) continue;
+
+        const id = expr.arguments?.[0]?.value;
+
+        if (id != null) dependencies.push(id.toString());
+      }
+    }
+
+    if (dependencies.length > 0) {
+      registerWebpackModule({
+        id: name,
+        run: func,
+        dependencies
+      });
+    } else {
+      injectedWpModules.push({ id: name, run: func });
+      modules[name] = func;
+      inject = true;
+    }
   }
 
   if (webpackRequire != null) {
