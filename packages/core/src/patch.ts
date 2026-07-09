@@ -333,7 +333,7 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
     // @ts-expect-error FIXME proper type checking (tree.type === "Program", body[0].type === "ExpressionStatement")
     const modExpr = tree.body[0].expression;
     const reqParam = modExpr.params[2];
-    const dependencies = [];
+    const dependencies = [moduleId.toString()];
     for (const node of modExpr.body.body) {
       if (node.type !== "VariableDeclaration") continue;
 
@@ -425,7 +425,7 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
 
   if (inject) {
     // biome-ignore lint/correctness/noUnusedFunctionParameters: keep ts happy
-    let oldEntry = (require: WebpackRequireType) => {};
+    let oldEntry: ((require: WebpackRequireType) => void) & { __entrypoints?: string[] } = (require) => {};
     if (fullEntry?.[2] != null) {
       oldEntry = fullEntry[2];
     }
@@ -447,6 +447,7 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
       }
       oldEntry(require);
     };
+    loader.__entrypoints = entrypoints;
 
     if (splice && fullEntry != null) {
       logger.trace("Splicing custom Webpack modules:", fullEntry[0], modules, entrypoints, entry);
@@ -605,7 +606,10 @@ export async function installWebpackPatcher() {
             for (const id of newMods) {
               modules[id] = newModules[id];
             }
-            if (fakeEntry[2] != null) window.webpackChunkdiscord_app.push([[chunkId--], {}, fakeEntry[2]]);
+            // @ts-expect-error injected field
+            if (fakeEntry[2] != null && fakeEntry[2].__entrypoints?.length > 0) {
+              window.webpackChunkdiscord_app.push([[chunkId--], {}, fakeEntry[2]]);
+            }
           }
         }
       }
