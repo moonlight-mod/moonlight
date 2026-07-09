@@ -85,7 +85,11 @@ async function load() {
   // force all scripts to re-evaluate
   for (const script of document.getElementsByTagName("script")) {
     const newScript = document.createElement("script");
-    for (const attr of script.attributes) newScript.setAttribute(attr.name, attr.value);
+    for (const attr of script.attributes) {
+      if (attr.name === "src" && attr.value.includes("/sentry.")) continue;
+      newScript.setAttribute(attr.name, attr.value);
+    }
+    if (script.textContent !== "") newScript.textContent = script.textContent;
 
     script.replaceWith(newScript);
   }

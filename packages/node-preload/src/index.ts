@@ -119,9 +119,6 @@ async function loadPreload() {
   const webPreloadPath = path.join(__dirname, "web-preload.js");
   const webPreload = fs.readFileSync(webPreloadPath, "utf8");
   await webFrame.executeJavaScript(webPreload);
-
-  const func = await webFrame.executeJavaScript("async () => { await window._moonlightWebLoad(); }");
-  await func();
 }
 
 async function init() {
@@ -158,6 +155,9 @@ if (isOverlay) {
       // Do this to get global.DiscordNative assigned
       // @ts-expect-error Lying to discord_desktop_core
       process.emit("loaded");
+
+      const func = await webFrame.executeJavaScript("async () => { await window._moonlightWebLoad(); }");
+      await func();
     } catch (e) {
       // biome-ignore lint/suspicious/noConsole: logger unlikely to be initialized
       console.error("[moonlight:node-preload] Error initializing:", e);

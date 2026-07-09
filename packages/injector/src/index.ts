@@ -158,7 +158,23 @@ class BrowserWindow extends ElectronBrowserWindow {
       }
     });
 
+    let blockScripts = false;
+    let mainUrl = "";
     this.webContents.session.webRequest.onBeforeRequest((details, cb) => {
+      // {{{ fix race conditions when reloading scripts for stophack
+      if (details.resourceType === "mainFrame" && details.url.includes("discord.com")) {
+        mainUrl = details.url;
+        blockScripts = true;
+      }
+      if (blockScripts && details.resourceType === "script") {
+        cb({ cancel: true });
+        return;
+      }
+      if (mainUrl !== "" && blockScripts && details.url === mainUrl && details.resourceType !== "mainFrame") {
+        blockScripts = false;
+      }
+      // }}}
+
       // Allow plugins to block some URLs,
       // this is needed because multiple webRequest handlers cannot be registered at once
       cb({ cancel: blockedUrls.some((u) => u.test(details.url)) });
