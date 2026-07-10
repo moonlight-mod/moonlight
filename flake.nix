@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+    flake-compat.url = "https://git.lix.systems/lix-project/flake-compat/archive/main.tar.gz";
   };
 
   outputs =
