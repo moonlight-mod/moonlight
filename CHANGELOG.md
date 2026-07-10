@@ -1,9 +1,14 @@
-## Nix
+## Core
 
-- Pin node and pnpm versions to fix issues when making the flake follow nixpkgs `unstable` branch
+- Remapped modules now scan for dependencies to work around a Discord change
+- Block scripts from loading before the page gets reconstructed by stophack to fix race conditions in loading
 
 ## Core Extensions
 
-### Moonbase
+### Component Editor
 
-- Fix switch items being only the switch
+- Fix DM list patch
+
+## Nix
+
+- Path fixes for macOS
