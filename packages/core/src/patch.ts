@@ -317,6 +317,7 @@ function handleModuleDependencies() {
 }
 
 const injectedWpModules: IdentifiedWebpackModule[] = [];
+const allModuleIds = new Set<string>();
 function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?: WebpackJsonpEntry) {
   const modules: Record<string, WebpackModuleFunc> = {};
   const entrypoints: string[] = [];
@@ -332,8 +333,17 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
 
     // @ts-expect-error FIXME proper type checking (tree.type === "Program", body[0].type === "ExpressionStatement")
     const modExpr = tree.body[0].expression;
-    const reqParam = modExpr.params[2];
-    const dependencies = [moduleId.toString()];
+    if (modExpr.params.length !== 3) {
+      logger.debug(
+        `Skipping dependency resolving for "${name}" (${moduleId}), it is probably an npm dependency that doesn't require anything.`
+      );
+      injectedWpModules.push({ id: name, run: func });
+      modules[name] = func;
+      inject = true;
+      continue;
+    }
+    const reqParam = modExpr.params[2]?.name;
+    const dependencies = [{ id: moduleId }];
     for (const node of modExpr.body.body) {
       if (node.type !== "VariableDeclaration") continue;
 
@@ -341,11 +351,11 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
         const expr = dec.init;
         if (expr == null) continue;
         if (expr.type !== "CallExpression") continue;
-        if (expr.callee.type !== "Identifier" && expr.callee.name !== reqParam) continue;
+        if (!(expr.callee.type === "Identifier" && expr.callee.name === reqParam)) continue;
 
         const id = expr.arguments?.[0]?.value;
 
-        if (id != null) dependencies.push(id.toString());
+        if (id != null) dependencies.push({ id });
       }
     }
 
@@ -368,7 +378,9 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
     }
   }
 
-  for (const [_modId, mod] of Object.entries(entry)) {
+  for (const [modId, mod] of Object.entries(entry)) {
+    allModuleIds.add(modId.toString());
+
     const modStr = mod.toString();
     for (const wpModule of webpackModules) {
       const id = depToString(wpModule);
@@ -386,7 +398,7 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
             } else if (
               dep.ext != null
                 ? injectedWpModules.find((x) => x.ext === dep.ext && x.id === dep.id)
-                : injectedWpModules.find((x) => x.id === dep.id)
+                : injectedWpModules.find((x) => x.id === dep.id) || allModuleIds.has(dep.id.toString())
             ) {
               deps.delete(dep);
             }
@@ -402,6 +414,7 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
       webpackModules.delete(wpModule);
       moonlight.pendingModules.delete(wpModule);
       injectedWpModules.push(wpModule);
+      allModuleIds.add(wpModule.ext != null ? `${wpModule.ext}_${wpModule.id}` : wpModule.id);
 
       inject = true;
 
