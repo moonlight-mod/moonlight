@@ -3,12 +3,17 @@
 
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.xz";
+    flake-compat = {
+      url = "github:NixOS/flake-compat";
+      flake = false;
+    };
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      ...
     }:
     let
       overlay = import ./nix/overlay.nix { inherit self; };
