@@ -13,6 +13,7 @@
     {
       self,
       nixpkgs,
+      ...
     }:
     let
       overlay = import ./nix/overlay.nix { inherit self; };
