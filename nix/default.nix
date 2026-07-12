@@ -1,14 +1,14 @@
 {
   lib,
   stdenv,
-  nodejs_22,
+  nodejs-slim_22,
   pnpm_10,
   pnpmConfigHook,
   fetchPnpmDeps,
 }:
 let
-  nodejs = nodejs_22;
-  pnpm = pnpm_10.override { inherit nodejs; };
+  nodejs = nodejs-slim_22;
+  pnpm = pnpm_10.override { nodejs-slim =  nodejs; };
 in
 stdenv.mkDerivation (finalAttrs: {
   pname = "moonlight";
@@ -31,7 +31,7 @@ stdenv.mkDerivation (finalAttrs: {
     inherit (finalAttrs) pname version src;
     inherit pnpm;
     fetcherVersion = 3;
-    hash = "sha256-+jxp3dD/SyGdskMyw0jhDzDRj7wXD4Egkx3ok3cMiyc=";
+    hash = "sha256-g1wlpbUlGwE3Chrry89gJX2+3+jY/jyXYwiAWAfoHlA=";
   };
 
   env = {

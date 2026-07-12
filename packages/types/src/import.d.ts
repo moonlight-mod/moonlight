@@ -24,6 +24,7 @@ declare module "@moonlight-mod/wp/commands_commands" {
 
 declare module "@moonlight-mod/wp/common_ErrorBoundary" {
   import { CoreExtensions } from "@moonlight-mod/types";
+
   const _default: CoreExtensions.Common.ErrorBoundary;
   export default _default;
 }
@@ -82,18 +83,21 @@ declare module "@moonlight-mod/wp/componentEditor_messages" {
 
 declare module "@moonlight-mod/wp/contextMenu_contextMenu" {
   import { CoreExtensions } from "@moonlight-mod/types";
+
   const _: CoreExtensions.ContextMenu.ContextMenu;
   export = _;
 }
 
 declare module "@moonlight-mod/wp/linkRedirect_linkRedirect" {
   import { CoreExtensions } from "@moonlight-mod/types";
+
   const _default: CoreExtensions.LinkRedirect.LinkRedirect;
   export default _default;
 }
 
 declare module "@moonlight-mod/wp/markdown_markdown" {
   import { CoreExtensions } from "@moonlight-mod/types";
+
   const _: CoreExtensions.Markdown.Markdown;
   export = _;
 }
@@ -112,6 +116,7 @@ declare module "@moonlight-mod/wp/moonbase_moonbase" {
 
 declare module "@moonlight-mod/wp/notices_notices" {
   import { CoreExtensions } from "@moonlight-mod/types";
+
   const _default: CoreExtensions.Notices.Notices;
   export default _default;
 }
