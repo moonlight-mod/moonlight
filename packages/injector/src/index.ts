@@ -162,7 +162,11 @@ class BrowserWindow extends ElectronBrowserWindow {
     let mainUrl = "";
     this.webContents.session.webRequest.onBeforeRequest((details, cb) => {
       // {{{ fix race conditions when reloading scripts for stophack
-      if (details.resourceType === "mainFrame" && details.url.includes("discord.com")) {
+      if (
+        details.resourceType === "mainFrame" &&
+        details.url.includes("discord.com") &&
+        !details.url.includes("/popout")
+      ) {
         mainUrl = details.url;
         blockScripts = true;
       }
