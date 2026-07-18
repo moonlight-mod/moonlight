@@ -99,6 +99,13 @@
       "description": "May help with VAAPI and Zero Copy",
       "type": "boolean",
       "default": false
+    },
+    "disableWaylandColorManagement": {
+      "advice": "restart",
+      "displayName": "Disable Wayland Color Management",
+      "description": "Fixes colors being washed out with HDR enabled on Electron 40+. Has no effect on other operating systems",
+      "type": "boolean",
+      "default": false
     }
   },
   "apiLevel": 2

@@ -49,6 +49,10 @@ if (process.platform === "linux") {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "waylandExplicitSync")) {
     enabledFeatures.push("WaylandLinuxDrmSyncobj");
   }
+
+  if (moonlightHost.getConfigOption<boolean>("nativeFixes", "disableWaylandColorManagement")) {
+    disabledFeatures.push("WaylandWpColorManagerV1");
+  }
 }
 
 // NOTE: Only tested if this appears on Windows, it should appear on all when hardware acceleration is disabled
