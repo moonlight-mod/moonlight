@@ -24,7 +24,7 @@ export enum ItemType {
 }
 
 type Exports = {
-  ItemType: ItemType;
+  ItemType: typeof ItemType;
   hasLayout: (item: any) => boolean;
 };
 export default Exports;

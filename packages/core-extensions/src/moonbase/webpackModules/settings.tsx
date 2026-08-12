@@ -1,12 +1,13 @@
+import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import Breadcrumbs from "@moonlight-mod/wp/discord/design/components/Breadcrumbs/web/Breadcrumbs";
 import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 //import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
+import { ItemType } from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemConstants";
 import {
   createCustom,
   createPanel,
   createSection,
-  createSidebarItem,
-  createTabItem
+  createSidebarItem
 } from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemCreators";
 //import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
@@ -17,7 +18,6 @@ import React from "@moonlight-mod/wp/react";
 import redesign from "@moonlight-mod/wp/settings_redesign";
 import settings from "@moonlight-mod/wp/settings_settings";
 import spacepack from "@moonlight-mod/wp/spacepack_spacepack";
-import ErrorBoundary from "src/common/webpackModules/ErrorBoundary";
 
 const notice = {
   stores: [MoonbaseSettingsStore],
@@ -37,6 +37,15 @@ const notice = {
     );
   }
 };
+
+// FIXME: export exported types to mappings definitions
+function createTabItem(key: string, props: Record<string, any>) {
+  return {
+    ...props,
+    key,
+    type: ItemType.TAB_ITEM
+  };
+}
 
 const oldLocation = MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "oldLocation", false);
 const position = oldLocation ? -2 : -9999;

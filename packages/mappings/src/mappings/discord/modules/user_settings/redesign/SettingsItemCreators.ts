@@ -68,7 +68,7 @@ export type PanelProps = {
     stores: Store<any>[];
     element: React.FunctionComponent;
   };
-  decoration: {
+  decoration?: {
     type: DecorationTypes.STRONGLY_DISCOURAGED_CUSTOM;
     component: React.FC<any>;
   };
@@ -130,10 +130,6 @@ register((moonmap, lunast) => {
       moonmap.addExport(name, "createPanel", {
         type: ModuleExportType.Function,
         find: ".PANEL,"
-      });
-      moonmap.addExport(name, "createTabItem", {
-        type: ModuleExportType.Function,
-        find: ".TAB_ITEM,"
       });
       moonmap.addExport(name, "createSplit", {
         type: ModuleExportType.Function,
