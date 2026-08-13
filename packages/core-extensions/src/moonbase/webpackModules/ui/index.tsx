@@ -1,12 +1,9 @@
 import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
-import { UserSettingsModalStore } from "@moonlight-mod/wp/common_stores";
-import UserSettingsModalActionCreators from "@moonlight-mod/wp/discord/actions/UserSettingsModalActionCreators";
-import { Divider } from "@moonlight-mod/wp/discord/components/common/BaseHeaderBar";
+import BaseHeaderBar from "@moonlight-mod/wp/discord/components/common/BaseHeaderBar";
 import HeaderBarClasses from "@moonlight-mod/wp/discord/components/common/HeaderBar.css";
 import TabBar from "@moonlight-mod/wp/discord/design/components/TabBar/TabBar";
 import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 import PeoplePageClasses from "@moonlight-mod/wp/discord/modules/people/web/PeoplePage.css";
-import { useStateFromStores } from "@moonlight-mod/wp/discord/packages/flux";
 import Margins from "@moonlight-mod/wp/discord/styles/shared/Margins.css";
 import React from "@moonlight-mod/wp/react";
 import AboutPage from "./about";
@@ -38,29 +35,16 @@ export const pages: {
 ];
 
 export function Moonbase() {
-  const subsection = useStateFromStores([UserSettingsModalStore], () => UserSettingsModalStore.getSubsection() ?? 0);
-  const setSubsection = React.useCallback(
-    (to: string) => {
-      if (subsection !== to) UserSettingsModalActionCreators.setSection("moonbase", to);
-    },
-    [subsection]
-  );
-
-  React.useEffect(
-    () => () => {
-      // Normally there's an onSettingsClose prop you can set but we don't expose it and I don't care enough to add support for it right now
-      UserSettingsModalActionCreators.clearSubsection("moonbase");
-    },
-    []
-  );
+  const [subsection, setSubsection] = React.useState(0);
+  const Page = pages[subsection].element;
 
   return (
     <ErrorBoundary>
-      <div className={`${HeaderBarClasses.children} ${Margins.marginBottom20}`}>
+      <div className={`${HeaderBarClasses.children} ${Margins.marginBottom20}`} style={{ minHeight: "32px" }}>
         <Text className={HeaderBarClasses.titleWrapper} variant="heading-lg/semibold" tag="h2">
           Moonbase
         </Text>
-        <Divider />
+        <BaseHeaderBar.Divider />
         <TabBar
           selectedItem={subsection}
           onItemSelect={setSubsection}
@@ -78,7 +62,7 @@ export function Moonbase() {
       <RestartAdviceMessage />
       <Update />
 
-      {React.createElement(pages[subsection].element)}
+      <Page />
     </ErrorBoundary>
   );
 }

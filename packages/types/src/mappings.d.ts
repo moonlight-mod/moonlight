@@ -92,7 +92,6 @@ declare module "@moonlight-mod/wp/discord/components/common/Alerts" {
 declare module "@moonlight-mod/wp/discord/components/common/BaseHeaderBar" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const Icon: MappedModules["discord/components/common/BaseHeaderBar"]["Icon"];
-  export const Divider: MappedModules["discord/components/common/BaseHeaderBar"]["Divider"];
   const _default: MappedModules["discord/components/common/BaseHeaderBar"]["default"];
   export default _default;
 }
@@ -1157,7 +1156,7 @@ declare module "@moonlight-mod/wp/discord/modules/user_settings/redesign/Setting
   export const createSection: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSection"];
   export const createSidebarItem: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createSidebarItem"];
   export const createPanel: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createPanel"];
-  export const createTabItem: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createTabItem"];
+  export const createNestedPanelNavigator: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createNestedPanelNavigator"];
   export const createCustom: MappedModules["discord/modules/user_settings/redesign/SettingsItemCreators"]["createCustom"];
 }
 

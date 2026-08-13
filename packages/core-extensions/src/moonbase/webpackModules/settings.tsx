@@ -2,7 +2,6 @@ import ErrorBoundary from "@moonlight-mod/wp/common_ErrorBoundary";
 import Breadcrumbs from "@moonlight-mod/wp/discord/design/components/Breadcrumbs/web/Breadcrumbs";
 import Text from "@moonlight-mod/wp/discord/design/components/Text/Text";
 //import { MenuItem } from "@moonlight-mod/wp/contextMenu_contextMenu";
-import { ItemType } from "@moonlight-mod/wp/discord/modules/user_settings/redesign/SettingsItemConstants";
 import {
   createCustom,
   createPanel,
@@ -37,15 +36,6 @@ const notice = {
     );
   }
 };
-
-// FIXME: export exported types to mappings definitions
-function createTabItem(key: string, props: Record<string, any>) {
-  return {
-    ...props,
-    key,
-    type: ItemType.TAB_ITEM
-  };
-}
 
 const oldLocation = MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "oldLocation", false);
 const position = oldLocation ? -2 : -9999;
@@ -123,7 +113,7 @@ if (MoonbaseSettingsStore.getExtensionConfigRaw<boolean>("moonbase", "sections",
 const redesignTitle = () => "moonlight";
 const redesignPanel = createPanel("moonbase_panel", {
   useTitle: redesignTitle,
-  decoration: {
+  /*decoration: {
     type: 0, // DecorationTypes.STRONGLY_DISCOURAGED_CUSTOM,
     component: () => (
       <ErrorBoundary>
@@ -131,22 +121,12 @@ const redesignPanel = createPanel("moonbase_panel", {
         <RestartAdviceMessage />
       </ErrorBoundary>
     )
-  },
-  buildLayout: () =>
-    pages.map((page) =>
-      createTabItem(`moonbase_tab-${page.id}`, {
-        getTitle: () => page.name,
-        buildLayout: () => [
-          createCustom(`moonbase_tab-${page.id}_content`, {
-            Component: () => (
-              <ErrorBoundary>
-                <page.element />
-              </ErrorBoundary>
-            )
-          })
-        ]
-      })
-    ),
+  },*/
+  buildLayout: () => [
+    createCustom(`moonbase_content`, {
+      Component: () => <Moonbase />
+    })
+  ],
   notice
 });
 const redesignSidebarItem = createSidebarItem("moonbase_item", {

@@ -73,7 +73,6 @@ export type BaseHeaderBar = ComponentType<BaseHeaderBarProps> & {
 
 type Exports = {
   Icon: Icon;
-  Divider: Divider;
   default: BaseHeaderBar;
 };
 export default Exports;
@@ -90,10 +89,6 @@ register((moonmap) => {
         type: ModuleExportType.Function,
         find: 'size:"custom",className:',
         recursive: true
-      });
-      moonmap.addExport(name, "Divider", {
-        type: ModuleExportType.Function,
-        find: /let{className:.}/
       });
 
       return true;
