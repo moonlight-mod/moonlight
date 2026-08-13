@@ -78,10 +78,9 @@ export type PaneProps = {
   render: React.FC<any>;
 } & GenericProps;
 
-export type TabProps = {
-  getTitle?: () => string;
-  initialize?: () => void;
-  onItemSelect?: () => void;
+export type NestedPanelNavigatorProps = {
+  useTitle?: () => string;
+  useSubtitle?: () => string;
 } & GenericProps;
 
 export type CustomProps = {
@@ -95,8 +94,11 @@ type Exports = {
   createSection: (key: string, props: SectionProps) => FinalizedItem<SectionProps, ItemType.SECTION>;
   createSidebarItem: (key: string, props: SidebarItemProps) => FinalizedItem<SidebarItemProps, ItemType.SIDEBAR_ITEM>;
   createPanel: (key: string, props: PanelProps) => FinalizedItem<PanelProps, ItemType.PANEL>;
-  createTabItem: (key: string, props: TabProps) => FinalizedItem<TabProps, ItemType.TAB_ITEM>;
   createCustom: (key: string, props: CustomProps) => FinalizedItemWithoutLayout<CustomProps, ItemType.CUSTOM>;
+  createNestedPanelNavigator: (
+    key: string,
+    props: NestedPanelNavigatorProps
+  ) => FinalizedItem<NestedPanelNavigatorProps, ItemType.NESTED_PANEL_NAVIGATOR>;
 };
 export default Exports;
 
