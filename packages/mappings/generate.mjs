@@ -3,6 +3,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as ts from "typescript";
 
+const __dirname = import.meta.dirname;
+
 const mappedTypes = {
   "discord/actions/ContextMenuActionCreators": "ContextMenuActionCreators",
   "discord/actions/UserActionCreators": "UserActionCreators",
@@ -153,9 +155,9 @@ const mappedTypes = {
 
 let write = process.argv.includes("--write");
 
-function getExports(path) {
-  let sourcePath = `./src/mappings/${path}.ts`;
-  if (!fs.existsSync(sourcePath)) sourcePath = `./src/mappings/${path}/index.ts`;
+function getExports(targetPath) {
+  let sourcePath = path.resolve(`${__dirname}/src/mappings/${targetPath}.ts`);
+  if (!fs.existsSync(sourcePath)) sourcePath = path.resolve(`${__dirname}/src/mappings/${targetPath}/index.ts`);
   if (!fs.existsSync(sourcePath)) return null;
   const program = ts.createProgram([sourcePath], {
     target: ts.ScriptTarget.ES2022,
@@ -173,7 +175,7 @@ function getExports(path) {
 }
 
 function getPaths() {
-  const paths = fs.readdirSync("src/mappings", { recursive: true });
+  const paths = fs.readdirSync(path.resolve(`${__dirname}/src/mappings`), { recursive: true });
   const out = [];
 
   for (const filePath of paths) {
@@ -193,7 +195,7 @@ function generateImports() {
   }
 
   if (write) {
-    fs.writeFileSync("src/modules.ts", str);
+    fs.writeFileSync(path.resolve(`${__dirname}/src/modules.ts`), str);
   } else {
     console.log(str);
   }
@@ -222,7 +224,7 @@ function generateTypes() {
   str += "export declare function WebpackRequire<T extends keyof MappedModules>(\n  module: T\n): MappedModules[T];\n";
 
   if (write) {
-    fs.writeFileSync("src/types.ts", str);
+    fs.writeFileSync(path.resolve(`${__dirname}/src/types.ts`), str);
   } else {
     console.log(str);
   }
@@ -260,7 +262,7 @@ function generateDeclares(prefix) {
   }
 
   if (write) {
-    fs.writeFileSync("../types/src/mappings.d.ts", str);
+    fs.writeFileSync(path.resolve(`${__dirname}/../types/src/mappings.d.ts`), str);
   } else {
     console.log(str);
   }
