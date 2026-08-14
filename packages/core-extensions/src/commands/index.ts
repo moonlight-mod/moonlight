@@ -49,8 +49,8 @@ export const patches: Patch[] = [
     find: /\.icon,bot:\i\.application\?\.bot,/,
     replace: [
       {
-        match: /(?<==\i=>)(\i)\.type===/,
-        replacement: (orig, section) => `${section}.id!=="${APPLICATION_ID}"&&${orig}`
+        match: /return (\i)\.type===/,
+        replacement: (_, section) => `return ${section}.id!=="${APPLICATION_ID}"&&${section}.type===`
       },
       {
         match: /(\.useMemo\(\(\)=>)((\i)\.type)/,
