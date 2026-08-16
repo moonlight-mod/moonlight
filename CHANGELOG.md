@@ -1,14 +1,22 @@
 ## Core
 
-- Remapped modules now scan for dependencies to work around a Discord change
-- Block scripts from loading before the page gets reconstructed by stophack to fix race conditions in loading
+- Fixed some edge cases in remapped module dependency resolution
+- Fixed popout being broken again
 
 ## Core Extensions
 
-### Component Editor
+### moonbase
 
-- Fix DM list patch
+- Fixed Discord removing tab items from settings
+
+### Commands
+
+- Fixed patch
+
+### Native Fixes
+
+- Added option to disable Wayland Color Management to fix washed out colors when HDR is enabled
 
 ## Nix
 
-- Path fixes for macOS
+- Added flake-compat (thanks @votisek)
