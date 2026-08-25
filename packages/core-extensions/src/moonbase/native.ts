@@ -124,7 +124,23 @@ export default function getNatives(): MoonbaseNatives {
 
       logger.debug("Writing version file:", ref);
       const versionFile = moonlightNodeSandboxed.fs.join(moonlightGlobal.getMoonlightDir(), installedVersionFile);
-      await moonlightNodeSandboxed.fs.writeFileString(versionFile, ref.trim());
+      let versionInfo;
+      let branchStr = branch === MoonlightBranch.STABLE ? "stable" : "nightly";
+      if (moonlightNodeSandboxed.fs.exists(versionFile)) {
+        versionInfo = JSON.parse(moonlightNodeSandboxed.fs.readFileString(versionFile));
+        versionInfo[branchStr].version = ref;
+      } else {
+        versionInfo = {
+          [branchStr]: {
+            version: ref,
+            path: {
+              root: "none",
+              path: dist
+            }
+          }
+        };
+      }
+      await moonlightNodeSandboxed.fs.writeFileString(versionFile, JSON.stringify(versionInfo));
 
       logger.debug("Update extracted");
     },
