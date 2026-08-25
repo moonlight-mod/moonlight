@@ -46,3 +46,13 @@ export enum RestartAdvice {
   ReloadNeeded, // A reload is needed
   RestartNeeded // A restart is needed
 }
+
+export type BranchVersionInfo = {
+  path: {
+    root: "moonlight" | "none";
+    path: string;
+  };
+  version: string;
+};
+
+export type VersionInfo = { [key in MoonlightBranch]?: BranchVersionInfo };
