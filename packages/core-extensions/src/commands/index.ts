@@ -75,6 +75,17 @@ export const patches: Patch[] = [
       match: /\|\|(\i)===\i\.\i\.BUILT_IN/,
       replacement: (orig, id) => `${orig}||${id}==="${APPLICATION_ID}"`
     }
+  },
+
+  // fix dice rolling when patchAll is enabled
+  // (idk anywhere better to put this)
+  {
+    find: "this.handleStartRoll",
+    replace: {
+      match: /(:`### \${\i} \${\i})(\${\i}`)/,
+      replacement: (_, p1, p2) => `${p1}\\n${p2}`
+    },
+    prerequisite: () => moonlightNode.config.patchAll ?? false
   }
 ];
 
