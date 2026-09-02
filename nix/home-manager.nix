@@ -53,7 +53,7 @@ in
         };
     in
     lib.mkMerge [
-      (lib.mkIf pkgs.stdenv.isDarwin {
+      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
         home.file = {
           "Library/Application Support/moonlight-mod/stable.json" = file cfg.configs.stable;
           "Library/Application Support/moonlight-mod/ptb.json" = file cfg.configs.ptb;
@@ -61,7 +61,7 @@ in
           "Library/Application Support/moonlight-mod/development.json" = file cfg.configs.development;
         };
       })
-      (lib.mkIf (!pkgs.stdenv.isDarwin) {
+      (lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) {
         xdg.configFile = {
           "moonlight-mod/stable.json" = file cfg.configs.stable;
           "moonlight-mod/ptb.json" = file cfg.configs.ptb;
