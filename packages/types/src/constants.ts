@@ -1,7 +1,7 @@
 export const extensionsDir = "extensions";
 export const coreExtensionsDir = "core-extensions";
 export const repoUrlFile = ".moonlight-repo-url";
-export const installedVersionFile = ".moonlight-installed-version";
+export const installedVersionFile = "moonlight-installed-versions.json";
 
 export const ipcGetOldPreloadPath = "_moonlight_getOldPreloadPath";
 
