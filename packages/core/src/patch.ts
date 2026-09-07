@@ -121,7 +121,7 @@ function patchModule(id: string, patchId: string, replaced: string, entry: Webpa
   }
 }
 
-const previouslyPatched = new Map<string, IdentifiedPatch>();
+const previouslyPatched = new Map<string, IdentifiedPatch[]>();
 
 function patchModules(entry: WebpackJsonpEntry[1], chunkId?: WebpackJsonpEntry[0]) {
   // Populate the module cache
@@ -129,7 +129,13 @@ function patchModules(entry: WebpackJsonpEntry[1], chunkId?: WebpackJsonpEntry[0
     if (func.__moonlight !== true) {
       if (Object.hasOwn(moduleCache, id)) {
         logger.debug(`Chunk "${chunkId?.join(", ") ?? "<unknown>"}" replacing module "${id}"`);
-        if (previouslyPatched.has(id)) moonlight.unpatched.add(previouslyPatched.get(id)!);
+        if (previouslyPatched.has(id)) {
+          for (const patch of previouslyPatched.get(id)!) {
+            patches.push(patch);
+            moonlight.unpatched.add(patch);
+          }
+          previouslyPatched.delete(id);
+        }
       }
 
       moduleCache[id] = func.toString().replace(/\n/g, "");
@@ -202,10 +208,10 @@ function patchModules(entry: WebpackJsonpEntry[1], chunkId?: WebpackJsonpEntry[0
             if (replaced === moduleString) {
               logger.warn("Patch replacement failed", id, patchId, patch);
               isPatched = false;
+              patchedStr.pop();
               if (patch.hardFail) {
                 hardFailed = true;
                 break;
-              } else {
               }
             }
           } else if (replace.type === PatchReplaceType.Module) {
@@ -225,7 +231,8 @@ function patchModules(entry: WebpackJsonpEntry[1], chunkId?: WebpackJsonpEntry[0
         }
 
         if (isPatched) {
-          previouslyPatched.set(id, patch);
+          if (!previouslyPatched.has(id)) previouslyPatched.set(id, []);
+          previouslyPatched.get(id)!.push(patch);
           moonlight.unpatched.delete(patch);
         }
         if (shouldRemove) patches.splice(i--, 1);
