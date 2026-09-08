@@ -24,10 +24,11 @@ if (moonlightHost.getConfigOption<boolean>("nativeFixes", "disableRendererBackgr
   app.commandLine.appendSwitch("disable-background-timer-throttling");
 }
 
-if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vulkan") ?? false) {
+// vulkan renderer is so underdeveloped that it causes more issues than it helps
+/*if (moonlightHost.getConfigOption<boolean>("nativeFixes", "vulkan") ?? false) {
   enabledFeatures.push("Vulkan", "DefaultANGLEVulkan", "VulkanFromANGLE");
   app.commandLine.appendSwitch("use-angle", "vulkan");
-}
+}*/
 
 if (process.platform === "linux") {
   if (moonlightHost.getConfigOption<boolean>("nativeFixes", "linuxAutoscroll") ?? false) {

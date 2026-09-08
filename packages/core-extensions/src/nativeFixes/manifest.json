@@ -23,13 +23,6 @@
       "type": "boolean",
       "default": true
     },
-    "vulkan": {
-      "advice": "restart",
-      "displayName": "Enable Vulkan renderer",
-      "description": "Uses the Vulkan backend for rendering",
-      "type": "boolean",
-      "default": false
-    },
     "linuxAutoscroll": {
       "advice": "restart",
       "displayName": "Enable middle click autoscroll on Linux",
@@ -68,7 +61,7 @@
     "linuxHevcSupport": {
       "advice": "restart",
       "displayName": "HEVC support on Linux",
-      "description": "You might also need to enable Vulkan renderer. Has no effect on other operating systems",
+      "description": "Has no effect on other operating systems",
       "type": "boolean",
       "default": true
     },
