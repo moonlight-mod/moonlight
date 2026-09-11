@@ -29,8 +29,8 @@ export const patches: Patch[] = [
   {
     find: "Slate: Unknown decoration attribute: ",
     replace: {
-      match: /=({strong:.+?});/,
-      replacement: (_, rules) => `=require("markdown_markdown")._addSlateDecorators(${rules});`
+      match: /=({strong:.+?})(;|,)/,
+      replacement: (_, rules, ending) => `=require("markdown_markdown")._addSlateDecorators(${rules})${ending}`
     }
   }
 ];
