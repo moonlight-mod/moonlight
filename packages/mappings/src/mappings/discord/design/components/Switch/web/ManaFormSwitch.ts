@@ -1,3 +1,4 @@
+import { ModuleExportType } from "@moonlight-mod/moonmap";
 import type { ComponentType } from "react";
 import register from "../../../../../../registry";
 import type { FieldComponentProps } from "../../Form/web/Field";
@@ -15,6 +16,11 @@ register((moonmap) => {
     find: 'layout:"horizontal",interactiveLabel:!0,auxiliaryContentPosition:"under-label",',
     process({ id }) {
       moonmap.addModule(id, name);
+
+      moonmap.addExport(name, "default", {
+        type: ModuleExportType.Function,
+        find: ",hasIcon:"
+      });
 
       return true;
     }

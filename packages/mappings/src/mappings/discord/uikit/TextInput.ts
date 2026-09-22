@@ -35,15 +35,16 @@ export default Exports;
 
 register((moonmap) => {
   const name = "discord/uikit/TextInput";
+  const find = ',"data-mana-component":"text-input",';
   moonmap.register({
     name,
-    find: '="text",placeholder:',
+    find,
     process({ id }) {
       moonmap.addModule(id, name);
 
       moonmap.addExport(name, "default", {
         type: ModuleExportType.Function,
-        find: '="text",placeholder:'
+        find
       });
 
       return true;
