@@ -51,8 +51,8 @@ register((moonmap) => {
         find: "_dispatchWithDevtools("
       });
       moonmap.addExport(name, "Store", {
-        type: ModuleExportType.Function,
-        find: "registerActionHandlers("
+        type: ModuleExportType.Key,
+        find: "removeAllConditionalListeners"
       });
       moonmap.addExport(name, "statesWillNeverBeEqual", {
         type: ModuleExportType.Function,

@@ -11,7 +11,7 @@ register((moonmap) => {
   const name = "discord/Dispatcher";
   moonmap.register({
     name,
-    find: '.Early=0]="Early",',
+    find: /\(.,{addBreadcrumb:/, // FIXME: this could be improved, but there's really not a lot to work with in this module
     process({ id }) {
       moonmap.addModule(id, name);
 
