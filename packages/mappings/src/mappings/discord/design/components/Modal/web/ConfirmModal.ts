@@ -1,3 +1,4 @@
+import { ModuleExportType } from "@moonlight-mod/moonmap";
 import type { ComponentType, PropsWithChildren, ReactNode } from "react";
 import register from "../../../../../../registry";
 import type { ButtonVariant } from "../../Button/web/Button";
@@ -23,11 +24,17 @@ export default Exports;
 
 register((moonmap) => {
   const name = "discord/design/components/Modal/web/ConfirmModal";
+  const find = 'role:"alertdialog",notice:';
   moonmap.register({
     name,
-    find: "{ConfirmModal:()=>",
+    find,
     process({ id }) {
       moonmap.addModule(id, name);
+
+      moonmap.addExport(name, "ConfirmModal", {
+        type: ModuleExportType.Function,
+        find
+      });
 
       return true;
     }
