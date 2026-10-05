@@ -139,7 +139,11 @@ function patchModules(entry: WebpackJsonpEntry[1], chunkId?: WebpackJsonpEntry[0
       }
 
       moduleCache[id] = func.toString().replace(/\n/g, "");
-      moonlight.moonmap.parseScript(id, moduleCache[id]);
+      try {
+        moonlight.moonmap.parseScript(id, moduleCache[id]);
+      } catch (err) {
+        logger.error("Failed to parse script for LunAST", id, err);
+      }
     }
   }
 
@@ -255,8 +259,8 @@ function patchModules(entry: WebpackJsonpEntry[1], chunkId?: WebpackJsonpEntry[0
           }
         }
       }
-    } catch (e) {
-      logger.error("Failed to parse script for LunAST", id, e);
+    } catch (err) {
+      logger.error("Failed to parse script for LunAST", id, err);
     }
 
     if (moonlightNode.config.patchAll === true) {
@@ -336,46 +340,50 @@ function injectModules(entry: WebpackJsonpEntry[1], splice?: boolean, fullEntry?
 
     const moduleId = moonlight.moonmap.modules[name];
     const modStr = moduleCache[moduleId];
-    const tree = moonlight.lunast.utils.parseFixed(`(${modStr})`);
+    try {
+      const tree = moonlight.lunast.utils.parseFixed(`(${modStr})`);
 
-    // @ts-expect-error FIXME proper type checking (tree.type === "Program", body[0].type === "ExpressionStatement")
-    const modExpr = tree.body[0].expression;
-    if (modExpr.params.length !== 3) {
-      logger.debug(
-        `Skipping dependency resolving for "${name}" (${moduleId}), it is probably an npm dependency that doesn't require anything.`
-      );
-      injectedWpModules.push({ id: name, run: func });
-      modules[name] = func;
-      inject = true;
-      continue;
-    }
-    const reqParam = modExpr.params[2]?.name;
-    const dependencies = [{ id: moduleId }];
-    for (const node of modExpr.body.body) {
-      if (node.type !== "VariableDeclaration") continue;
-
-      for (const dec of node.declarations) {
-        const expr = dec.init;
-        if (expr == null) continue;
-        if (expr.type !== "CallExpression") continue;
-        if (!(expr.callee.type === "Identifier" && expr.callee.name === reqParam)) continue;
-
-        const id = expr.arguments?.[0]?.value;
-
-        if (id != null) dependencies.push({ id });
+      // @ts-expect-error FIXME proper type checking (tree.type === "Program", body[0].type === "ExpressionStatement")
+      const modExpr = tree.body[0].expression;
+      if (modExpr.params.length !== 3) {
+        logger.debug(
+          `Skipping dependency resolving for "${name}" (${moduleId}), it is probably an npm dependency that doesn't require anything.`
+        );
+        injectedWpModules.push({ id: name, run: func });
+        modules[name] = func;
+        inject = true;
+        continue;
       }
-    }
+      const reqParam = modExpr.params[2]?.name;
+      const dependencies = [{ id: moduleId }];
+      for (const node of modExpr.body.body) {
+        if (node.type !== "VariableDeclaration") continue;
 
-    if (dependencies.length > 0) {
-      registerWebpackModule({
-        id: name,
-        run: func,
-        dependencies
-      });
-    } else {
-      injectedWpModules.push({ id: name, run: func });
-      modules[name] = func;
-      inject = true;
+        for (const dec of node.declarations) {
+          const expr = dec.init;
+          if (expr == null) continue;
+          if (expr.type !== "CallExpression") continue;
+          if (!(expr.callee.type === "Identifier" && expr.callee.name === reqParam)) continue;
+
+          const id = expr.arguments?.[0]?.value;
+
+          if (id != null) dependencies.push({ id });
+        }
+      }
+
+      if (dependencies.length > 0) {
+        registerWebpackModule({
+          id: name,
+          run: func,
+          dependencies
+        });
+      } else {
+        injectedWpModules.push({ id: name, run: func });
+        modules[name] = func;
+        inject = true;
+      }
+    } catch (err) {
+      logger.error(`Failed to resolve dependencies for "${name}" (${moduleId}):`, err);
     }
   }
 
