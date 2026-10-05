@@ -74,7 +74,7 @@ function showAbout() {
 electron.app.whenReady().then(() => {
   const original = electron.Menu.buildFromTemplate;
   electron.Menu.buildFromTemplate = function (entries) {
-    const i = entries.findIndex((e) => e.label === "Check for Updates...");
+    const i = entries.findIndex((e) => e.label === "Acknowledgements");
     if (i === -1) return original.call(this, entries);
 
     if (!entries.find((e) => e.label === "moonlight")) {
@@ -97,7 +97,7 @@ electron.app.whenReady().then(() => {
 
       options.push({ label: "About", click: showAbout });
 
-      entries.splice(i + 1, 0, {
+      entries.splice(i, 0, {
         label: "moonlight",
         submenu: options
       });
