@@ -1,5 +1,7 @@
-## Core Extensions
+## Core
 
-### Markdown
+- Added error handling for dependency resolution of remapped modules
 
-- Fixed Slate decorator patch
+## Mappings
+
+- Fixes for latest Discord
