@@ -2,7 +2,7 @@ import extractAsar from "@moonlight-mod/core/asar";
 import { MoonlightBranch } from "@moonlight-mod/types";
 import { installedVersionFile, repoUrlFile } from "@moonlight-mod/types/constants";
 import { parseTarGzip } from "nanotar";
-import type { MoonbaseNatives, RepositoryManifest } from "./types";
+import type { BranchVersionInfo, MoonbaseNatives, RepositoryManifest, VersionInfo } from "./types";
 
 const moonlightGlobal = globalThis.moonlightHost ?? globalThis.moonlightNode;
 
@@ -124,7 +124,24 @@ export default function getNatives(): MoonbaseNatives {
 
       logger.debug("Writing version file:", ref);
       const versionFile = moonlightNodeSandboxed.fs.join(moonlightGlobal.getMoonlightDir(), installedVersionFile);
-      await moonlightNodeSandboxed.fs.writeFileString(versionFile, ref.trim());
+      let versionInfo: VersionInfo;
+      const fallbackInfo: BranchVersionInfo = {
+        version: ref,
+        path: {
+          root: "none",
+          path: dist
+        }
+      };
+      if (await moonlightNodeSandboxed.fs.exists(versionFile)) {
+        versionInfo = JSON.parse(await moonlightNodeSandboxed.fs.readFileString(versionFile));
+        if (!versionInfo[branch]) versionInfo[branch] = fallbackInfo;
+        versionInfo[branch].version = ref;
+      } else {
+        versionInfo = {
+          [branch]: fallbackInfo
+        };
+      }
+      await moonlightNodeSandboxed.fs.writeFileString(versionFile, JSON.stringify(versionInfo));
 
       logger.debug("Update extracted");
     },
