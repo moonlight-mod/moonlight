@@ -1,6 +1,9 @@
-## Core
+## Core Extensions
 
-- Added error handling for dependency resolution of remapped modules
+### Moonbase
+
+- Fixed context menu submenu being missing after the client loads due to Discord changing the capitalization of "Check for updates"
+- Fixed HelpMessage
 
 ## Mappings
 
