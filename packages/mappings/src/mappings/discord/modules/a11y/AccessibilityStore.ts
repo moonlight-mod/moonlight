@@ -4,7 +4,7 @@ register((moonmap) => {
   const name = "discord/modules/a11y/AccessibilityStore";
   moonmap.register({
     name,
-    find: '"AccessibilityStore"',
+    find: 'displayName="AccessibilityStore"',
     process({ id }) {
       moonmap.addModule(id, name);
 
