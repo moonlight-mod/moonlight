@@ -153,13 +153,20 @@ declare module "@moonlight-mod/wp/discord/components/common/HeaderBar.css" {
 declare module "@moonlight-mod/wp/discord/components/common/HelpMessage.css" {
   import { MappedModules } from "@moonlight-mod/mappings";
   export const container: MappedModules["discord/components/common/HelpMessage.css"]["container"];
+  export const contentsContainer: MappedModules["discord/components/common/HelpMessage.css"]["contentsContainer"];
+  export const copyContainer: MappedModules["discord/components/common/HelpMessage.css"]["copyContainer"];
+  export const critical: MappedModules["discord/components/common/HelpMessage.css"]["critical"];
+  export const enterExit: MappedModules["discord/components/common/HelpMessage.css"]["enterExit"];
+  export const enterExitClip: MappedModules["discord/components/common/HelpMessage.css"]["enterExitClip"];
+  export const enterExitHidden: MappedModules["discord/components/common/HelpMessage.css"]["enterExitHidden"];
   export const icon: MappedModules["discord/components/common/HelpMessage.css"]["icon"];
-  export const iconDiv: MappedModules["discord/components/common/HelpMessage.css"]["iconDiv"];
-  export const text: MappedModules["discord/components/common/HelpMessage.css"]["text"];
-  export const positive: MappedModules["discord/components/common/HelpMessage.css"]["positive"];
-  export const warning: MappedModules["discord/components/common/HelpMessage.css"]["warning"];
+  export const iconAndTextContainer: MappedModules["discord/components/common/HelpMessage.css"]["iconAndTextContainer"];
+  export const iconContainer: MappedModules["discord/components/common/HelpMessage.css"]["iconContainer"];
   export const info: MappedModules["discord/components/common/HelpMessage.css"]["info"];
-  export const error: MappedModules["discord/components/common/HelpMessage.css"]["error"];
+  export const messageList: MappedModules["discord/components/common/HelpMessage.css"]["messageList"];
+  export const success: MappedModules["discord/components/common/HelpMessage.css"]["success"];
+  export const vertical: MappedModules["discord/components/common/HelpMessage.css"]["vertical"];
+  export const warning: MappedModules["discord/components/common/HelpMessage.css"]["warning"];
 }
 
 declare module "@moonlight-mod/wp/discord/components/common/Image" {
